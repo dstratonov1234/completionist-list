@@ -2,22 +2,16 @@
   "use strict";
 
   const STATUSES = {
+    completed: { label: "Закрыто", badge: "🏆 Закрыто" },
     in_progress: { label: "В процессе", badge: "▶ В процессе" },
-    completed: { label: "Пройдено", badge: "🏆 Пройдено" },
     planned: { label: "В планах", badge: "📌 В планах" },
-    dropped: { label: "Брошено", badge: "✕ Брошено" },
   };
-  const STATUS_ORDER = ["in_progress", "completed", "planned", "dropped"];
 
   const els = {
     listView: document.getElementById("list-view"),
-    header: document.getElementById("site-header"),
-    stats: document.getElementById("stats"),
-    tabs: document.getElementById("tabs"),
     search: document.getElementById("search"),
     list: document.getElementById("list"),
     gameView: document.getElementById("game-view"),
-    updated: document.getElementById("updated"),
     lightbox: document.getElementById("lightbox"),
     lbImg: document.getElementById("lb-img"),
     lbCaption: document.getElementById("lb-caption"),
@@ -26,10 +20,12 @@
   const state = {
     games: [],
     byId: new Map(),
-    tab: null,
     query: "",
+    collapsed: new Set(),
+    currentGame: null,
+    entering: false,
+    arriving: false,
     listScroll: 0,
-    reportCache: new Map(),
     conditionsCache: new Map(),
     // Версия данных (games.json → updated) — добавляется к файлам тем, чтобы после обновления не висел старый кэш.
     version: "",
@@ -147,7 +143,7 @@
     els.gameView.classList.remove("module-pending");
   }
 
-  function makeCtx(g, cond, reportReady) {
+  function makeCtx(g, cond) {
     const root = els.gameView;
     const cleanups = modules.cleanups;
     return {
@@ -169,7 +165,8 @@
       groups: () => [...root.querySelectorAll(".cond-group")],
       goalEl: (n) => root.querySelector(`.cond[data-goal="${n}"]`),
       section: (key) => root.querySelector(`.block[data-section="${key}"]`),
-      reportReady,
+      // Отчёты на сайт не выводятся (они только для Claude); оставлено для совместимости модулей.
+      reportReady: Promise.resolve(),
       esc,
       safeUrl,
       fmtDate,
@@ -203,7 +200,7 @@
     };
   }
 
-  async function mountModule(g, cond, reportReady) {
+  async function mountModule(g, cond) {
     if (g.theme?.js !== true) return;
     const token = ++modules.token;
     els.gameView.classList.add("module-pending");
@@ -214,7 +211,7 @@
     els.gameView.classList.remove("module-pending");
     if (!mod?.page) return;
     try {
-      const cleanup = mod.page(makeCtx(g, cond, reportReady));
+      const cleanup = mod.page(makeCtx(g, cond));
       if (typeof cleanup === "function") modules.cleanups.push(cleanup);
     } catch (e) {
       console.error(`theme ${g.id}:`, e);
@@ -319,11 +316,6 @@
     return h % 360;
   }
 
-  function initials(title) {
-    const words = title.replace(/[^\p{L}\p{N}\s]/gu, " ").split(/\s+/).filter(Boolean);
-    return (words.slice(0, 2).map((w) => w[0]).join("") || "?").toUpperCase();
-  }
-
   const gradient = (title) => {
     const hue = hashHue(title);
     return `linear-gradient(135deg,hsl(${hue} 55% 38%),hsl(${(hue + 40) % 360} 60% 22%))`;
@@ -354,6 +346,7 @@
         return;
       }
       if (img.classList.contains("hero-logo")) img.closest(".hero")?.classList.remove("has-logo");
+      if (img.classList.contains("gb-logo")) img.closest(".gbanner")?.classList.remove("has-logo");
       img.remove();
     },
     true,
@@ -375,105 +368,35 @@
     true,
   );
 
-  function coverHtml(g) {
-    const fallback = `<div class="cover-fallback" style="background:${gradient(g.title)}">${esc(initials(g.title))}</div>`;
-    return fallback + imgTag([coverUrl(g)], `alt="" loading="lazy"`);
-  }
+  // ---------- главная: категории сверху вниз ----------
+  // Закрытые → в процессе → в планах; внутри категории — по алфавиту. Категорию можно свернуть стрелкой
+  // (запоминается в браузере). У каждой игры — свой баннер, оформленный её темой.
 
-  // ---------- sorting ----------
+  const CATEGORIES = [
+    { status: "completed", label: "Закрытые" },
+    { status: "in_progress", label: "В процессе" },
+    { status: "planned", label: "В планах" },
+  ];
 
-  const time = (s) => parseDate(s)?.getTime() ?? null;
-  const desc = (a, b) => (b ?? -Infinity) - (a ?? -Infinity);
+  const byTitle = (a, b) => a.title.localeCompare(b.title, "ru", { sensitivity: "base" });
+  const ordered = () => CATEGORIES.flatMap((c) => state.games.filter((g) => g.status === c.status).sort(byTitle));
 
-  function compare(a, b) {
-    if (a.status !== b.status) return STATUS_ORDER.indexOf(a.status) - STATUS_ORDER.indexOf(b.status);
-    let r = 0;
-    switch (a.status) {
-      case "completed":
-        r = desc(time(a.finished), time(b.finished));
-        break;
-      case "in_progress":
-        r = desc(time(a.started), time(b.started));
-        break;
-      case "planned":
-        r = (a.priority ?? Infinity) - (b.priority ?? Infinity) || (time(a.added) ?? 0) - (time(b.added) ?? 0);
-        break;
-      case "dropped":
-        r = desc(time(a.finished ?? a.started), time(b.finished ?? b.started));
-        break;
+  const COLLAPSE_KEY = "cl-collapsed";
+
+  function loadCollapsed() {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(COLLAPSE_KEY) ?? "[]"));
+    } catch {
+      return new Set();
     }
-    return (Number.isNaN(r) ? 0 : r) || a.title.localeCompare(b.title, "ru");
   }
 
-  const visibleGames = (tab) => state.games.filter((g) => tab === "all" || g.status === tab).sort(compare);
-
-  // ---------- list view ----------
-
-  function counts() {
-    const c = { all: state.games.length };
-    for (const s of STATUS_ORDER) c[s] = 0;
-    for (const g of state.games) c[g.status] = (c[g.status] ?? 0) + 1;
-    return c;
-  }
-
-  function renderStats() {
-    const c = counts();
-    const goalsDone = state.games.reduce((sum, g) => sum + (Number(g.goals?.done) || 0), 0);
-    const tiles = [
-      ["completed", "Закрыто игр", c.completed],
-      ["in_progress", "В процессе", c.in_progress],
-      ["planned", "В планах", c.planned],
-      ["", "Целей выполнено", goalsDone.toLocaleString("ru-RU")],
-    ];
-    els.stats.innerHTML = tiles
-      .map(([cls, label, val]) => `<div class="stat ${cls}"><dt>${label}</dt><dd>${val}</dd></div>`)
-      .join("");
-  }
-
-  // Шапка главной подсвечивается артом последней закрытой (или текущей) игры.
-  function renderHeaderArt() {
-    const g = state.games.filter((x) => x.status === "completed").sort(compare)[0] ?? state.games.filter((x) => x.status === "in_progress").sort(compare)[0];
-    const url = g && (safeUrl(g.hero) || steamAsset(g, "library_hero.jpg") || coverUrl(g));
-    if (url) els.header.style.setProperty("--header-img", `url(${JSON.stringify(url)})`);
-  }
-
-  function availableTabs() {
-    const c = counts();
-    const tabs = ["in_progress", "completed", "planned"];
-    if (c.dropped) tabs.push("dropped");
-    tabs.push("all");
-    return tabs;
-  }
-
-  function defaultTab() {
-    const c = counts();
-    return ["in_progress", "completed", "planned"].find((s) => c[s] > 0) ?? "all";
-  }
-
-  function renderTabs() {
-    const c = counts();
-    els.tabs.innerHTML = availableTabs()
-      .map((key) => {
-        const label = key === "all" ? "Все" : STATUSES[key].label;
-        const current = key === state.tab ? ' aria-current="page"' : "";
-        return `<a class="tab" data-status="${key}" href="#/${key}"${current}>${label}<span class="count">${c[key] ?? 0}</span></a>`;
-      })
-      .join("");
-  }
-
-  const goalsText = (t) => `${t.done} из ${t.total} ${plural(t.total, "цели", "целей", "целей")}`;
-
-  function cardMeta(g) {
-    const bits = [];
-    if (g.platform) bits.push(`<span class="chip">${esc(g.platform)}</span>`);
-    const date = {
-      completed: g.finished && `✓ ${fmtDate(g.finished)}`,
-      in_progress: g.started && `с ${fmtDate(g.started)}`,
-      planned: g.added && `добавлено ${fmtDate(g.added)}`,
-      dropped: (g.finished || g.started) && fmtDate(g.finished || g.started),
-    }[g.status];
-    if (date) bits.push(`<span>${esc(date)}</span>`);
-    return bits.length ? `<div class="meta">${bits.join("")}</div>` : "";
+  function saveCollapsed() {
+    try {
+      localStorage.setItem(COLLAPSE_KEY, JSON.stringify([...state.collapsed]));
+    } catch {
+      /* приватный режим и т.п. — просто не запоминаем */
+    }
   }
 
   const progressBar = (done, total) => {
@@ -481,48 +404,180 @@
     return `<div class="progress" title="${p}%"><div style="width:${p}%"></div></div>`;
   };
 
-  function cardHtml(g) {
+  const heroUrls = (g) => [g.hero, steamAsset(g, "library_hero.jpg"), coverUrl(g)];
+  const logoUrls = (g) => [g.logo, steamAsset(g, "logo.png")];
+
+  function bannerHtml(g) {
     const s = STATUSES[g.status] ?? { badge: g.status };
-    const priority = g.status === "planned" && g.priority != null ? `<span class="badge priority">#${esc(g.priority)}</span>` : "";
-    const t = g.goals?.total ? g.goals : null;
-    const goals = t
-      ? `<div class="card-goals"><span>${esc(goalsText(t))}</span>${g.status === "planned" ? "" : progressBar(t.done, t.total)}</div>`
-      : "";
-    const note = g.notes ? `<div class="note">${esc(g.notes)}</div>` : "";
-    const footer = g.report ? `<div class="card-footer">Читать отчёт →</div>` : "";
     const vars = themeVars(g.theme);
+    const hasLogo = unique(logoUrls(g).map(safeUrl)).length > 0;
+    const t = g.goals?.total ? g.goals : null;
+    const date = {
+      completed: g.finished && `закрыта ${fmtDate(g.finished)}`,
+      in_progress: g.started && `с ${fmtDate(g.started)}`,
+      planned: g.added && `в планах с ${fmtDate(g.added)}`,
+    }[g.status];
+    const progress = t
+      ? `<div class="gb-count"><b>${t.done}</b><span>из ${t.total}</span></div>
+         <div class="gb-label">${plural(t.total, "условие закрытия", "условия закрытия", "условий закрытия")}</div>
+         ${progressBar(t.done, t.total)}`
+      : `<div class="gb-label">Условия закрытия ещё не заданы</div>`;
 
     return `
-      <a class="card ${esc(g.status)} ${vars ? "themed-card" : ""}" data-game="${esc(g.id)}" style="${esc(styleAttr(vars))}" href="#/game/${encodeURIComponent(g.id)}">
-        <div class="cover">${coverHtml(g)}<span class="badge">${s.badge}</span>${priority}</div>
-        <div class="card-body">
-          <h3 class="card-title">${esc(g.title)}</h3>
-          ${cardMeta(g)}
-          ${goals}
-          ${note}
-          ${footer}
+      <a class="gbanner ${esc(g.status)} ${vars ? "themed-card" : ""} ${hasLogo ? "has-logo" : ""}" data-game="${esc(g.id)}"
+         style="${esc(styleAttr(vars))}" href="#/game/${encodeURIComponent(g.id)}">
+        <div class="gb-media" style="background:${gradient(g.title)}">${imgTag(heroUrls(g), 'alt="" loading="lazy"')}</div>
+        <div class="gb-body">
+          <div class="gb-main">
+            <div class="gb-title">
+              ${hasLogo ? imgTag(logoUrls(g), `class="gb-logo" alt="" loading="lazy"`) : ""}
+              <h3 class="gb-name">${esc(g.title)}</h3>
+            </div>
+            <div class="gb-meta">
+              <span class="gb-status">${s.badge}</span>
+              ${date ? `<span>${esc(date)}</span>` : ""}
+            </div>
+            ${g.notes ? `<p class="gb-notes">${esc(g.notes)}</p>` : ""}
+          </div>
+          <div class="gb-progress">${progress}</div>
         </div>
       </a>`;
   }
 
-  function emptyHtml() {
-    if (state.query) return `<div class="empty"><strong>Ничего не найдено</strong>Попробуй другой запрос.</div>`;
-    const text = {
-      in_progress: ["Сейчас ничего не проходится", "Самое время начать что-нибудь из планов."],
-      completed: ["Пока ни одной закрытой игры", "Первый трофей впереди."],
-      planned: ["Список планов пуст", "Добавь игры, в которые хочешь сыграть."],
-      dropped: ["Брошенных игр нет", ""],
-      all: ["Список пока пуст", "Скоро здесь появятся игры."],
-    }[state.tab];
-    return `<div class="empty"><strong>${text[0]}</strong>${text[1]}</div>`;
-  }
-
   function renderList() {
     const q = state.query.trim().toLowerCase();
-    const games = visibleGames(state.tab).filter(
-      (g) => !q || g.title.toLowerCase().includes(q) || (g.aliases ?? []).some((a) => a.toLowerCase().includes(q)),
-    );
-    els.list.innerHTML = games.length ? games.map(cardHtml).join("") : emptyHtml();
+    const match = (g) => !q || g.title.toLowerCase().includes(q) || (g.aliases ?? []).some((a) => a.toLowerCase().includes(q));
+    const html = CATEGORIES.map((c) => {
+      const all = state.games.filter((g) => g.status === c.status);
+      const games = all.filter(match).sort(byTitle);
+      if (!games.length) return "";
+      const collapsed = !q && state.collapsed.has(c.status);
+      return `
+        <section class="cat ${c.status} ${collapsed ? "collapsed" : ""}" data-cat="${c.status}">
+          <h2 class="cat-head">
+            <button type="button" class="cat-toggle" aria-expanded="${!collapsed}" aria-controls="cat-${c.status}">
+              <span class="cat-arrow" aria-hidden="true"></span>
+              <span class="cat-title">${c.label}</span>
+              <span class="cat-count">${q ? `${games.length} из ${all.length}` : all.length}</span>
+            </button>
+          </h2>
+          <div class="cat-body" id="cat-${c.status}"${collapsed ? " inert" : ""}>
+            <div class="cat-inner">${games.map(bannerHtml).join("")}</div>
+          </div>
+        </section>`;
+    }).join("");
+    els.list.innerHTML =
+      html ||
+      (q
+        ? `<div class="empty"><strong>Ничего не найдено</strong>Попробуй другой запрос.</div>`
+        : `<div class="empty"><strong>Список пока пуст</strong>Скоро здесь появятся игры.</div>`);
+  }
+
+  function toggleCat(btn) {
+    const sec = btn.closest(".cat");
+    const collapsed = !sec.classList.contains("collapsed");
+    sec.classList.toggle("collapsed", collapsed);
+    btn.setAttribute("aria-expanded", String(!collapsed));
+    sec.querySelector(".cat-body").inert = collapsed;
+    if (collapsed) state.collapsed.add(sec.dataset.cat);
+    else state.collapsed.delete(sec.dataset.cat);
+    saveCollapsed();
+  }
+
+  // ---------- сцена: фон главной и бесшовный вход в игру ----------
+  // Наведение на баннер меняет фон главной на стартовый кадр страницы этой игры (её баннер-арт на её фоне,
+  // ровно как наверху страницы игры). Клик: главная растворяется, страница игры проявляется поверх того же кадра.
+
+  const stageEl = document.getElementById("stage");
+  const stage = { current: null, leaveTimer: 0 };
+  const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function stageLayer(g) {
+    let layer = stageEl.querySelector(`.stage-layer[data-game="${CSS.escape(g.id)}"]`);
+    if (layer) return layer;
+    const vars = themeVars(g.theme);
+    layer = document.createElement("div");
+    layer.className = `stage-layer ${vars ? "themed-card" : ""}`;
+    layer.dataset.game = g.id;
+    if (vars) layer.setAttribute("style", styleAttr(vars));
+    layer.innerHTML = `<div class="stage-hero"><div class="hero-media" style="background:${gradient(g.title)}">${imgTag(heroUrls(g), 'alt=""')}</div></div>`;
+    stageEl.append(layer);
+    return layer;
+  }
+
+  function setStage(g, { instant = false } = {}) {
+    clearTimeout(stage.leaveTimer);
+    const id = g?.id ?? null;
+    if (stage.current === id && !instant) return;
+    stage.current = id;
+    stageEl.classList.toggle("instant", instant);
+    const target = g ? stageLayer(g) : null;
+    for (const l of stageEl.querySelectorAll(".stage-layer")) if (l !== target) l.classList.remove("on");
+    if (target) {
+      if (instant) target.classList.add("on");
+      // слой включается кадром позже (чтобы сработал переход); если за этот кадр навели на другой баннер — не включаем
+      else requestAnimationFrame(() => stage.current === id && target.classList.add("on"));
+    }
+    document.body.classList.toggle("staged", !!g);
+    if (instant) requestAnimationFrame(() => requestAnimationFrame(() => stageEl.classList.remove("instant")));
+  }
+
+  const bannerGame = (el) => state.byId.get(el?.closest?.(".gbanner")?.dataset.game);
+
+  els.list.addEventListener("pointerover", (e) => {
+    if (e.pointerType !== "mouse") return;
+    const g = bannerGame(e.target);
+    if (g) setStage(g);
+  });
+
+  els.list.addEventListener("pointerout", (e) => {
+    // Во время входа в игру список становится «прозрачным» для мыши и браузер шлёт pointerout —
+    // фон в этот момент сбрасывать нельзя, иначе переход перестанет быть бесшовным.
+    if (state.entering || state.arriving || document.body.classList.contains("leaving")) return;
+    if (e.pointerType !== "mouse" || !bannerGame(e.target) || bannerGame(e.relatedTarget)) return;
+    clearTimeout(stage.leaveTimer);
+    stage.leaveTimer = setTimeout(() => setStage(null), 260);
+  });
+
+  els.list.addEventListener("focusin", (e) => {
+    const g = bannerGame(e.target);
+    if (g) setStage(g);
+  });
+
+  els.list.addEventListener("click", (e) => {
+    const btn = e.target.closest(".cat-toggle");
+    if (btn) return toggleCat(btn);
+    const g = bannerGame(e.target);
+    if (!g || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    enterGame(g);
+  });
+
+  async function enterGame(g) {
+    if (state.entering) return;
+    state.listScroll = window.scrollY;
+    const href = `#/game/${encodeURIComponent(g.id)}`;
+    if (reduceMotion()) {
+      location.hash = href;
+      return;
+    }
+    state.entering = true;
+    setStage(g);
+    document.body.classList.add("leaving");
+    requestAnimationFrame(() => clearTimeout(stage.leaveTimer));
+    const img = stageLayer(g).querySelector("img");
+    const loaded =
+      img && !img.complete
+        ? new Promise((r) => {
+            img.addEventListener("load", r, { once: true });
+            img.addEventListener("error", r, { once: true });
+            setTimeout(r, 1200);
+          })
+        : null;
+    await Promise.all([new Promise((r) => setTimeout(r, 450)), loaded]);
+    state.entering = false;
+    state.arriving = true;
+    location.hash = href;
   }
 
   // ---------- game view: условия закрытия ----------
@@ -649,9 +704,8 @@
               : ""
           }
           <dl class="facts">
-            ${fact("Платформа", g.platform)}
             ${fact("Начато", fmtDate(g.started))}
-            ${fact(g.status === "dropped" ? "Брошено" : "Закрыто", fmtDate(g.finished))}
+            ${fact("Закрыто", fmtDate(g.finished))}
             ${fact("Дней", days != null ? `${days} ${plural(days, "день", "дня", "дней")}` : null)}
             ${fact("Время", g.playtime != null ? fmtHours(g.playtime) : null)}
             ${fact("В очереди", g.status === "planned" && g.priority != null ? `#${g.priority}` : null)}
@@ -662,7 +716,7 @@
   }
 
   function neighborsHtml(g) {
-    const list = visibleGames(state.tab === "all" || state.tab === g.status ? state.tab : g.status);
+    const list = ordered();
     const i = list.findIndex((x) => x.id === g.id);
     const prev = list[i - 1], next = list[i + 1];
     if (!prev && !next) return "";
@@ -675,20 +729,16 @@
 
   function renderGame(g, cond) {
     const s = STATUSES[g.status] ?? { badge: g.status };
-    const heroUrls = [g.hero, steamAsset(g, "library_hero.jpg"), coverUrl(g)];
-    const logoUrls = [g.logo, steamAsset(g, "logo.png")];
-    const hasLogo = unique(logoUrls.map(safeUrl)).length > 0;
-    const metaBits =
-      [g.platform].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("") +
-      (g.demo ? `<span class="demo-chip" title="Пробная игра для демонстрации сайта">демо</span>` : "");
+    const hasLogo = unique(logoUrls(g).map(safeUrl)).length > 0;
+    const metaBits = g.demo ? `<span class="demo-chip" title="Пробная игра для демонстрации сайта">демо</span>` : "";
 
     els.gameView.innerHTML = `
       <header class="hero ${esc(g.status)} ${hasLogo ? "has-logo" : ""}">
-        <div class="hero-media" style="background:${gradient(g.title)}">${imgTag(heroUrls, 'alt=""')}</div>
+        <div class="hero-media" style="background:${gradient(g.title)}">${imgTag(heroUrls(g), 'alt=""')}</div>
         <div class="wrap hero-inner">
-          <a class="back" href="#/${esc(state.tab)}">← К списку</a>
+          <a class="back" href="#/">← К списку</a>
           <div class="hero-title">
-            ${hasLogo ? imgTag(logoUrls, `class="hero-logo" alt="${esc(g.title)}"`) : ""}
+            ${hasLogo ? imgTag(logoUrls(g), `class="hero-logo" alt="${esc(g.title)}"`) : ""}
             <h1>${esc(g.title)}</h1>
             <div class="hero-meta"><span class="status-pill">${s.badge}</span>${metaBits}</div>
           </div>
@@ -704,19 +754,10 @@
               ? `<section class="block" data-section="closing">${sectionHead(g, "closing", "Точка закрытия", "⚑")}<div class="cond-closing">${cond.closing.map((p) => `<p>${esc(p)}</p>`).join("")}</div></section>`
               : ""
           }
-          ${
-            g.report || g.status === "completed"
-              ? `<section class="block" data-section="report">${sectionHead(g, "report", "Отчёт", "📝")}<div class="report" id="report" data-gallery>${
-                  g.report ? `<p class="muted">Загружаю отчёт…</p>` : `<p class="muted">Отчёт пока не добавлен.</p>`
-                }</div></section>`
-              : ""
-          }
           ${neighborsHtml(g)}
         </div>
         ${sideHtml(g, cond)}
       </div>`;
-
-    return g.report ? loadReport(g) : Promise.resolve();
   }
 
   // Клик по группе в боковой панели — прокрутка к ней.
@@ -726,58 +767,6 @@
     e.preventDefault();
     els.gameView.querySelector(`.cond-group[data-group="${a.dataset.jump}"]`)?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
-
-  async function loadReport(g) {
-    const target = document.getElementById("report");
-    try {
-      let html = state.reportCache.get(g.id);
-      if (!html) {
-        const res = await fetch(`reports/${encodeURIComponent(g.id)}.md`, { cache: "no-cache" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        html = DOMPurify.sanitize(marked.parse(await res.text()));
-        state.reportCache.set(g.id, html);
-      }
-      if (!target.isConnected) return;
-      target.innerHTML = html;
-      enhanceReport(target);
-    } catch (err) {
-      if (target.isConnected) target.innerHTML = `<p class="muted">Не удалось загрузить отчёт (${esc(err.message)}).</p>`;
-    }
-  }
-
-  // Картинка одна в абзаце → figure с подписью из alt; несколько подряд → галерея.
-  function enhanceReport(root) {
-    const isBlank = (n) => n.nodeType === Node.TEXT_NODE && !n.textContent.trim();
-    for (const p of root.querySelectorAll("p")) {
-      const nodes = [...p.childNodes].filter((n) => !isBlank(n) && n.nodeName !== "BR");
-      if (!nodes.length || !nodes.every((n) => n.nodeName === "IMG")) continue;
-      const figures = nodes.map((img) => {
-        const fig = document.createElement("figure");
-        fig.append(img);
-        if (img.alt) {
-          const cap = document.createElement("figcaption");
-          cap.textContent = img.alt;
-          fig.append(cap);
-        }
-        return fig;
-      });
-      const wrap = document.createElement("div");
-      wrap.className = figures.length > 1 ? "report-gallery" : "report-figure";
-      wrap.append(...figures);
-      p.replaceWith(wrap);
-    }
-    for (const img of root.querySelectorAll("img")) {
-      img.loading = "lazy";
-      if (!img.closest("a")) {
-        img.setAttribute("data-zoom", "");
-        img.dataset.caption = img.title || img.alt || "";
-      }
-    }
-    for (const a of root.querySelectorAll('a[href^="http"]')) {
-      a.target = "_blank";
-      a.rel = "noopener";
-    }
-  }
 
   // ---------- lightbox ----------
 
@@ -815,53 +804,73 @@
       if (e.key === "ArrowRight") showLightbox(state.lightbox.index + 1);
       return;
     }
-    if (e.key === "Escape" && !els.gameView.hidden) location.hash = `#/${state.tab}`;
+    if (e.key === "Escape" && !els.gameView.hidden) location.hash = "#/";
   });
 
   // ---------- routing ----------
 
   function showList() {
     state.pageToken++;
-    const wasGame = !els.gameView.hidden;
+    const fromGame = els.gameView.hidden ? null : state.currentGame;
     clearPageTheme();
     els.gameView.hidden = true;
+    els.gameView.classList.remove("arriving");
     els.gameView.innerHTML = "";
     els.listView.hidden = false;
+    document.body.classList.remove("leaving");
     document.title = SITE_TITLE;
-    renderTabs();
+    state.currentGame = null;
+    stageEl.hidden = false;
     renderList();
-    if (wasGame) window.scrollTo(0, state.listScroll);
+    if (!fromGame) return;
+    window.scrollTo(0, state.listScroll);
+    if (reduceMotion()) return setStage(null, { instant: true });
+    // Обратный путь: стартовый кадр игры остаётся на месте и плавно гаснет, пока главная проявляется.
+    stageEl.classList.add("bare");
+    setStage(fromGame, { instant: true });
+    els.listView.classList.add("returning");
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        stageEl.classList.remove("bare");
+        setStage(null);
+      }),
+    );
+    setTimeout(() => els.listView.classList.remove("returning"), 700);
   }
 
   async function showGame(g) {
     const token = ++state.pageToken;
-    if (!els.listView.hidden) state.listScroll = window.scrollY;
+    if (!els.listView.hidden && !state.arriving) state.listScroll = window.scrollY;
+    const arriving = state.arriving;
+    state.arriving = false;
+    state.currentGame = g;
     els.listView.hidden = true;
     els.gameView.hidden = false;
+    els.gameView.classList.toggle("arriving", arriving);
     document.title = `${g.title} — ${SITE_TITLE}`;
     applyPageTheme(g);
     const cond = await loadConditions(g);
     if (token !== state.pageToken) return;
-    const reportReady = renderGame(g, cond);
+    renderGame(g, cond);
     window.scrollTo(0, 0);
-    mountModule(g, cond, reportReady);
+    mountModule(g, cond);
+    // Страница игры проявилась поверх того же кадра — сцену убираем без анимации
+    // (на странице игры фон — её собственный, сцена бы его закрыла).
+    setTimeout(() => {
+      if (token !== state.pageToken) return;
+      document.body.classList.remove("leaving");
+      setStage(null, { instant: true });
+      stageEl.hidden = true;
+    }, arriving ? 600 : 0);
   }
 
   function route() {
     const hash = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
     const [head, ...rest] = hash.split("/");
     if (els.lightbox.open) els.lightbox.close();
-
-    if (head === "game") {
-      const g = state.byId.get(rest.join("/"));
-      if (g) {
-        state.tab ??= defaultTab();
-        showGame(g);
-        return;
-      }
-    }
-    state.tab = availableTabs().includes(head) ? head : state.tab ?? defaultTab();
-    showList();
+    const g = head === "game" ? state.byId.get(rest.join("/")) : null;
+    if (g) showGame(g);
+    else showList();
   }
 
   els.search.addEventListener("input", () => {
@@ -881,15 +890,12 @@
       state.games = (data.games ?? []).filter((g) => g && g.id && g.title);
       state.version = encodeURIComponent(data.updated ?? "");
       state.byId = new Map(state.games.map((g) => [g.id, g]));
-      if (data.updated) els.updated.textContent = `Обновлено: ${fmtDate(data.updated)}`;
-      document.getElementById("demo-note").hidden = !state.games.some((g) => g.demo);
     } catch (err) {
       els.list.innerHTML = `<div class="empty"><strong>Не удалось загрузить список</strong>${esc(err.message)}</div>`;
       return;
     }
+    state.collapsed = loadCollapsed();
     loadThemeAssets(state.games);
-    renderStats();
-    renderHeaderArt();
     route();
   }
 

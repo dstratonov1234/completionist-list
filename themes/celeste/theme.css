@@ -8,7 +8,7 @@
    Цвет обводки — --ce-line (меняется на hover/фокусе), толщина — --ce-b. */
 
 html[data-game="celeste"],
-.card[data-game="celeste"] {
+.gbanner[data-game="celeste"] {
   --ce-b: 4px;
   --ce-ink: #0b0613;
   --ce-snow: #fff4fb;
@@ -29,119 +29,371 @@ html[data-game="celeste"],
 }
 
 /* =====================================================================
-   Карточка в списке
+   Баннер на главной — «уровень» в пиксельной рамке
+   Рамка с выщербленными углами и ступенчатой тенью «на полу», внутренняя тёмная обводка,
+   тёмная часть под текстом рассыпается пиксельным дизерингом, пиксельный снег. Счётчик условий — клубники
+   (у закрытой игры — золотая крылатая), полоска — пиксельные ячейки с кристальным сердцем
+   на текущей высоте. Наведение — ступенчатый прыжок, рывок через баннер и снегопад;
+   нажатие — кнопка вдавливается, рамка синеет, как волосы Мадлен после рывка.
    ===================================================================== */
 
-.card[data-game="celeste"] {
+.gbanner[data-game="celeste"] {
+  --ce-line: color-mix(in srgb, var(--t-accent) 42%, var(--t-surface));
+  --ce-floor: color-mix(in srgb, var(--t-accent) 20%, var(--t-bg));
+  --ce-lift: 8px;
   border: none;
   border-radius: 0;
-  background: var(--t-surface);
   box-shadow:
     0 calc(-1 * var(--ce-b)) 0 0 var(--ce-line),
     0 var(--ce-b) 0 0 var(--ce-line),
     calc(-1 * var(--ce-b)) 0 0 0 var(--ce-line),
     var(--ce-b) 0 0 0 var(--ce-line),
-    inset 0 -4px 0 0 var(--ce-lo),
-    8px 8px 0 0 var(--ce-drop);
+    8px var(--ce-lift) 0 0 var(--ce-floor);
   transition: none;
 }
 
-.card[data-game="celeste"]:hover,
-.card[data-game="celeste"]:focus-visible {
+.gbanner[data-game="celeste"]:hover,
+.gbanner[data-game="celeste"]:focus-visible {
   --ce-line: var(--ce-hot);
-  transform: translateY(-6px);
+  --ce-floor: color-mix(in srgb, var(--t-accent) 34%, var(--t-bg));
+  --ce-lift: 12px;
+  border: none;
   outline: none;
+  transform: translateY(-4px);
+}
+
+.gbanner[data-game="celeste"]:is(:hover, :focus-visible, :active) {
   box-shadow:
     0 calc(-1 * var(--ce-b)) 0 0 var(--ce-line),
     0 var(--ce-b) 0 0 var(--ce-line),
     calc(-1 * var(--ce-b)) 0 0 0 var(--ce-line),
     var(--ce-b) 0 0 0 var(--ce-line),
-    inset 0 -4px 0 0 var(--ce-lo),
-    8px 14px 0 0 var(--ce-drop);
+    8px var(--ce-lift) 0 0 var(--ce-floor);
 }
 
-.card[data-game="celeste"]:focus-visible { --ce-line: var(--ce-gold); }
+.gbanner[data-game="celeste"]:focus-visible { --ce-line: var(--ce-gold); }
 
-.card[data-game="celeste"] .cover img { transition: none; }
-.card[data-game="celeste"]:hover .cover img { transform: scale(1.04); }
-
-/* градиент обложки — ступенчатыми полосами, как дизеринг */
-.card[data-game="celeste"] .cover::after {
-  height: 48px;
-  background: linear-gradient(
-    to top,
-    var(--t-surface) 0 8px,
-    color-mix(in srgb, var(--t-surface) 80%, transparent) 8px 16px,
-    color-mix(in srgb, var(--t-surface) 55%, transparent) 16px 24px,
-    color-mix(in srgb, var(--t-surface) 32%, transparent) 24px 32px,
-    color-mix(in srgb, var(--t-surface) 14%, transparent) 32px 40px,
-    transparent 40px
-  );
+/* нажатие: вдавливается в пол, рамка синеет — рывок потрачен */
+.gbanner[data-game="celeste"]:active {
+  --ce-line: var(--ce-blue);
+  --ce-lift: 4px;
+  transform: translate(2px, 2px);
 }
 
-.card[data-game="celeste"] .badge {
+/* внутренняя обводка и блик — на .gb-body: она поверх арта, но под текстом */
+.gbanner[data-game="celeste"] .gb-body {
+  box-shadow:
+    inset 0 0 0 2px var(--ce-ink),
+    inset 0 6px 0 0 rgba(255, 214, 236, 0.09),
+    inset 0 -6px 0 0 rgba(0, 0, 0, 0.32);
+}
+
+/* ---------- арт: тёмная часть под текстом рассыпается пиксельным дизерингом ---------- */
+
+.gbanner[data-game="celeste"] .gb-media img { transition: transform 0.3s steps(3); }
+
+.gbanner[data-game="celeste"] .gb-media::after {
+  background:
+    linear-gradient(
+      90deg,
+      var(--t-bg) 0 26%,
+      color-mix(in srgb, var(--t-bg) 66%, transparent) 26%,
+      color-mix(in srgb, var(--t-bg) 40%, transparent) 44%,
+      color-mix(in srgb, var(--t-bg) 18%, transparent) 62%,
+      color-mix(in srgb, var(--t-bg) 44%, transparent) 100%
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--t-bg) 72%, transparent) 0 16px,
+      color-mix(in srgb, var(--t-bg) 54%, transparent) 16px 32px,
+      color-mix(in srgb, var(--t-bg) 38%, transparent) 32px 48px,
+      color-mix(in srgb, var(--t-bg) 24%, transparent) 48px 64px,
+      color-mix(in srgb, var(--t-bg) 12%, transparent) 64px 80px,
+      transparent 80px
+    );
+}
+
+/* Полоса дизеринга на краю: клетки 4px заполняют 75% → 50% → 25%. Три узора вложены друг в друга,
+   каждый обрезан по своей рамке (content / padding / border-box) — так у каждого своя треть полосы. */
+.gbanner[data-game="celeste"] .gb-media::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 26%;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 48px;
+  padding: 0 16px 0 0;
+  border: solid transparent;
+  border-width: 0 16px 0 0;
+  pointer-events: none;
+  background:
+    conic-gradient(from 270deg at 4px 4px, var(--t-bg) 25%, transparent 0 50%, var(--t-bg) 0) content-box,
+    conic-gradient(from 270deg at 4px 4px, var(--t-bg) 25%, transparent 0 50%, var(--t-bg) 0 75%, transparent 0) padding-box,
+    conic-gradient(from 270deg at 4px 4px, var(--t-bg) 25%, transparent 0) border-box;
+  background-size: 8px 8px;
+  background-origin: border-box;
+}
+
+/* ---------- снег: два слоя квадратных снежинок, при наведении — метель ---------- */
+
+.gbanner[data-game="celeste"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.45;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='140' shape-rendering='crispEdges' fill='%23fff4fb'%3E%3Crect x='14' y='10' width='2' height='2'/%3E%3Crect x='62' y='34' width='2' height='2'/%3E%3Crect x='118' y='8' width='2' height='2'/%3E%3Crect x='156' y='52' width='2' height='2'/%3E%3Crect x='30' y='78' width='2' height='2'/%3E%3Crect x='92' y='96' width='2' height='2'/%3E%3Crect x='140' y='118' width='2' height='2'/%3E%3Crect x='8' y='126' width='2' height='2'/%3E%3Crect x='76' y='64' width='2' height='2'/%3E%3C/svg%3E") 0 0 / 180px 140px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='200' shape-rendering='crispEdges' fill='%23ffd6e4'%3E%3Crect x='40' y='30' width='3' height='3'/%3E%3Crect x='180' y='70' width='3' height='3'/%3E%3Crect x='110' y='150' width='3' height='3'/%3E%3Crect x='232' y='172' width='3' height='3'/%3E%3Crect x='20' y='122' width='3' height='3'/%3E%3C/svg%3E") 0 0 / 260px 200px;
+}
+
+.gbanner[data-game="celeste"]:is(:hover, :focus-visible)::before { opacity: 0.9; }
+
+/* ---------- рывок: пиксельный след проносится через баннер ---------- */
+
+.gbanner[data-game="celeste"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 30%;
+  z-index: -1;
+  width: 100%;
+  height: 8px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, var(--t-accent) 60%, var(--ce-snow)) right center / 168px 8px no-repeat;
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 12px);
+  mask: repeating-linear-gradient(90deg, #000 0 8px, transparent 8px 12px);
+}
+
+/* ---------- название и логотип ---------- */
+
+.gbanner[data-game="celeste"] .gb-logo { filter: drop-shadow(4px 4px 0 var(--ce-ink)); }
+
+.gbanner[data-game="celeste"] .gb-name {
+  font-size: clamp(30px, 4vw, 40px);
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--ce-snow);
+  overflow-wrap: anywhere;
+  text-shadow: 3px 3px 0 var(--t-accent), 6px 6px 0 var(--ce-ink);
+}
+
+/* ---------- фишки: пиксельные рамки ---------- */
+
+.gbanner[data-game="celeste"] .gb-meta { gap: 8px 10px; }
+
+.gbanner[data-game="celeste"] .gb-meta span {
+  padding: 2px 9px;
+  border: none;
   border-radius: 0;
-  top: 12px;
-  left: 12px;
-  font-family: var(--t-heading);
-  font-weight: 600;
+  font: 500 14px/1.35 var(--t-heading);
   letter-spacing: 0.02em;
-  box-shadow: 0 -2px 0 0 var(--ce-ink), 0 2px 0 0 var(--ce-ink), -2px 0 0 0 var(--ce-ink), 2px 0 0 0 var(--ce-ink), 4px 4px 0 0 var(--ce-drop);
+  color: var(--t-text);
+  background: color-mix(in srgb, var(--t-bg) 78%, transparent);
+  backdrop-filter: none;
+  box-shadow: 0 -2px 0 0 var(--ce-line), 0 2px 0 0 var(--ce-line), -2px 0 0 0 var(--ce-line), 2px 0 0 0 var(--ce-line);
 }
 
-.card[data-game="celeste"] .card-title {
-  font-size: 22px;
+.gbanner[data-game="celeste"] .gb-meta .gb-status {
+  font-weight: 600;
+  color: var(--ce-ink);
+  background: var(--status-color);
+  box-shadow: 0 -2px 0 0 var(--ce-ink), 0 2px 0 0 var(--ce-ink), -2px 0 0 0 var(--ce-ink), 2px 0 0 0 var(--ce-ink), 4px 4px 0 0 var(--ce-ink);
+}
+
+.gbanner[data-game="celeste"].completed .gb-meta .gb-status { background: var(--ce-gold); }
+
+.gbanner[data-game="celeste"] .gb-notes {
+  padding-left: 12px;
+  color: var(--t-text);
+  box-shadow: inset 4px 0 0 0 var(--t-accent);
   text-shadow: 2px 2px 0 var(--ce-ink);
 }
 
-/* клубника после названия; у пройденной игры — золотая крылатая */
-.card[data-game="celeste"] .card-title::after {
+/* ---------- прогресс: окно счётчика клубник ---------- */
+
+.gbanner[data-game="celeste"] .gb-progress {
+  gap: 8px;
+  padding: 14px 18px 18px;
+  border: none;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--t-surface) 90%, transparent);
+  backdrop-filter: none;
+  box-shadow:
+    0 -3px 0 0 var(--ce-snow),
+    0 3px 0 0 var(--ce-snow),
+    -3px 0 0 0 var(--ce-snow),
+    3px 0 0 0 var(--ce-snow),
+    inset 0 -4px 0 0 rgba(0, 0, 0, 0.3),
+    6px 6px 0 0 var(--ce-ink);
+}
+
+.gbanner[data-game="celeste"] .gb-count {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.gbanner[data-game="celeste"] .gb-count::before {
   content: "";
-  display: inline-block;
-  width: 22px;
-  height: 26px;
-  margin-left: 8px;
-  vertical-align: -3px;
+  flex: none;
+  align-self: center;
+  width: 28px;
+  height: 36px;
+  margin-right: 2px;
   background: url(assets/berry.webp) center / contain no-repeat;
 }
 
-.card[data-game="celeste"].completed .card-title::after {
-  width: 32px;
+.gbanner[data-game="celeste"].completed .gb-count::before {
+  width: 44px;
+  height: 40px;
   background-image: url(assets/golden.webp);
 }
 
-.card[data-game="celeste"] .chip { border-radius: 0; }
-
-.card[data-game="celeste"] :is(.card-goals, .card-footer) { font-family: var(--t-heading); letter-spacing: 0.02em; }
-.card[data-game="celeste"] .card-goals { font-size: 14px; }
-.card[data-game="celeste"] .card-footer { color: var(--t-accent); }
-.card[data-game="celeste"]:hover .card-footer { color: var(--ce-gold); }
-
-.card[data-game="celeste"] .progress {
-  height: 8px;
-  border-radius: 0;
-  background: color-mix(in srgb, var(--t-text) 12%, var(--t-surface));
+.gbanner[data-game="celeste"] .gb-count b {
+  font-family: var(--t-display);
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--ce-gold);
+  text-shadow: 3px 3px 0 var(--ce-ink);
 }
 
-.card[data-game="celeste"] .progress > div {
+.gbanner[data-game="celeste"] .gb-count span {
+  margin: 0 0 3px;
+  font: 600 19px/1 var(--t-heading);
+  color: var(--t-text);
+}
+
+.gbanner[data-game="celeste"] .gb-label {
+  font: 500 13px/1.2 var(--t-heading);
+  letter-spacing: 0.1em;
+  color: color-mix(in srgb, var(--t-text) 78%, var(--t-surface));
+}
+
+/* полоска — ячейки, как шкала выносливости; на конце — кристальное сердце */
+.gbanner[data-game="celeste"] .gb-progress .progress {
+  position: relative;
+  height: 12px;
+  margin: 4px 2px 2px;
+  overflow: visible;
   border-radius: 0;
-  background: repeating-linear-gradient(90deg, var(--t-accent) 0 10px, color-mix(in srgb, var(--t-accent) 65%, var(--ce-ink)) 10px 12px);
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 244, 251, 0.12) 0 10px, transparent 10px 12px),
+    var(--ce-ink);
+  box-shadow: 0 -2px 0 0 var(--ce-ink), 0 2px 0 0 var(--ce-ink), -2px 0 0 0 var(--ce-ink), 2px 0 0 0 var(--ce-ink);
+}
+
+.gbanner[data-game="celeste"] .gb-progress .progress > div {
+  position: relative;
+  border-radius: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 10px, var(--ce-ink) 10px 12px),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--t-accent) 50%, white) 0 3px,
+      var(--t-accent) 3px 8px,
+      color-mix(in srgb, var(--t-accent) 68%, var(--ce-ink)) 8px
+    );
+}
+
+.gbanner[data-game="celeste"].completed .gb-progress .progress > div {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 10px, var(--ce-ink) 10px 12px),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--ce-gold) 45%, white) 0 3px,
+      var(--ce-gold) 3px 8px,
+      color-mix(in srgb, var(--ce-gold) 66%, var(--ce-ink)) 8px
+    );
+}
+
+.gbanner[data-game="celeste"] .gb-progress .progress > div::after {
+  content: "";
+  position: absolute;
+  right: -9px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  background: url(assets/heart.webp) center / contain no-repeat;
+  filter: drop-shadow(2px 2px 0 var(--ce-ink));
+}
+
+/* ---------- узкий экран: баннер в столбик, затемнение снизу вверх ---------- */
+
+@media (max-width: 680px) {
+  .gbanner[data-game="celeste"] .gb-media::after {
+    background: linear-gradient(
+      0deg,
+      var(--t-bg) 0 34%,
+      color-mix(in srgb, var(--t-bg) 70%, transparent) 34%,
+      color-mix(in srgb, var(--t-bg) 50%, transparent) 62%,
+      color-mix(in srgb, var(--t-bg) 36%, transparent) 100%
+    );
+  }
+  /* в столбик низ баннера занимает окно счётчика — полоса дизеринга торчала бы по его краям */
+  .gbanner[data-game="celeste"] .gb-media::before { display: none; }
+  .gbanner[data-game="celeste"] .gb-count { justify-content: flex-start; }
+  .gbanner[data-game="celeste"] .gb-count b { font-size: 38px; }
+}
+
+/* ---------- движение — только без prefers-reduced-motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .gbanner[data-game="celeste"]:is(:hover, :focus-visible, :active) { transform: none; }
+  .gbanner[data-game="celeste"]:hover .gb-media img { transform: none; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* ступенчатый прыжок карточки и подпрыгивающая клубника */
-  .card[data-game="celeste"]:hover,
-  .card[data-game="celeste"]:focus-visible { animation: ce-card-hop 0.42s both; }
-  .card[data-game="celeste"]:hover .card-title::after,
-  .card[data-game="celeste"]:focus-visible .card-title::after { animation: ce-berry-hop 0.7s steps(1) infinite; }
+  .gbanner[data-game="celeste"]:is(:hover, :focus-visible) { animation: ce-gb-hop 0.42s both; }
+  .gbanner[data-game="celeste"]:active { animation: none; }
+  .gbanner[data-game="celeste"]:is(:hover, :focus-visible)::before { animation: ce-gb-snow 3.2s steps(64) infinite; }
+  .gbanner[data-game="celeste"]:is(:hover, :focus-visible)::after { animation: ce-gb-dash 0.4s steps(8) both; }
+  .gbanner[data-game="celeste"]:is(:hover, :focus-visible) .gb-count::before { animation: ce-berry-hop 0.7s steps(1) infinite; }
+  .gbanner[data-game="celeste"]:is(:hover, :focus-visible) .gb-progress .progress > div::after { animation: ce-gb-bob 0.8s steps(1) infinite; }
 }
 
-@keyframes ce-card-hop {
+/* ступенчатый прыжок: вверх рывками, приземление с отскоком — в пределах 6px */
+@keyframes ce-gb-hop {
   0% { transform: translateY(0); animation-timing-function: steps(2); }
-  35% { transform: translateY(-12px); animation-timing-function: steps(2); }
-  65% { transform: translateY(-4px); animation-timing-function: steps(1); }
-  82% { transform: translateY(-8px); animation-timing-function: steps(1); }
-  100% { transform: translateY(-6px); }
+  35% { transform: translateY(-6px); animation-timing-function: steps(2); }
+  62% { transform: translateY(-2px); animation-timing-function: steps(1); }
+  80% { transform: translateY(-5px); animation-timing-function: steps(1); }
+  100% { transform: translateY(-4px); }
+}
+
+@keyframes ce-gb-snow {
+  to { background-position: -180px 140px, -260px 400px; }
+}
+
+@keyframes ce-gb-dash {
+  0% { opacity: 1; transform: translateX(-100%); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(176px); }
+}
+
+@keyframes ce-gb-bob { 50% { transform: translateY(-3px); } }
+
+/* Фон главной при наведении — стартовый кадр страницы игры: у её шапки переход в фон
+   ступенчатыми полосами (см. «шапка» ниже), здесь — ровно тот же, чтобы вход был бесшовным. */
+.stage-layer[data-game="celeste"] .stage-hero::after {
+  background:
+    linear-gradient(
+      to top,
+      var(--t-bg) 0 12px,
+      color-mix(in srgb, var(--t-bg) 86%, transparent) 12px 24px,
+      color-mix(in srgb, var(--t-bg) 70%, transparent) 24px 36px,
+      color-mix(in srgb, var(--t-bg) 54%, transparent) 36px 48px,
+      color-mix(in srgb, var(--t-bg) 38%, transparent) 48px 60px,
+      transparent 60px
+    ),
+    linear-gradient(to bottom, color-mix(in srgb, var(--t-bg) 45%, transparent) 0%, transparent 30%, color-mix(in srgb, var(--t-bg) 30%, transparent) 55%, color-mix(in srgb, var(--t-bg) 85%, transparent) 100%),
+    linear-gradient(to right, color-mix(in srgb, var(--t-bg) 65%, transparent), transparent 65%);
 }
 
 @keyframes ce-berry-hop {

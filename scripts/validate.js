@@ -6,14 +6,14 @@ const fs = require("fs");
 const path = require("path");
 
 const root = path.join(__dirname, "..");
-const STATUSES = ["completed", "in_progress", "planned", "dropped"];
+const STATUSES = ["completed", "in_progress", "planned"];
 const DATE_RE = /^\d{4}(-\d{2}(-\d{2})?)?$/;
 const ID_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const URL_RE = /^https?:\/\/\S+$/;
 
 const PARTICLES = ["embers", "sparks", "ash", "snow", "rain", "spores", "dust", "stars", "petals", "leaves", "bubbles"];
 const TEXTURES = ["vignette", "grain", "scanlines", "glow", "fog", "paper", "halftone"];
-const SECTION_KEYS = ["report", "closing"];
+const SECTION_KEYS = ["closing"];
 const HEX_RE = /^#[0-9a-f]{6}$/i;
 const FONT_SPEC_RE = /^[\w\s:@;,.+-]+$/;
 
@@ -131,7 +131,7 @@ function checkUrl(where, key, value, isImage) {
 }
 
 // Поля «об игре» сайт больше не показывает — страница только про условия закрытия.
-const OBSOLETE = ["description", "genres", "developer", "year", "rating", "achievements", "completion", "screenshots", "links", "progress"];
+const OBSOLETE = ["description", "genres", "developer", "year", "rating", "achievements", "completion", "screenshots", "links", "progress", "report", "platform"];
 const FIX = process.argv.includes("--fix");
 let fixed = 0;
 
@@ -220,7 +220,6 @@ for (const [i, g] of (data.games ?? []).entries()) {
   for (const k of ["cover", "hero", "logo"]) checkUrl(where, k, g[k], true);
   checkConditions(where, g);
 
-  if (g.report && !fs.existsSync(path.join(root, "reports", `${g.id}.md`))) errors.push(`${where}: report=true, но нет reports/${g.id}.md`);
   if (g.status === "completed" && !g.finished) warnings.push(`${where}: пройдена, но нет даты finished`);
   if (g.status === "in_progress" && !g.started) warnings.push(`${where}: в процессе, но нет даты started`);
   if (!g.cover && !g.steamAppId) warnings.push(`${where}: нет обложки (cover или steamAppId)`);
@@ -236,16 +235,6 @@ for (const f of fs.existsSync(path.join(root, "data", "conditions")) ? fs.readdi
 if (FIX && fixed) {
   fs.writeFileSync(path.join(root, "data/games.json"), JSON.stringify(data, null, 2) + "\n");
   console.log(`исправлено goals у ${fixed} игр`);
-}
-
-for (const f of fs.readdirSync(path.join(root, "reports"))) {
-  if (!f.endsWith(".md") || f.startsWith("_")) continue;
-  const id = f.slice(0, -3);
-  const g = (data.games ?? []).find((x) => x.id === id);
-  if (!g) warnings.push(`reports/${f}: нет игры с таким id`);
-  else if (!g.report) warnings.push(`reports/${f}: файл есть, но у игры report не true`);
-  const md = fs.readFileSync(path.join(root, "reports", f), "utf8");
-  for (const m of md.matchAll(/!\[[^\]]*\]\((\S+?)(?:\s+"[^"]*")?\)/g)) images.set(m[1], `reports/${f}`);
 }
 
 async function checkImages() {
@@ -297,6 +286,6 @@ async function checkFonts() {
   if (errors.length) process.exit(1);
   const count = (s) => data.games.filter((g) => g.status === s).length;
   console.log(
-    `✓ OK: ${data.games.length} игр (пройдено ${count("completed")}, в процессе ${count("in_progress")}, в планах ${count("planned")}, брошено ${count("dropped")})`,
+    `✓ OK: ${data.games.length} игр (закрыто ${count("completed")}, в процессе ${count("in_progress")}, в планах ${count("planned")})`,
   );
 })();

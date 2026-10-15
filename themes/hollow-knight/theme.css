@@ -1,35 +1,165 @@
 /* Hollow Knight — «Дневник Халлоунеста»: бледный свет душ на тёмной синеве, филигрань, пещера на фоне.
    Ассеты (assets/*.webp) сгенерированы по assets.json. */
 
-/* ---------- карточка в списке: рамка из четырёх углов ---------- */
+/* ---------- баннер на главной: запись дневника в филигранной рамке ---------- */
 
-.card[data-game="hollow-knight"]::before {
+.gbanner[data-game="hollow-knight"] {
+  border-color: rgba(143, 180, 232, 0.22);
+  border-radius: 2px;
+  background: #060912;
+}
+
+/* рамка из четырёх углов филиграни */
+.gbanner[data-game="hollow-knight"]::before {
   content: "";
   position: absolute;
-  inset: 4px;
-  z-index: 4;
+  inset: 6px;
+  z-index: 2;
   pointer-events: none;
   background:
-    url(assets/corner.webp) top left / 64px no-repeat,
-    url(assets/corner-tr.webp) top right / 64px no-repeat,
-    url(assets/corner-bl.webp) bottom left / 64px no-repeat,
-    url(assets/corner-br.webp) bottom right / 64px no-repeat;
-  opacity: 0.7;
-  transition: opacity 0.3s, filter 0.3s;
+    url(assets/corner.webp) top left / 72px no-repeat,
+    url(assets/corner-tr.webp) top right / 72px no-repeat,
+    url(assets/corner-bl.webp) bottom left / 72px no-repeat,
+    url(assets/corner-br.webp) bottom right / 72px no-repeat;
+  opacity: 0.65;
+  transition: opacity 0.4s, filter 0.4s;
 }
 
-.card[data-game="hollow-knight"]:hover::before {
+/* мягкий свет светомухи, который разгорается при наведении */
+.gbanner[data-game="hollow-knight"]::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 34%;
+  top: 50%;
+  width: 360px;
+  height: 360px;
+  margin: -180px 0 0 -180px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(220, 235, 255, 0.35), rgba(150, 185, 255, 0.12) 40%, transparent 70%);
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.6s, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.gbanner[data-game="hollow-knight"]:hover,
+.gbanner[data-game="hollow-knight"]:focus-visible {
+  border-color: rgba(190, 210, 255, 0.55);
+  box-shadow: 0 0 0 1px rgba(170, 200, 255, 0.25), 0 22px 50px -18px rgba(120, 160, 255, 0.55);
+}
+
+.gbanner[data-game="hollow-knight"]:hover::before,
+.gbanner[data-game="hollow-knight"]:focus-visible::before {
   opacity: 1;
-  filter: drop-shadow(0 0 6px rgba(170, 200, 255, 0.8));
+  filter: drop-shadow(0 0 6px rgba(170, 200, 255, 0.85));
 }
 
-.card[data-game="hollow-knight"] .badge { top: 16px; left: 30px; }
+.gbanner[data-game="hollow-knight"]:hover::after,
+.gbanner[data-game="hollow-knight"]:focus-visible::after {
+  opacity: 1;
+  transform: none;
+}
 
-.card[data-game="hollow-knight"] .card-title::after {
-  content: " ❦";
-  color: #8fb4e8;
-  font-size: 0.8em;
-  font-variant-emoji: text;
+.gbanner[data-game="hollow-knight"] .gb-media img { filter: saturate(0.9) brightness(0.92); }
+
+.gbanner[data-game="hollow-knight"] .gb-body { padding-left: 40px; padding-right: 36px; }
+
+/* филигрань под логотипом */
+.gbanner[data-game="hollow-knight"] .gb-title::after {
+  content: "";
+  display: block;
+  width: 210px;
+  max-width: 70%;
+  height: 26px;
+  margin-top: 4px;
+  background: url(assets/divider.webp) left center / contain no-repeat;
+  opacity: 0.8;
+}
+
+.gbanner[data-game="hollow-knight"] .gb-logo { filter: drop-shadow(0 0 14px rgba(170, 200, 255, 0.45)) drop-shadow(0 4px 16px rgba(0, 0, 0, 0.7)); }
+
+.gbanner[data-game="hollow-knight"] .gb-meta span {
+  border-radius: 2px;
+  border-color: rgba(143, 180, 232, 0.25);
+  background: rgba(6, 9, 18, 0.7);
+  font-family: "Cormorant SC", serif;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.gbanner[data-game="hollow-knight"] .gb-meta .gb-status {
+  background: rgba(223, 232, 247, 0.92);
+  color: #0a0f1c;
+}
+
+.gbanner[data-game="hollow-knight"] .gb-notes { font-style: italic; font-size: 16px; }
+
+/* прогресс: сосуд души и тонкая нить света */
+.gbanner[data-game="hollow-knight"] .gb-progress {
+  position: relative;
+  border-radius: 2px;
+  border-color: rgba(143, 180, 232, 0.25);
+  background: rgba(6, 9, 18, 0.78);
+  padding-left: 76px;
+}
+
+.gbanner[data-game="hollow-knight"] .gb-progress::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 52px;
+  height: 72px;
+  transform: translateY(-50%);
+  background:
+    url(assets/vessel.webp) center / contain no-repeat,
+    radial-gradient(circle at 50% 47%, rgba(235, 242, 255, 0.95) 0 13px, rgba(170, 200, 255, 0.35) 17px, transparent 24px);
+  filter: drop-shadow(0 0 8px rgba(170, 200, 255, 0.45));
+}
+
+.gbanner[data-game="hollow-knight"] .gb-count b {
+  font-family: "Cormorant SC", serif;
+  font-weight: 600;
+  color: #f2f5fb;
+  text-shadow: 0 0 16px rgba(170, 200, 255, 0.5);
+}
+
+.gbanner[data-game="hollow-knight"] .gb-label { font-family: "Cormorant SC", serif; font-size: 13px; color: #8fb4e8; }
+
+.gbanner[data-game="hollow-knight"] .progress {
+  height: 2px;
+  background: rgba(143, 180, 232, 0.2);
+  overflow: visible;
+}
+
+.gbanner[data-game="hollow-knight"] .progress > div {
+  position: relative;
+  background: linear-gradient(90deg, rgba(143, 180, 232, 0.4), #f2f5fb);
+  box-shadow: 0 0 8px rgba(190, 210, 255, 0.8);
+}
+
+@media (max-width: 680px) {
+  .gbanner[data-game="hollow-knight"] .gb-body { padding: 24px 24px 22px; }
+  .gbanner[data-game="hollow-knight"]::after { left: 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gbanner[data-game="hollow-knight"]::before,
+  .gbanner[data-game="hollow-knight"]::after { transition: none; }
+}
+
+/* ---------- сцена главной: стартовый кадр страницы — баннер-арт и пещера под ним ---------- */
+
+.stage-layer[data-game="hollow-knight"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(assets/cavern.webp) center 70% / cover no-repeat;
+  opacity: 0.6;
+  transform: scale(1.15);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.6) 30%, #000 70%);
+  mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.6) 30%, #000 70%);
 }
 
 /* ---------- фон-пещера ---------- */
@@ -45,7 +175,6 @@
   mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.6) 30%, #000 70%);
 }
 
-html[data-game="hollow-knight"] .hk .report,
 html[data-game="hollow-knight"] .hk .side-card,
 html[data-game="hollow-knight"] .hk .neighbor {
   background: rgba(9, 13, 25, 0.82);
@@ -400,39 +529,6 @@ html[data-game="hollow-knight"] .block .sec-label { text-shadow: 0 0 18px rgba(1
 }
 
 .hk-lumafly.on { opacity: 1; }
-
-/* ---------- отчёт: буквица и цитаты с орнаментом ---------- */
-
-.hk-report > p:first-of-type::first-letter {
-  float: left;
-  padding: 6px 10px 0 0;
-  font-family: var(--t-display);
-  font-size: 3.6em;
-  line-height: 0.8;
-  color: #fff;
-  text-shadow: 0 0 14px rgba(170, 200, 255, 0.55);
-}
-
-.hk-report blockquote {
-  border: none;
-  margin: 1.4em 0;
-  text-align: center;
-  font-size: 21px;
-  font-style: italic;
-  color: #e9eef9;
-}
-
-.hk-report blockquote::before,
-.hk-report blockquote::after {
-  content: "❦";
-  display: block;
-  color: #8fb4e8;
-  font-size: 14px;
-  font-style: normal;
-  font-variant-emoji: text;
-}
-
-.hk-report blockquote::after { transform: rotate(180deg); }
 
 /* ---------- мобильная раскладка ---------- */
 

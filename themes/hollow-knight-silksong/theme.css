@@ -2,91 +2,331 @@
    Ассеты (assets/*.webp) сгенерированы по assets.json. Классы модуля — с префиксом ss-. */
 
 /* ====================================================================================
-   Карточка в списке: прошитая красной нитью рамка (стежки бегут по кругу при наведении) и игла
+   Баннер на главной: шёлковое полотно, прошитое алой нитью, в золочёных уголках.
+   Справа на нитях висит табличка с иглой и колокольчиком — как знак в шапке страницы игры.
+   Наведение/фокус: стежки бегут по кругу, табличка качается, колокольчик звенит, игла шьёт.
    ==================================================================================== */
 
-.card[data-game="hollow-knight-silksong"] {
-  --ss-st: color-mix(in srgb, var(--t-accent) 78%, transparent);
-  border-color: color-mix(in srgb, var(--t-accent) 34%, var(--t-surface));
-  background:
-    radial-gradient(120% 60% at 50% 115%, color-mix(in srgb, var(--t-accent) 16%, transparent), transparent 70%),
-    linear-gradient(180deg, var(--t-surface), color-mix(in srgb, var(--t-surface) 50%, var(--t-bg)));
+.gbanner[data-game="hollow-knight-silksong"] {
+  border-color: color-mix(in srgb, var(--t-accent-2) 26%, transparent);
+  border-radius: 2px;
 }
 
-.card[data-game="hollow-knight-silksong"]::before {
+.gbanner[data-game="hollow-knight-silksong"]:hover,
+.gbanner[data-game="hollow-knight-silksong"]:focus-visible {
+  border-color: color-mix(in srgb, var(--t-accent-2) 72%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--t-accent) 38%, transparent),
+    0 0 14px -2px color-mix(in srgb, var(--t-accent) 60%, transparent),
+    0 10px 22px -14px rgba(0, 0, 0, 0.9);
+}
+
+.gbanner[data-game="hollow-knight-silksong"]:focus-visible {
+  outline: 1px solid color-mix(in srgb, var(--t-accent-2) 85%, transparent);
+  outline-offset: 3px;
+}
+
+/* шов по краю полотна: алые стежки */
+.gbanner[data-game="hollow-knight-silksong"]::before {
   content: "";
   position: absolute;
-  inset: 5px;
-  z-index: 4;
+  inset: 9px;
+  z-index: 2;
   pointer-events: none;
   background:
-    linear-gradient(90deg, var(--ss-st) 0 7px, transparent 7px) 0 0 / 12px 1.5px repeat-x,
-    linear-gradient(90deg, var(--ss-st) 0 7px, transparent 7px) 0 100% / 12px 1.5px repeat-x,
-    linear-gradient(180deg, var(--ss-st) 0 7px, transparent 7px) 0 0 / 1.5px 12px repeat-y,
-    linear-gradient(180deg, var(--ss-st) 0 7px, transparent 7px) 100% 0 / 1.5px 12px repeat-y;
-  opacity: 0.7;
-  transition: opacity 0.3s;
+    linear-gradient(90deg, var(--t-accent) 0 8px, transparent 8px) 0 0 / 13px 1.5px repeat-x,
+    linear-gradient(90deg, var(--t-accent) 0 8px, transparent 8px) 0 100% / 13px 1.5px repeat-x,
+    linear-gradient(180deg, var(--t-accent) 0 8px, transparent 8px) 0 0 / 1.5px 13px repeat-y,
+    linear-gradient(180deg, var(--t-accent) 0 8px, transparent 8px) 100% 0 / 1.5px 13px repeat-y;
+  opacity: 0.6;
+  transition: opacity 0.35s;
 }
 
-.card[data-game="hollow-knight-silksong"]:hover::before,
-.card[data-game="hollow-knight-silksong"]:focus-visible::before { opacity: 1; }
-
-@media (prefers-reduced-motion: no-preference) {
-  .card[data-game="hollow-knight-silksong"]:hover::before,
-  .card[data-game="hollow-knight-silksong"]:focus-visible::before { animation: ss-march 0.9s linear infinite; }
-}
-
-@keyframes ss-march {
-  from { background-position: 0 0, 0 100%, 0 0, 100% 0; }
-  to { background-position: 12px 0, -12px 100%, 0 -12px, 100% 12px; }
-}
-
-/* игла, проколовшая шов между обложкой и текстом */
-.card[data-game="hollow-knight-silksong"] .card-body { position: relative; }
-
-.card[data-game="hollow-knight-silksong"] .card-body::after {
+/* золочёные уголки-филигрань */
+.gbanner[data-game="hollow-knight-silksong"]::after {
   content: "";
   position: absolute;
-  top: -15px;
-  right: 16px;
-  z-index: 5;
-  width: 86px;
-  height: 24px;
+  inset: 3px;
+  z-index: 3;
   pointer-events: none;
-  background: url(assets/needle.webp) left top / 100% auto no-repeat;
-  transform: rotate(-14deg);
-  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.7));
-  transition: transform 0.45s cubic-bezier(0.3, 0.7, 0.2, 1.3);
+  background:
+    url(assets/frame.webp) top left / 62px no-repeat,
+    url(assets/frame-tr.webp) top right / 62px no-repeat,
+    url(assets/frame-bl.webp) bottom left / 62px no-repeat,
+    url(assets/frame-br.webp) bottom right / 62px no-repeat;
+  opacity: 0.72;
+  transition: opacity 0.35s, filter 0.35s;
 }
 
-.card[data-game="hollow-knight-silksong"]:hover .card-body::after,
-.card[data-game="hollow-knight-silksong"]:focus-visible .card-body::after { transform: translateX(-10px) rotate(-14deg); }
+.gbanner[data-game="hollow-knight-silksong"]:hover::before,
+.gbanner[data-game="hollow-knight-silksong"]:focus-visible::before { opacity: 1; }
 
-.card[data-game="hollow-knight-silksong"] .card-title { padding-right: 70px; letter-spacing: 0.02em; }
+.gbanner[data-game="hollow-knight-silksong"]:hover::after,
+.gbanner[data-game="hollow-knight-silksong"]:focus-visible::after {
+  opacity: 1;
+  filter: drop-shadow(0 0 5px rgba(242, 180, 94, 0.65));
+}
 
-/* статус — алая шёлковая лента с вырезом, очередь — позолоченный ярлык */
-.card[data-game="hollow-knight-silksong"] .badge {
-  top: 14px;
-  left: 14px;
-  padding: 3px 16px 3px 10px;
+.gbanner[data-game="hollow-knight-silksong"] .gb-body { padding: 28px 34px 28px 38px; }
+
+/* название: логотип в алом ореоле, без логотипа — Cormorant Unicase */
+.gbanner[data-game="hollow-knight-silksong"] .gb-logo {
+  filter: drop-shadow(0 4px 18px rgba(12, 6, 7, 0.95)) drop-shadow(0 0 22px rgba(229, 72, 60, 0.3));
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .gb-name {
+  font-size: clamp(28px, 3.6vw, 40px);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: #fff4ee;
+  text-shadow: 0 0 22px rgba(229, 72, 60, 0.55), 0 2px 14px rgba(0, 0, 0, 0.85);
+}
+
+/* статус — алая шёлковая лента с вырезом (у закрытой — золотая), остальное — ярлыки */
+.gbanner[data-game="hollow-knight-silksong"] .gb-meta {
+  font-family: var(--t-heading);
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-variant-numeric: lining-nums;
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .gb-meta span {
   border-radius: 0;
+  border-color: color-mix(in srgb, var(--t-accent-2) 24%, transparent);
+  background: rgba(16, 7, 8, 0.74);
+  color: color-mix(in srgb, var(--t-text) 86%, var(--t-bg));
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .gb-meta .gb-status {
+  padding-right: 19px;
+  border-color: transparent;
   color: #fff3ee;
   background: linear-gradient(180deg, #d9443a, #8e1b1b);
   clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  backdrop-filter: none;
 }
 
-.card[data-game="hollow-knight-silksong"] .badge.priority {
-  left: auto;
-  right: 14px;
-  padding: 3px 10px 3px 16px;
+.gbanner.completed[data-game="hollow-knight-silksong"] .gb-meta .gb-status {
   color: #2a0d08;
   background: linear-gradient(180deg, #f8d696, #c98a2e);
-  clip-path: polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%);
   text-shadow: none;
 }
 
-.card[data-game="hollow-knight-silksong"] .note { font-style: italic; }
+.gbanner[data-game="hollow-knight-silksong"] .gb-notes {
+  font-style: italic;
+  color: color-mix(in srgb, var(--t-text) 80%, var(--t-bg));
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
+}
+
+/* прогресс — табличка в золочёной раме, подвешенная на нитях к игле; снизу колокольчик */
+.gbanner[data-game="hollow-knight-silksong"] .gb-progress {
+  position: relative;
+  gap: 4px;
+  padding: 11px 18px 12px;
+  border-radius: 0;
+  border-color: color-mix(in srgb, var(--t-accent-2) 62%, transparent);
+  background:
+    url(assets/frame.webp) left 3px top 3px / 26px no-repeat,
+    url(assets/frame-tr.webp) right 3px top 3px / 26px no-repeat,
+    url(assets/frame-bl.webp) left 3px bottom 3px / 26px no-repeat,
+    url(assets/frame-br.webp) right 3px bottom 3px / 26px no-repeat,
+    radial-gradient(120% 90% at 50% 0%, rgba(229, 72, 60, 0.26), transparent 70%),
+    linear-gradient(180deg, rgba(52, 14, 16, 0.9), rgba(18, 7, 8, 0.93));
+  box-shadow:
+    0 0 0 3px rgba(12, 6, 7, 0.85),
+    0 0 0 4px color-mix(in srgb, var(--t-accent-2) 40%, transparent),
+    0 14px 30px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  transform-origin: 50% -60px;
+}
+
+/* подвес: нить от верхней кромки → игла → две нити (Λ) к табличке */
+.gbanner[data-game="hollow-knight-silksong"] .gb-progress::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 240px;
+  pointer-events: none;
+  background:
+    url(assets/needle.webp) 50% calc(100% + 4px) / 128px auto no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 30' preserveAspectRatio='none'%3E%3Cpath d='M50 0 2 30M50 0 98 30' fill='none' stroke='%23e5483c' stroke-width='1.6' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") 50% 100% / 64% 26px no-repeat,
+    linear-gradient(90deg, #8e1b1b, #ff7a62 50%, #8e1b1b) 50% 0 / 2px calc(100% - 26px) no-repeat;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.7));
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .gb-progress::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 20px;
+  height: 37px;
+  margin: -2px 0 0 -10px;
+  pointer-events: none;
+  background: url(assets/bell.webp) center top / contain no-repeat;
+  transform-origin: 50% 0;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.75));
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .gb-count b {
+  font-family: var(--t-display);
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1;
+  color: #fff4ee;
+  text-shadow: 0 0 18px rgba(229, 72, 60, 0.75);
+  font-variant-numeric: lining-nums;
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .gb-count span {
+  font-family: var(--t-heading);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--t-accent-2);
+  font-variant-numeric: lining-nums;
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .gb-label {
+  font-family: var(--t-heading);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  color: color-mix(in srgb, var(--t-accent-2) 78%, var(--t-text));
+}
+
+/* шкала: проколы иглой, пройденное — алый стежок, на конце — игла (у закрытой — узелок) */
+.gbanner[data-game="hollow-knight-silksong"] .progress {
+  height: 4px;
+  margin: 6px 22px 3px;
+  overflow: visible;
+  border-radius: 0;
+  background: radial-gradient(circle, color-mix(in srgb, var(--t-accent-2) 50%, transparent) 0 1.2px, transparent 1.7px) 0 50% / 9px 4px repeat-x;
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .progress > div {
+  position: relative;
+  height: 2px;
+  margin-top: 1px;
+  border-radius: 0;
+  background: linear-gradient(90deg, var(--t-accent) 0 6px, transparent 6px) 0 0 / 9px 100% repeat-x;
+  filter: drop-shadow(0 0 3px rgba(229, 72, 60, 0.85));
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .progress > div::after {
+  content: "";
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: 46px;
+  height: 13px;
+  margin: -2px 0 0 -6px;
+  background: url(assets/needle.webp) left top / 100% auto no-repeat;
+}
+
+.gbanner[data-game="hollow-knight-silksong"] .progress > div[style*="width:100%"]::after {
+  width: 12px;
+  height: 17px;
+  margin: -8px 0 0 -6px;
+  background: url(assets/knot.webp) center / contain no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .gbanner[data-game="hollow-knight-silksong"]:hover::before,
+  .gbanner[data-game="hollow-knight-silksong"]:focus-visible::before { animation: ss-gb-run 0.8s linear infinite; }
+
+  .gbanner[data-game="hollow-knight-silksong"]:hover .gb-progress,
+  .gbanner[data-game="hollow-knight-silksong"]:focus-visible .gb-progress { animation: ss-gb-sway 1.7s ease-out; }
+
+  .gbanner[data-game="hollow-knight-silksong"]:hover .gb-progress::after,
+  .gbanner[data-game="hollow-knight-silksong"]:focus-visible .gb-progress::after { animation: ss-gb-ring 1.3s ease-out; }
+
+  .gbanner[data-game="hollow-knight-silksong"]:hover .progress > div::after,
+  .gbanner[data-game="hollow-knight-silksong"]:focus-visible .progress > div::after { animation: ss-gb-sew 0.9s ease-in-out infinite; }
+
+  .gbanner[data-game="hollow-knight-silksong"]:hover .progress > div[style*="width:100%"]::after,
+  .gbanner[data-game="hollow-knight-silksong"]:focus-visible .progress > div[style*="width:100%"]::after { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gbanner[data-game="hollow-knight-silksong"]::before,
+  .gbanner[data-game="hollow-knight-silksong"]::after { transition: none; }
+}
+
+/* стежки бегут по кругу: верх — вправо, правый край — вниз, низ — влево, левый — вверх */
+@keyframes ss-gb-run {
+  from { background-position: 0 0, 0 100%, 0 0, 100% 0; }
+  to { background-position: 13px 0, -13px 100%, 0 -13px, 100% 13px; }
+}
+
+@keyframes ss-gb-sway {
+  0% { transform: rotate(0); }
+  18% { transform: rotate(1.8deg); }
+  40% { transform: rotate(-1.3deg); }
+  62% { transform: rotate(0.7deg); }
+  82% { transform: rotate(-0.3deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes ss-gb-ring {
+  0% { transform: rotate(0); }
+  14% { transform: rotate(-16deg); }
+  32% { transform: rotate(13deg); }
+  50% { transform: rotate(-8deg); }
+  68% { transform: rotate(5deg); }
+  86% { transform: rotate(-2deg); }
+  100% { transform: rotate(0); }
+}
+
+@keyframes ss-gb-sew {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+/* телефон: табличка под текстом — игла продета через её верхний край, колокольчик убираем */
+@media (max-width: 680px) {
+  .gbanner[data-game="hollow-knight-silksong"] .gb-body { padding: 28px 24px 24px; }
+  .gbanner[data-game="hollow-knight-silksong"]::after { background-size: 46px; }
+  .gbanner[data-game="hollow-knight-silksong"] .gb-progress { text-align: left; transform-origin: 50% 0; }
+  .gbanner[data-game="hollow-knight-silksong"] .progress { margin: 6px 22px 3px 0; }
+
+  .gbanner[data-game="hollow-knight-silksong"] .gb-progress::before {
+    left: auto;
+    right: 42px;
+    bottom: auto;
+    top: -4px;
+    width: 100px;
+    height: 28px;
+    background: url(assets/needle.webp) 0 0 / 100% auto no-repeat;
+  }
+
+  .gbanner[data-game="hollow-knight-silksong"] .gb-progress::after { display: none; }
+}
+
+/* ====================================================================================
+   Сцена главной: стартовый кадр страницы — баннер-арт и цитадель под ним (как .ss-citadel)
+   ==================================================================================== */
+
+.stage-layer[data-game="hollow-knight-silksong"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(assets/citadel.webp) center 30% / cover no-repeat;
+  opacity: 0.5;
+  transform: scale(1.12);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 30%, #000 75%);
+  mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 30%, #000 75%);
+}
+
+/* на узком экране шапка страницы выше (min-height под знак с иглой) — кадр сцены такой же */
+@media (max-width: 700px) {
+  .stage-layer[data-game="hollow-knight-silksong"] .stage-hero { height: max(var(--hero-h), 450px); }
+}
 
 /* ====================================================================================
    Страница: фон-цитадель и шёлковые «заплатки» вместо плоских блоков

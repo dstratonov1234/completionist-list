@@ -5,7 +5,6 @@
       "id": "hollow-knight",
       "demo": true,
       "status": "completed",
-      "platform": "PC",
       "title": "Hollow Knight",
       "steamAppId": 367520,
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/3c3489495136b26b34f8a9543c7f5645b99d388c/header.jpg",
@@ -19,7 +18,6 @@
         "Холлоу Найт",
         "Полый рыцарь"
       ],
-      "report": true,
       "theme": {
         "bg": "#060912",
         "surface": "#0e1424",
@@ -64,7 +62,6 @@
       "id": "celeste",
       "demo": true,
       "status": "completed",
-      "platform": "PC",
       "title": "Celeste",
       "steamAppId": 504230,
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/header.jpg",
@@ -73,7 +70,6 @@
       "started": "2026-06",
       "finished": "2026-07",
       "playtime": 41.5,
-      "report": true,
       "theme": {
         "bg": "#140a1f",
         "surface": "#22132f",
@@ -112,7 +108,6 @@
       "id": "elden-ring",
       "demo": true,
       "status": "in_progress",
-      "platform": "PC",
       "title": "ELDEN RING",
       "steamAppId": 1245620,
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg",
@@ -164,17 +159,15 @@
     {
       "id": "cyberpunk-2077",
       "demo": true,
-      "status": "dropped",
-      "platform": "PC",
+      "status": "in_progress",
       "title": "Cyberpunk 2077",
       "steamAppId": 1091500,
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/e9047d8ec47ae3d94bb8b464fb0fc9e9972b4ac7/header.jpg",
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/cf8cec802dc47d0f24b75f9eee135e96812e2652/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/logo.png",
       "started": "2026-03-01",
-      "finished": "2026-04-05",
       "playtime": 14,
-      "notes": "Бросил после пролога: не зашёл открытый мир. Может, вернусь ради Phantom Liberty.",
+      "notes": "Прохожу неспешно: пролог закрыт, дальше — квест Панам и Phantom Liberty.",
       "theme": {
         "bg": "#07060a",
         "surface": "#121019",
@@ -216,7 +209,6 @@
       "id": "hollow-knight-silksong",
       "demo": true,
       "status": "planned",
-      "platform": "PC",
       "title": "Hollow Knight: Silksong",
       "steamAppId": 1030300,
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/7983574d464e6559ac7e24275727f73a8bcca1f3/header.jpg",
@@ -267,7 +259,6 @@
       "demo": true,
       "title": "The Legend of Zelda: Tears of the Kingdom",
       "status": "planned",
-      "platform": "Switch",
       "priority": 2,
       "added": "2026-10-12",
       "cover": "https://static.wikia.nocookie.net/zelda_gamepedia_en/images/0/09/Key_Art_for_TotK.png/revision/latest/scale-to-width-down/800",
@@ -309,6 +300,57 @@
       "goals": {
         "done": 0,
         "total": 4
+      }
+    },
+    {
+      "id": "fire-emblem-engage",
+      "demo": true,
+      "title": "Fire Emblem Engage",
+      "status": "in_progress",
+      "started": "2026-10-15",
+      "aliases": [
+        "FE Engage",
+        "Engage",
+        "Файр Эмблем"
+      ],
+      "cover": "https://upload.wikimedia.org/wikipedia/en/f/f6/Fire_Emblem_Engage.jpg",
+      "hero": "https://cdn.fireemblemwiki.org/4/4f/FEE_Alear_m_f_01.jpg",
+      "logo": "https://cdn.fireemblemwiki.org/thumb/2/2e/FEE_English_logo_light.png/800px-FEE_English_logo_light.png",
+      "theme": {
+        "bg": "#0b0d24",
+        "surface": "#151a3d",
+        "text": "#eef0ff",
+        "accent": "#5aa2ff",
+        "accent2": "#f3c35c",
+        "fonts": [
+          "Unbounded:wght@400;600;700"
+        ],
+        "displayFont": "Unbounded",
+        "headingFont": "Unbounded",
+        "headingWeight": 700,
+        "headingSpacing": "0.02em",
+        "radius": 8,
+        "ornament": "◆",
+        "particles": {
+          "type": "stars",
+          "color": [
+            "#f3c35c",
+            "#9cc4ff",
+            "#ff6b81"
+          ],
+          "density": 0.6
+        },
+        "textures": [
+          "glow",
+          "vignette"
+        ],
+        "heroPosition": "center 25%",
+        "css": true,
+        "js": true
+      },
+      "goals": {
+        "done": 0,
+        "total": 30
       }
     }
   ]

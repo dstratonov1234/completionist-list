@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Completionist List</title>
-  <meta name="description" content="Мой список игр: пройдено на 100%, в процессе и в планах.">
+  <meta name="description" content="Мой список закрытия игр: условия закрытия, прогресс и отчёты.">
   <!-- Fandom и другие вики отдают заглушку вместо картинки, если видят чужой Referer -->
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#0c0e13">
@@ -15,34 +15,19 @@
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <div id="list-view">
-    <header class="site-header" id="site-header">
-      <div class="wrap">
-        <div class="brand">
-          <h1>Completionist&nbsp;List</h1>
-          <p class="tagline">Игры, которые закрыты навсегда, — и те, что ещё впереди.</p>
-        </div>
-        <dl class="stats" id="stats"></dl>
-      </div>
-    </header>
+  <!-- Сцена: фон главной меняется на стартовый кадр игры под курсором; через неё идёт бесшовный вход в игру -->
+  <div id="stage" aria-hidden="true"></div>
 
-    <main class="wrap">
-      <p class="demo-note" id="demo-note" hidden>
-        <b>Демо-режим.</b> Здесь пока пробные игры — чтобы показать, как выглядит сайт. Скоро их заменит настоящий список.
-      </p>
-      <div class="toolbar">
-        <nav class="tabs" id="tabs" aria-label="Статусы"></nav>
-        <input class="search" id="search" type="search" placeholder="Поиск игры…" aria-label="Поиск игры" autocomplete="off">
-      </div>
-      <section id="list" class="grid" aria-live="polite"></section>
-    </main>
-  </div>
+  <!-- Главная: только поиск и список -->
+  <main id="list-view" class="wrap">
+    <h1 class="sr-only">Completionist List</h1>
+    <div class="toolbar">
+      <input class="search" id="search" type="search" placeholder="Поиск игры…" aria-label="Поиск игры" autocomplete="off">
+    </div>
+    <div id="list" class="game-list"></div>
+  </main>
 
   <article id="game-view" class="game-view" hidden></article>
-
-  <footer class="site-footer wrap">
-    <span id="updated"></span>
-  </footer>
 
   <dialog id="lightbox" class="lightbox" aria-label="Просмотр изображения">
     <button class="lb-btn lb-close" type="button" aria-label="Закрыть">×</button>
@@ -54,8 +39,6 @@
     <button class="lb-btn lb-next" type="button" aria-label="Следующее">›</button>
   </dialog>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
   <script src="assets/fx.js"></script>
   <script src="assets/app.js"></script>
 </body>

@@ -17,7 +17,6 @@
       vessel();
       lumafly();
 
-      ctx.reportReady.then(() => root.querySelector(".report")?.classList.add("hk-report"));
       return () => root.classList.remove("hk");
 
       // ---------- заставка области, как при входе в новую локацию ----------

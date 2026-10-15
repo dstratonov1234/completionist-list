@@ -16,71 +16,389 @@ html[data-game="zelda-totk"] {
   --zt-line: rgba(31, 124, 134, 0.3);
 }
 
-/* ======================= карточка в списке ======================= */
+/* ======================= баннер на главной ======================= */
+/* Главная тёмная, а этот баннер — светлый лист журнала странника: пергамент, бирюзовая рамка из глифов
+   (на наведении загорается, и по ней бежит огонёк — как по рамке планшета на странице игры), название
+   с глиф-разделителем, облачная гряда и парящий остров, прогресс — мини-планшет с экраном-пергаментом. */
 
-.card[data-game="zelda-totk"] {
-  border-color: rgba(31, 124, 134, 0.38);
-  background: linear-gradient(180deg, #fbf9f1, #f2eedf);
+.gbanner[data-game="zelda-totk"] {
+  --zt-teal: #1f7c86;
+  --zt-teal-deep: #155a62;
+  --zt-glow: #52d8e0;
+  --zt-ink: #1d2b2b;
+  --zt-ink-soft: #3d4b4b;
+  --zt-muted: #5d6b6a;
+  --zt-gold: #b8892a;
+  border-color: rgba(82, 216, 224, 0.3);
+  border-radius: 16px;
+  background: linear-gradient(180deg, #fbf9f1, #f1efe4);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.6);
 }
 
-.card[data-game="zelda-totk"]::before {
+.gbanner[data-game="zelda-totk"]:hover,
+.gbanner[data-game="zelda-totk"]:focus-visible {
+  border-color: var(--zt-glow);
+  box-shadow:
+    0 0 0 1px rgba(82, 216, 224, 0.55),
+    0 0 18px -3px rgba(82, 216, 224, 0.65),
+    0 18px 30px -20px rgba(0, 0, 0, 0.8);
+}
+
+.gbanner[data-game="zelda-totk"]:focus-visible {
+  box-shadow:
+    0 0 0 2px #f0feff,
+    0 0 0 4px var(--zt-glow),
+    0 0 14px -2px rgba(82, 216, 224, 0.6);
+}
+
+/* рамка из глифов: углы-спирали и тонкая линия */
+.gbanner[data-game="zelda-totk"]::before {
   content: "";
   position: absolute;
-  inset: 6px;
-  z-index: 4;
+  inset: 7px;
+  z-index: 1;
   pointer-events: none;
-  border: 1px solid rgba(31, 124, 134, 0.2);
-  border-radius: 4px;
+  border: 1px solid rgba(31, 124, 134, 0.22);
+  border-radius: 10px;
   background:
-    url(assets/glyph-corner.webp) top left / 50px no-repeat,
-    url(assets/glyph-corner-tr.webp) top right / 50px no-repeat,
-    url(assets/glyph-corner-bl.webp) bottom left / 50px no-repeat,
-    url(assets/glyph-corner-br.webp) bottom right / 50px no-repeat;
-  opacity: 0.62;
-  transition: opacity 0.3s, filter 0.3s, border-color 0.3s;
+    url(assets/glyph-corner.webp) top left / 46px no-repeat,
+    url(assets/glyph-corner-tr.webp) top right / 46px no-repeat,
+    url(assets/glyph-corner-bl.webp) bottom left / 46px no-repeat,
+    url(assets/glyph-corner-br.webp) bottom right / 46px no-repeat;
+  opacity: 0.6;
+  transition: opacity 0.35s, border-color 0.35s, filter 0.35s;
 }
 
-.card[data-game="zelda-totk"]:hover,
-.card[data-game="zelda-totk"]:focus-visible {
-  border-color: #1f7c86;
-  box-shadow: 0 0 0 1px rgba(82, 216, 224, 0.45), 0 0 28px -6px rgba(82, 216, 224, 0.6), 0 18px 36px -18px rgba(29, 43, 43, 0.5);
-}
-
-.card[data-game="zelda-totk"]:hover::before,
-.card[data-game="zelda-totk"]:focus-visible::before {
+.gbanner[data-game="zelda-totk"]:hover::before,
+.gbanner[data-game="zelda-totk"]:focus-visible::before {
   opacity: 1;
-  border-color: rgba(82, 216, 224, 0.55);
-  filter: drop-shadow(0 0 4px rgba(82, 216, 224, 0.9));
+  border-color: rgba(82, 216, 224, 0.6);
+  filter: drop-shadow(0 0 3px rgba(82, 216, 224, 0.85));
 }
 
-.card[data-game="zelda-totk"] .cover::after {
+/* огонёк, бегущий по рамке (только при наведении и фокусе) */
+.gbanner[data-game="zelda-totk"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  display: none;
+  width: 84px;
+  height: 3px;
+  border-radius: 3px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(82, 216, 224, 0.9) 55%, #fff);
+  box-shadow: 0 0 10px 2px rgba(82, 216, 224, 0.8), 0 0 3px #fff;
+  offset-path: inset(7px round 10px);
+  offset-rotate: auto;
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+/* облачная гряда внизу — как на баннере страницы игры */
+.gbanner[data-game="zelda-totk"] .gb-media::before {
+  content: "";
+  position: absolute;
+  left: -6%;
+  right: -6%;
+  bottom: -12px;
+  height: 46%;
+  z-index: 1;
+  pointer-events: none;
   background:
-    url(assets/glyph-divider.webp) center bottom 4px / auto 18px no-repeat,
-    linear-gradient(to top, #fbf9f1, transparent);
+    url(assets/cloud.webp) 0% 100% / auto 70% no-repeat,
+    url(assets/cloud.webp) 31% 140% / auto 96% no-repeat,
+    url(assets/cloud.webp) 63% 110% / auto 72% no-repeat,
+    url(assets/cloud.webp) 97% 135% / auto 100% no-repeat;
+  opacity: 0.85;
+  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+  transition: transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-.card[data-game="zelda-totk"] .badge {
-  top: 14px;
-  left: 16px;
-  border: 1px solid rgba(31, 124, 134, 0.5);
-  background: rgba(251, 249, 241, 0.94);
-  color: #155a62;
-  box-shadow: 0 2px 10px rgba(29, 43, 43, 0.22);
+/* парящий остров в небе арта — между названием и прогрессом */
+.gbanner[data-game="zelda-totk"] .gb-body::before {
+  content: "";
+  position: absolute;
+  right: clamp(272px, 30%, 420px);
+  top: 16px;
+  z-index: -1;
+  width: 46px;
+  aspect-ratio: 640 / 829;
+  pointer-events: none;
+  background: url(assets/island.webp) center / 100% 100% no-repeat;
+  opacity: 0.92;
+  filter: saturate(0.7) brightness(1.05) contrast(0.9);
 }
 
-.card[data-game="zelda-totk"] .badge.priority {
-  left: auto;
-  right: 16px;
-  border-color: rgba(255, 251, 233, 0.5);
-  background: linear-gradient(180deg, #c99a35, #a5781f);
-  color: #fffbe9;
+.gbanner[data-game="zelda-totk"] .gb-name {
+  max-width: 660px;
+  font-size: clamp(24px, 3.2vw, 33px);
+  line-height: 1.12;
+  color: var(--zt-ink);
+  text-shadow: 0 0 18px rgba(251, 249, 241, 0.95), 0 0 2px rgba(251, 249, 241, 0.85);
+  transition: color 0.3s;
 }
 
-.card[data-game="zelda-totk"] .card-title { color: #1d2b2b; transition: color 0.25s; }
-.card[data-game="zelda-totk"]:hover .card-title { color: #155a62; }
-.card[data-game="zelda-totk"] .card-goals { color: #155a62; }
-.card[data-game="zelda-totk"] .card-goals > span::before { content: "◈ "; color: #1f7c86; font-variant-emoji: text; }
-.card[data-game="zelda-totk"] .progress > div { background: linear-gradient(90deg, #1f7c86, #52d8e0); }
+.gbanner[data-game="zelda-totk"]:hover .gb-name,
+.gbanner[data-game="zelda-totk"]:focus-visible .gb-name { color: var(--zt-teal-deep); }
+
+/* глиф-разделитель под названием; при наведении по нему пробегает свет */
+.gbanner[data-game="zelda-totk"] .gb-title::after {
+  content: "";
+  display: block;
+  width: min(300px, 72%);
+  aspect-ratio: 1024 / 143;
+  margin: -2px 0 -12px -8px;
+  background:
+    linear-gradient(100deg, transparent 42%, rgba(240, 254, 255, 0.95) 50%, transparent 58%) 100% 0 / 300% 100% no-repeat,
+    url(assets/glyph-divider.webp) center / 100% 100% no-repeat;
+  -webkit-mask: url(assets/glyph-divider.webp) center / 100% 100% no-repeat;
+  mask: url(assets/glyph-divider.webp) center / 100% 100% no-repeat;
+  opacity: 0.85;
+  transition: opacity 0.3s, filter 0.3s;
+}
+
+.gbanner[data-game="zelda-totk"]:hover .gb-title::after,
+.gbanner[data-game="zelda-totk"]:focus-visible .gb-title::after {
+  opacity: 1;
+  filter: brightness(1.08) saturate(1.3);
+}
+
+.gbanner[data-game="zelda-totk"] .gb-meta { color: var(--zt-ink-soft); }
+
+.gbanner[data-game="zelda-totk"] .gb-meta span {
+  border-color: rgba(31, 124, 134, 0.24);
+  background: rgba(255, 253, 247, 0.88);
+  color: var(--zt-ink-soft);
+  backdrop-filter: none;
+}
+
+/* статус — как плашка на баннере страницы игры */
+.gbanner[data-game="zelda-totk"] .gb-meta .gb-status {
+  border-color: rgba(31, 124, 134, 0.55);
+  background: #fffdf7;
+  color: var(--zt-teal-deep);
+  font-variant-emoji: text;
+  box-shadow: 0 0 0 3px rgba(82, 216, 224, 0.16);
+}
+
+.gbanner[data-game="zelda-totk"].in_progress .gb-status {
+  border-color: var(--zt-teal);
+  background: linear-gradient(180deg, #e6f7f5, #d3efec);
+  box-shadow: 0 0 0 3px rgba(82, 216, 224, 0.2), 0 0 12px rgba(82, 216, 224, 0.45);
+}
+
+.gbanner[data-game="zelda-totk"].completed .gb-status {
+  border-color: var(--zt-teal-deep);
+  background: linear-gradient(180deg, #1f7c86, #155a62);
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(184, 137, 42, 0.28), 0 0 12px rgba(82, 216, 224, 0.5);
+}
+
+.gbanner[data-game="zelda-totk"] .gb-notes {
+  padding-left: 11px;
+  border-left: 2px solid var(--zt-gold);
+  color: var(--zt-ink-soft);
+}
+
+/* прогресс — мини-планшет: каменная рамка, экран-пергамент, кольцо глифов */
+.gbanner[data-game="zelda-totk"] .gb-progress {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  gap: 5px;
+  padding: 14px 18px 16px;
+  border: 5px solid transparent;
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, #fffdf7, #f4efdf) padding-box,
+    linear-gradient(180deg, #36504f, #1f3233 60%, #172526) border-box;
+  backdrop-filter: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(31, 124, 134, 0.38),
+    inset 0 2px 12px rgba(16, 28, 29, 0.18),
+    0 0 0 1px rgba(82, 216, 224, 0.22),
+    0 14px 26px -14px rgba(16, 28, 29, 0.6);
+  transition: box-shadow 0.35s;
+}
+
+.gbanner[data-game="zelda-totk"]:hover .gb-progress,
+.gbanner[data-game="zelda-totk"]:focus-visible .gb-progress {
+  box-shadow:
+    inset 0 0 0 1px rgba(31, 124, 134, 0.5),
+    inset 0 2px 12px rgba(16, 28, 29, 0.18),
+    0 0 0 1px rgba(82, 216, 224, 0.75),
+    0 0 14px rgba(82, 216, 224, 0.45),
+    0 14px 26px -14px rgba(16, 28, 29, 0.6);
+}
+
+.gbanner[data-game="zelda-totk"] .gb-progress::before {
+  content: "";
+  position: absolute;
+  left: -44px;
+  top: 50%;
+  z-index: -1;
+  width: 128px;
+  height: 128px;
+  margin-top: -64px;
+  pointer-events: none;
+  background: url(assets/glyph-ring.webp) center / contain no-repeat;
+  opacity: 0.2;
+  transition: opacity 0.4s;
+}
+
+.gbanner[data-game="zelda-totk"]:hover .gb-progress::before,
+.gbanner[data-game="zelda-totk"]:focus-visible .gb-progress::before { opacity: 0.32; }
+
+.gbanner[data-game="zelda-totk"] .gb-count b {
+  font-size: 40px;
+  font-weight: 400;
+  color: var(--zt-teal-deep);
+  text-shadow: 0 0 16px rgba(82, 216, 224, 0.45);
+}
+
+.gbanner[data-game="zelda-totk"] .gb-count span {
+  font-family: var(--t-heading);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--zt-ink-soft);
+}
+
+.gbanner[data-game="zelda-totk"] .gb-label { font-size: 11.5px; letter-spacing: 0.08em; color: var(--zt-muted); }
+
+/* дорожка — ряд погасших глифов-точек, заполнение — бирюзовая энергия */
+.gbanner[data-game="zelda-totk"] .gb-progress .progress {
+  height: 8px;
+  margin-top: 3px;
+  border-radius: 8px;
+  background:
+    radial-gradient(circle, rgba(31, 124, 134, 0.42) 1.1px, transparent 1.7px) 3px 50% / 11px 8px repeat-x,
+    rgba(29, 43, 43, 0.08);
+  box-shadow: inset 0 1px 2px rgba(29, 43, 43, 0.2);
+}
+
+.gbanner[data-game="zelda-totk"] .gb-progress .progress > div {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--zt-teal), var(--zt-glow));
+  box-shadow: 0 0 10px rgba(82, 216, 224, 0.7);
+}
+
+.gbanner[data-game="zelda-totk"] .gb-progress .progress > div::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85), transparent);
+  transform: translateX(-100%);
+}
+
+@supports (offset-path: inset(1px round 1px)) {
+  .gbanner[data-game="zelda-totk"]::after { display: block; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .gbanner[data-game="zelda-totk"]::after { animation: zt-trace 7s -1.2s linear infinite paused; }
+  .gbanner[data-game="zelda-totk"] .gb-body::before { animation: zt-bob 7s ease-in-out infinite alternate; }
+  .gbanner[data-game="zelda-totk"] .gb-progress::before { animation: zt-spin 40s linear infinite paused; }
+
+  .gbanner[data-game="zelda-totk"]:hover::after,
+  .gbanner[data-game="zelda-totk"]:focus-visible::after { opacity: 1; animation-play-state: running; }
+
+  .gbanner[data-game="zelda-totk"]:hover .gb-progress::before,
+  .gbanner[data-game="zelda-totk"]:focus-visible .gb-progress::before { animation-play-state: running; }
+
+  .gbanner[data-game="zelda-totk"]:hover .gb-media::before { transform: translate3d(-3%, 0, 0); }
+
+  .gbanner[data-game="zelda-totk"]:hover .gb-title::after,
+  .gbanner[data-game="zelda-totk"]:focus-visible .gb-title::after { animation: zt-gb-sweep 2.6s 0.15s ease-in-out infinite; }
+
+  .gbanner[data-game="zelda-totk"]:hover .gb-progress .progress > div::after,
+  .gbanner[data-game="zelda-totk"]:focus-visible .gb-progress .progress > div::after { animation: zt-gb-shimmer 2.2s 0.3s ease-in-out infinite; }
+}
+
+@keyframes zt-gb-sweep {
+  from { background-position: 100% 0, center; }
+  to { background-position: 0% 0, center; }
+}
+
+@keyframes zt-gb-shimmer {
+  to { transform: translateX(100%); }
+}
+
+@media (max-width: 680px) {
+  .gbanner[data-game="zelda-totk"]::before { inset: 5px; border-radius: 11px; background-size: 34px, 34px, 34px, 34px; }
+  .gbanner[data-game="zelda-totk"]::after { width: 52px; offset-path: inset(5px round 11px); }
+  .gbanner[data-game="zelda-totk"] .gb-body::before { display: none; }
+  .gbanner[data-game="zelda-totk"] .gb-title::after { width: min(260px, 82%); }
+  .gbanner[data-game="zelda-totk"] .gb-progress::before { left: auto; right: -44px; }
+}
+
+/* ======================= сцена за главной ======================= */
+/* Наведение на баннер показывает за списком верх страницы игры (.stage-layer). Острова и облачная гряда
+   стоят ровно там же, где их ставит theme.js (.zt-isle-*, .zt-bank), в стартовом положении, — чтобы
+   переход на страницу и обратно не прыгал. */
+
+.stage-layer[data-game="zelda-totk"] .hero-media:not(.portrait)::before,
+.stage-layer[data-game="zelda-totk"] .hero-media:not(.portrait)::after,
+.stage-layer[data-game="zelda-totk"]::after {
+  content: "";
+  position: absolute;
+  aspect-ratio: 640 / 829;
+  pointer-events: none;
+  background: url(assets/island.webp) center / 100% 100% no-repeat;
+}
+
+.stage-layer[data-game="zelda-totk"] .hero-media:not(.portrait)::before { right: 7%; top: 9%; width: clamp(78px, 10vw, 150px); }
+
+.stage-layer[data-game="zelda-totk"] .hero-media:not(.portrait)::after {
+  right: 27%;
+  top: 17%;
+  width: clamp(42px, 5vw, 76px);
+  opacity: 0.8;
+  filter: saturate(0.6) brightness(1.08) contrast(0.85);
+}
+
+/* третий остров — на слое (у .hero-media оба псевдоэлемента заняты); z-index 0 — над артом, под градиентом */
+.stage-layer[data-game="zelda-totk"]::after {
+  left: 47%;
+  top: calc(var(--hero-h) * 0.06);
+  z-index: 0;
+  width: clamp(30px, 3.2vw, 50px);
+  opacity: 0.6;
+  filter: saturate(0.6) brightness(1.08) contrast(0.85);
+}
+
+.stage-layer[data-game="zelda-totk"] .stage-hero::before {
+  content: "";
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  bottom: -5%;
+  height: 40%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.9;
+  background:
+    url(assets/cloud.webp) 0% 100% / auto 76% no-repeat,
+    url(assets/cloud.webp) 33% 130% / auto 100% no-repeat,
+    url(assets/cloud.webp) 67% 105% / auto 68% no-repeat,
+    url(assets/cloud.webp) 100% 125% / auto 96% no-repeat;
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 98%);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 98%);
+}
+
+/* гряда на странице начинает дрейф (zt-drift) с −2,5% */
+@media (prefers-reduced-motion: no-preference) {
+  .stage-layer[data-game="zelda-totk"] .stage-hero::before { transform: translate3d(-2.5%, 0, 0); }
+}
+
+@media (max-width: 680px) {
+  .stage-layer[data-game="zelda-totk"]::after { display: none; }
+  .stage-layer[data-game="zelda-totk"] .hero-media:not(.portrait)::before { right: 5%; top: 14%; }
+  .stage-layer[data-game="zelda-totk"] .hero-media:not(.portrait)::after { right: 30%; top: 20%; }
+}
 
 /* ======================= вход: облака расходятся ======================= */
 
