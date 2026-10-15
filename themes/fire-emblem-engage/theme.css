@@ -155,9 +155,6 @@ html[data-game="fire-emblem-engage"],
 }
 
 .gbanner[data-game="fire-emblem-engage"] .gb-name { font-family: "Unbounded", sans-serif; }
-
-.gbanner[data-game="fire-emblem-engage"] .gb-notes { color: var(--fe-dim); }
-
 /* прогресс — мини-шкала Engage: кольцо Эмблемы и цепочка ромбов */
 .gbanner[data-game="fire-emblem-engage"] .gb-progress {
   position: relative;
@@ -513,15 +510,6 @@ html[data-game="fire-emblem-engage"] .game-view.fe-reveal .game-layout { animati
 
 @keyframes fe-eg-card { from { opacity: 0; transform: scaleX(0.2); } }
 @keyframes fe-eg-card-in { from { opacity: 0; transform: translateY(8px); } }
-
-.fe-eg-chapter {
-  font-size: clamp(11px, 1.6vw, 14px);
-  font-weight: 600;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--fe-gold-hi);
-}
-
 .fe-eg-title {
   margin-top: 4px;
   font-size: clamp(20px, 3.6vw, 36px);
@@ -532,13 +520,6 @@ html[data-game="fire-emblem-engage"] .game-view.fe-reveal .game-layout { animati
 }
 
 .fe-eg-rule { display: block; width: min(320px, 70vw); margin: 6px auto 2px; }
-
-.fe-eg-sub {
-  font-family: var(--t-body, system-ui, sans-serif);
-  font-size: clamp(13px, 1.7vw, 16px);
-  color: var(--fe-dim);
-}
-
 /* выход: панели разлетаются, ринг и надпись тают */
 .fe-engage.fe-out .fe-eg-blue { animation: fe-eg-out-l 0.6s cubic-bezier(0.55, 0, 0.35, 1) forwards; }
 .fe-engage.fe-out .fe-eg-red { animation: fe-eg-out-r 0.6s cubic-bezier(0.55, 0, 0.35, 1) forwards; }
@@ -804,7 +785,7 @@ html[data-game="fire-emblem-engage"] .fe-hud .group-progress li.fe-clear .progre
 
 @keyframes fe-meter-glow { to { opacity: 0.65; } }
 
-/* заметка игрока и комментарии к целям — окно диалога */
+/* комментарии к целям — окно диалога */
 html[data-game="fire-emblem-engage"] .fe .fe-talk {
   position: relative;
   margin: 18px 0 0;
@@ -817,9 +798,6 @@ html[data-game="fire-emblem-engage"] .fe .fe-talk {
   color: var(--fe-text);
 }
 
-html[data-game="fire-emblem-engage"] .fe .fe-notes { margin-top: 26px; }
-
-html[data-game="fire-emblem-engage"] .fe .fe-notes::before,
 .fe-talk-name {
   position: absolute;
   top: -10px;
@@ -834,9 +812,6 @@ html[data-game="fire-emblem-engage"] .fe .fe-notes::before,
   background: linear-gradient(90deg, var(--fe-red-deep), #d42a50);
   clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
 }
-
-html[data-game="fire-emblem-engage"] .fe .fe-notes::before { content: "Заметка"; }
-
 /* ---------- нет условий ---------- */
 
 html[data-game="fire-emblem-engage"] .fe .fe-none {

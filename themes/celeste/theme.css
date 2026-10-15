@@ -184,13 +184,6 @@ html[data-game="celeste"],
 
 /* ---------- фишки: пиксельные рамки ---------- */
 
-.gbanner[data-game="celeste"] .gb-notes {
-  padding-left: 12px;
-  color: var(--t-text);
-  box-shadow: inset 4px 0 0 0 var(--t-accent);
-  text-shadow: 2px 2px 0 var(--ce-ink);
-}
-
 /* ---------- прогресс: окно счётчика клубник ---------- */
 
 .gbanner[data-game="celeste"] .gb-progress {
@@ -459,17 +452,6 @@ html[data-game="celeste"],
 
 /* на главной карточка проявляется, когда волна дошла до середины экрана */
 .ce-wipe.ce-cover .ce-wipe-card:not(.out) { animation-delay: 0.34s; }
-
-.ce-wipe-card small {
-  display: block;
-  margin-bottom: 4px;
-  font-size: clamp(14px, 2.2vw, 19px);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--t-accent-2);
-  text-shadow: 2px 2px 0 var(--ce-ink);
-}
-
 .ce-wipe-card strong {
   display: block;
   font-size: clamp(44px, 10vw, 96px);
@@ -487,12 +469,6 @@ html[data-game="celeste"],
   background: url(assets/berry.webp) center / contain no-repeat;
   animation: ce-bob 0.5s steps(1) infinite;
 }
-
-.ce-wipe-berry.ce-gold {
-  width: 84px;
-  background-image: url(assets/golden.webp);
-}
-
 @keyframes ce-card-in { from { opacity: 0; transform: translate(-50%, -38%); } }
 @keyframes ce-card-out { to { opacity: 0; transform: translate(-50%, -64%); } }
 @keyframes ce-bob { 50% { transform: translateY(-6px); } }
@@ -701,9 +677,6 @@ html[data-game="celeste"] .game-view .progress.ce-seg::after {
   inset: 0;
   background: repeating-linear-gradient(90deg, transparent 0 calc(var(--ce-seg) - 3px), var(--t-surface) calc(var(--ce-seg) - 3px) var(--ce-seg));
 }
-
-html[data-game="celeste"] .game-view .game-notes { border-left: 4px solid var(--t-accent); }
-
 /* =====================================================================
    Восхождение: гора с отметками
    ===================================================================== */

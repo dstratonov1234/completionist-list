@@ -107,28 +107,6 @@
   letter-spacing: 0.2em;
   text-shadow: 0 0 18px rgba(232, 199, 122, 0.32), 0 2px 14px #000;
 }
-
-.gbanner[data-game="elden-ring"] .gb-notes {
-  position: relative;
-  padding-left: 18px;
-  font-size: 15px;
-  font-style: italic;
-  color: #e3d5b0;
-  text-shadow: 0 1px 10px #000;
-}
-
-.gbanner[data-game="elden-ring"] .gb-notes::before {
-  content: "";
-  position: absolute;
-  left: 3px;
-  top: 0.62em;
-  width: 5px;
-  height: 5px;
-  border: 1px solid #c9a45c;
-  background: rgba(232, 199, 122, 0.3);
-  transform: rotate(45deg);
-}
-
 /* ---------- прогресс: малый сигил с числом + золотая линия пути с ромбом на острие ---------- */
 
 .gbanner[data-game="elden-ring"] .gb-progress {
@@ -464,16 +442,6 @@
   margin: 6px auto 10px;
   animation: er-rule-in 1.5s 0.55s cubic-bezier(0.3, 0.6, 0.2, 1) both;
 }
-
-.er-intro-sub {
-  font-family: var(--t-body);
-  font-style: italic;
-  font-size: clamp(16px, 2.4vw, 22px);
-  color: #dccba0;
-  text-shadow: 0 2px 16px #000;
-  animation: er-fade-in 1.3s 1s ease both;
-}
-
 .er-intro.er-out { animation: er-fade-out 0.95s ease forwards; pointer-events: none; }
 .er-intro.er-out.er-skip { animation-duration: 0.4s; }
 
@@ -684,33 +652,6 @@ html[data-game="elden-ring"] .neighbor small {
 }
 
 html[data-game="elden-ring"] .neighbor b { font-weight: 400; letter-spacing: 0.12em; color: #efe2bf; }
-
-/* заметка игрока — как надпись-послание: курсив между золотыми линиями */
-html[data-game="elden-ring"] .game-notes {
-  position: relative;
-  margin: 18px 0;
-  padding: 12px 16px 12px 34px;
-  border: none;
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-  border-image: linear-gradient(90deg, rgba(201, 164, 92, 0.6), transparent 80%) 1;
-  background: linear-gradient(90deg, rgba(201, 164, 92, 0.1), transparent 70%);
-  font-style: italic;
-  color: #e6d8b4;
-}
-
-html[data-game="elden-ring"] .game-notes::before {
-  content: "";
-  position: absolute;
-  left: 13px;
-  top: 50%;
-  width: 7px;
-  height: 7px;
-  border: 1px solid #c9a45c;
-  background: rgba(232, 199, 122, 0.3);
-  transform: translateY(-50%) rotate(45deg);
-}
-
 /* ==================== сигил прогресса ==================== */
 
 .er-sigil {

@@ -505,14 +505,10 @@
   // волна идёт вверх по склону. paint(p, fill): p — фронт волны (0…end); fill — за фронтом клетки
   // закрыты (наползание), иначе открыты (рассыпание); у фронта — кайма цветами волос.
   function buildWipe(layer, game, esc) {
-    // Подпись шторки — только прогресс по условиям, без статуса игры.
-    const { done = 0, total = 0 } = game.goals ?? {};
-    const sub = total ? `Отметок взято: ${done} из ${total}` : "";
     layer.innerHTML = `
       <canvas></canvas>
       <div class="ce-wipe-card">
-        <span class="ce-wipe-berry ${total && done === total ? "ce-gold" : ""}"></span>
-        ${sub ? `<small>${esc(sub)}</small>` : ""}
+        <span class="ce-wipe-berry"></span>
         <strong>${esc(game.title)}</strong>
       </div>`;
     const t = game.theme ?? {};

@@ -12,14 +12,12 @@
   const LIFT = { full: 2000, repeat: 1300 };
   const OUT = { full: 3000, repeat: 2400 };
 
-  // Карточка области: имя игры золотом, орнаментальная линия, подпись — только прогресс по условиям.
-  function introCard(game, assets, esc, done, total) {
-    const sub = total ? `Выполнено условий: ${done} из ${total}` : "";
+  // Карточка области: имя игры золотом и орнаментальная линия — без статуса и прогресса.
+  function introCard(game, assets, esc) {
     return `
       <div class="er-intro-card">
         <div class="er-intro-title">${esc(game.title)}</div>
         <img class="er-intro-rule" src="${assets}divider.webp" alt="">
-        ${sub ? `<div class="er-intro-sub">${esc(sub)}</div>` : ""}
       </div>`;
   }
 
@@ -43,7 +41,7 @@
         const v = from?.style.getPropertyValue(k);
         if (v) card.style.setProperty(k, v);
       }
-      card.innerHTML = introCard(t.game, t.assets, t.esc, t.game.goals?.done ?? 0, t.game.goals?.total ?? 0);
+      card.innerHTML = introCard(t.game, t.assets, t.esc);
       return t.wait(COVER_MS);
     },
 
@@ -111,7 +109,7 @@
           const veil = !seen;
           const goals = ctx.goals?.() ?? [];
           card = ctx.layer(`er-intro${veil ? " er-veil" : ""}`);
-          card.innerHTML = introCard(game, assets, esc, goals.filter((x) => x?.done).length, goals.length);
+          card.innerHTML = introCard(game, assets, esc);
           if (veil) root.classList.add("er-veiled");
           out = veil ? OUT.full : OUT.repeat;
         }

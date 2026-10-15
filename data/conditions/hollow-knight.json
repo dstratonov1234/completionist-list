@@ -22,8 +22,7 @@
           "counts": "Титры просмотрены",
           "done": true,
           "date": "2026-08-25",
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/16/Hornet_Idle.png/revision/latest",
-          "note": "Самая грустная из всех — до сих пор помню музыку"
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/16/Hornet_Idle.png/revision/latest"
         },
         {
           "n": 3,
@@ -40,7 +39,6 @@
     },
     {
       "title": "Испытания",
-      "note": "Отдельные вызовы, ради которых игра и была закрыта целиком.",
       "goals": [
         {
           "n": 4,
@@ -60,8 +58,7 @@
           "counts": "Повержен",
           "done": true,
           "date": "2026-09-02",
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/9/98/Screenshot_HK_Nightmare_King_Grimm_01.png/revision/latest/scale-to-width-down/800",
-          "note": "Попыток 40, не меньше — но этот танец того стоил"
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/9/98/Screenshot_HK_Nightmare_King_Grimm_01.png/revision/latest/scale-to-width-down/800"
         },
         {
           "n": 6,
@@ -71,7 +68,6 @@
           "done": true,
           "date": "2026-09-18",
           "image": "https://static.wikia.nocookie.net/hollowknight/images/1/13/Godhome_Arena_Absolute_Radiance_Phase_4.png/revision/latest/scale-to-width-down/800",
-          "note": "Последний удар — и руки тряслись ещё минут пять",
           "checklist": [
             {
               "items": [

@@ -3,7 +3,6 @@
   "groups": [
     {
       "title": "Полубоги",
-      "note": "Каждый великий рунный босс — отдельная цель.",
       "goals": [
         {
           "n": 1,
@@ -31,8 +30,7 @@
           "counts": "Повержен",
           "done": true,
           "date": "2026-10-12",
-          "image": "https://static.wikia.nocookie.net/eldenring/images/f/ff/ER_Concept_Art_Radahn1.jpg/revision/latest/scale-to-width-down/800",
-          "note": "Фестиваль с призывами — лучшее событие в игре"
+          "image": "https://static.wikia.nocookie.net/eldenring/images/f/ff/ER_Concept_Art_Radahn1.jpg/revision/latest/scale-to-width-down/800"
         },
         {
           "n": 4,

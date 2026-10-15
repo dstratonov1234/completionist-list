@@ -2,6 +2,7 @@
 //   node scripts/validate.js                 — структура данных
 //   node scripts/validate.js --check-images  — плюс доступность картинок (без Referer, как на сайте) и шрифтов темы
 //   node scripts/validate.js --fix           — пересчитать goals { done, total } в games.json по data/conditions
+//                                              и проставить версию кода сайта (build) в games.json и index.html
 const fs = require("fs");
 const path = require("path");
 
@@ -131,7 +132,7 @@ function checkUrl(where, key, value, isImage) {
 }
 
 // Поля «об игре» сайт больше не показывает — страница только про условия закрытия.
-const OBSOLETE = ["description", "genres", "developer", "year", "rating", "achievements", "completion", "screenshots", "links", "progress", "report", "platform"];
+const OBSOLETE = ["description", "genres", "developer", "year", "rating", "achievements", "completion", "screenshots", "links", "progress", "report", "platform", "notes"];
 const FIX = process.argv.includes("--fix");
 let fixed = 0;
 
@@ -232,9 +233,33 @@ for (const f of fs.existsSync(path.join(root, "data", "conditions")) ? fs.readdi
   if (f.endsWith(".json") && !ids.has(f.slice(0, -5))) warnings.push(`data/conditions/${f}: нет игры с таким id`);
 }
 
-if (FIX && fixed) {
+// Версия кода сайта — хэш движка и тем. Ею помечены ссылки в index.html (?v=) и файлы тем (games.json "build"),
+// чтобы после публикации браузер сразу брал новые файлы, а не старые из кэша (GitHub Pages кэширует их на 10 минут).
+function siteBuild() {
+  const files = ["assets/app.js", "assets/style.css", "assets/fx.js"];
+  for (const id of fs.readdirSync(path.join(root, "themes"))) {
+    for (const f of ["theme.js", "theme.css"]) if (fs.existsSync(path.join(root, "themes", id, f))) files.push(`themes/${id}/${f}`);
+  }
+  const hash = require("crypto").createHash("sha1");
+  for (const f of files.sort()) hash.update(f).update(fs.readFileSync(path.join(root, f), "utf8").replace(/\r\n/g, "\n"));
+  return hash.digest("hex").slice(0, 10);
+}
+const build = siteBuild();
+const indexPath = path.join(root, "index.html");
+const indexHtml = fs.readFileSync(indexPath, "utf8");
+const indexBuilt = indexHtml.replace(/(href|src)="(assets\/(?:app\.js|style\.css|fx\.js))(?:\?v=[\w-]*)?"/g, `$1="$2?v=${build}"`);
+const buildStale = data.build !== build || indexBuilt !== indexHtml;
+if (buildStale && !FIX) errors.push(`версия кода сайта (build) устарела — запусти с --fix`);
+
+if (FIX && (fixed || buildStale)) {
+  if (buildStale) {
+    const { updated, build: _old, games, ...rest } = data;
+    data = { updated, build, ...rest, games };
+    fs.writeFileSync(indexPath, indexBuilt);
+    console.log(`версия кода сайта: ${build}`);
+  }
   fs.writeFileSync(path.join(root, "data/games.json"), JSON.stringify(data, null, 2) + "\n");
-  console.log(`исправлено goals у ${fixed} игр`);
+  if (fixed) console.log(`исправлено goals у ${fixed} игр`);
 }
 
 async function checkImages() {

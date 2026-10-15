@@ -1,5 +1,6 @@
 {
   "updated": "2026-10-15",
+  "build": "8f3898442c",
   "games": [
     {
       "id": "hollow-knight",
@@ -115,7 +116,6 @@
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/logo.png",
       "started": "2026-10-01",
       "playtime": 48,
-      "notes": "Иду на все концовки: билд на кровотечение, Маления пока не по зубам.",
       "theme": {
         "bg": "#0a0b09",
         "surface": "#15150f",
@@ -167,7 +167,6 @@
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/logo.png",
       "started": "2026-03-01",
       "playtime": 14,
-      "notes": "Прохожу неспешно: пролог закрыт, дальше — квест Панам и Phantom Liberty.",
       "theme": {
         "bg": "#07060a",
         "surface": "#121019",
@@ -216,7 +215,6 @@
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/logo.png",
       "priority": 1,
       "added": "2026-10-10",
-      "notes": "Хочу пройти вслепую, без гайдов.",
       "theme": {
         "bg": "#0c0607",
         "surface": "#1b1012",

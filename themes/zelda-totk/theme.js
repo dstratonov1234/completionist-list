@@ -18,9 +18,6 @@
 
   // Небо, облака и название игры — одна и та же заставка и на главной (cover), и при прямом входе.
   function gateHtml(game, assets, esc) {
-    // подпись — только прогресс по условиям закрытия, без статуса игры
-    const { done = 0, total = 0 } = game.goals ?? {};
-    const sub = total ? `Выполнено условий: ${done} из ${total}` : "";
     return `
       <div class="zt-gate-sky"></div>
       ${CLOUDS.map(
@@ -30,7 +27,6 @@
       <div class="zt-gate-title">
         <img src="${assets}glyph-divider.webp" alt="">
         <div class="zt-gate-name">${esc(game.title)}</div>
-        ${sub ? `<div class="zt-gate-sub">${esc(sub)}</div>` : ""}
       </div>`;
   }
 

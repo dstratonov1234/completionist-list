@@ -444,7 +444,6 @@
               ${hasLogo ? imgTag(logoUrls(g), `class="gb-logo" alt="" loading="lazy"`) : ""}
               <h3 class="gb-name">${esc(g.title)}</h3>
             </div>
-            ${g.notes ? `<p class="gb-notes">${esc(g.notes)}</p>` : ""}
           </div>
           <div class="gb-progress">${progress}</div>
         </div>
@@ -751,7 +750,6 @@
       <div class="wrap game-layout ${esc(g.status)}">
         <div class="game-main">
           ${cond ? "" : `<p class="muted cond-none">Условия закрытия для этой игры ещё не добавлены.</p>`}
-          ${g.notes ? `<p class="game-notes">${esc(g.notes)}</p>` : ""}
           ${cond ? groupsHtml(g, cond) : ""}
           ${neighborsHtml(g)}
         </div>
@@ -888,7 +886,8 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       state.games = (data.games ?? []).filter((g) => g && g.id && g.title);
-      state.version = encodeURIComponent(data.updated ?? "");
+      // build — хэш кода сайта (ставит validate.js --fix): новые файлы тем не берутся из кэша
+      state.version = encodeURIComponent(data.build ?? data.updated ?? "");
       state.byId = new Map(state.games.map((g) => [g.id, g]));
     } catch (err) {
       els.list.innerHTML = `<div class="empty"><strong>Не удалось загрузить список</strong>${esc(err.message)}</div>`;

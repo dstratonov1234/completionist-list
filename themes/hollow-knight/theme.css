@@ -78,9 +78,6 @@
 }
 
 .gbanner[data-game="hollow-knight"] .gb-logo { filter: drop-shadow(0 0 14px rgba(170, 200, 255, 0.45)) drop-shadow(0 4px 16px rgba(0, 0, 0, 0.7)); }
-
-.gbanner[data-game="hollow-knight"] .gb-notes { font-style: italic; font-size: 16px; }
-
 /* прогресс: сосуд души и тонкая нить света */
 .gbanner[data-game="hollow-knight"] .gb-progress {
   position: relative;
@@ -193,15 +190,6 @@ html[data-game="hollow-knight"] .hk .neighbor {
   color: #f2f5fb;
   text-shadow: 0 0 26px rgba(160, 190, 255, 0.65), 0 2px 30px #000;
 }
-
-.hk-area-sub {
-  font-family: var(--t-body);
-  font-style: italic;
-  font-size: 19px;
-  color: #c9d5ec;
-  text-shadow: 0 2px 14px #000;
-}
-
 .hk-area-title.out { animation: hk-title-out 1.5s ease forwards; }
 
 /* вуаль: опускается ещё на главной (cover) и поднимается уже над страницей игры */

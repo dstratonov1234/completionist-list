@@ -4,13 +4,11 @@
 (() => {
   "use strict";
 
-  // Карточка области: название игры между филигранью и подпись про прогресс.
-  function areaCard(el, game, assets, esc, done, total) {
-    const sub = total ? `Условий выполнено: ${done} из ${total}` : "";
+  // Карточка области: только название игры между филигранью — без статуса и прогресса.
+  function areaCard(el, game, assets, esc) {
     el.innerHTML = `
       <img src="${assets}divider.webp" alt="">
       <div class="hk-area-name">${esc(game.title)}</div>
-      ${sub ? `<div class="hk-area-sub">${esc(sub)}</div>` : ""}
       <img class="hk-flip" src="${assets}divider.webp" alt="">`;
   }
 
@@ -18,7 +16,7 @@
     // Начало заставки ещё на главной: опускается тёмная вуаль Халлоунеста и проявляется карточка области.
     cover(t) {
       t.layer("hk-veil");
-      areaCard(t.layer("hk-area-title"), t.game, t.assets, t.esc, t.game.goals?.done ?? 0, t.game.goals?.total ?? 0);
+      areaCard(t.layer("hk-area-title"), t.game, t.assets, t.esc);
       return t.wait(650);
     },
 
@@ -43,7 +41,7 @@
         const handed = ctx.handoff?.layers.find((l) => l.classList.contains("hk-area-title"));
         if (ctx.reducedMotion && !handed) return;
         const t = handed ?? ctx.layer("hk-area-title");
-        if (!handed) areaCard(t, game, assets, esc, done, goals.length);
+        if (!handed) areaCard(t, game, assets, esc);
         const timers = [
           veil && setTimeout(() => veil.classList.add("out"), 450),
           veil && setTimeout(() => veil.remove(), 1500),

@@ -21,25 +21,9 @@
   // Когда панели сомкнулись и шов прочерчен (0.32s + 35% от 0.9s, × --k) — с этого момента экран закрыт.
   const SHUT = { full: 640, quick: 360 };
 
-  function plural(n, one, few, many) {
-    const m10 = n % 10, m100 = n % 100;
-    if (m10 === 1 && m100 !== 11) return one;
-    if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
-    return many;
-  }
-
-  // Карточка главы: «Пролог» / «Глава N» / «Эпилог» и подпись про прогресс.
-  function chapter(game, done, total) {
-    if (!total) return { label: "Пролог", sub: "Условия закрытия ещё не заданы" };
-    // только по числу выполненных условий — статус игры не называем
-    const sub = `Выполнено ${done} из ${total} ${plural(total, "условия", "условий", "условий")} закрытия`;
-    return { label: done === total ? "Эпилог" : done ? `Глава ${done}` : "Пролог", sub };
-  }
-
   // Заставка целиком лежит в одном слое; её CSS-анимации идут от момента создания, так что слой, начатый
   // на главной, просто доигрывает на странице игры.
-  function engageMarkup(o, game, assets, esc, done, total) {
-    const { label, sub } = chapter(game, done, total);
+  function engageMarkup(o, game, assets, esc) {
     o.innerHTML = `
       <div class="fe-eg-panel fe-eg-blue"><i></i></div>
       <div class="fe-eg-panel fe-eg-red"><i></i></div>
@@ -49,10 +33,8 @@
       <img class="fe-eg-ring" src="${assets}ring.webp" alt="">
       <div class="fe-eg-word" data-text="ENGAGE">ENGAGE</div>
       <div class="fe-eg-card">
-        <div class="fe-eg-chapter">${esc(label)}</div>
         <div class="fe-eg-title">${esc(game.title)}</div>
         <img class="fe-eg-rule" src="${assets}divider.webp" alt="">
-        <div class="fe-eg-sub">${esc(sub)}</div>
       </div>`;
     // Диагональ шва — та же, что у краёв панелей (64% сверху → 36% снизу), угол зависит от пропорций экрана.
     const ang = (Math.atan2(0.28 * window.innerWidth, window.innerHeight) * 180) / Math.PI;
@@ -76,7 +58,7 @@
     cover(t) {
       const seen = seenBefore();
       const o = t.layer(`fe-engage${seen ? " fe-quick" : ""}`);
-      engageMarkup(o, t.game, t.assets, t.esc, t.game.goals?.done ?? 0, t.game.goals?.total ?? 0);
+      engageMarkup(o, t.game, t.assets, t.esc);
       t.data.start = performance.now();
       t.data.seen = seen;
       return t.wait(seen ? SHUT.quick : SHUT.full);
@@ -111,16 +93,9 @@
         const start = (handed && ctx.handoff.data?.start) || performance.now();
         root.classList.add("fe-hold");
         let o = handed;
-        if (o) {
-          // Карточка собрана по счётчику из games.json — сверяем с условиями (обычно совпадает, и ничего не меняется).
-          const { label, sub } = chapter(game, done, total);
-          const ch = o.querySelector(".fe-eg-chapter");
-          const sb = o.querySelector(".fe-eg-sub");
-          if (ch && ch.textContent !== label) ch.textContent = label;
-          if (sb && sb.textContent !== sub) sb.textContent = sub;
-        } else {
+        if (!o) {
           o = ctx.layer(`fe-engage${seen ? " fe-quick" : ""}`);
-          engageMarkup(o, game, assets, esc, done, total);
+          engageMarkup(o, game, assets, esc);
         }
         let out = false;
         let gone = 0;
@@ -194,9 +169,8 @@
         });
       }
 
-      // ---------- заметка игрока — окно диалога; «условий ещё нет» — панель ----------
+      // ---------- «условий ещё нет» — панель ----------
       function notes() {
-        root.querySelector(".game-notes")?.classList.add("fe-talk", "fe-notes");
         root.querySelector(".cond-none")?.classList.add("fe-none");
       }
 

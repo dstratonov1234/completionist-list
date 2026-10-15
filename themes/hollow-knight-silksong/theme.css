@@ -81,13 +81,6 @@
   color: #fff4ee;
   text-shadow: 0 0 22px rgba(229, 72, 60, 0.55), 0 2px 14px rgba(0, 0, 0, 0.85);
 }
-
-.gbanner[data-game="hollow-knight-silksong"] .gb-notes {
-  font-style: italic;
-  color: color-mix(in srgb, var(--t-text) 80%, var(--t-bg));
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.85);
-}
-
 /* прогресс — табличка в золочёной раме, подвешенная на нитях к игле; снизу колокольчик */
 .gbanner[data-game="hollow-knight-silksong"] .gb-progress {
   position: relative;
@@ -324,32 +317,6 @@ html[data-game="hollow-knight-silksong"] .ss .side-card { backdrop-filter: blur(
 
 html[data-game="hollow-knight-silksong"] .ss .neighbor:hover,
 html[data-game="hollow-knight-silksong"] .ss .neighbor:focus-visible { outline-color: var(--t-accent-2); }
-
-/* заметка — ярлык, приколотый иглой */
-html[data-game="hollow-knight-silksong"] .ss .game-notes {
-  position: relative;
-  margin: 4px 0 14px;
-  padding: 12px 16px 12px 64px;
-  border: none;
-  background: linear-gradient(90deg, rgba(60, 16, 18, 0.7), rgba(26, 10, 11, 0.5));
-  outline: 1px dashed color-mix(in srgb, var(--t-accent) 50%, transparent);
-  outline-offset: -5px;
-  font-style: italic;
-}
-
-html[data-game="hollow-knight-silksong"] .ss .game-notes::before {
-  content: "";
-  position: absolute;
-  left: 8px;
-  top: 50%;
-  width: 52px;
-  height: 15px;
-  margin-top: -9px;
-  background: url(assets/needle.webp) left top / 100% auto no-repeat;
-  transform: rotate(-24deg);
-  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7));
-}
-
 html[data-game="hollow-knight-silksong"] .ss .hero-logo {
   filter: drop-shadow(0 4px 22px rgba(12, 6, 7, 0.95)) drop-shadow(0 0 30px rgba(229, 72, 60, 0.25));
 }
@@ -1164,6 +1131,4 @@ html[data-game="hollow-knight-silksong"] .ss .group-progress .progress > div {
   .ss-stitch, .ss-seam { width: 20px; }
   .ss-knot { width: 20px; }
   .ss-seam { top: 30px; }
-  html[data-game="hollow-knight-silksong"] .ss .game-notes { padding-left: 54px; }
-  html[data-game="hollow-knight-silksong"] .ss .game-notes::before { width: 42px; }
 }
