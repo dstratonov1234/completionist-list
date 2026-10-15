@@ -1,0 +1,4 @@
+.claude/*
+!.claude/launch.json
+.DS_Store
+Thumbs.db
