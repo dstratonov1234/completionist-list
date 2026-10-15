@@ -47,6 +47,121 @@
 
   const SITE_TITLE = "Completionist List";
 
+  // ---------- per-game themes ----------
+  // theme в games.json: цвета, шрифты, частицы и текстуры конкретной игры. Применяется к её карточке
+  // (переменные на .themed-card) и ко всей странице игры (переменные + .themed на <html>).
+
+  const COLOR_RE = /^#[0-9a-f]{3,8}$/i;
+  const FONT_RE = /^[\w\s-]+$/;
+  const TEXTURES = { front: ["vignette", "grain", "scanlines"], back: ["glow", "fog", "paper", "halftone"] };
+  const DEFAULT_THEME_COLOR = document.querySelector('meta[name="theme-color"]')?.content ?? "#0c0e13";
+  const clamp = (n, a, b) => Math.min(b, Math.max(a, n));
+
+  function luminance(hex) {
+    const h = hex.replace("#", "");
+    const full = h.length <= 4 ? [...h.slice(0, 3)].map((c) => c + c).join("") : h.slice(0, 6);
+    const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+  const fx = { front: null, back: null, vars: [] };
+
+  function themeVars(t) {
+    if (!t || ![t.bg, t.surface, t.text, t.accent].every((c) => COLOR_RE.test(c ?? ""))) return null;
+    const sans = "Inter, system-ui, sans-serif";
+    const font = (name) => (FONT_RE.test(name ?? "") ? `'${name}', ${sans}` : sans);
+    const radius = clamp(Number(t.radius ?? 14) || 0, 0, 28);
+    return {
+      "--t-scheme": luminance(t.bg) < 0.35 ? "dark" : "light",
+      "--t-radius-pill": radius < 8 ? `${radius}px` : "999px",
+      "--t-bg": t.bg,
+      "--t-surface": t.surface,
+      "--t-text": t.text,
+      "--t-accent": t.accent,
+      "--t-accent-2": COLOR_RE.test(t.accent2 ?? "") ? t.accent2 : t.accent,
+      "--t-display": font(t.displayFont ?? t.headingFont),
+      "--t-heading": font(t.headingFont),
+      "--t-body": font(t.bodyFont),
+      "--t-body-size": `${clamp(Number(t.bodySize) || 15, 13, 20)}px`,
+      "--t-radius": `${radius}px`,
+      "--t-heading-case": t.headingCase === "uppercase" ? "uppercase" : "none",
+      "--t-heading-weight": String(clamp(Number(t.headingWeight) || 700, 300, 900)),
+      "--t-heading-spacing": /^-?\d*\.?\d+em$/.test(t.headingSpacing ?? "") ? t.headingSpacing : "0em",
+      "--t-hero-pos": /^[\w\s%.-]+$/.test(t.heroPosition ?? "") ? t.heroPosition : "center 30%",
+    };
+  }
+
+  const styleAttr = (vars) => (vars ? Object.entries(vars).map(([k, v]) => `${k}:${v}`).join(";") : "");
+
+  function loadStylesheet(href) {
+    if (document.querySelector(`link[data-src="${CSS.escape(href)}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.dataset.src = href;
+    document.head.append(link);
+  }
+
+  // Шрифты всех тем и их собственные css грузятся сразу: карточки в списке тоже оформлены.
+  function loadThemeAssets(games) {
+    for (const g of games) {
+      if (!themeVars(g.theme)) continue;
+      for (const spec of g.theme.fonts ?? []) {
+        if (/^[\w\s:@;,.+-]+$/.test(spec)) loadStylesheet(`https://fonts.googleapis.com/css2?family=${spec.trim().replace(/ /g, "+")}&display=swap`);
+      }
+      if (g.theme.css === true) loadStylesheet(`themes/${encodeURIComponent(g.id)}.css`);
+    }
+  }
+
+  function clearPageTheme() {
+    const root = document.documentElement;
+    root.classList.remove("themed");
+    delete root.dataset.game;
+    for (const k of fx.vars) root.style.removeProperty(k);
+    fx.vars = [];
+    fx.front?.remove();
+    fx.back?.remove();
+    fx.front = fx.back = null;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", DEFAULT_THEME_COLOR);
+    window.GameFX?.stop();
+  }
+
+  function fxLayer(kind, names) {
+    if (!names.length) return null;
+    const el = document.createElement("div");
+    el.className = `fx-${kind}`;
+    el.setAttribute("aria-hidden", "true");
+    el.innerHTML = names.map((n) => `<i class="tx-${n}"></i>`).join("");
+    document.body.append(el);
+    return el;
+  }
+
+  function applyPageTheme(g) {
+    clearPageTheme();
+    const root = document.documentElement;
+    root.dataset.game = g.id;
+    const vars = themeVars(g.theme);
+    if (!vars) return;
+    root.classList.add("themed");
+    for (const [k, v] of Object.entries(vars)) root.style.setProperty(k, v);
+    fx.vars = Object.keys(vars);
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", g.theme.bg);
+
+    const textures = [].concat(g.theme.textures ?? []);
+    fx.back = fxLayer("back", textures.filter((x) => TEXTURES.back.includes(x)));
+    fx.front = fxLayer("front", textures.filter((x) => TEXTURES.front.includes(x)));
+
+    const p = typeof g.theme.particles === "string" ? { type: g.theme.particles } : g.theme.particles;
+    if (p?.type) window.GameFX?.start({ ...p, color: p.color ?? g.theme.accent });
+  }
+
+  // Заголовок секции страницы игры; тема может заменить иконку (ornament) и название (sections.<key>).
+  function sectionHead(g, key, label, icon, count) {
+    const custom = g.theme?.sections?.[key] ?? {};
+    const shownIcon = custom.icon ?? (themeVars(g.theme) && g.theme.ornament) ?? icon;
+    const countHtml = count != null ? ` <span class="block-count">${esc(count)}</span>` : "";
+    return `<h2><span class="sec-icon">${esc(shownIcon)}</span><span class="sec-label">${esc(custom.label ?? label)}</span>${countHtml}</h2>`;
+  }
+
   // ---------- helpers ----------
 
   const esc = (s) =>
@@ -287,9 +402,10 @@
     const completion = g.status === "completed" && g.completion ? `<div class="completion-note">${esc(g.completion)}</div>` : "";
     const note = g.notes ? `<div class="note">${esc(g.notes)}</div>` : "";
     const footer = g.report ? `<div class="card-footer">Читать отчёт →</div>` : "";
+    const vars = themeVars(g.theme);
 
     return `
-      <a class="card ${esc(g.status)}" href="#/game/${encodeURIComponent(g.id)}">
+      <a class="card ${esc(g.status)} ${vars ? "themed-card" : ""}" data-game="${esc(g.id)}" style="${esc(styleAttr(vars))}" href="#/game/${encodeURIComponent(g.id)}">
         <div class="cover">${coverHtml(g)}<span class="badge">${s.badge}</span>${priority}</div>
         <div class="card-body">
           <h3 class="card-title">${esc(g.title)}</h3>
@@ -418,7 +534,7 @@
           t.layout === "list"
             ? `<div class="ach-list" data-gallery>${items.map(achievementRow).join("")}</div>`
             : `<div class="goal-grid" data-gallery>${items.map((x) => goalCard(x, type)).join("")}</div>`;
-        return `<section class="block"><h2>${t.icon} ${t.label} <span class="block-count">${count}</span></h2>${body}</section>`;
+        return `<section class="block">${sectionHead(g, type, t.label, t.icon, count)}${body}</section>`;
       })
       .join("");
   }
@@ -428,7 +544,7 @@
     if (!shots.length) return "";
     return `
       <section class="block">
-        <h2>🖼 Скриншоты</h2>
+        ${sectionHead(g, "screenshots", "Скриншоты", "🖼")}
         <div class="shots" data-gallery>
           ${shots.map((u, i) => `<button class="shot" type="button">${imgTag([u], `alt="Скриншот ${i + 1}" loading="lazy" data-zoom data-caption="${esc(g.title)}"`)}</button>`).join("")}
         </div>
@@ -520,7 +636,7 @@
           ${g.notes ? `<p class="game-notes">${esc(g.notes)}</p>` : ""}
           ${
             g.report || g.status === "completed"
-              ? `<section class="block"><h2>📝 Отчёт</h2><div class="report" id="report" data-gallery>${
+              ? `<section class="block">${sectionHead(g, "report", "Отчёт", "📝")}<div class="report" id="report" data-gallery>${
                   g.report ? `<p class="muted">Загружаю отчёт…</p>` : `<p class="muted">Отчёт пока не добавлен.</p>`
                 }</div></section>`
               : ""
@@ -630,6 +746,7 @@
 
   function showList() {
     const wasGame = !els.gameView.hidden;
+    clearPageTheme();
     els.gameView.hidden = true;
     els.gameView.innerHTML = "";
     els.listView.hidden = false;
@@ -644,6 +761,7 @@
     els.listView.hidden = true;
     els.gameView.hidden = false;
     document.title = `${g.title} — ${SITE_TITLE}`;
+    applyPageTheme(g);
     renderGame(g);
     window.scrollTo(0, 0);
   }
@@ -686,6 +804,7 @@
       els.list.innerHTML = `<div class="empty"><strong>Не удалось загрузить список</strong>${esc(err.message)}</div>`;
       return;
     }
+    loadThemeAssets(state.games);
     renderStats();
     renderHeaderArt();
     route();
