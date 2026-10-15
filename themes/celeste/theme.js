@@ -2,7 +2,8 @@
 // Все цели — отметки на тропе вверх по пиксельной горе (выполненные — с флагом, впереди — пустые);
 // выбор отметки открывает её «открытку» с маркой и штемпелем; общий прогресс — высота подъёма
 // (кристальное сердце на тропе, мини-гора в боковой панели), на вершине ждёт золотая клубника.
-// Вход — пиксельная шторка, рассыпающаяся вверх по склону; фон — ночное пиксельное небо с горами;
+// Вход — пиксельная шторка: по клику на баннер она наползает вверх по склону ещё на главной (cover),
+// а на странице игры рассыпается дальше вверх по склону; фон — ночное пиксельное небо с горами;
 // курсор оставляет след рывка цветами волос (быстро — синий «рывок»), клик — пиксельный взрыв.
 // Один rAF-цикл на всё; при prefers-reduced-motion — без анимаций и курсорных эффектов.
 (() => {
@@ -10,13 +11,20 @@
 
   const HAIR = { red: "#d6455e", pink: "#ff6f91", blue: "#5fcde4", gold: "#ffd36e", snow: "#fff4fb" };
   const HEX = /^#[0-9a-f]{6}$/i;
+  const COLOR = /^#[0-9a-f]{3,8}$/i;
+  const FONT = /^[\w\s-]+$/;
+
+  // Шторка: наползает за FILL с, держит карточку HOLD с и рассыпается за DUR с; фронт идёт шагами по 1/24.
+  const FILL = 0.65;
+  const DUR = 0.8;
+  const HOLD = { direct: 0.5, handoff: 0.3 };
+  const STEPS = 24;
 
   // Подзаголовок шторки — в метафоре горы, по статусу игры.
   const SUMMIT = {
     completed: "Вершина покорена",
     in_progress: "Восхождение продолжается",
     planned: "У подножия горы",
-    dropped: "Привал на склоне",
   };
 
   const FIELDS = [
@@ -27,6 +35,43 @@
   ];
 
   GameThemes.register("celeste", {
+    // Начало входа ещё на главной: по клику шторка наползает вверх по склону поверх гаснущего списка,
+    // в середине проявляется карточка с названием. Promise выполняется, когда экран закрыт целиком;
+    // дальше ту же шторку (t.data.wipe) рассыпает page().
+    cover(t) {
+      const w = buildWipe(t.layer("ce-wipe ce-cover"), t.game, t.esc);
+      if (!w) return t.wait(450);
+      t.data.wipe = w;
+      return new Promise((resolve) => {
+        let t0 = null;
+        let lastStep = -1;
+        let over = false;
+        const finish = (full) => {
+          if (over) return;
+          over = true;
+          clearTimeout(fallback);
+          if (full) w.paint(w.end, true);
+          resolve();
+        };
+        // Страховка: если кадры не идут (вкладка в фоне), экран всё равно закрывается вовремя.
+        const fallback = setTimeout(() => finish(true), FILL * 1000 + 300);
+        const tick = (now) => {
+          if (over) return;
+          if (!w.layer.isConnected) return finish(false);
+          t0 ??= now;
+          const p = ((now - t0) / 1000 / FILL) * w.end;
+          if (p >= w.end) return finish(true);
+          const step = Math.floor(p * STEPS);
+          if (step !== lastStep) {
+            lastStep = step;
+            w.paint(step / STEPS, true);
+          }
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    },
+
     page(ctx) {
       const { root, game, esc, assets } = ctx;
       root.classList.add("ce");
@@ -41,7 +86,6 @@
       const tickers = [sky(ctx), entrance(ctx), dash(ctx)].filter(Boolean);
       if (tickers.length) ctx.loop((now, dt) => tickers.forEach((t) => t(now, dt)));
 
-      ctx.reportReady?.then?.(() => root.querySelector(".report")?.classList.add("ce-report"));
       return () => {
         undo.reverse().forEach((fn) => fn());
         root.classList.remove("ce");
@@ -96,8 +140,7 @@
             <article class="ce-postcard" id="ce-postcard" role="tabpanel" data-gallery tabindex="-1"></article>
           </div>`;
 
-        const firstGroup = ctx.groups()[0];
-        const anchor = firstGroup ?? ctx.section("closing") ?? ctx.section("report") ?? main.querySelector(".neighbors");
+        const anchor = ctx.groups()[0] ?? main.querySelector(".neighbors");
         anchor ? anchor.before(sec) : main.append(sec);
         const hidden = ctx.groups();
         hidden.forEach((g) => g.classList.add("ce-gone"));
@@ -286,12 +329,9 @@
         });
       }
 
-      // ---------- полоски прогресса — по сегменту на цель ----------
+      // ---------- полоски прогресса групп — по сегменту на цель ----------
       function segmentBars(ctx) {
         const bars = [];
-        const all = collect(ctx.conditions).length;
-        const sum = root.querySelector(".cond-summary .progress");
-        if (sum && all) bars.push([sum, all]);
         const groups = ctx.conditions?.groups ?? [];
         ctx.el.side?.querySelectorAll(".group-progress li").forEach((li) => {
           const a = li.querySelector("[data-jump]");
@@ -338,73 +378,21 @@
       }
 
       // ---------- вход: пиксельная шторка с названием, рассыпается вверх по склону ----------
+      // С главной шторка уже закрывает экран (cover → ctx.handoff): рассыпаем её же.
+      // Прямой заход по ссылке или перезагрузка — шторка появляется сразу закрытой, как раньше.
       function entrance(ctx) {
-        if (ctx.reducedMotion) return null;
-        const layer = ctx.layer("ce-wipe");
-        const sub = SUMMIT[game.status] ?? "";
-        layer.innerHTML = `
-          <canvas></canvas>
-          <div class="ce-wipe-card">
-            <span class="ce-wipe-berry ${game.status === "completed" ? "ce-gold" : ""}"></span>
-            ${sub ? `<small>${esc(sub)}</small>` : ""}
-            <strong>${esc(game.title)}</strong>
-          </div>`;
-        const canvas = layer.querySelector("canvas");
-        const card = layer.querySelector(".ce-wipe-card");
-        const g = canvas.getContext("2d");
-        if (!g) {
-          layer.remove();
-          return null;
-        }
-
-        const cell = window.innerWidth < 600 ? 30 : 44;
-        const cols = Math.ceil(window.innerWidth / cell) + 1;
-        const rows = Math.ceil(window.innerHeight / cell) + 1;
-        canvas.width = cols;
-        canvas.height = rows;
-        canvas.style.width = `${cols * cell}px`;
-        canvas.style.height = `${rows * cell}px`;
-
-        const t = game.theme ?? {};
-        const bg = rgb(HEX.test(t.bg ?? "") ? t.bg : "#140a1f");
-        const alt = mix(bg, rgb(HEX.test(t.surface ?? "") ? t.surface : "#22132f"), 0.55);
-        const edgeA = rgb(HEX.test(t.accent ?? "") ? t.accent : HAIR.pink);
-        const edgeB = rgb(HEX.test(t.accent2 ?? "") ? t.accent2 : HAIR.gold);
-
-        // Порог каждой клетки: диагональ снизу-слева вверх-направо + немного случайности.
-        const r = rand(String(game.title).length + 5);
-        const th = new Float32Array(cols * rows);
-        const shade = new Uint8Array(cols * rows);
-        for (let y = 0; y < rows; y++) {
-          for (let x = 0; x < cols; x++) {
-            th[y * cols + x] = ((x / cols + (1 - y / rows)) / 2) * 0.78 + r() * 0.22;
-            shade[y * cols + x] = r() > 0.82 ? 1 : 0;
-          }
-        }
-        const img = g.createImageData(cols, rows);
-        const EDGE = 0.07;
-        const draw = (p) => {
-          const d = img.data;
-          for (let i = 0; i < th.length; i++) {
-            const k = p - th[i];
-            const c = k < 0 ? (shade[i] ? alt : bg) : k < EDGE ? edgeA : k < EDGE * 2 ? edgeB : null;
-            const o = i * 4;
-            if (c) {
-              d[o] = c[0];
-              d[o + 1] = c[1];
-              d[o + 2] = c[2];
-              d[o + 3] = 255;
-            } else d[o + 3] = 0;
-          }
-          g.putImageData(img, 0, 0);
-        };
-        draw(-1);
+        const handed = ctx.handoff?.layers?.find((l) => l.classList?.contains("ce-wipe")) ?? null;
+        const taken = handed?.isConnected && !ctx.reducedMotion ? ctx.handoff.data?.wipe ?? null : null;
+        if (handed && !taken) handed.remove();
+        if (!taken && ctx.reducedMotion) return null;
+        const w = taken ?? buildWipe(ctx.layer("ce-wipe"), game, esc);
+        if (!w) return null;
+        if (!taken) w.paint(-1, false);
         // Страховка: если кадры не идут (вкладка в фоне, экономия энергии), шторка не должна висеть.
-        const safety = setTimeout(() => layer.remove(), 3500);
+        const safety = setTimeout(() => w.layer.remove(), 3500);
         ctx.onCleanup(() => clearTimeout(safety));
 
-        const HOLD = 0.5;
-        const DUR = 0.8;
+        const hold = taken ? HOLD.handoff : HOLD.direct;
         let t0 = null;
         let lastStep = -1;
         let finished = false;
@@ -412,19 +400,19 @@
           if (finished) return;
           t0 ??= now;
           const s = (now - t0) / 1000;
-          if (s > HOLD) card.classList.add("out");
-          const p = ((s - HOLD) / DUR) * (1 + EDGE * 2);
+          if (s > hold) w.card.classList.add("out");
+          const p = ((s - hold) / DUR) * w.end;
           if (p <= 0) return;
-          if (p >= 1 + EDGE * 2) {
+          if (p >= w.end) {
             finished = true;
-            layer.remove();
+            w.layer.remove();
             return;
           }
           // Шаги по 1/24 — рассыпание идёт рывками, без плавной интерполяции.
-          const step = Math.floor(p * 24);
+          const step = Math.floor(p * STEPS);
           if (step === lastStep) return;
           lastStep = step;
-          draw(step / 24);
+          w.paint(step / STEPS, false);
         };
       }
 
@@ -519,6 +507,83 @@
       }
     },
   });
+
+  // ---------- пиксельная шторка: сетка клеток во весь экран и карточка с названием ----------
+  // Одна шторка на весь вход: её строит cover() на главной или entrance() при прямом заходе.
+  // У каждой клетки свой порог — диагональ снизу-слева вверх-направо + немного случайности, так что
+  // волна идёт вверх по склону. paint(p, fill): p — фронт волны (0…end); fill — за фронтом клетки
+  // закрыты (наползание), иначе открыты (рассыпание); у фронта — кайма цветами волос.
+  function buildWipe(layer, game, esc) {
+    const sub = SUMMIT[game.status] ?? "";
+    layer.innerHTML = `
+      <canvas></canvas>
+      <div class="ce-wipe-card">
+        <span class="ce-wipe-berry ${game.status === "completed" ? "ce-gold" : ""}"></span>
+        ${sub ? `<small>${esc(sub)}</small>` : ""}
+        <strong>${esc(game.title)}</strong>
+      </div>`;
+    const t = game.theme ?? {};
+    // Токены темы — прямо на слое: на главной у html ещё нет переменных игры, а карточка
+    // должна выглядеть одинаково до и после перехода.
+    const accent2 = COLOR.test(t.accent2 ?? "") ? t.accent2 : t.accent;
+    const font = t.displayFont ?? t.headingFont;
+    if (COLOR.test(t.accent ?? "")) layer.style.setProperty("--t-accent", t.accent);
+    if (COLOR.test(accent2 ?? "")) layer.style.setProperty("--t-accent-2", accent2);
+    if (FONT.test(font ?? "")) layer.style.setProperty("--t-display", `'${font}', Inter, system-ui, sans-serif`);
+
+    const canvas = layer.querySelector("canvas");
+    const card = layer.querySelector(".ce-wipe-card");
+    const g = canvas.getContext("2d");
+    if (!g) {
+      layer.remove();
+      return null;
+    }
+
+    const cell = window.innerWidth < 600 ? 30 : 44;
+    const cols = Math.ceil(window.innerWidth / cell) + 1;
+    const rows = Math.ceil(window.innerHeight / cell) + 1;
+    canvas.width = cols;
+    canvas.height = rows;
+    canvas.style.width = `${cols * cell}px`;
+    canvas.style.height = `${rows * cell}px`;
+
+    const bg = rgb(HEX.test(t.bg ?? "") ? t.bg : "#140a1f");
+    const alt = mix(bg, rgb(HEX.test(t.surface ?? "") ? t.surface : "#22132f"), 0.55);
+    const edgeA = rgb(HEX.test(t.accent ?? "") ? t.accent : HAIR.pink);
+    const edgeB = rgb(HEX.test(t.accent2 ?? "") ? t.accent2 : HAIR.gold);
+
+    const r = rand(String(game.title).length + 5);
+    const th = new Float32Array(cols * rows);
+    const shade = new Uint8Array(cols * rows);
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        th[y * cols + x] = ((x / cols + (1 - y / rows)) / 2) * 0.78 + r() * 0.22;
+        shade[y * cols + x] = r() > 0.82 ? 1 : 0;
+      }
+    }
+    const img = g.createImageData(cols, rows);
+    const EDGE = 0.07;
+    // Порядок от закрытой части к открытой одинаков в обе стороны: тёмные клетки → розовая → золотая кайма.
+    const paint = (p, fill) => {
+      const d = img.data;
+      for (let i = 0; i < th.length; i++) {
+        const k = p - th[i];
+        const dark = shade[i] ? alt : bg;
+        const c = fill
+          ? k < 0 ? null : k < EDGE ? edgeB : k < EDGE * 2 ? edgeA : dark
+          : k < 0 ? dark : k < EDGE ? edgeA : k < EDGE * 2 ? edgeB : null;
+        const o = i * 4;
+        if (c) {
+          d[o] = c[0];
+          d[o + 1] = c[1];
+          d[o + 2] = c[2];
+          d[o + 3] = 255;
+        } else d[o + 3] = 0;
+      }
+      g.putImageData(img, 0, 0);
+    };
+    return { layer, card, paint, end: 1 + EDGE * 2 };
+  }
 
   // ---------- пиксельная гора ----------
   // Силуэт строится по столбцам шириной U в координатах viewBox 0..100 × 0..H и квантуется по сетке —

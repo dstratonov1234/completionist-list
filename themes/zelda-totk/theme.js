@@ -1,22 +1,65 @@
 // The Legend of Zelda: Tears of the Kingdom — «Журнал странника».
 // Страница — планшет: каменная рамка с бирюзовыми глифами, по которой бегут огоньки; вкладки — группы
-// условий закрытия (+ «Точка закрытия» и «Отчёт»); цели — записи журнала приключений: слева список с
-// отметками, справа запись (на телефоне — аккордеон). Вход — облака расходятся и открывают небо,
-// в баннере — парящие острова с параллаксом и облачная гряда.
+// условий закрытия; цели — записи журнала приключений: слева список с отметками, справа запись
+// (на телефоне — аккордеон). Вход — облака расходятся и открывают небо (с главной облака сначала
+// наплывают с краёв поверх списка — cover()), в баннере — парящие острова с параллаксом и облачная гряда.
 (() => {
   "use strict";
 
-  const STATUS = { planned: "В планах", in_progress: "В пути", completed: "Пройдено", dropped: "Отложено" };
+  const STATUS = { planned: "В планах", in_progress: "В пути", completed: "Пройдено" };
   const GATE_SUB = {
     planned: "Приключение впереди",
     in_progress: "Путешествие продолжается",
     completed: "Путь пройден",
-    dropped: "Путь прерван",
   };
+  // Облака заставки: x, y (% экрана), ширина (vmax), куда уплывает (-1 влево / 1 вправо), задержка (с), зеркально
+  const CLOUDS = [
+    [16, 14, 72, -1, 0.0, 0], [84, 10, 78, 1, 0.04, 1], [50, 26, 66, 1, 0.1, 0],
+    [22, 46, 86, -1, 0.06, 1], [80, 50, 80, 1, 0.12, 0], [46, 66, 74, -1, 0.16, 0],
+    [12, 86, 80, -1, 0.2, 0], [88, 88, 84, 1, 0.22, 1],
+  ];
   const CHECK = `<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.8 10.6l3.4 3.4 7-7.6"/></svg>`;
   const pad2 = (n) => (/^\d$/.test(String(n)) ? `0${n}` : String(n));
+  const OPEN_MS = 1900; // сколько длится «облака расходятся» (самое долгое облако: 1,6 с + 0,22 с задержки)
+
+  // Небо, облака и название игры — одна и та же заставка и на главной (cover), и при прямом входе.
+  function gateHtml(game, assets, esc) {
+    const sub = GATE_SUB[game.status] ?? "";
+    return `
+      <div class="zt-gate-sky"></div>
+      ${CLOUDS.map(
+        ([x, y, w, d, t, f]) =>
+          `<img class="zt-gate-cloud" src="${assets}cloud.webp" alt="" style="--x:${x}%;--y:${y}%;--w:${w}vmax;--d:${d};--t:${t}s;--f:${f ? -1 : 1}">`,
+      ).join("")}
+      <div class="zt-gate-title">
+        <img src="${assets}glyph-divider.webp" alt="">
+        <div class="zt-gate-name">${esc(game.title)}</div>
+        ${sub ? `<div class="zt-gate-sub">${esc(sub)}</div>` : ""}
+      </div>`;
+  }
 
   GameThemes.register("zelda-totk", {
+    // Начало заставки ещё на главной: облака наплывают с краёв поверх растворяющегося списка, небо и
+    // название проявляются. Promise выполняется, когда небо закрыло экран; разводит облака уже page().
+    async cover(t) {
+      const g = t.layer("zt-gate zt-cover");
+      // Шрифты темы на главной заданы только у сцены/баннера — берём их оттуда, чтобы название не
+      // сменило шрифт, когда страница игры выставит те же переменные на <html>.
+      const src = document.querySelector('.stage-layer[data-game="zelda-totk"], .gbanner[data-game="zelda-totk"]');
+      for (const k of ["--t-display", "--t-heading", "--t-body"]) {
+        const v = src?.style.getPropertyValue(k);
+        if (v) g.style.setProperty(k, v);
+      }
+      g.innerHTML = gateHtml(t.game, t.assets, t.esc);
+      t.data.started = performance.now();
+      // облака не должны «вспыхнуть» посреди наплыва, когда догрузятся, — ждём их, но недолго
+      const imgs = [...g.querySelectorAll("img")];
+      await Promise.race([Promise.all(imgs.map((i) => i.decode?.().catch(() => {}))), t.wait(300)]);
+      void g.offsetWidth; // стартовое положение (облака за краями) должно примениться до перехода
+      g.classList.add("zt-closed");
+      await t.wait(720);
+    },
+
     page(ctx) {
       const { root, el, esc, assets, game } = ctx;
       root.classList.add("zt");
@@ -27,45 +70,62 @@
       const sky = heroSky();
       const pad = device();
       sidePanel(pad);
-      root.querySelector(".cond-summary")?.classList.add("zt-summary");
       root.querySelector(".cond-none")?.classList.add("zt-none");
-      root.querySelector(".report")?.classList.add("zt-report");
       motion(sky);
 
       return () => root.classList.remove("zt");
 
       // ---------- вход: облака расходятся и открывают небо ----------
       function gate() {
+        // Пришли с главной: небо и облака уже закрывают экран (cover) — остаётся их развести.
+        const handed = ctx.handoff?.layers.find((l) => l.classList.contains("zt-gate"));
+        if (handed) return reveal(handed);
         if (ctx.reducedMotion) return;
         let seen = false;
         try {
           seen = sessionStorage.getItem("zt-gate") === "1";
           sessionStorage.setItem("zt-gate", "1");
         } catch {}
-        // x, y (% экрана), ширина (vmax), куда уплывает (-1 влево / 1 вправо), задержка (с), зеркально
-        const clouds = [
-          [16, 14, 72, -1, 0.0, 0], [84, 10, 78, 1, 0.04, 1], [50, 26, 66, 1, 0.1, 0],
-          [22, 46, 86, -1, 0.06, 1], [80, 50, 80, 1, 0.12, 0], [46, 66, 74, -1, 0.16, 0],
-          [12, 86, 80, -1, 0.2, 0], [88, 88, 84, 1, 0.22, 1],
-        ];
-        const sub = GATE_SUB[game.status] ?? "";
         const g = ctx.layer("zt-gate");
-        g.innerHTML = `
-          <div class="zt-gate-sky"></div>
-          ${clouds
-            .map(
-              ([x, y, w, d, t, f]) =>
-                `<img class="zt-gate-cloud" src="${assets}cloud.webp" alt="" style="--x:${x}%;--y:${y}%;--w:${w}vmax;--d:${d};--t:${t}s;--f:${f ? -1 : 1}">`,
-            )
-            .join("")}
-          <div class="zt-gate-title">
-            <img src="${assets}glyph-divider.webp" alt="">
-            <div class="zt-gate-name">${esc(game.title)}</div>
-            ${sub ? `<div class="zt-gate-sub">${esc(sub)}</div>` : ""}
-          </div>`;
-        const open = () => g.classList.add("zt-open");
+        g.innerHTML = gateHtml(game, assets, esc);
+        const open = () => {
+          if (g.classList.contains("zt-open")) return;
+          settleTitle(g);
+          g.classList.add("zt-open");
+        };
         const t1 = setTimeout(open, seen ? 350 : 1150);
         const t2 = setTimeout(() => g.remove(), seen ? 2200 : 3000);
+        ctx.onCleanup(() => (clearTimeout(t1), clearTimeout(t2)));
+        for (const type of ["pointerdown", "keydown", "wheel"]) ctx.listen(window, type, open, { passive: true, once: true });
+      }
+
+      // Анимация появления названия (fill: both) держит opacity/transform, и при .zt-open оно пропадало
+      // за кадр. Снимаем её на текущем кадре — дальше название уходит обычным переходом.
+      function settleTitle(g) {
+        const title = g.querySelector(".zt-gate-title");
+        if (!title) return;
+        const { opacity, transform } = getComputedStyle(title);
+        title.style.animation = "none";
+        title.style.opacity = opacity;
+        title.style.transform = transform;
+        void title.offsetWidth;
+        title.style.opacity = title.style.transform = "";
+      }
+
+      // Облака расходятся так же, как при прямом входе. Название к этому моменту уже читается; страница
+      // под небом успевает проявиться (≥ 250 мс), а всего от клика проходит столько же, сколько при первом входе.
+      function reveal(g) {
+        try {
+          sessionStorage.setItem("zt-gate", "1");
+        } catch {}
+        let t2 = 0;
+        const open = () => {
+          if (!alive || g.classList.contains("zt-open")) return;
+          g.classList.add("zt-open");
+          t2 = setTimeout(() => g.remove(), ctx.reducedMotion ? 0 : OPEN_MS);
+        };
+        const since = performance.now() - (ctx.handoff.data?.started ?? 0);
+        const t1 = setTimeout(open, ctx.reducedMotion ? 0 : Math.max(250, 1150 - since));
         ctx.onCleanup(() => (clearTimeout(t1), clearTimeout(t2)));
         for (const type of ["pointerdown", "keydown", "wheel"]) ctx.listen(window, type, open, { passive: true, once: true });
       }
@@ -158,7 +218,7 @@
 
           tabs.push(tab);
           panels.push(panel);
-          meta.push({ goals, complete, report: block.dataset.section === "report" });
+          meta.push({ goals, complete });
         });
 
         const ink = document.createElement("span");
@@ -227,10 +287,8 @@
         }
         document.fonts?.ready.then(moveInk);
 
-        // Первая вкладка: у пройденной игры — отчёт, иначе первая группа с невыполненными целями.
-        const reportI = meta.findIndex((m) => m.report);
-        const openI = meta.findIndex((m) => m.goals?.length && !m.complete);
-        select(game.status === "completed" && reportI >= 0 ? reportI : Math.max(0, openI));
+        // Первая вкладка — первая группа с невыполненными целями (если всё выполнено — первая).
+        select(Math.max(0, meta.findIndex((m) => m.goals?.length && !m.complete)));
         const settle = setTimeout(() => ink.classList.add("zt-ready"), 60);
         ctx.onCleanup(() => clearTimeout(settle));
 

@@ -470,6 +470,26 @@ html[data-game="zelda-totk"] {
   from { opacity: 0; transform: translateY(14px); }
 }
 
+/* С главной (cover): та же заставка, но собирается плавно — облака наплывают с тех же сторон, куда потом
+   уплывут, небо и название проявляются поверх растворяющегося списка (.zt-cover → .zt-closed).
+   Затем page() ставит .zt-open, и расход облаков идёт с обычными переходами выше. */
+.zt-gate.zt-cover .zt-gate-title { animation: none; }
+
+.zt-gate.zt-cover:not(.zt-closed) .zt-gate-sky { opacity: 0; }
+.zt-gate.zt-cover:not(.zt-closed) .zt-gate-title { opacity: 0; transform: translateY(14px); }
+.zt-gate.zt-cover:not(.zt-closed) .zt-gate-cloud {
+  transform: translateX(calc(var(--d) * (24vw + var(--w) * 0.4))) scale(1.2) scaleX(var(--f));
+  opacity: 0;
+}
+
+.zt-gate.zt-cover:not(.zt-open) .zt-gate-sky { transition: opacity 0.6s ease 0.08s; }
+.zt-gate.zt-cover:not(.zt-open) .zt-gate-title { transition: opacity 0.6s ease 0.2s, transform 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) 0.2s; }
+.zt-gate.zt-cover:not(.zt-open) .zt-gate-cloud {
+  transition:
+    transform 0.9s cubic-bezier(0.3, 0.75, 0.35, 1) calc(var(--t) * 0.5),
+    opacity 0.4s ease-out calc(var(--t) * 0.5);
+}
+
 /* ======================= баннер: небо и острова ======================= */
 
 html[data-game="zelda-totk"] .zt .hero::after { z-index: -2; }
@@ -523,24 +543,14 @@ html[data-game="zelda-totk"] .zt .hero .status-pill {
 
 html[data-game="zelda-totk"] .zt .hero.completed .status-pill { background: var(--zt-teal); border-color: var(--zt-teal); color: #fff; }
 
-/* ======================= сводка, заметка, пустое состояние ======================= */
+/* ======================= заметка, пустое состояние ======================= */
 
-.zt-summary,
 .zt-none {
   position: relative;
   isolation: isolate;
   overflow: hidden;
 }
 
-html[data-game="zelda-totk"] .zt .zt-summary {
-  padding: 24px 28px;
-  border: 1px solid var(--zt-line);
-  border-radius: 14px;
-  background: linear-gradient(180deg, var(--zt-paper), var(--zt-paper-2));
-  box-shadow: 0 16px 32px -24px rgba(29, 43, 43, 0.55);
-}
-
-.zt-summary::before,
 .zt-screen::before {
   content: "";
   position: absolute;
@@ -555,30 +565,6 @@ html[data-game="zelda-totk"] .zt .zt-summary {
   opacity: 0.5;
 }
 
-.zt-summary::after {
-  content: "";
-  position: absolute;
-  right: -80px;
-  top: 50%;
-  z-index: -1;
-  width: 250px;
-  height: 250px;
-  margin-top: -125px;
-  background: url(assets/glyph-ring.webp) center / contain no-repeat;
-  opacity: 0.16;
-}
-
-html[data-game="zelda-totk"] .zt-summary .cond-total b {
-  font-family: var(--t-heading);
-  font-size: 48px;
-  font-weight: 400;
-  color: var(--zt-teal-deep);
-  text-shadow: 0 0 18px rgba(82, 216, 224, 0.35);
-}
-
-html[data-game="zelda-totk"] .zt-summary .cond-total span { font-family: var(--t-heading); font-weight: 400; color: var(--zt-ink-soft); }
-html[data-game="zelda-totk"] .zt-summary .cond-total small { font-size: 13.5px; color: var(--zt-muted); letter-spacing: 0.02em; }
-
 html[data-game="zelda-totk"] .zt .progress {
   background: rgba(29, 43, 43, 0.1);
   box-shadow: inset 0 1px 2px rgba(29, 43, 43, 0.18);
@@ -588,13 +574,6 @@ html[data-game="zelda-totk"] .zt .progress > div {
   background: linear-gradient(90deg, var(--zt-teal), var(--zt-glow));
   box-shadow: 0 0 10px rgba(82, 216, 224, 0.7);
 }
-
-html[data-game="zelda-totk"] .zt-summary .progress { height: 10px; max-width: 520px; }
-html[data-game="zelda-totk"] .zt-summary .cond-aim { max-width: 640px; color: var(--zt-ink); }
-html[data-game="zelda-totk"] .zt-summary .cond-aim b { font-family: var(--t-heading); font-weight: 400; color: var(--zt-teal-deep); }
-html[data-game="zelda-totk"] .zt-summary .cond-setup { list-style: none; padding-left: 0; color: var(--zt-ink-soft); }
-html[data-game="zelda-totk"] .zt-summary .cond-setup li::before { content: "◈ "; color: var(--zt-teal); font-variant-emoji: text; }
-html[data-game="zelda-totk"] .zt-summary .cond-rev { font-style: italic; color: var(--zt-muted); }
 
 html[data-game="zelda-totk"] .zt .game-notes {
   margin: 18px 0 0;
@@ -1199,112 +1178,6 @@ html[data-game="zelda-totk"] .zt .zt-entry .cond-link {
 
 html[data-game="zelda-totk"] .zt .zt-entry .cond-link:hover { background: rgba(82, 216, 224, 0.12); box-shadow: 0 0 12px rgba(82, 216, 224, 0.35); }
 
-/* точка закрытия */
-html[data-game="zelda-totk"] .zt .cond-closing {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 22px 26px;
-  border: 1px solid var(--zt-line);
-  border-radius: 14px;
-  background: var(--zt-paper);
-}
-
-html[data-game="zelda-totk"] .zt .cond-closing::after {
-  content: "";
-  position: absolute;
-  right: -60px;
-  bottom: -60px;
-  z-index: -1;
-  width: 200px;
-  height: 200px;
-  background: url(assets/glyph-ring.webp) center / contain no-repeat;
-  opacity: 0.14;
-}
-
-html[data-game="zelda-totk"] .zt .cond-closing p { color: var(--zt-ink); font-size: 15.5px; }
-
-/* ======================= отчёт ======================= */
-
-html[data-game="zelda-totk"] .zt .zt-report {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 26px 30px;
-  border: 1px solid var(--zt-line);
-  border-radius: 14px;
-  background: var(--zt-paper);
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--zt-ink);
-}
-
-html[data-game="zelda-totk"] .zt .zt-report h1,
-html[data-game="zelda-totk"] .zt .zt-report h2,
-html[data-game="zelda-totk"] .zt .zt-report h3 { font-family: var(--t-heading); font-weight: 400; color: var(--zt-ink); }
-
-html[data-game="zelda-totk"] .zt .zt-report h2::after {
-  content: "";
-  display: block;
-  width: min(300px, 70%);
-  height: 20px;
-  margin: 4px 0 0 -6px;
-  background: url(assets/glyph-divider.webp) left center / contain no-repeat;
-}
-
-html[data-game="zelda-totk"] .zt .zt-report > p:first-of-type::first-letter {
-  float: left;
-  padding: 6px 10px 0 0;
-  font-family: var(--t-display);
-  font-size: 3.4em;
-  line-height: 0.85;
-  color: var(--zt-teal);
-  text-shadow: 0 0 16px rgba(82, 216, 224, 0.45);
-}
-
-html[data-game="zelda-totk"] .zt .zt-report blockquote {
-  position: relative;
-  margin: 1.4em 0;
-  padding: 14px 18px 14px 46px;
-  border: 0;
-  border-radius: 10px;
-  background: rgba(184, 137, 42, 0.09);
-  font-family: var(--t-heading);
-  color: var(--zt-ink);
-}
-
-html[data-game="zelda-totk"] .zt .zt-report blockquote::before {
-  content: "◈";
-  position: absolute;
-  left: 18px;
-  top: 13px;
-  color: var(--zt-gold-deep);
-  font-variant-emoji: text;
-}
-
-html[data-game="zelda-totk"] .zt .zt-report ul { list-style: none; padding-left: 1.4em; }
-
-html[data-game="zelda-totk"] .zt .zt-report ul > li::before {
-  content: "◈";
-  display: inline-block;
-  width: 1.4em;
-  margin-left: -1.4em;
-  color: var(--zt-teal);
-  font-size: 0.8em;
-  font-variant-emoji: text;
-}
-
-html[data-game="zelda-totk"] .zt .zt-report img {
-  border: 5px solid #fff;
-  border-radius: 6px;
-  box-shadow: 0 10px 24px -12px rgba(29, 43, 43, 0.5);
-}
-
-html[data-game="zelda-totk"] .zt .zt-report a { color: var(--zt-teal-deep); }
-html[data-game="zelda-totk"] .zt .zt-report th { border-bottom: 2px solid var(--zt-teal); }
-html[data-game="zelda-totk"] .zt .zt-report code { background: rgba(31, 124, 134, 0.08); }
-
 /* ======================= боковая панель ======================= */
 
 html[data-game="zelda-totk"] .zt-side .side-card {
@@ -1371,7 +1244,6 @@ html[data-game="zelda-totk"] .zt .neighbor small { color: var(--zt-muted); }
   .zt-isle-2 img { animation-duration: 9s; animation-delay: -3s; }
   .zt-isle-3 img { animation-duration: 11s; animation-delay: -6s; }
   .zt-bank i { animation: zt-drift 38s ease-in-out infinite alternate; }
-  .zt-summary::after,
   .zt-ring-glyph { animation: zt-spin 120s linear infinite; }
   .zt-quest.zt-sel .zt-quest-rune i,
   .zt-quest:hover .zt-quest-rune i { animation: zt-mote 2.6s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
@@ -1429,9 +1301,4 @@ html[data-game="zelda-totk"] .zt .neighbor small { color: var(--zt-muted); }
   html[data-game="zelda-totk"] .zt .zt-sheet > h2 { font-size: 23px; }
 
   .zt-quest { margin: 0 0 4px; padding: 11px 10px 14px; }
-
-  html[data-game="zelda-totk"] .zt .zt-summary { padding: 20px 18px; }
-  .zt-summary::after { right: -110px; }
-  html[data-game="zelda-totk"] .zt .zt-report { padding: 18px 16px; }
-  html[data-game="zelda-totk"] .zt .cond-closing { padding: 18px 16px; }
 }

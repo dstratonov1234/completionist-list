@@ -13,7 +13,7 @@ const URL_RE = /^https?:\/\/\S+$/;
 
 const PARTICLES = ["embers", "sparks", "ash", "snow", "rain", "spores", "dust", "stars", "petals", "leaves", "bubbles"];
 const TEXTURES = ["vignette", "grain", "scanlines", "glow", "fog", "paper", "halftone"];
-const SECTION_KEYS = ["closing"];
+const SECTION_KEYS = [];
 const HEX_RE = /^#[0-9a-f]{6}$/i;
 const FONT_SPEC_RE = /^[\w\s:@;,.+-]+$/;
 
@@ -151,7 +151,7 @@ function checkConditions(where, g) {
   }
   if (!Array.isArray(c.groups) || !c.groups.length) return errors.push(`${cw}: нужен непустой groups`);
   for (const k of ["aim", "title", "revision"]) if (c[k] != null && typeof c[k] !== "string") errors.push(`${cw}: ${k} — строка`);
-  for (const k of ["setup", "closing"]) if (c[k] != null && !(Array.isArray(c[k]) && c[k].every((x) => typeof x === "string"))) errors.push(`${cw}: ${k} — массив строк`);
+  for (const k of ["setup"]) if (c[k] != null && !(Array.isArray(c[k]) && c[k].every((x) => typeof x === "string"))) errors.push(`${cw}: ${k} — массив строк`);
 
   const nums = new Set();
   const seenImg = new Map();

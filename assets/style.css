@@ -811,7 +811,6 @@ html.themed .hero h1,
 
 html.themed .block h2,
 html.themed .cond-title,
-html.themed .cond-total b,
 html.themed .ring-text b,
 html.themed .neighbor b,
 html.themed .back { font-family: var(--t-heading); }
@@ -995,26 +994,6 @@ html.themed .neighbor:hover {
 
 .cond-none { margin: 0 0 20px; }
 
-.cond-summary {
-  padding: 18px 20px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--bg-elev);
-}
-
-.cond-total { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin-bottom: 10px; }
-.cond-total b { font-size: 40px; font-weight: 800; line-height: 1; color: var(--game-accent, var(--accent)); }
-.cond-total span { font-size: 18px; font-weight: 700; color: var(--text-dim); }
-.cond-total small { flex-basis: 100%; font-size: 13px; color: var(--text-faint); }
-
-.cond-summary .progress { height: 8px; }
-.cond-summary .progress > div { background: var(--game-accent, var(--accent)); }
-
-.cond-aim { margin: 14px 0 0; }
-.cond-setup { margin: 10px 0 0; padding-left: 18px; color: var(--text-dim); font-size: 14px; }
-.cond-setup li { margin: 2px 0; }
-.cond-rev { margin: 10px 0 0; font-size: 12px; color: var(--text-faint); }
-
 .cond-group-note { margin: -6px 0 14px; color: var(--text-dim); font-size: 14px; }
 
 .cond-list { display: flex; flex-direction: column; gap: 12px; }
@@ -1119,8 +1098,6 @@ html.themed .neighbor:hover {
 .cond-gallery img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: var(--radius-sm); }
 
 .cond-link { align-self: flex-start; font-size: 13px; font-weight: 600; text-decoration: none; }
-
-.cond-closing p { margin: 0 0 8px; color: var(--text-dim); }
 
 /* sidebar: кольцо прогресса и группы */
 

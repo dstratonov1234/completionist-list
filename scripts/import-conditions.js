@@ -3,11 +3,12 @@
 //   node scripts/import-conditions.js "<путь к УСЛОВИЯ_ЗАКРЫТИЯ.md>" <id>
 //
 // Формат файла (его составляет пользователь по своей инструкции):
-//   # Заголовок · **Редакция …** · абзац «Цель: …» · ## Игра (список) · ## Конечный список:
+//   # Заголовок · ## Конечный список:
 //   ### Группа → необязательный абзац → таблица | # | Цель | Что нового даёт | Что потребуется / Открывается | Как засчитываем | Статус |
 //   **Чек-лист для #N:** → строки «☐ Пункт · ☑ Пункт», можно с префиксом «Базовые:»
-//   ## Точка закрытия → абзацы.
-// Остальные разделы («Сознательно не делаем», «Источники», …) на сайт не идут.
+// Остальные разделы и шапка («Цель», «Игра», редакция, «Точка закрытия», «Сознательно не делаем», «Источники», …)
+// на сайт не идут:
+// игра закрыта, когда выполнены все условия, — отдельная «точка закрытия» на сайте не нужна.
 //
 // Повторный импорт (пользователь прислал новую редакцию или отметил ☑) обновляет тексты и статусы,
 // а картинки, ссылки, даты, заметки и прочее, что добавили на сайте, сохраняет — сопоставление по номеру цели.
@@ -116,27 +117,6 @@ function parseChecklist(block, i) {
 // ---------- разбор ----------
 
 const title = plain(lines.find((l) => /^#\s/.test(l))?.replace(/^#\s+/, "") ?? id);
-const revision = plain(lines.find((l) => /редакция/i.test(l) && /\*\*/.test(l)) ?? "").replace(/\s*—.*$/, "") || undefined;
-const aimIdx = lines.findIndex((l) => /^Цель:/i.test(l.trim()));
-let aim;
-if (aimIdx >= 0) {
-  const buf = [];
-  for (let j = aimIdx; j < lines.length && lines[j].trim(); j++) buf.push(lines[j]);
-  aim = plain(buf.join(" ").replace(/^Цель:\s*/i, ""));
-  aim = aim.charAt(0).toUpperCase() + aim.slice(1);
-}
-// Пункты списка; строки-продолжения (с отступом, без маркера) приклеиваются к пункту.
-function bullets(block) {
-  const items = [];
-  for (const l of block) {
-    if (/^\s*[-*]\s/.test(l)) items.push(l.replace(/^\s*[-*]\s/, ""));
-    else if (items.length && /^\s+\S/.test(l)) items[items.length - 1] += " " + l.trim();
-  }
-  return items.map(plain);
-}
-
-const setup = bullets(sectionLines("Игра"));
-const closing = paragraphs(sectionLines("Точка закрытия"));
 
 const listBlock = sectionLines("Конечный список");
 const groups = [];
@@ -170,7 +150,8 @@ for (let i = 0; i < listBlock.length; i++) {
   }
 }
 
-const parsed = { title, revision, aim, setup: setup.length ? setup : undefined, groups: groups.filter((g) => g.goals.length), closing: closing.length ? closing : undefined };
+// На сайт идут только группы и цели: «Цель», раздел «Игра» и редакция — служебные, их не показываем.
+const parsed = { title, groups: groups.filter((g) => g.goals.length) };
 
 // ---------- слияние с тем, что уже есть на сайте ----------
 

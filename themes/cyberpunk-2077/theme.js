@@ -1,6 +1,8 @@
 // Cyberpunk 2077 — «нетраннерский HUD Найт-Сити».
-// Вход через глитч-шторку, HUD поверх экрана (уголки, строка состояния с часами, координатами и
-// счётчиком контрактов, сканирующая линия), штамп статуса в баннере (FLATLINED для брошенной игры).
+// Вход через глитч-шторку: с главной полосы съезжаются ещё над списком (cover) и разъезжаются уже
+// над страницей игры (page + ctx.handoff); при прямом заходе шторка сразу закрыта и разъезжается.
+// HUD поверх экрана (уголки, строка состояния с часами, координатами и счётчиком контрактов,
+// сканирующая линия), штамп статуса в баннере.
 // Условия закрытия — контракты фиксера: выполненные получают штамп и «скан», невыполненные —
 // зашифрованы (картинка под замком, дешифруется по клику/Enter/тапу). Заголовки и названия
 // дешифруются при прокрутке, баннер изредка рвёт глитчем, курсор — прицел, сбоку — HUD-датчик
@@ -14,7 +16,6 @@
 
   // Слова штампа, строки состояния и биомонитора по статусу игры. date — какое поле дат показать.
   const STATES = {
-    dropped: { stamp: "FLATLINED", bar: "Связь потеряна", sub: "Брошено", pulse: "Нет сигнала", date: "finished", prefix: "" },
     completed: { stamp: "JOB DONE", bar: "Контракт закрыт", sub: "Пройдено", pulse: "Стабилен", date: "finished", prefix: "" },
     in_progress: { stamp: "JACKED IN", bar: "Соединение активно", sub: "В процессе", pulse: "Активен", date: "started", prefix: "с " },
     planned: { stamp: "STANDBY", bar: "Ожидание подключения", sub: "В планах", pulse: "Ожидание", date: "added", prefix: "добавлено " },
@@ -32,15 +33,56 @@
   const scramble = (chars) => chars.map((c) => (SPACE.test(c) ? c : glyph())).join("");
   const pad = (n, w = 2) => String(n).padStart(w, "0");
   const hex4 = (s) => `0x${(hash(s) & 0xffff).toString(16).toUpperCase().padStart(4, "0")}`;
+  const toneOf = (status) => `cp-s-${Object.hasOwn(STATES, status) ? status : "unknown"}`;
+
+  // Глитч-шторка: 7 полос в случайном порядке (--d), неоновая кромка, глитч-полоса и надпись подключения.
+  // Возвращает узел для названия игры — его дешифруют.
+  function bootScreen(w) {
+    const bands = 7;
+    const order = [...Array(bands).keys()].sort(() => Math.random() - 0.5);
+    w.innerHTML = `
+      ${order.map((d, i) => `<i class="${i % 2 ? "cp-r" : "cp-l"}" style="--i:${i};--d:${d}"></i>`).join("")}
+      <div class="cp-boot-glitch"></div>
+      <div class="cp-boot-text"><span>◢ NC//NET · Подключение</span><b></b></div>`;
+    return w.querySelector(".cp-boot-text b");
+  }
+
+  // Дешифровка на таймере — для cover(), где ещё нет rAF-цикла страницы. Сама останавливается.
+  function decodeTimed(node, text, { dur = 380, delay = 0 } = {}) {
+    const chars = [...text];
+    const n = Math.max(1, chars.length);
+    const t0 = performance.now() + delay;
+    const at = chars.map((_, i) => t0 + (i / n) * dur * 0.6 + Math.random() * dur * 0.4);
+    const end = Math.max(t0, ...at);
+    node.textContent = scramble(chars);
+    const id = setInterval(() => {
+      const now = performance.now();
+      if (!node.isConnected || now >= end) {
+        clearInterval(id);
+        node.textContent = text;
+        return;
+      }
+      node.textContent = chars.map((c, i) => (now >= at[i] || SPACE.test(c) ? c : glyph())).join("");
+    }, 55);
+  }
 
   GameThemes.register("cyberpunk-2077", {
+    // Начало входа ещё на главной: полосы шторки по очереди въезжают слева и справа (кромкой вперёд) поверх
+    // растворяющегося списка, затем проявляется надпись подключения. Промис — когда экран закрыт целиком.
+    cover(t) {
+      const w = t.layer(`cp-boot cp-cover ${toneOf(t.game.status)}`);
+      decodeTimed(bootScreen(w), String(t.game.title).toUpperCase(), { dur: 380, delay: 300 });
+      // Последняя полоса стартует через 6 × 45 мс и едет 0,34 с.
+      return t.wait(640);
+    },
+
     page(ctx) {
       const { root, el, esc, assets, game } = ctx;
       const html = document.documentElement;
       const motion = !ctx.reducedMotion;
       const known = Object.hasOwn(STATES, game.status);
       const st = known ? STATES[game.status] : UNKNOWN;
-      const tone = `cp-s-${known ? game.status : "unknown"}`;
+      const tone = toneOf(game.status);
       const seed = hash(game.id);
       const goals = (typeof ctx.goals === "function" ? ctx.goals() : null) ?? [];
       const tally = { done: goals.filter((g) => g.done).length, total: goals.length };
@@ -87,11 +129,9 @@
       stamp();
       statusPill();
       headings();
-      briefing();
       contracts();
       gauge();
       biomonitor();
-      report();
       heroGlitch();
       reticle();
       entrance();
@@ -250,23 +290,6 @@
         for (const label of root.querySelectorAll(".block > h2 .sec-label")) decodeOnView(label);
       }
 
-      // ---------- брифинг (.cond-summary): сегментная шкала по целям ----------
-      function briefing() {
-        const sum = root.querySelector(".cond-summary");
-        if (!sum) return;
-        const bar = sum.querySelector(".progress");
-        if (bar && tally.total && tally.total <= 60) {
-          const seg = document.createElement("div");
-          seg.className = "cp-segbar";
-          seg.setAttribute("aria-hidden", "true");
-          seg.innerHTML = goals.map((g, i) => `<i class="${g.done ? "on" : ""}" style="--k:${i}"></i>`).join("");
-          bar.replaceWith(seg);
-          onView(seg, () => seg.classList.add("cp-in"));
-        }
-        const big = sum.querySelector(".cond-total b");
-        if (big && motion) decode(big, big.textContent, { dur: 600, delay: 900 });
-      }
-
       // ---------- цели — контракты фиксера ----------
       function contracts() {
         const arts = [...root.querySelectorAll(".cond[data-goal]")];
@@ -416,11 +439,9 @@
         const beat = (x) => `M${x} 24H${x + 34}l4-4 4 4H${x + 52}l3 4 5-20 5 30 4-14H${x + 84}q8-7 16 0H${x + 120}`;
         const kind = known ? game.status : "unknown";
         const line =
-          kind === "dropped"
-            ? `<path d="M0 24H26l4-4 4 4H44l3 4 5-14 5 18 4-8H240"/>`
-            : kind === "planned" || kind === "unknown"
-              ? `<path class="cp-ecg-idle" d="M0 24H240"/>`
-              : `<path d="${beat(0)}"/><path d="${beat(120)}"/>`;
+          kind === "planned" || kind === "unknown"
+            ? `<path class="cp-ecg-idle" d="M0 24H240"/>`
+            : `<path d="${beat(0)}"/><path d="${beat(120)}"/>`;
         card.insertAdjacentHTML(
           "afterbegin",
           `<div class="cp-bio" aria-hidden="true">
@@ -428,17 +449,6 @@
              <div class="cp-ecg cp-ecg-${kind}"><svg ${SVGNS} viewBox="0 0 240 40" preserveAspectRatio="none">${line}</svg></div>
            </div>`,
         );
-      }
-
-      // ---------- отчёт: терминальный журнал ----------
-      function report() {
-        const mark = () => {
-          if (!alive) return;
-          const r = root.querySelector(".report");
-          if (r && !r.classList.contains("cp-report")) r.classList.add("cp-report");
-        };
-        mark();
-        ctx.reportReady?.then(mark, () => {});
       }
 
       // ---------- глитч баннера: редкие короткие разрывы картинки ----------
@@ -555,15 +565,19 @@
 
       // ---------- вход: глитч-шторка из полос ----------
       function entrance() {
+        // С главной: шторка уже закрыта (cover) — та же глитч-вспышка и полосы разъезжаются над страницей.
+        const layers = ctx.handoff?.layers ?? [];
+        const handed = motion && layers.find((l) => l.classList.contains("cp-boot"));
+        if (handed) {
+          handed.classList.add("cp-out");
+          later(() => layers.forEach((l) => l.remove()), 1500);
+          return;
+        }
+        layers.forEach((l) => l.remove());
+        // Прямой заход: шторка закрыта с первого кадра и сразу разъезжается.
         if (!motion) return;
-        const bands = 7;
-        const order = [...Array(bands).keys()].sort(() => Math.random() - 0.5);
         const w = ctx.layer(`cp-boot ${tone}`);
-        w.innerHTML = `
-          ${order.map((d, i) => `<i class="${i % 2 ? "cp-r" : "cp-l"}" style="--i:${i};--d:${d}"></i>`).join("")}
-          <div class="cp-boot-glitch"></div>
-          <div class="cp-boot-text"><span>◢ NC//NET · Подключение</span><b></b></div>`;
-        decode(w.querySelector(".cp-boot-text b"), String(game.title).toUpperCase(), { dur: 380 });
+        decode(bootScreen(w), String(game.title).toUpperCase(), { dur: 380 });
         later(() => w.remove(), 1500);
       }
     },

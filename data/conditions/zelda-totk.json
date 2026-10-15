@@ -1,10 +1,5 @@
 {
   "title": "Окончательное закрытие Tears of the Kingdom",
-  "revision": "Черновик от 12.10.2026 (демо)",
-  "aim": "Сюжет, все храмы и святилища; короки — только до первой полной сумки.",
-  "setup": [
-    "The Legend of Zelda: Tears of the Kingdom (Switch), версия 1.2.1."
-  ],
   "groups": [
     {
       "title": "Сюжет",

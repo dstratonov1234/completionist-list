@@ -30,6 +30,7 @@
     // Версия данных (games.json → updated) — добавляется к файлам тем, чтобы после обновления не висел старый кэш.
     version: "",
     pageToken: 0,
+    handoff: null, // начало заставки, сыгранное на главной (cover), — ждёт страницу игры
     lightbox: { items: [], index: 0 },
   };
 
@@ -143,10 +144,25 @@
     els.gameView.classList.remove("module-pending");
   }
 
+  // Заставка, начатая на главной (cover), передаётся странице игры: её слои уже закрывают экран,
+  // page() должна их открыть и убрать. Если модуль не справился — страховка убирает их через 6 с.
+  function takeHandoff(g, cleanups) {
+    const handoff = state.handoff?.id === g.id ? state.handoff : null;
+    if (!handoff) return null;
+    state.handoff = null;
+    const drop = () => handoff.layers.forEach((el) => el.remove());
+    const safety = setTimeout(drop, 6000);
+    cleanups.push(() => (clearTimeout(safety), drop()));
+    return { layers: handoff.layers, data: handoff.data };
+  }
+
   function makeCtx(g, cond) {
     const root = els.gameView;
     const cleanups = modules.cleanups;
+    const handoff = takeHandoff(g, cleanups);
     return {
+      // { layers, data } — если вход был с главной и тема сыграла начало заставки в cover(); иначе null
+      handoff,
       game: g,
       root,
       html: document.documentElement,
@@ -216,6 +232,38 @@
     } catch (e) {
       console.error(`theme ${g.id}:`, e);
     }
+  }
+
+  // cover(tctx): начало заставки игры, которое играет ещё на главной сразу после клика по баннеру.
+  // Должна вернуть Promise, который выполнится, когда экран полностью закрыт. Слои создавать через tctx.layer().
+  function makeCoverCtx(g) {
+    dropHandoff();
+    const handoff = { id: g.id, layers: [], data: {} };
+    state.handoff = handoff;
+    // На главной переменные темы (--t-display и др.) есть только у баннера — слоям заставки их даём сами.
+    const vars = styleAttr(themeVars(g.theme));
+    return {
+      game: g,
+      assets: `themes/${encodeURIComponent(g.id)}/assets/`,
+      finePointer: window.matchMedia("(pointer: fine)").matches,
+      data: handoff.data,
+      esc,
+      layer(className, parent = document.body) {
+        const el = document.createElement("div");
+        el.className = className;
+        el.setAttribute("aria-hidden", "true");
+        if (vars) el.setAttribute("style", vars);
+        parent.append(el);
+        handoff.layers.push(el);
+        return el;
+      },
+      wait: (ms) => new Promise((r) => setTimeout(r, ms)),
+    };
+  }
+
+  function dropHandoff() {
+    state.handoff?.layers.forEach((el) => el.remove());
+    state.handoff = null;
   }
 
   function clearPageTheme() {
@@ -527,7 +575,9 @@
   els.list.addEventListener("pointerover", (e) => {
     if (e.pointerType !== "mouse") return;
     const g = bannerGame(e.target);
-    if (g) setStage(g);
+    if (!g) return;
+    setStage(g);
+    if (g.theme?.js === true) loadModule(g.id); // чтобы заставка могла начаться сразу по клику
   });
 
   els.list.addEventListener("pointerout", (e) => {
@@ -541,7 +591,9 @@
 
   els.list.addEventListener("focusin", (e) => {
     const g = bannerGame(e.target);
-    if (g) setStage(g);
+    if (!g) return;
+    setStage(g);
+    if (g.theme?.js === true) loadModule(g.id);
   });
 
   els.list.addEventListener("click", (e) => {
@@ -565,6 +617,24 @@
     setStage(g);
     document.body.classList.add("leaving");
     requestAnimationFrame(() => clearTimeout(stage.leaveTimer));
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    // Заставка игры (занавес, тучи, глитч…) начинается прямо на главной и закрывает экран;
+    // страница игры собирается под ней, а её page() открывает заставку уже на игре — без скачков.
+    const mod = g.theme?.js === true ? await Promise.race([loadModule(g.id), wait(800)]) : null;
+    if (mod?.cover) {
+      try {
+        await Promise.race([Promise.resolve(mod.cover(makeCoverCtx(g))), wait(2500)]);
+        state.entering = false;
+        state.arriving = true;
+        location.hash = href;
+        return;
+      } catch (e) {
+        console.error(`theme ${g.id} cover:`, e);
+        dropHandoff();
+      }
+    }
+
     const img = stageLayer(g).querySelector("img");
     const loaded =
       img && !img.complete
@@ -669,22 +739,6 @@
       .join("");
   }
 
-  function summaryHtml(g, cond) {
-    const t = tally(allGoals(cond));
-    const pct = t.total ? Math.round((t.done / t.total) * 100) : 0;
-    return `
-      <section class="cond-summary">
-        <div class="cond-total">
-          <b>${t.done}</b><span>из ${t.total}</span>
-          <small>${g.status === "completed" ? "Игра закрыта" : `${pct}% условий закрытия выполнено`}</small>
-        </div>
-        ${progressBar(t.done, t.total)}
-        ${cond.aim ? `<p class="cond-aim"><b>Цель закрытия.</b> ${esc(cond.aim)}</p>` : ""}
-        ${cond.setup?.length ? `<ul class="cond-setup">${cond.setup.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
-        ${cond.revision ? `<p class="cond-rev">${esc(cond.revision)}</p>` : ""}
-      </section>`;
-  }
-
   function sideHtml(g, cond) {
     const t = tally(allGoals(cond));
     const p = t.total ? t.done / t.total : 0;
@@ -746,14 +800,9 @@
       </header>
       <div class="wrap game-layout ${esc(g.status)}">
         <div class="game-main">
-          ${cond ? summaryHtml(g, cond) : `<p class="muted cond-none">Условия закрытия для этой игры ещё не добавлены.</p>`}
+          ${cond ? "" : `<p class="muted cond-none">Условия закрытия для этой игры ещё не добавлены.</p>`}
           ${g.notes ? `<p class="game-notes">${esc(g.notes)}</p>` : ""}
           ${cond ? groupsHtml(g, cond) : ""}
-          ${
-            cond?.closing?.length
-              ? `<section class="block" data-section="closing">${sectionHead(g, "closing", "Точка закрытия", "⚑")}<div class="cond-closing">${cond.closing.map((p) => `<p>${esc(p)}</p>`).join("")}</div></section>`
-              : ""
-          }
           ${neighborsHtml(g)}
         </div>
         ${sideHtml(g, cond)}
@@ -811,6 +860,7 @@
 
   function showList() {
     state.pageToken++;
+    dropHandoff();
     const fromGame = els.gameView.hidden ? null : state.currentGame;
     clearPageTheme();
     els.gameView.hidden = true;

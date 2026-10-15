@@ -4,7 +4,24 @@
 (() => {
   "use strict";
 
+  // Карточка области: название игры между филигранью и подпись про прогресс.
+  function areaCard(el, game, assets, esc, done, total) {
+    const sub = game.status === "completed" ? "Закрыто навсегда" : total ? `Условий выполнено: ${done} из ${total}` : "";
+    el.innerHTML = `
+      <img src="${assets}divider.webp" alt="">
+      <div class="hk-area-name">${esc(game.title)}</div>
+      ${sub ? `<div class="hk-area-sub">${esc(sub)}</div>` : ""}
+      <img class="hk-flip" src="${assets}divider.webp" alt="">`;
+  }
+
   GameThemes.register("hollow-knight", {
+    // Начало заставки ещё на главной: опускается тёмная вуаль Халлоунеста и проявляется карточка области.
+    cover(t) {
+      t.layer("hk-veil");
+      areaCard(t.layer("hk-area-title"), t.game, t.assets, t.esc, t.game.goals?.done ?? 0, t.game.goals?.total ?? 0);
+      return t.wait(650);
+    },
+
     page(ctx) {
       const { root, el, esc, assets, game } = ctx;
       const goals = ctx.goals();
@@ -21,22 +38,19 @@
 
       // ---------- заставка области, как при входе в новую локацию ----------
       function areaTitle() {
-        if (ctx.reducedMotion) return;
-        const sub =
-          game.status === "completed"
-            ? "Закрыто навсегда"
-            : goals.length
-              ? `Условий выполнено: ${done} из ${goals.length}`
-              : "";
-        const t = ctx.layer("hk-area-title");
-        t.innerHTML = `
-          <img src="${assets}divider.webp" alt="">
-          <div class="hk-area-name">${esc(game.title)}</div>
-          ${sub ? `<div class="hk-area-sub">${esc(sub)}</div>` : ""}
-          <img class="hk-flip" src="${assets}divider.webp" alt="">`;
-        const timer = setTimeout(() => t.classList.add("out"), 2600);
-        const gone = setTimeout(() => t.remove(), 4200);
-        ctx.onCleanup(() => (clearTimeout(timer), clearTimeout(gone)));
+        // Вход с главной: вуаль и карточка уже на экране (cover) — вуаль поднимается, карточка ещё висит.
+        const veil = ctx.handoff?.layers.find((l) => l.classList.contains("hk-veil"));
+        const handed = ctx.handoff?.layers.find((l) => l.classList.contains("hk-area-title"));
+        if (ctx.reducedMotion && !handed) return;
+        const t = handed ?? ctx.layer("hk-area-title");
+        if (!handed) areaCard(t, game, assets, esc, done, goals.length);
+        const timers = [
+          veil && setTimeout(() => veil.classList.add("out"), 450),
+          veil && setTimeout(() => veil.remove(), 1500),
+          setTimeout(() => t.classList.add("out"), handed ? 2200 : 2600),
+          setTimeout(() => t.remove(), handed ? 3800 : 4200),
+        ];
+        ctx.onCleanup(() => timers.forEach((x) => x && clearTimeout(x)));
       }
 
       // ---------- пещера за контентом, с лёгким параллаксом ----------

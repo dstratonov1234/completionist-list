@@ -446,8 +446,12 @@ html[data-game="celeste"],
 }
 
 /* ---------- шторка входа ---------- */
+/* Начинается ещё на главной (cover): там у html нет переменных игры — свои цвета шторка носит с собой,
+   токены темы (--t-accent, --t-accent-2, --t-display) theme.js ставит прямо на слой. */
 
 .ce-wipe {
+  --ce-snow: #fff4fb;
+  --ce-ink: #0b0613;
   position: fixed;
   inset: 0;
   z-index: 70;
@@ -475,6 +479,9 @@ html[data-game="celeste"],
 }
 
 .ce-wipe-card.out { animation: ce-card-out 0.3s steps(3) forwards; }
+
+/* на главной карточка проявляется, когда волна дошла до середины экрана */
+.ce-wipe.ce-cover .ce-wipe-card:not(.out) { animation-delay: 0.34s; }
 
 .ce-wipe-card small {
   display: block;
@@ -556,7 +563,7 @@ html[data-game="celeste"] .game-view .ce-gone { display: none !important; }
 
 /* ---------- панели ---------- */
 
-html[data-game="celeste"] .game-view :is(.cond-summary, .report, .side-card, .neighbor, .cond-closing, .ce-panel) {
+html[data-game="celeste"] .game-view :is(.side-card, .neighbor) {
   border: none;
   border-radius: 0;
   background: var(--ce-panel);
@@ -726,71 +733,6 @@ html[data-game="celeste"] .game-view .progress.ce-seg::after {
   inset: 0;
   background: repeating-linear-gradient(90deg, transparent 0 calc(var(--ce-seg) - 3px), var(--t-surface) calc(var(--ce-seg) - 3px) var(--ce-seg));
 }
-
-/* =====================================================================
-   Сводка условий: счётчик клубник, цель — окно диалога
-   ===================================================================== */
-
-html[data-game="celeste"] .game-view .cond-summary { padding: 20px 22px; }
-
-html[data-game="celeste"] .game-view .cond-total { align-items: center; gap: 4px 12px; }
-
-html[data-game="celeste"] .game-view .cond-total::before {
-  content: "";
-  width: 34px;
-  height: 40px;
-  background: url(assets/berry.webp) center / contain no-repeat;
-}
-
-html[data-game="celeste"] .game-view.ce .game-layout.completed .cond-total::before {
-  width: 50px;
-  background-image: url(assets/golden.webp);
-}
-
-html[data-game="celeste"] .game-view .cond-total b {
-  font-family: var(--t-display);
-  font-size: 46px;
-  font-weight: 700;
-  color: var(--ce-gold);
-  text-shadow: 3px 3px 0 var(--ce-ink);
-}
-
-html[data-game="celeste"] .game-view .cond-total span { font-family: var(--t-heading); font-size: 20px; }
-html[data-game="celeste"] .game-view .cond-total small { font-family: var(--t-heading); font-size: 15px; color: var(--text-dim); letter-spacing: 0.02em; }
-
-html[data-game="celeste"] .game-view .cond-aim {
-  position: relative;
-  margin: 18px 0 0;
-  padding: 12px 16px 16px;
-  line-height: 1.6;
-  background: color-mix(in srgb, var(--t-bg) 88%, black);
-  box-shadow: 0 -3px 0 0 var(--ce-snow), 0 3px 0 0 var(--ce-snow), -3px 0 0 0 var(--ce-snow), 3px 0 0 0 var(--ce-snow), 6px 6px 0 0 var(--ce-drop);
-}
-
-html[data-game="celeste"] .game-view .cond-aim b {
-  display: block;
-  margin-bottom: 2px;
-  font-family: var(--t-heading);
-  font-weight: 600;
-  color: var(--ce-gold);
-}
-
-html[data-game="celeste"] .game-view :is(.cond-setup, .report ul) { list-style: none; }
-html[data-game="celeste"] .game-view .cond-setup { margin-top: 14px; padding-left: 22px; }
-html[data-game="celeste"] .game-view :is(.cond-setup, .report ul) > li { position: relative; }
-
-html[data-game="celeste"] .game-view :is(.cond-setup, .report ul) > li::before {
-  content: "";
-  position: absolute;
-  left: -18px;
-  top: 0.62em;
-  width: 6px;
-  height: 6px;
-  background: var(--t-accent);
-  box-shadow: 2px 2px 0 0 var(--ce-ink);
-}
-
-html[data-game="celeste"] .game-view .cond-rev { font-family: var(--t-heading); font-size: 13px; letter-spacing: 0.02em; }
 
 html[data-game="celeste"] .game-view .game-notes { border-left: 4px solid var(--t-accent); }
 
@@ -1229,8 +1171,7 @@ html[data-game="celeste"] .game-view .ce-climb { container: ce-climb / inline-si
   box-shadow: 0 -3px 0 0 var(--t-accent), 0 3px 0 0 var(--t-accent), -3px 0 0 0 var(--t-accent), 3px 0 0 0 var(--t-accent);
 }
 
-.ce-pc-note::after,
-html[data-game="celeste"] .game-view .report blockquote::after {
+.ce-pc-note::after {
   content: "";
   position: absolute;
   right: 12px;
@@ -1354,129 +1295,6 @@ html[data-game="celeste"] .game-view .group-progress .progress { height: 6px; }
 html[data-game="celeste"] .game-view .fact { border-bottom: 2px dashed color-mix(in srgb, var(--t-text) 12%, transparent); }
 html[data-game="celeste"] .game-view .fact:last-child { border-bottom: none; }
 
-/* ---------- точка закрытия: золотая клубника на вершине ---------- */
-
-html[data-game="celeste"] .game-view .cond-closing {
-  --ce-line: color-mix(in srgb, var(--ce-gold) 70%, var(--t-surface));
-  display: grid;
-  grid-template-columns: 52px minmax(0, 1fr);
-  column-gap: 16px;
-  align-items: center;
-  padding: 16px 18px;
-}
-
-html[data-game="celeste"] .game-view .cond-closing::before {
-  content: "";
-  grid-row: 1 / span 20;
-  align-self: start;
-  width: 52px;
-  height: 46px;
-  background: url(assets/golden.webp) center / contain no-repeat;
-}
-
-html[data-game="celeste"] .game-view .cond-closing p { grid-column: 2; margin: 0 0 6px; color: var(--t-text); }
-html[data-game="celeste"] .game-view .cond-closing p:last-child { margin-bottom: 0; }
-
-/* =====================================================================
-   Отчёт: заголовки в пиксельных рамках, пиксельные маркеры, цитата — окно диалога
-   ===================================================================== */
-
-html[data-game="celeste"] .game-view .report {
-  padding: 24px 28px;
-  line-height: 1.65;
-}
-
-html[data-game="celeste"] .game-view .report h2 {
-  position: relative;
-  width: fit-content;
-  max-width: 100%;
-  margin: 1.8em 0 0.8em;
-  padding: 6px 14px 6px 46px;
-  font-size: 20px;
-  letter-spacing: 0.02em;
-  color: var(--ce-snow);
-  text-shadow: 2px 2px 0 var(--ce-ink);
-  background: color-mix(in srgb, var(--t-accent) 22%, var(--t-bg));
-  box-shadow:
-    0 -3px 0 0 var(--t-accent),
-    0 3px 0 0 var(--t-accent),
-    -3px 0 0 0 var(--t-accent),
-    3px 0 0 0 var(--t-accent),
-    inset 0 -3px 0 0 rgba(0, 0, 0, 0.25),
-    6px 6px 0 0 var(--ce-drop);
-}
-
-html[data-game="celeste"] .game-view .report > h2:first-child { margin-top: 4px; }
-
-html[data-game="celeste"] .game-view .report h2::before {
-  content: "";
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  width: 22px;
-  height: 26px;
-  transform: translateY(-50%);
-  background: url(assets/berry.webp) center / contain no-repeat;
-}
-
-html[data-game="celeste"] .game-view .report h3 {
-  margin: 1.3em 0 0.4em;
-  font-size: 17px;
-  color: var(--ce-gold);
-  text-shadow: 2px 2px 0 var(--ce-ink);
-}
-
-html[data-game="celeste"] .game-view .report h3::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 10px;
-  vertical-align: 2px;
-  background: var(--ce-gold);
-  box-shadow: 2px 2px 0 0 var(--ce-ink);
-}
-
-html[data-game="celeste"] .game-view .report :is(ul, ol) { padding-left: 26px; }
-html[data-game="celeste"] .game-view .report ul > li::before { left: -20px; }
-
-html[data-game="celeste"] .game-view .report ol > li::marker {
-  font-family: var(--t-heading);
-  color: var(--t-accent);
-}
-
-html[data-game="celeste"] .game-view .report strong { color: var(--ce-snow); }
-
-html[data-game="celeste"] .game-view .report blockquote {
-  position: relative;
-  margin: 1.3em 0;
-  padding: 14px 18px 18px;
-  border: none;
-  color: var(--t-text);
-  background: color-mix(in srgb, var(--t-bg) 88%, black);
-  box-shadow:
-    0 -3px 0 0 var(--ce-snow),
-    0 3px 0 0 var(--ce-snow),
-    -3px 0 0 0 var(--ce-snow),
-    3px 0 0 0 var(--ce-snow),
-    6px 6px 0 0 var(--ce-drop);
-}
-
-html[data-game="celeste"] .game-view .report img { border-radius: 0; }
-
-html[data-game="celeste"] .game-view .report :is(.report-figure, .report-gallery) img {
-  box-shadow: 0 -4px 0 0 var(--ce-line), 0 4px 0 0 var(--ce-line), -4px 0 0 0 var(--ce-line), 4px 0 0 0 var(--ce-line), 8px 8px 0 0 var(--ce-drop);
-}
-
-html[data-game="celeste"] .game-view .report figcaption {
-  margin-top: 12px;
-  font-family: var(--t-heading);
-  font-size: 14px;
-}
-
-html[data-game="celeste"] .game-view .report :is(th, td) { border: 2px solid var(--ce-line); }
-html[data-game="celeste"] .game-view .report code { border-radius: 0; }
-
 /* ---------- лайтбокс ---------- */
 
 html[data-game="celeste"] .lightbox img { border-radius: 0; }
@@ -1491,8 +1309,7 @@ html[data-game="celeste"] .lb-btn { border-radius: 0; font-family: var(--t-headi
   .ce-stars-b { animation-duration: 3.1s; animation-delay: -1.2s; }
 
   html[data-game="celeste"] .game-view .block:hover > h2 .sec-icon { animation: ce-berry-hop 0.7s steps(1) infinite; }
-  html[data-game="celeste"] .game-view :is(.report blockquote, .ce-pc-note)::after { animation: ce-blink 1s steps(1) infinite; }
-  html[data-game="celeste"] .game-view .cond-closing::before { animation: ce-bob 1.2s steps(1) infinite; }
+  html[data-game="celeste"] .game-view .ce-pc-note::after { animation: ce-blink 1s steps(1) infinite; }
 
   /* под шторкой заголовок и раскладка «всплывают» уже после её рассыпания */
   html[data-game="celeste"] .game-view.ce .hero-title { animation-delay: 0.7s; }
@@ -1537,10 +1354,6 @@ html[data-game="celeste"] .lb-btn { border-radius: 0; font-family: var(--t-headi
    ===================================================================== */
 
 @media (max-width: 560px) {
-  html[data-game="celeste"] .game-view .report { padding: 18px 16px; }
-  html[data-game="celeste"] .game-view .report h2 { font-size: 18px; }
-  html[data-game="celeste"] .game-view .cond-summary { padding: 16px; }
-  html[data-game="celeste"] .game-view .cond-total b { font-size: 40px; }
   .ce-postcard { padding: 16px 14px 14px; }
   .ce-alt { grid-template-columns: 110px minmax(0, 1fr); }
   .ce-sky-far { opacity: 0.4; }

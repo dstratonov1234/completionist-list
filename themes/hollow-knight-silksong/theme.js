@@ -1,7 +1,8 @@
 // Hollow Knight: Silksong — «Шёлк и песня Фарлума».
-// Вход — расходятся алые шёлковые кулисы; курсор тянет за собой красную нить (верлет-верёвка на canvas);
-// секции «сшиты» стежком, который протягивает игла при прокрутке; в баннере висит игла с колокольчиком —
-// знак очереди / прогресса; за страницей — позолоченная цитадель с лёгким параллаксом.
+// Вход — алые шёлковые кулисы: с главной они сходятся ещё над списком (cover) и расходятся уже над
+// страницей игры; при прямом заходе стоят закрытыми и расходятся. Курсор тянет за собой красную нить
+// (верлет-верёвка на canvas); секции «сшиты» стежком, который протягивает игла при прокрутке; в баннере
+// висит игла с колокольчиком — знак очереди / прогресса; за страницей — позолоченная цитадель с параллаксом.
 // Модуль не завязан на конкретные секции: всё, чего нет на странице, просто пропускается.
 (() => {
   "use strict";
@@ -11,7 +12,30 @@
   const V_SVG = `<svg viewBox="0 0 100 30" preserveAspectRatio="none" aria-hidden="true"><path class="ss-v-l" d="M50 0 L3 30"/><path class="ss-v-r" d="M50 0 L97 30"/></svg>`;
   const LOOSE_SVG = `<svg viewBox="0 0 24 80" aria-hidden="true"><path d="M4 0 C 4 14, 20 18, 16 34 S 4 52, 12 66 S 20 76, 16 80"/></svg>`;
 
+  // Кулисы: две половины, ламбрекен сверху (::before) и узел с колокольчиком посередине.
+  const curtainsHtml = (assets) => `
+    <div class="ss-curtain ss-l"></div>
+    <div class="ss-curtain ss-r"></div>
+    <div class="ss-clasp"><img src="${assets}knot.webp" alt=""><img class="ss-clasp-bell" src="${assets}bell.webp" alt=""></div>`;
+
+  // Кулисы сходятся за SHUT_MS; сомкнувшись, стоят закрытыми около HOLD_MS, затем расходятся.
+  const SHUT_MS = 720;
+  const HOLD_MS = 380;
+  const OPEN_MS = 420; // прямой заход: сколько кулисы стоят закрытыми до раскрытия
+  const GONE_MS = 1880; // от начала раскрытия до удаления слоя
+
   GameThemes.register("hollow-knight-silksong", {
+    // Начало заставки ещё на главной: кулисы сходятся с боков над растворяющимся списком,
+    // сверху опускается ламбрекен, на стыке — узел, колокольчик звенит. Promise — когда экран закрыт.
+    cover(t) {
+      const c = t.layer("ss-curtains ss-cover ss-pre");
+      c.innerHTML = curtainsHtml(t.assets);
+      void c.offsetWidth; // зафиксировать раскрытое положение, чтобы закрытие шло transition-ом
+      c.classList.remove("ss-pre");
+      t.data.shutAt = performance.now() + SHUT_MS;
+      return t.wait(SHUT_MS + 30);
+    },
+
     page(ctx) {
       const { root, el, esc, assets, game } = ctx;
       const motion = !ctx.reducedMotion;
@@ -24,25 +48,30 @@
       try { curtains(); } catch (e) { console.error(e); }
       try { citadel(); } catch (e) { console.error(e); }
       try { ornament(); } catch (e) { console.error(e); }
-      try { summary(); } catch (e) { console.error(e); }
       try { tapestry(); } catch (e) { console.error(e); }
       try { hoop(); } catch (e) { console.error(e); }
       try { seams(); } catch (e) { console.error(e); }
       try { silkLoop(); } catch (e) { console.error(e); }
 
-      ctx.reportReady?.then?.(() => root.querySelector(".report")?.classList.add("ss-report"));
       return () => root.classList.remove("ss");
 
       // ---------- вход: две шёлковые кулисы расходятся ----------
       function curtains() {
+        // С главной кулисы уже сомкнулись над экраном (cover) — только раскрываем их.
+        const handed = ctx.handoff?.layers?.find?.((l) => l?.classList?.contains("ss-curtains"));
+        if (handed) {
+          if (!motion) return handed.remove();
+          const since = performance.now() - (Number(ctx.handoff.data?.shutAt) || 0);
+          const hold = Math.max(120, Math.min(HOLD_MS, HOLD_MS - since));
+          later(() => handed.classList.add("ss-open"), hold);
+          later(() => handed.remove(), hold + GONE_MS);
+          return;
+        }
         if (!motion) return;
         const c = ctx.layer("ss-curtains");
-        c.innerHTML = `
-          <div class="ss-curtain ss-l"></div>
-          <div class="ss-curtain ss-r"></div>
-          <div class="ss-clasp"><img src="${assets}knot.webp" alt=""><img class="ss-clasp-bell" src="${assets}bell.webp" alt=""></div>`;
-        later(() => c.classList.add("ss-open"), 420);
-        later(() => c.remove(), 2300);
+        c.innerHTML = curtainsHtml(assets);
+        later(() => c.classList.add("ss-open"), OPEN_MS);
+        later(() => c.remove(), OPEN_MS + GONE_MS);
       }
 
       // ---------- фон: цитадель за контентом ----------
@@ -115,13 +144,6 @@
               sub: game.finished ? ctx.fmtDate(game.finished) : "",
               frac: total ? clamp01(done / total) : 1,
             };
-          case "dropped":
-            return {
-              label: "Нить оборвана",
-              value: pct != null ? `${Math.round(pct)}%` : "✕",
-              sub: game.finished || game.started ? ctx.fmtDate(game.finished || game.started) : "",
-              frac: null,
-            };
           default: {
             const p = game.priority;
             return {
@@ -132,21 +154,6 @@
             };
           }
         }
-      }
-
-      // ---------- сводка: игла тянет красную нить по шкале прогресса ----------
-      function summary() {
-        const sum = root.querySelector(".cond-summary");
-        if (!sum) return;
-        sum.classList.add("ss-summary");
-        const fill = sum.querySelector(".progress > div");
-        if (!fill) return;
-        fill.parentElement.classList.add("ss-thread-bar");
-        const needle = document.createElement("img");
-        needle.className = "ss-bar-needle";
-        needle.src = `${assets}needle.webp`;
-        needle.alt = "";
-        fill.append(needle);
       }
 
       // ---------- гобелен: каждая цель — вышитая заплатка, висящая на шёлковых нитях ----------

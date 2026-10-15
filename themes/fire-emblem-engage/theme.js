@@ -1,9 +1,11 @@
 // Fire Emblem Engage — «Карта сражения».
 // Вход — момент «ENGAGE!»: синяя и красная панели (раскол волос Алеара) смыкаются по диагонали, вспыхивает
-// кольцо Эмблемы, затем карточка главы и панели разлетаются. Условия закрытия — тактическая карта: группы —
-// секторы поля, цели — клетки с юнитами (выполненные — завербованы: в цвете, с кольцом; остальные — серые).
-// По клеткам ходит фирменный курсор-рамка (стрелки, мышь, тап), выбор показывает окно юнита и «зону хода»;
-// чек-лист — слоты колец. Прогресс — шкала Engage в панели-HUD над картой; искры за курсором.
+// кольцо Эмблемы, затем карточка главы и панели разлетаются. С главной заставка начинается ещё на списке
+// (cover): панели влетают поверх растворяющегося списка, а страница игры собирается уже под ними.
+// Условия закрытия — тактическая карта: группы — секторы поля, цели — клетки с юнитами (выполненные —
+// завербованы: в цвете, с кольцом; остальные — серые). По клеткам ходит фирменный курсор-рамка (стрелки, мышь,
+// тап), выбор показывает окно юнита и «зону хода»; чек-лист — слоты колец. Прогресс — шкала Engage в панели-HUD
+// над картой; искры за курсором.
 (() => {
   "use strict";
 
@@ -14,8 +16,73 @@
     ["counts", "Как засчитываем"],
   ];
   const SPARK_COLORS = ["#ffe08a", "#f3c35c", "#8fc4ff", "#ff7a90"];
+  // Сколько от начала заставки панели держат экран, прежде чем разлететься (повторный вход — быстрый темп).
+  const HOLD = { full: 2500, quick: 1250 };
+  // Когда панели сомкнулись и шов прочерчен (0.32s + 35% от 0.9s, × --k) — с этого момента экран закрыт.
+  const SHUT = { full: 640, quick: 360 };
+
+  function plural(n, one, few, many) {
+    const m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return one;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
+    return many;
+  }
+
+  // Карточка главы: «Пролог» / «Глава N» / «Эпилог» и подпись про прогресс.
+  function chapter(game, done, total) {
+    if (!total) return { label: "Пролог", sub: "Условия закрытия ещё не заданы" };
+    const of = `${done} из ${total} ${plural(total, "условия", "условий", "условий")} закрытия`;
+    if (game.status === "completed" || done === total) return { label: "Эпилог", sub: `Игра закрыта · ${of}` };
+    if (game.status === "planned") return { label: "Пролог", sub: `В планах · ${total} ${plural(total, "условие", "условия", "условий")} закрытия` };
+    return { label: done ? `Глава ${done}` : "Пролог", sub: `Выполнено ${of}` };
+  }
+
+  // Заставка целиком лежит в одном слое; её CSS-анимации идут от момента создания, так что слой, начатый
+  // на главной, просто доигрывает на странице игры.
+  function engageMarkup(o, game, assets, esc, done, total) {
+    const { label, sub } = chapter(game, done, total);
+    o.innerHTML = `
+      <div class="fe-eg-panel fe-eg-blue"><i></i></div>
+      <div class="fe-eg-panel fe-eg-red"><i></i></div>
+      <div class="fe-eg-seam"></div>
+      <div class="fe-eg-flash"></div>
+      <img class="fe-eg-burst" src="${assets}burst.webp" alt="">
+      <img class="fe-eg-ring" src="${assets}ring.webp" alt="">
+      <div class="fe-eg-word" data-text="ENGAGE">ENGAGE</div>
+      <div class="fe-eg-card">
+        <div class="fe-eg-chapter">${esc(label)}</div>
+        <div class="fe-eg-title">${esc(game.title)}</div>
+        <img class="fe-eg-rule" src="${assets}divider.webp" alt="">
+        <div class="fe-eg-sub">${esc(sub)}</div>
+      </div>`;
+    // Диагональ шва — та же, что у краёв панелей (64% сверху → 36% снизу), угол зависит от пропорций экрана.
+    const ang = (Math.atan2(0.28 * window.innerWidth, window.innerHeight) * 180) / Math.PI;
+    o.style.setProperty("--ang", `${ang.toFixed(2)}deg`);
+  }
+
+  // Видел ли заставку в этой вкладке: повторные входы идут в быстром темпе.
+  function seenBefore() {
+    try {
+      const seen = sessionStorage.getItem("fe-engage") === "1";
+      sessionStorage.setItem("fe-engage", "1");
+      return seen;
+    } catch {
+      return false; // приватный режим — каждый раз полная заставка
+    }
+  }
 
   GameThemes.register("fire-emblem-engage", {
+    // Начало заставки ещё на главной: синяя и красная панели влетают поверх растворяющегося списка и смыкаются
+    // по диагонали со вспышкой шва. Promise выполняется, когда экран закрыт; остальное доиграет page().
+    cover(t) {
+      const seen = seenBefore();
+      const o = t.layer(`fe-engage${seen ? " fe-quick" : ""}`);
+      engageMarkup(o, t.game, t.assets, t.esc, t.game.goals?.done ?? 0, t.game.goals?.total ?? 0);
+      t.data.start = performance.now();
+      t.data.seen = seen;
+      return t.wait(seen ? SHUT.quick : SHUT.full);
+    },
+
     page(ctx) {
       const { root, el, esc, assets, game } = ctx;
       const cond = ctx.conditions;
@@ -31,53 +98,31 @@
       entrance();
       heroFloor();
       hud();
-      briefing();
+      notes();
       const map = battleMap();
-      victory();
 
       return () => root.classList.remove("fe", "fe-hold", "fe-reveal");
 
-      // ---------- текст для заставки ----------
-      function chapter() {
-        if (!total) return { label: "Пролог", sub: "Условия закрытия ещё не заданы" };
-        const of = `${done} из ${total} ${ctx.plural(total, "условия", "условий", "условий")} закрытия`;
-        if (game.status === "completed" || done === total) return { label: "Эпилог", sub: `Игра закрыта · ${of}` };
-        if (game.status === "dropped") return { label: "Отступление", sub: `Кампания прервана · ${of}` };
-        if (game.status === "planned") return { label: "Пролог", sub: `В планах · ${total} ${ctx.plural(total, "условие", "условия", "условий")} закрытия` };
-        return { label: done ? `Глава ${done}` : "Пролог", sub: `Выполнено ${of}` };
-      }
-
       // ---------- вход: ENGAGE! ----------
       function entrance() {
-        if (!motion) return;
-        let seen = false;
-        try {
-          seen = sessionStorage.getItem("fe-engage") === "1";
-          sessionStorage.setItem("fe-engage", "1");
-        } catch {
-          /* приватный режим — каждый раз полная заставка */
-        }
-        const { label, sub } = chapter();
+        // Вход с главной: панели уже сомкнулись над списком (cover) — слой доигрывает кольцо, ENGAGE и карточку.
+        const handed = ctx.handoff?.layers.find((l) => l.classList.contains("fe-engage")) ?? null;
+        if (!motion) return handed?.remove();
+        const seen = handed ? !!ctx.handoff.data?.seen : seenBefore();
+        const start = (handed && ctx.handoff.data?.start) || performance.now();
         root.classList.add("fe-hold");
-        const o = ctx.layer(`fe-engage${seen ? " fe-quick" : ""}`);
-        o.innerHTML = `
-          <div class="fe-eg-panel fe-eg-blue"><i></i></div>
-          <div class="fe-eg-panel fe-eg-red"><i></i></div>
-          <div class="fe-eg-seam"></div>
-          <div class="fe-eg-flash"></div>
-          <img class="fe-eg-burst" src="${assets}burst.webp" alt="">
-          <img class="fe-eg-ring" src="${assets}ring.webp" alt="">
-          <div class="fe-eg-word" data-text="ENGAGE">ENGAGE</div>
-          <div class="fe-eg-card">
-            <div class="fe-eg-chapter">${esc(label)}</div>
-            <div class="fe-eg-title">${esc(game.title)}</div>
-            <img class="fe-eg-rule" src="${assets}divider.webp" alt="">
-            <div class="fe-eg-sub">${esc(sub)}</div>
-          </div>`;
-        // Диагональ шва — та же, что у краёв панелей (64% сверху → 36% снизу), угол зависит от пропорций экрана.
-        const ang = (Math.atan2(0.28 * window.innerWidth, window.innerHeight) * 180) / Math.PI;
-        o.style.setProperty("--ang", `${ang.toFixed(2)}deg`);
-        const start = performance.now();
+        let o = handed;
+        if (o) {
+          // Карточка собрана по счётчику из games.json — сверяем с условиями (обычно совпадает, и ничего не меняется).
+          const { label, sub } = chapter(game, done, total);
+          const ch = o.querySelector(".fe-eg-chapter");
+          const sb = o.querySelector(".fe-eg-sub");
+          if (ch && ch.textContent !== label) ch.textContent = label;
+          if (sb && sb.textContent !== sub) sb.textContent = sub;
+        } else {
+          o = ctx.layer(`fe-engage${seen ? " fe-quick" : ""}`);
+          engageMarkup(o, game, assets, esc, done, total);
+        }
         let out = false;
         let gone = 0;
         const finish = () => {
@@ -100,7 +145,8 @@
           }
           gone = setTimeout(() => o.remove(), 750);
         };
-        const timer = setTimeout(finish, seen ? 1250 : 2500);
+        // Разлёт — в тот же момент от начала заставки, что и при прямом входе (с главной часть уже сыграна).
+        const timer = setTimeout(finish, Math.max(120, (seen ? HOLD.quick : HOLD.full) - (performance.now() - start)));
         ctx.onCleanup(() => (clearTimeout(timer), clearTimeout(gone)));
         for (const type of ["pointerdown", "keydown", "wheel", "touchmove"]) ctx.listen(window, type, finish, { passive: true, once: true });
       }
@@ -149,13 +195,8 @@
         });
       }
 
-      // ---------- брифинг: цель закрытия и настройки ----------
-      function briefing() {
-        const s = root.querySelector(".cond-summary");
-        if (s) {
-          s.classList.add("fe-brief");
-          s.insertAdjacentHTML("afterbegin", `<div class="fe-brief-tag" aria-hidden="true">Брифинг</div>`);
-        }
+      // ---------- заметка игрока — окно диалога; «условий ещё нет» — панель ----------
+      function notes() {
         root.querySelector(".game-notes")?.classList.add("fe-talk", "fe-notes");
         root.querySelector(".cond-none")?.classList.add("fe-none");
       }
@@ -537,14 +578,6 @@
               )
               .join("")}
           </div>`;
-      }
-
-      // ---------- точка закрытия — «условие победы» ----------
-      function victory() {
-        const s = ctx.section("closing");
-        if (!s) return;
-        s.classList.add("fe-victory");
-        s.querySelector("h2")?.insertAdjacentHTML("afterbegin", `<span class="fe-vc-tag" aria-hidden="true">Условие победы</span>`);
       }
 
       // ---------- искры: пул из 24 ромбиков, анимация через Web Animations ----------

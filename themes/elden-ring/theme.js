@@ -2,7 +2,7 @@
 // Заставка как карточка новой области (золотое имя на чёрном, тонкие линии), лучи благодати в баннере,
 // группы условий закрытия — экраны инвентаря (сетка ячеек + панель описания, у выполненных —
 // «ВРАГ ПОВЕРЖЕН»), золотой сигил прогресса, искры благодати за курсором и при касании, руины в дымке.
-// Заголовки секций, панели, отчёт и карточка в списке — в theme.css.
+// Заголовки секций, панели и баннер на главной — в theme.css.
 (() => {
   "use strict";
 
@@ -10,10 +10,50 @@
     in_progress: "Благодать указывает путь",
     completed: "Путь завершён",
     planned: "Путь ещё впереди",
-    dropped: "Благодать угасла",
   };
 
+  // Чёрный экран заставки при входе с главной наплывает за 0.7 с (theme.css, .er-cover) — ждём чуть дольше.
+  const COVER_MS = 760;
+  // Когда (от начала заставки) сходит чёрный экран и гаснет карточка: полная заставка и повторная за сессию.
+  const LIFT = { full: 2000, repeat: 1300 };
+  const OUT = { full: 3000, repeat: 2400 };
+
+  // Карточка области: имя игры золотом, орнаментальная линия, подпись о пути.
+  function introCard(game, assets, esc, done, total) {
+    let sub = SUBTITLE[game.status] ?? "";
+    if (game.status === "in_progress" && total) sub += ` · ${done} из ${total}`;
+    return `
+      <div class="er-intro-card">
+        <div class="er-intro-title">${esc(game.title)}</div>
+        <img class="er-intro-rule" src="${assets}divider.webp" alt="">
+        ${sub ? `<div class="er-intro-sub">${esc(sub)}</div>` : ""}
+      </div>`;
+  }
+
   GameThemes.register("elden-ring", {
+    // Вход с главной: по клику на баннер поверх растворяющегося списка наплывает чёрный экран и начинает
+    // проявляться золотая карточка. Страница игры собирается уже в темноте, page() доигрывает заставку.
+    cover(t) {
+      let seen = false;
+      try {
+        seen = sessionStorage.getItem("er-intro") === "1";
+      } catch {
+        /* приватный режим — полная заставка */
+      }
+      t.data.start = performance.now();
+      t.data.seen = seen;
+      const card = t.layer("er-intro er-veil er-cover");
+      // На главной шрифты темы заданы только баннеру и сцене — переносим их, чтобы надпись не сменила шрифт.
+      const id = CSS.escape(t.game.id);
+      const from = document.querySelector(`.stage-layer[data-game="${id}"]`) ?? document.querySelector(`.gbanner[data-game="${id}"]`);
+      for (const k of ["--t-display", "--t-heading", "--t-body"]) {
+        const v = from?.style.getPropertyValue(k);
+        if (v) card.style.setProperty(k, v);
+      }
+      card.innerHTML = introCard(t.game, t.assets, t.esc, t.game.goals?.done ?? 0, t.game.goals?.total ?? 0);
+      return t.wait(COVER_MS);
+    },
+
     page(ctx) {
       const { root, el, esc, assets, game } = ctx;
       root.classList.add("er");
@@ -39,11 +79,19 @@
         });
       }
 
-      return () => root.classList.remove("er", "er-veiled");
+      return () => {
+        root.classList.remove("er", "er-veiled", "er-handoff");
+        root.style.removeProperty("--er-lift");
+      };
 
       // ---------- заставка: имя области золотом на чёрном ----------
       function intro() {
-        if (ctx.reducedMotion) return;
+        // Вход с главной: чёрный экран и карточка уже на месте (cover).
+        const handed = ctx.handoff?.layers.find((l) => l.classList.contains("er-intro")) ?? null;
+        if (ctx.reducedMotion) {
+          ctx.handoff?.layers.forEach((l) => l.remove());
+          return;
+        }
         // Первый заход за сессию — с чёрным экраном, повторные — только карточка поверх страницы.
         let seen = false;
         try {
@@ -52,22 +100,31 @@
         } catch {
           /* приватный режим — просто показываем полную заставку */
         }
-        const veil = !seen;
-        let sub = SUBTITLE[game.status] ?? "";
-        const goals = ctx.goals?.() ?? [];
-        if (game.status === "in_progress" && goals.length) sub += ` · ${goals.filter((x) => x?.done).length} из ${goals.length}`;
-
-        const card = ctx.layer(`er-intro${veil ? " er-veil" : ""}`);
-        card.innerHTML = `
-          <div class="er-intro-card">
-            <div class="er-intro-title">${esc(game.title)}</div>
-            <img class="er-intro-rule" src="${assets}divider.webp" alt="">
-            ${sub ? `<div class="er-intro-sub">${esc(sub)}</div>` : ""}
-          </div>`;
-        if (veil) root.classList.add("er-veiled");
+        const timers = [];
+        let card, out;
+        if (handed) {
+          // Чёрное сходит тогда же, что и при прямом заходе (считая от начала заставки на главной), страница
+          // поднимается из темноты вслед за ним (--er-lift в theme.css), карточка ещё висит и гаснет последней.
+          // Повторный вход за сессию — короче: чёрное сходит раньше.
+          card = handed;
+          const kind = ctx.handoff.data?.seen ? "repeat" : "full";
+          const elapsed = performance.now() - (ctx.handoff.data?.start ?? performance.now());
+          const lift = Math.max(150, LIFT[kind] - elapsed);
+          out = Math.max(lift + 900, OUT[kind] - elapsed);
+          root.style.setProperty("--er-lift", `${Math.round(lift)}ms`);
+          root.classList.add("er-handoff");
+          timers.push(setTimeout(() => card.classList.add("er-lift"), lift));
+        } else {
+          const veil = !seen;
+          const goals = ctx.goals?.() ?? [];
+          card = ctx.layer(`er-intro${veil ? " er-veil" : ""}`);
+          card.innerHTML = introCard(game, assets, esc, goals.filter((x) => x?.done).length, goals.length);
+          if (veil) root.classList.add("er-veiled");
+          out = veil ? OUT.full : OUT.repeat;
+        }
 
         let done = false;
-        const timers = [];
+        const drop = () => (handed ? ctx.handoff.layers : [card]).forEach((l) => l.remove());
         const finish = (skip) => {
           if (done) return;
           done = true;
@@ -75,11 +132,11 @@
           // При пропуске страница появляется сразу; иначе доигрывает подъём из темноты.
           if (skip) {
             card.classList.add("er-skip");
-            root.classList.remove("er-veiled");
+            root.classList.remove("er-veiled", "er-handoff");
           }
-          timers.push(setTimeout(() => card.remove(), skip ? 450 : 1000));
+          timers.push(setTimeout(drop, skip ? 450 : 1000));
         };
-        timers.push(setTimeout(() => finish(false), veil ? 3000 : 2400));
+        timers.push(setTimeout(() => finish(false), out));
         // Пропуск: любой клик, касание, клавиша или прокрутка.
         for (const type of ["pointerdown", "keydown", "wheel", "touchstart"]) {
           ctx.listen(window, type, () => finish(true), { passive: true });

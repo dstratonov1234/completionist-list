@@ -604,7 +604,7 @@ html[data-game="fire-emblem-engage"] .game-view.fe-reveal .game-layout { animati
 }
 
 /* ============================ раскладка страницы ============================ */
-/* Одна колонка: сверху HUD (шкала Engage, группы, даты), затем брифинг, карта и условие победы. */
+/* Одна колонка: сверху HUD (шкала Engage, группы, даты), затем заметка и карта условий. */
 
 html[data-game="fire-emblem-engage"] .fe .game-layout {
   grid-template-columns: minmax(0, 1fr);
@@ -616,8 +616,6 @@ html[data-game="fire-emblem-engage"] .fe .game-side { position: static; order: -
 
 /* общая глянцевая панель со срезанными углами */
 html[data-game="fire-emblem-engage"] .fe-hud .side-card,
-html[data-game="fire-emblem-engage"] .fe .fe-brief,
-html[data-game="fire-emblem-engage"] .fe .fe-victory,
 html[data-game="fire-emblem-engage"] .fe .fe-none,
 html[data-game="fire-emblem-engage"] .fe-unit {
   position: relative;
@@ -629,8 +627,6 @@ html[data-game="fire-emblem-engage"] .fe-unit {
 }
 
 html[data-game="fire-emblem-engage"] .fe-hud .side-card::before,
-html[data-game="fire-emblem-engage"] .fe .fe-brief::before,
-html[data-game="fire-emblem-engage"] .fe .fe-victory::before,
 html[data-game="fire-emblem-engage"] .fe-unit-frame {
   content: "";
   position: absolute;
@@ -832,66 +828,6 @@ html[data-game="fire-emblem-engage"] .fe-hud .group-progress li.fe-clear .progre
 }
 
 @keyframes fe-meter-glow { to { opacity: 0.65; } }
-
-/* ---------- брифинг ---------- */
-
-html[data-game="fire-emblem-engage"] .fe .fe-brief { padding: 30px 28px 20px; }
-html[data-game="fire-emblem-engage"] .fe .fe-brief .cond-total,
-html[data-game="fire-emblem-engage"] .fe .fe-brief > .progress { display: none; }
-
-.fe-brief-tag {
-  position: absolute;
-  top: 0;
-  left: 30px;
-  padding: 4px 18px 4px 14px;
-  font-family: "Unbounded", sans-serif;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--fe-navy);
-  background: linear-gradient(90deg, var(--fe-gold-hi), var(--fe-gold));
-  clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 9px 100%);
-}
-
-html[data-game="fire-emblem-engage"] .fe .fe-brief .cond-aim { margin: 4px 0 0; font-size: 15.5px; line-height: 1.55; }
-
-html[data-game="fire-emblem-engage"] .fe .fe-brief .cond-aim b {
-  display: block;
-  margin-bottom: 4px;
-  font-family: "Unbounded", sans-serif;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--fe-blue-hi);
-}
-
-html[data-game="fire-emblem-engage"] .fe .fe-brief .cond-setup {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 6px 26px;
-  margin: 14px 0 0;
-  padding: 12px 0 0;
-  list-style: none;
-  border-top: 1px solid var(--fe-line);
-  color: var(--fe-dim);
-  font-size: 13.5px;
-}
-
-html[data-game="fire-emblem-engage"] .fe .fe-brief .cond-setup li { position: relative; margin: 0; padding-left: 16px; }
-
-html[data-game="fire-emblem-engage"] .fe .fe-brief .cond-setup li::before {
-  content: "";
-  position: absolute;
-  left: 2px;
-  top: 0.55em;
-  width: 6px;
-  height: 6px;
-  background: var(--fe-blue);
-  transform: rotate(45deg);
-}
-
-html[data-game="fire-emblem-engage"] .fe .fe-brief .cond-rev { color: var(--fe-faint); text-align: right; }
 
 /* заметка игрока и комментарии к целям — окно диалога */
 html[data-game="fire-emblem-engage"] .fe .fe-talk {
@@ -1613,30 +1549,6 @@ html[data-game="fire-emblem-engage"] .fe-unit.fe-inline {
 
 .fe-unit.fe-inline .fe-unit-scroll { overflow: visible; }
 
-/* ============================ точка закрытия — условие победы ============================ */
-
-html[data-game="fire-emblem-engage"] .fe .fe-victory { margin-top: 26px; padding: 22px 28px 16px; }
-html[data-game="fire-emblem-engage"] .fe .fe-victory h2 { flex-wrap: wrap; gap: 6px 10px; font-size: 18px; }
-html[data-game="fire-emblem-engage"] .fe .fe-victory h2 .sec-icon { color: var(--fe-gold); text-shadow: 0 0 10px rgba(243, 195, 92, 0.7); }
-html[data-game="fire-emblem-engage"] .fe .fe-victory h2::after { background: linear-gradient(to right, rgba(243, 195, 92, 0.6), transparent); }
-
-.fe-vc-tag {
-  flex: 0 0 auto;
-  order: -1;
-  margin-right: calc(100% - 10px);
-  padding: 3px 18px 3px 12px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #fff;
-  background: linear-gradient(90deg, var(--fe-red-deep), #d42a50);
-  clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
-}
-
-html[data-game="fire-emblem-engage"] .fe .fe-victory .cond-closing p { color: var(--fe-dim); line-height: 1.6; }
-html[data-game="fire-emblem-engage"] .fe .fe-victory .cond-closing p:first-child { color: var(--fe-text); }
-
 /* ============================ соседние игры ============================ */
 
 html[data-game="fire-emblem-engage"] .fe .neighbor {
@@ -1665,10 +1577,6 @@ html[data-game="fire-emblem-engage"] .fe .neighbor small { color: var(--fe-faint
 
 @media (max-width: 640px) {
   html[data-game="fire-emblem-engage"] .fe-hud .side-card { grid-template-columns: minmax(0, 1fr); padding: 18px 18px 16px; }
-  html[data-game="fire-emblem-engage"] .fe .fe-brief { padding: 30px 18px 18px; }
-  html[data-game="fire-emblem-engage"] .fe .fe-victory { padding: 20px 18px 14px; }
-  html[data-game="fire-emblem-engage"] .fe .fe-brief .cond-setup { grid-template-columns: minmax(0, 1fr); }
-  .fe-brief-tag { left: 18px; }
   .fe-meter-dial { width: 108px; }
   .fe-field { padding: 14px 10px 18px; }
   .fe-sector-head { margin-left: -10px; padding-left: 12px; font-size: 13px; }
