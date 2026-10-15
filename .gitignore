@@ -2,3 +2,8 @@
 !.claude/launch.json
 .DS_Store
 Thumbs.db
+
+# секреты никогда не коммитим (репозиторий публичный)
+*.key
+.env
+.env.*

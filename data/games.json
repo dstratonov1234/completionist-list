@@ -11,158 +11,15 @@
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/3c3489495136b26b34f8a9543c7f5645b99d388c/header.jpg",
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/0daf3933d392d7bb7c5a890917e20c917fcc458e/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/logo.png",
-      "screenshots": [
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_5384f9f8b96a0b9934b2bc35a4058376211636d2.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_d5b6edd94e77ba6db31c44d8a3c09d807ab27751.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_a81e4231cc8d55f58b51a4a938898af46503cae5.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_62e10cf506d461e11e050457b08aa0e2a1c078d0.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_bd76bd88bc5334ee56ae3d5f0d8dec4455e8e3b8.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_33a645903d6dd9beec39f272a3daf57174a6cc26.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_47f3523dbea462aff2ca4bc9f605faaf80a792b2.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_92c7e8f34c00bdb455070ecdd5b746f0d2f6d808.jpg"
-      ],
-      "description": "Hollow Knight – это эпическое приключение в огромном разрушенном королевстве, полном насекомых и героев. Исследуйте извилистые пещеры, сражайтесь с порчеными тварями и заводите дружбу со странными жуками – все это в классической двухмерной ручной рисовке.",
-      "developer": "Team Cherry",
-      "year": 2017,
-      "genres": [
-        "Экшены",
-        "Приключенческие игры",
-        "Инди"
-      ],
-      "links": [
-        {
-          "title": "Steam",
-          "url": "https://store.steampowered.com/app/367520/"
-        },
-        {
-          "title": "Вики",
-          "url": "https://hollowknight.fandom.com/wiki/Hollow_Knight_Wiki"
-        },
-        {
-          "title": "HowLongToBeat",
-          "url": "https://howlongtobeat.com/?q=Hollow%20Knight"
-        }
-      ],
       "started": "2026-08-01",
       "finished": "2026-09-20",
       "playtime": 64,
-      "rating": 10,
-      "completion": "112%, все концовки и все 63 достижения",
-      "achievements": {
-        "done": 63,
-        "total": 63
-      },
       "aliases": [
         "HK",
         "Холлоу Найт",
         "Полый рыцарь"
       ],
       "report": true,
-      "goals": [
-        {
-          "type": "boss",
-          "title": "Хорнет",
-          "description": "Защитница Халлоунеста и первый серьёзный экзамен.",
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/16/Hornet_Idle.png/revision/latest",
-          "link": "https://hollowknight.fandom.com/wiki/Hornet",
-          "date": "2026-08-04"
-        },
-        {
-          "type": "boss",
-          "title": "Король Кошмара Гримм",
-          "description": "Финал труппы Гримма.",
-          "note": "Попыток 40, не меньше — но этот танец того стоил",
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/9/98/Screenshot_HK_Nightmare_King_Grimm_01.png/revision/latest/scale-to-width-down/800",
-          "link": "https://hollowknight.fandom.com/wiki/Nightmare_King_Grimm",
-          "date": "2026-09-02"
-        },
-        {
-          "type": "boss",
-          "title": "Чистый Сосуд",
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/e/e4/B_Pure_Vessel.png/revision/latest",
-          "link": "https://hollowknight.fandom.com/wiki/Pure_Vessel",
-          "date": "2026-09-12"
-        },
-        {
-          "type": "boss",
-          "title": "Абсолютное Сияние",
-          "description": "Финальный босс дополнения Godmaster.",
-          "note": "Последний удар — и руки тряслись ещё минут пять",
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/13/Godhome_Arena_Absolute_Radiance_Phase_4.png/revision/latest/scale-to-width-down/800",
-          "link": "https://hollowknight.fandom.com/wiki/Absolute_Radiance",
-          "date": "2026-09-18"
-        },
-        {
-          "type": "challenge",
-          "title": "Путь боли",
-          "description": "Секретная платформенная секция Белого дворца.",
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/b/b4/White_Palace.png/revision/latest/scale-to-width-down/800",
-          "link": "https://hollowknight.fandom.com/wiki/Path_of_Pain",
-          "date": "2026-09-08"
-        },
-        {
-          "type": "achievement",
-          "title": "Стальное сердце",
-          "description": "Пройдите и завершите игру на 100% в режиме Стальной души",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/367520/e3b29bb02a500134a1112b6f925820fd57fe8bf9.jpg",
-          "rarity": 3.9,
-          "date": "2026-09-10"
-        },
-        {
-          "type": "achievement",
-          "title": "Стальная душа",
-          "description": "Пройдите игру в режиме Стальной души",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/367520/c2a017099150e32a6d014c318d921a5a2deec181.jpg",
-          "rarity": 4.7,
-          "date": "2026-09-11"
-        },
-        {
-          "type": "achievement",
-          "title": "Молниеносное прохождение",
-          "description": "Пройдите игру за 5 часов",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/367520/23dd899f5f08281f920f8db73e825884a5d9ebe8.jpg",
-          "rarity": 5.4,
-          "date": "2026-09-12"
-        },
-        {
-          "type": "achievement",
-          "title": "Принять Пустоту",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/367520/671c16432f460cdd9eff88d5c01b4abc7cfe2703.jpg",
-          "rarity": 5.4,
-          "date": "2026-09-13"
-        },
-        {
-          "type": "achievement",
-          "title": "Быстрое прохождение",
-          "description": "Пройдите и завершите игру на 100% за 20 часов",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/367520/990df88f2440225e3c9ee49fc68233c1cc476807.jpg",
-          "rarity": 5.6,
-          "date": "2026-09-14"
-        },
-        {
-          "type": "achievement",
-          "title": "Крайне быстрое прохождение",
-          "description": "Пройдите игру за 10 часов",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/367520/95cb373a7b6309360f0f12fb18c993b013102f77.jpg",
-          "rarity": 6.6,
-          "date": "2026-09-15"
-        },
-        {
-          "type": "achievement",
-          "title": "Вестник перемен",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/367520/781ccaf816379f217f53dfb86fb8c3a77daed9d1.jpg",
-          "rarity": 7,
-          "date": "2026-09-16"
-        },
-        {
-          "type": "achievement",
-          "title": "Чистое прохождение",
-          "description": "Пройдите и завершите игру на 112%",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/367520/6b7a9e0fa49788c8ad8b56ddff75ac6250330b92.jpg",
-          "rarity": 7,
-          "date": "2026-09-17"
-        }
-      ],
       "theme": {
         "bg": "#060912",
         "surface": "#0e1424",
@@ -195,12 +52,12 @@
           "grain"
         ],
         "heroPosition": "center 35%",
-        "sections": {
-          "screenshots": {
-            "label": "Халлоунест"
-          }
-        },
-        "css": true
+        "css": true,
+        "js": true
+      },
+      "goals": {
+        "done": 8,
+        "total": 8
       }
     },
     {
@@ -213,132 +70,10 @@
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/header.jpg",
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/logo.png",
-      "screenshots": [
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_1ad297c2044cdcf450ee83e56350cafb590da755.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_03bfe6bd5ddac7f747c8d2aa1a4f82cfd53c6dcb.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_4b0f0222341b64a37114033aca9994551f27c161.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_1012b11ad364ad6c138a25a654108de28de56c5f.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_832ef0f27c3d6efdaa4b5d1cc896dce0999bc9e8.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_1098b655a622720cfd549b104736a4eca8948100.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/504230/ss_0eab901ec5c364aa18225fa608ff9cbcc1f432bf.jpg"
-      ],
-      "description": "В платформере от создателей TowerFall Мэдлин сражается со своими демонами на пути к вершине горы Селеста. Преодолевай сотни хорошо продуманных сложностей, отыскивай тайники и постигай загадку горы.",
-      "developer": "Maddy Makes Games Inc., Extremely OK Games, Ltd.",
-      "year": 2018,
-      "genres": [
-        "Экшены",
-        "Приключенческие игры",
-        "Инди"
-      ],
-      "links": [
-        {
-          "title": "Steam",
-          "url": "https://store.steampowered.com/app/504230/"
-        },
-        {
-          "title": "Вики",
-          "url": "https://celestegame.fandom.com/wiki/Celeste_Wiki"
-        },
-        {
-          "title": "HowLongToBeat",
-          "url": "https://howlongtobeat.com/?q=Celeste"
-        }
-      ],
       "started": "2026-06",
       "finished": "2026-07",
       "playtime": 41.5,
-      "rating": 9,
-      "completion": "Все клубники, кристальные сердца и Farewell",
-      "achievements": {
-        "done": 32,
-        "total": 32
-      },
       "report": true,
-      "goals": [
-        {
-          "type": "location",
-          "title": "Заброшенный город",
-          "image": "https://static.wikia.nocookie.net/celestegame/images/2/2f/Forsaken_City.png/revision/latest/scale-to-width-down/800",
-          "link": "https://celestegame.fandom.com/wiki/Chapter_1:_Forsaken_City"
-        },
-        {
-          "type": "location",
-          "title": "Отель «Селестиал»",
-          "image": "https://static.wikia.nocookie.net/celestegame/images/f/f6/Celestial_Resort.png/revision/latest/scale-to-width-down/800",
-          "link": "https://celestegame.fandom.com/wiki/Chapter_3:_Celestial_Resort"
-        },
-        {
-          "type": "location",
-          "title": "Зеркальный храм",
-          "image": "https://static.wikia.nocookie.net/celestegame/images/b/bd/Mirror_Temple.png/revision/latest/scale-to-width-down/800",
-          "link": "https://celestegame.fandom.com/wiki/Chapter_5:_Mirror_Temple"
-        },
-        {
-          "type": "location",
-          "title": "Вершина",
-          "note": "Саундтрек на этой главе — отдельный вид счастья",
-          "image": "https://static.wikia.nocookie.net/celestegame/images/d/d7/The_Summit.png/revision/latest/scale-to-width-down/800",
-          "link": "https://celestegame.fandom.com/wiki/Chapter_7:_The_Summit"
-        },
-        {
-          "type": "boss",
-          "title": "Бадлин",
-          "description": "Погоня за собственным отражением.",
-          "image": "https://static.wikia.nocookie.net/celestegame/images/d/dc/Badeline.png/revision/latest/scale-to-width-down/593",
-          "link": "https://celestegame.fandom.com/wiki/Badeline"
-        },
-        {
-          "type": "dlc",
-          "title": "Глава 9: Прощание",
-          "description": "Самая сложная глава игры.",
-          "image": "https://static.wikia.nocookie.net/celestegame/images/b/b3/Cover_Art_for_the_soundtrack.jpg/revision/latest",
-          "link": "https://celestegame.fandom.com/wiki/Chapter_9:_Farewell",
-          "date": "2026-07-28"
-        },
-        {
-          "type": "collectible",
-          "title": "Все золотые клубники",
-          "description": "Пройти главу целиком без единой смерти.",
-          "link": "https://celestegame.fandom.com/wiki/Golden_Strawberries_Guide"
-        },
-        {
-          "type": "achievement",
-          "title": "Wow",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/504230/b002c7e5e8cb1da71c5992a73076a26a5403e1ee.jpg",
-          "rarity": 6.6
-        },
-        {
-          "type": "achievement",
-          "title": "1UP!",
-          "description": "Получить 1UP",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/504230/01751a67a64a8d6883480f5626233d2952b3faff.jpg",
-          "rarity": 8.2
-        },
-        {
-          "type": "achievement",
-          "title": "Спасибо, что играли",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/504230/9492cd8d788b45471c098fa29372570892be4452.jpg",
-          "rarity": 8.2
-        },
-        {
-          "type": "achievement",
-          "title": "Farewell",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/504230/fde5aef242ebd69a490713d84b7053dbb99d7144.jpg",
-          "rarity": 8.8
-        },
-        {
-          "type": "achievement",
-          "title": "Друзья обалдеют!",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/504230/9b043fec21f1028d306f0908b401c86d8869c334.jpg",
-          "rarity": 10.4
-        },
-        {
-          "type": "achievement",
-          "title": "Прощание",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/504230/e80a2d49fc33936b74f1631d77165b33822c4925.jpg",
-          "rarity": 11.4
-        }
-      ],
       "theme": {
         "bg": "#140a1f",
         "surface": "#22132f",
@@ -365,14 +100,12 @@
           "glow",
           "vignette"
         ],
-        "sections": {
-          "location": {
-            "label": "Главы"
-          },
-          "collectible": {
-            "label": "Клубники"
-          }
-        }
+        "css": true,
+        "js": true
+      },
+      "goals": {
+        "done": 7,
+        "total": 7
       }
     },
     {
@@ -385,130 +118,9 @@
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg",
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/logo.png",
-      "screenshots": [
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_943bf6fe62352757d9070c1d33e50b92fe8539f1.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_ef61b771ee6b269b1f0cb484233e07a0bfb5f81b.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_510a02cf3045e841e180f2b77fb87545e0c8b59d.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_c494372930ca791bdc6221eca134f2270fb2cb9f.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1245620/ss_fa6b881ef7c30522012ab2b2b83001e79baee093.jpg"
-      ],
-      "description": "НОВЫЙ ФЭНТЕЗИЙНЫЙ РОЛЕВОЙ БОЕВИК.\r\nВосстань, погасшая душа! Междуземье ждёт своего повелителя. Пусть благодать приведёт тебя к Кольцу Элден.",
-      "developer": "FromSoftware, Inc.",
-      "year": 2022,
-      "genres": [
-        "Экшены",
-        "Ролевые игры"
-      ],
-      "links": [
-        {
-          "title": "Steam",
-          "url": "https://store.steampowered.com/app/1245620/"
-        },
-        {
-          "title": "Вики",
-          "url": "https://eldenring.fandom.com/wiki/Elden_Ring_Wiki"
-        },
-        {
-          "title": "HowLongToBeat",
-          "url": "https://howlongtobeat.com/?q=Elden%20Ring"
-        }
-      ],
       "started": "2026-10-01",
       "playtime": 48,
-      "progress": 35,
-      "achievements": {
-        "done": 21,
-        "total": 42
-      },
       "notes": "Иду на все концовки: билд на кровотечение, Маления пока не по зубам.",
-      "goals": [
-        {
-          "type": "boss",
-          "title": "Маргит, Ужасное Знамение",
-          "image": "https://static.wikia.nocookie.net/eldenring/images/d/d0/ER_Margit_Boss.png/revision/latest/scale-to-width-down/800",
-          "link": "https://eldenring.fandom.com/wiki/Margit,_the_Fell_Omen",
-          "date": "2026-10-03"
-        },
-        {
-          "type": "boss",
-          "title": "Годрик Сшитый",
-          "image": "https://static.wikia.nocookie.net/eldenring/images/4/43/ER_Godrick_the_Grafted.jpg/revision/latest/scale-to-width-down/800",
-          "link": "https://eldenring.fandom.com/wiki/Godrick_the_Grafted",
-          "date": "2026-10-05"
-        },
-        {
-          "type": "boss",
-          "title": "Реннала, Королева Полнолуния",
-          "image": "https://static.wikia.nocookie.net/eldenring/images/f/f5/Queen_Rennala.webp/revision/latest/scale-to-width-down/800",
-          "link": "https://eldenring.fandom.com/wiki/Rennala,_Queen_of_the_Full_Moon",
-          "date": "2026-10-08"
-        },
-        {
-          "type": "boss",
-          "title": "Звёздная Бич Радан",
-          "note": "Фестиваль с призывами — лучшее событие в игре",
-          "image": "https://static.wikia.nocookie.net/eldenring/images/f/ff/ER_Concept_Art_Radahn1.jpg/revision/latest/scale-to-width-down/800",
-          "link": "https://eldenring.fandom.com/wiki/Starscourge_Radahn",
-          "date": "2026-10-12"
-        },
-        {
-          "type": "boss",
-          "title": "Маления, Клинок Микеллы",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/eldenring/images/9/98/ER_Boss_Malenia%2C_Goddess_of_Rot_Scarlet_Aeonia.png/revision/latest/scale-to-width-down/800",
-          "link": "https://eldenring.fandom.com/wiki/Malenia,_Blade_of_Miquella"
-        },
-        {
-          "type": "boss",
-          "title": "Мог, Повелитель Крови",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/eldenring/images/8/83/Mohg.jpg/revision/latest/scale-to-width-down/800",
-          "link": "https://eldenring.fandom.com/wiki/Mohg,_Lord_of_Blood"
-        },
-        {
-          "type": "achievement",
-          "title": "Маргит, Ужасное Знамение",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/1245620/9844ceb487fa8702ef9fddf8cf09b3767d985a14.jpg",
-          "rarity": 70.9,
-          "date": "2026-10-03"
-        },
-        {
-          "type": "achievement",
-          "title": "Хозяин осколка Годрик",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/1245620/1e230f1a87d7139e854c47e52337f9d50856ac64.jpg",
-          "rarity": 65.1,
-          "date": "2026-10-05"
-        },
-        {
-          "type": "achievement",
-          "title": "Королева Реннала Полнолунная",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/1245620/95a6c1398d842a3fdea1b43a14b33bef92dca09e.jpg",
-          "rarity": 58,
-          "date": "2026-10-08"
-        },
-        {
-          "type": "achievement",
-          "title": "Хозяин осколка Радан",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/1245620/f5f1f41ef749459d9ac45750cd1f069d05fe1dd8.jpg",
-          "rarity": 53.2,
-          "date": "2026-10-12"
-        },
-        {
-          "type": "achievement",
-          "title": "Хозяйка осколка Маления",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/1245620/f704fcd82daf933dd3ce81c4d8ffea3ec65f26f4.jpg",
-          "rarity": 36.4,
-          "done": false
-        },
-        {
-          "type": "achievement",
-          "title": "Кольцо Элден",
-          "description": "Все достижения получены",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/1245620/1cb1fe89084e822bd7d9ad4df66bc7f917995b38.jpg",
-          "rarity": 10.5,
-          "done": false
-        }
-      ],
       "theme": {
         "bg": "#0a0b09",
         "surface": "#15150f",
@@ -534,13 +146,19 @@
             "#f3c86b",
             "#ffdf9a"
           ],
-          "density": 0.7
+          "density": 0.5
         },
         "textures": [
           "glow",
           "vignette",
           "grain"
-        ]
+        ],
+        "css": true,
+        "js": true
+      },
+      "goals": {
+        "done": 3,
+        "total": 8
       }
     },
     {
@@ -553,85 +171,10 @@
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/e9047d8ec47ae3d94bb8b464fb0fc9e9972b4ac7/header.jpg",
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/cf8cec802dc47d0f24b75f9eee135e96812e2652/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/logo.png",
-      "screenshots": [
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_2f649b68d579bf87011487d29bc4ccbfdd97d34f.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_0e64170751e1ae20ff8fdb7001a8892fd48260e7.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_af2804aa4bf35d4251043744412ce3b359a125ef.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_b529b0abc43f55fc23fe8058eddb6e37c9629a6a.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_8640d9db74f7cad714f6ecfb0e1aceaa3f887e58.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_9284d1c5b248726760233a933dbb83757d7d5d95.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_4bda6f67580d94832ed2d5814e41ebe018ba1d9e.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1091500/ss_e5a94665dbfa5a30931cff2f45cdc0ebea9fcebb.jpg"
-      ],
-      "description": "Cyberpunk 2077 — приключенческая ролевая игра с открытым миром, действие которой происходит в футуристическом мегаполисе Найт-Сити, где выше всего ценятся власть, роскошь и модификации тела.",
-      "developer": "CD PROJEKT RED",
-      "year": 2020,
-      "genres": [
-        "Ролевые игры"
-      ],
-      "links": [
-        {
-          "title": "Steam",
-          "url": "https://store.steampowered.com/app/1091500/"
-        },
-        {
-          "title": "Вики",
-          "url": "https://cyberpunk.fandom.com/wiki/Cyberpunk_Wiki"
-        },
-        {
-          "title": "HowLongToBeat",
-          "url": "https://howlongtobeat.com/?q=Cyberpunk%202077"
-        }
-      ],
       "started": "2026-03-01",
       "finished": "2026-04-05",
       "playtime": 14,
       "notes": "Бросил после пролога: не зашёл открытый мир. Может, вернусь ради Phantom Liberty.",
-      "goals": [
-        {
-          "type": "other",
-          "title": "Знакомство с Джонни",
-          "image": "https://static.wikia.nocookie.net/cyberpunk/images/8/82/Johnny_Silverhand_Infobox_CP2077PL.png/revision/latest",
-          "link": "https://cyberpunk.fandom.com/wiki/Johnny_Silverhand",
-          "date": "2026-03-20"
-        },
-        {
-          "type": "boss",
-          "title": "Адам Смэшер",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/cyberpunk/images/5/51/Char_profile_adamsmash2077.png/revision/latest",
-          "link": "https://cyberpunk.fandom.com/wiki/Adam_Smasher"
-        },
-        {
-          "type": "dlc",
-          "title": "Phantom Liberty",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/cyberpunk/images/b/ba/Phantom_Liberty_Keyart_Cover_CP2077PL.jpg/revision/latest/scale-to-width-down/450",
-          "link": "https://cyberpunk.fandom.com/wiki/Phantom_Liberty"
-        },
-        {
-          "type": "achievement",
-          "title": "Шут",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/1091500/7975d6e5d790b88f030195e3b1a38e49a5de1c8d.jpg",
-          "rarity": 88.4,
-          "date": "2026-03-15"
-        },
-        {
-          "type": "achievement",
-          "title": "Влюблённые",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/1091500/25bab7e2288262ad801664e62f241e2839edb457.jpg",
-          "rarity": 67.2,
-          "date": "2026-03-15"
-        },
-        {
-          "type": "achievement",
-          "title": "Ответный удар",
-          "description": "Убить или оглушить врага, который кинул в вас гранату.",
-          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/1091500/33a8a122a08532ec727598142e6b5689ae7eed8b.jpg",
-          "rarity": 65.9,
-          "date": "2026-03-15"
-        }
-      ],
       "theme": {
         "bg": "#07060a",
         "surface": "#121019",
@@ -661,7 +204,12 @@
           "vignette"
         ],
         "heroPosition": "center 25%",
-        "css": true
+        "css": true,
+        "js": true
+      },
+      "goals": {
+        "done": 1,
+        "total": 4
       }
     },
     {
@@ -674,37 +222,6 @@
       "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/7983574d464e6559ac7e24275727f73a8bcca1f3/header.jpg",
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/70d7e70ae2fd0f8a46661d4a425cd84479dc7a61/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/logo.png",
-      "screenshots": [
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/26950369fe4b03c2268620eb9815c8a246aa0b06/ss_26950369fe4b03c2268620eb9815c8a246aa0b06.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/09ccaa6c16f158f9df8298feb5d196098506a028/ss_09ccaa6c16f158f9df8298feb5d196098506a028.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d1a893ec6357b347a55ed929833ba793b57a79d2/ss_d1a893ec6357b347a55ed929833ba793b57a79d2.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/856e33e755a0b9a785c645d116036516ea08812b/ss_856e33e755a0b9a785c645d116036516ea08812b.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/8e09f2b2eedd3fa9b4479dd5c26d8bdf60562478/ss_8e09f2b2eedd3fa9b4479dd5c26d8bdf60562478.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d907d0cc2b10b5ea4788b8d502cc27787d520c1d/ss_d907d0cc2b10b5ea4788b8d502cc27787d520c1d.jpg",
-        "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d20b045b8bdaea6ace2ca4170875772b439c2c2e/ss_d20b045b8bdaea6ace2ca4170875772b439c2c2e.jpg"
-      ],
-      "description": "Исследуйте огромное проклятое царство в Hollow Knight: Silksong! Открывайте его тайны, сражайтесь и боритесь за свою жизнь, поднимаясь к вершинам земель, где правят шёлк и песня.",
-      "developer": "Team Cherry",
-      "year": 2025,
-      "genres": [
-        "Экшены",
-        "Приключенческие игры",
-        "Инди"
-      ],
-      "links": [
-        {
-          "title": "Steam",
-          "url": "https://store.steampowered.com/app/1030300/"
-        },
-        {
-          "title": "Официальный сайт",
-          "url": "http://hollowknightsilksong.com/"
-        },
-        {
-          "title": "HowLongToBeat",
-          "url": "https://howlongtobeat.com/?q=Hollow%20Knight%3A%20Silksong"
-        }
-      ],
       "priority": 1,
       "added": "2026-10-10",
       "notes": "Следующая в очереди — сразу после Elden Ring.",
@@ -736,7 +253,13 @@
           "glow",
           "vignette",
           "grain"
-        ]
+        ],
+        "css": true,
+        "js": true
+      },
+      "goals": {
+        "done": 0,
+        "total": 3
       }
     },
     {
@@ -749,48 +272,9 @@
       "added": "2026-10-12",
       "cover": "https://static.wikia.nocookie.net/zelda_gamepedia_en/images/0/09/Key_Art_for_TotK.png/revision/latest/scale-to-width-down/800",
       "hero": "https://static.wikia.nocookie.net/zelda_gamepedia_en/images/5/5e/TotK_Seres_Scablands.png/revision/latest/scale-to-width-down/1600",
-      "screenshots": [
-        "https://static.wikia.nocookie.net/zelda_gamepedia_en/images/5/5e/TotK_Seres_Scablands.png/revision/latest/scale-to-width-down/1600",
-        "https://static.wikia.nocookie.net/zelda_gamepedia_en/images/0/0c/F09F58FC-EDFA-485F-B032-51822B5510B9.png/revision/latest/scale-to-width-down/1600",
-        "https://static.wikia.nocookie.net/zelda_gamepedia_en/images/7/77/Tears_of_the_Kingdom_Flame_Gleeok_screenshot.jpg/revision/latest"
-      ],
-      "description": "Продолжение Breath of the Wild: Линк исследует небесные острова над Хайрулом и подземные глубины под ним.",
-      "developer": "Nintendo EPD",
-      "year": 2023,
-      "genres": [
-        "Приключения",
-        "Открытый мир"
-      ],
-      "links": [
-        {
-          "title": "Википедия",
-          "url": "https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_Tears_of_the_Kingdom"
-        },
-        {
-          "title": "Вики",
-          "url": "https://zelda.fandom.com/wiki/The_Legend_of_Zelda:_Tears_of_the_Kingdom"
-        },
-        {
-          "title": "HowLongToBeat",
-          "url": "https://howlongtobeat.com/?q=Tears%20of%20the%20Kingdom"
-        }
-      ],
       "aliases": [
         "TotK",
         "Зельда"
-      ],
-      "goals": [
-        {
-          "type": "challenge",
-          "title": "Все 152 святилища",
-          "done": false
-        },
-        {
-          "type": "collectible",
-          "title": "Все 1000 семян короков",
-          "done": false,
-          "note": "Посмотрим, хватит ли терпения"
-        }
       ],
       "theme": {
         "bg": "#f1efe4",
@@ -818,7 +302,13 @@
         "textures": [
           "paper"
         ],
-        "heroPosition": "center 40%"
+        "heroPosition": "center 40%",
+        "css": true,
+        "js": true
+      },
+      "goals": {
+        "done": 0,
+        "total": 4
       }
     }
   ]

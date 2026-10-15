@@ -1,19 +1,19 @@
 // Проверка data/games.json перед коммитом:
 //   node scripts/validate.js                 — структура данных
 //   node scripts/validate.js --check-images  — плюс доступность картинок (без Referer, как на сайте) и шрифтов темы
+//   node scripts/validate.js --fix           — пересчитать goals { done, total } в games.json по data/conditions
 const fs = require("fs");
 const path = require("path");
 
 const root = path.join(__dirname, "..");
 const STATUSES = ["completed", "in_progress", "planned", "dropped"];
-const GOAL_TYPES = ["boss", "ending", "challenge", "dlc", "location", "collectible", "other", "achievement"];
 const DATE_RE = /^\d{4}(-\d{2}(-\d{2})?)?$/;
 const ID_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const URL_RE = /^https?:\/\/\S+$/;
 
 const PARTICLES = ["embers", "sparks", "ash", "snow", "rain", "spores", "dust", "stars", "petals", "leaves", "bubbles"];
 const TEXTURES = ["vignette", "grain", "scanlines", "glow", "fog", "paper", "halftone"];
-const SECTION_KEYS = [...GOAL_TYPES, "report", "screenshots"];
+const SECTION_KEYS = ["report", "closing"];
 const HEX_RE = /^#[0-9a-f]{6}$/i;
 const FONT_SPEC_RE = /^[\w\s:@;,.+-]+$/;
 
@@ -91,13 +91,26 @@ function checkTheme(where, g) {
   if (t.headingSpacing != null && !/^-?\d*\.?\d+em$/.test(t.headingSpacing)) errors.push(`${tw}: headingSpacing — например "0.08em"`);
   if (t.sections != null) {
     for (const [k, v] of Object.entries(t.sections)) {
-      if (!SECTION_KEYS.includes(k)) errors.push(`${tw}: sections.${k} — неизвестная секция (есть ${SECTION_KEYS.join(", ")})`);
+      if (!SECTION_KEYS.includes(k) && !/^group-\d+$/.test(k)) errors.push(`${tw}: sections.${k} — неизвестная секция (есть ${SECTION_KEYS.join(", ")})`);
       if (typeof v !== "object" || (v.label == null && v.icon == null)) errors.push(`${tw}: sections.${k} — { label?, icon? }`);
     }
   }
-  const cssFile = path.join(root, "themes", `${g.id}.css`);
-  if (t.css === true && !fs.existsSync(cssFile)) errors.push(`${tw}: css=true, но нет themes/${g.id}.css`);
-  if (t.css !== true && fs.existsSync(cssFile)) warnings.push(`${tw}: есть themes/${g.id}.css, но css не true — файл не подключится`);
+  for (const [flag, file] of [["css", "theme.css"], ["js", "theme.js"]]) {
+    const full = path.join(root, "themes", g.id, file);
+    if (t[flag] === true && !fs.existsSync(full)) errors.push(`${tw}: ${flag}=true, но нет themes/${g.id}/${file}`);
+    if (t[flag] !== true && fs.existsSync(full)) warnings.push(`${tw}: есть themes/${g.id}/${file}, но ${flag} не true — файл не подключится`);
+  }
+  if (t.js === true) {
+    const src = fs.existsSync(path.join(root, "themes", g.id, "theme.js")) ? fs.readFileSync(path.join(root, "themes", g.id, "theme.js"), "utf8") : "";
+    if (src && !src.includes(`GameThemes.register("${g.id}"`)) errors.push(`${tw}: theme.js должен вызывать GameThemes.register("${g.id}", …)`);
+  }
+  const assetsDir = path.join(root, "themes", g.id, "assets");
+  if (fs.existsSync(assetsDir)) {
+    for (const f of fs.readdirSync(assetsDir)) {
+      const kb = fs.statSync(path.join(assetsDir, f)).size / 1024;
+      if (kb > 600) warnings.push(`${tw}: themes/${g.id}/assets/${f} весит ${Math.round(kb)} КБ — сжать (max_width / webp)`);
+    }
+  }
 }
 
 let data;
@@ -117,6 +130,76 @@ function checkUrl(where, key, value, isImage) {
   else if (isImage) images.set(value, `${where}: ${key}`);
 }
 
+// Поля «об игре» сайт больше не показывает — страница только про условия закрытия.
+const OBSOLETE = ["description", "genres", "developer", "year", "rating", "achievements", "completion", "screenshots", "links", "progress"];
+const FIX = process.argv.includes("--fix");
+let fixed = 0;
+
+function checkConditions(where, g) {
+  const file = path.join(root, "data", "conditions", `${g.id}.json`);
+  if (!fs.existsSync(file)) {
+    if (g.goals) errors.push(`${where}: есть goals, но нет data/conditions/${g.id}.json`);
+    else if (g.status !== "planned") warnings.push(`${where}: нет условий закрытия (data/conditions/${g.id}.json)`);
+    return;
+  }
+  const cw = `conditions/${g.id}.json`;
+  let c;
+  try {
+    c = JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch (e) {
+    return errors.push(`${cw}: не читается: ${e.message}`);
+  }
+  if (!Array.isArray(c.groups) || !c.groups.length) return errors.push(`${cw}: нужен непустой groups`);
+  for (const k of ["aim", "title", "revision"]) if (c[k] != null && typeof c[k] !== "string") errors.push(`${cw}: ${k} — строка`);
+  for (const k of ["setup", "closing"]) if (c[k] != null && !(Array.isArray(c[k]) && c[k].every((x) => typeof x === "string"))) errors.push(`${cw}: ${k} — массив строк`);
+
+  const nums = new Set();
+  const seenImg = new Map();
+  let done = 0;
+  let total = 0;
+  for (const [gi, gr] of c.groups.entries()) {
+    if (!gr?.title) errors.push(`${cw} groups[${gi}]: нет title`);
+    if (!Array.isArray(gr?.goals) || !gr.goals.length) errors.push(`${cw} groups[${gi}] (${gr?.title}): нужен непустой goals`);
+    for (const goal of gr?.goals ?? []) {
+      const gw = `${cw} #${goal?.n ?? "?"}`;
+      total++;
+      if (!Number.isInteger(goal?.n)) errors.push(`${gw}: n — номер цели`);
+      else if (nums.has(goal.n)) errors.push(`${gw}: повторяющийся номер`);
+      nums.add(goal?.n);
+      if (!goal?.title) errors.push(`${gw}: нет title`);
+      if (typeof goal?.done !== "boolean") errors.push(`${gw}: done — true/false`);
+      if (goal?.done) done++;
+      if (goal?.done && !goal.date) warnings.push(`${gw}: выполнена, но нет даты date`);
+      if (goal?.date != null && !DATE_RE.test(goal.date)) errors.push(`${gw}: date — YYYY-MM-DD`);
+      for (const k of ["gives", "needs", "unlock", "counts", "note", "details"]) if (goal?.[k] != null && typeof goal[k] !== "string") errors.push(`${gw}: ${k} — строка`);
+      checkUrl(gw, "image", goal?.image, true);
+      checkUrl(gw, "link", goal?.link, false);
+      for (const [j, u] of (goal?.gallery ?? []).entries()) checkUrl(gw, `gallery[${j}]`, u, true);
+      if (goal?.image) {
+        if (seenImg.has(goal.image)) warnings.push(`${gw}: та же картинка, что у #${seenImg.get(goal.image)} — возможно, общая заглушка вики`);
+        else seenImg.set(goal.image, goal.n);
+      }
+      for (const [j, cl] of (goal?.checklist ?? []).entries()) {
+        if (!Array.isArray(cl?.items) || !cl.items.every((it) => it?.title && typeof it.done === "boolean")) {
+          errors.push(`${gw}: checklist[${j}].items — [{ title, done }]`);
+        }
+      }
+    }
+  }
+
+  const want = { done, total };
+  if (g.goals?.done !== done || g.goals?.total !== total) {
+    if (FIX) {
+      g.goals = want;
+      fixed++;
+    } else {
+      errors.push(`${where}: goals ${JSON.stringify(g.goals ?? null)} не совпадает с условиями ${JSON.stringify(want)} — запусти с --fix`);
+    }
+  }
+  if (g.status === "completed" && done < total) warnings.push(`${where}: статус «пройдено», но выполнено ${done} из ${total} условий`);
+  if (g.status !== "completed" && total && done === total) warnings.push(`${where}: все условия выполнены — пора ставить status: completed`);
+}
+
 const ids = new Set();
 for (const [i, g] of (data.games ?? []).entries()) {
   const where = `games[${i}] (${g.id ?? g.title ?? "?"})`;
@@ -128,59 +211,31 @@ for (const [i, g] of (data.games ?? []).entries()) {
   for (const k of ["started", "finished", "added"]) {
     if (g[k] != null && !DATE_RE.test(g[k])) errors.push(`${where}: ${k} должен быть YYYY, YYYY-MM или YYYY-MM-DD`);
   }
-  if (g.rating != null && !(g.rating >= 1 && g.rating <= 10)) errors.push(`${where}: rating от 1 до 10`);
-  if (g.progress != null && !(g.progress >= 0 && g.progress <= 100)) errors.push(`${where}: progress от 0 до 100`);
   if (g.playtime != null && !(g.playtime >= 0)) errors.push(`${where}: playtime — число часов`);
   if (g.priority != null && !Number.isInteger(g.priority)) errors.push(`${where}: priority — целое число`);
-  if (g.year != null && !Number.isInteger(g.year)) errors.push(`${where}: year — целое число`);
   if (g.steamAppId != null && !Number.isInteger(g.steamAppId)) errors.push(`${where}: steamAppId — число`);
-  if (g.genres != null && !(Array.isArray(g.genres) && g.genres.every((x) => typeof x === "string"))) errors.push(`${where}: genres — массив строк`);
-  if (g.achievements != null) {
-    const { done, total } = g.achievements;
-    if (!Number.isInteger(done) || !Number.isInteger(total) || done > total) errors.push(`${where}: achievements = { done, total }, done ≤ total`);
-  }
+  const obsolete = OBSOLETE.filter((k) => g[k] != null);
+  if (obsolete.length) warnings.push(`${where}: поля ${obsolete.join(", ")} на сайте не показываются — убрать`);
 
   for (const k of ["cover", "hero", "logo"]) checkUrl(where, k, g[k], true);
-  if (g.screenshots != null) {
-    if (!Array.isArray(g.screenshots)) errors.push(`${where}: screenshots — массив ссылок`);
-    else g.screenshots.forEach((u, j) => checkUrl(where, `screenshots[${j}]`, u, true));
-  }
-  if (g.links != null) {
-    if (!Array.isArray(g.links)) errors.push(`${where}: links — массив { title, url }`);
-    else g.links.forEach((l, j) => {
-      if (!l?.title) errors.push(`${where}: links[${j}] без title`);
-      checkUrl(where, `links[${j}].url`, l?.url ?? "", false);
-    });
-  }
-
-  if (g.goals != null) {
-    if (!Array.isArray(g.goals)) errors.push(`${where}: goals — массив`);
-    const seen = new Map();
-    for (const [j, goal] of (Array.isArray(g.goals) ? g.goals : []).entries()) {
-      const gw = `${where} goals[${j}] (${goal?.title ?? "?"})`;
-      if (!goal?.title) errors.push(`${gw}: нет title`);
-      if (!GOAL_TYPES.includes(goal?.type)) errors.push(`${gw}: type должен быть одним из ${GOAL_TYPES.join(", ")}`);
-      checkUrl(gw, "image", goal?.image, true);
-      checkUrl(gw, "link", goal?.link, false);
-      if (goal?.date != null && !DATE_RE.test(goal.date)) errors.push(`${gw}: date должен быть YYYY-MM-DD`);
-      if (goal?.rarity != null && !(goal.rarity >= 0 && goal.rarity <= 100)) errors.push(`${gw}: rarity — процент 0–100`);
-      if (goal?.done != null && typeof goal.done !== "boolean") errors.push(`${gw}: done — true/false`);
-      if (goal?.fit != null && !["cover", "contain"].includes(goal.fit)) errors.push(`${gw}: fit — cover или contain`);
-      if (goal?.image && goal.type !== "achievement") {
-        if (seen.has(goal.image)) warnings.push(`${gw}: та же картинка, что у «${seen.get(goal.image)}» — возможно, общая заглушка вики`);
-        else seen.set(goal.image, goal.title);
-      }
-    }
-  }
+  checkConditions(where, g);
 
   if (g.report && !fs.existsSync(path.join(root, "reports", `${g.id}.md`))) errors.push(`${where}: report=true, но нет reports/${g.id}.md`);
   if (g.status === "completed" && !g.finished) warnings.push(`${where}: пройдена, но нет даты finished`);
   if (g.status === "in_progress" && !g.started) warnings.push(`${where}: в процессе, но нет даты started`);
   if (!g.cover && !g.steamAppId) warnings.push(`${where}: нет обложки (cover или steamAppId)`);
-  if (!g.hero && !g.steamAppId && !g.screenshots?.length) warnings.push(`${where}: нет картинки для баннера (hero или screenshots)`);
-  if (g.status === "completed" && !g.goals?.length) warnings.push(`${where}: пройдена, но нет goals (боссы, ачивки, концовки)`);
+  if (!g.hero && !g.steamAppId) warnings.push(`${where}: нет картинки для баннера (hero)`);
   if (g.theme != null) checkTheme(where, g);
   else warnings.push(`${where}: нет theme — карточка и страница в стандартном оформлении`);
+}
+
+for (const f of fs.existsSync(path.join(root, "data", "conditions")) ? fs.readdirSync(path.join(root, "data", "conditions")) : []) {
+  if (f.endsWith(".json") && !ids.has(f.slice(0, -5))) warnings.push(`data/conditions/${f}: нет игры с таким id`);
+}
+
+if (FIX && fixed) {
+  fs.writeFileSync(path.join(root, "data/games.json"), JSON.stringify(data, null, 2) + "\n");
+  console.log(`исправлено goals у ${fixed} игр`);
 }
 
 for (const f of fs.readdirSync(path.join(root, "reports"))) {

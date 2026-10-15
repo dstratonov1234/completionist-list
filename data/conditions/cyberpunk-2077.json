@@ -1,0 +1,62 @@
+{
+  "title": "Закрытие Cyberpunk 2077",
+  "revision": "Редакция 1 от 01.03.2026 (демо)",
+  "aim": "Основной сюжет и Phantom Liberty, квест Панам — без зачистки карты.",
+  "setup": [
+    "Cyberpunk 2077 (PC), версия 2.2.",
+    "Сложность «Тяжело»."
+  ],
+  "groups": [
+    {
+      "title": "Сюжет",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Пролог: «Ограбление»",
+          "gives": "Завязка и знакомство с Джонни",
+          "counts": "Акт 1 завершён",
+          "done": true,
+          "date": "2026-03-20",
+          "image": "https://static.wikia.nocookie.net/cyberpunk/images/8/82/Johnny_Silverhand_Infobox_CP2077PL.png/revision/latest"
+        },
+        {
+          "n": 2,
+          "title": "Финал основного сюжета",
+          "gives": "Штурм «Арасаки» и концовка",
+          "counts": "Титры",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/cyberpunk/images/5/51/Char_profile_adamsmash2077.png/revision/latest"
+        }
+      ]
+    },
+    {
+      "title": "Персонажи",
+      "goals": [
+        {
+          "n": 3,
+          "title": "Квест Панам Палмер",
+          "gives": "Кочевники и одна из лучших концовок",
+          "counts": "Квест «Королева Пустошей» завершён",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/cyberpunk/images/8/8c/Panam_Palmer_Infobox_CP2077.png/revision/latest"
+        }
+      ]
+    },
+    {
+      "title": "DLC",
+      "goals": [
+        {
+          "n": 4,
+          "title": "Phantom Liberty",
+          "gives": "Шпионский триллер в Догтауне и новая концовка",
+          "counts": "Финал DLC",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/cyberpunk/images/b/ba/Phantom_Liberty_Keyart_Cover_CP2077PL.jpg/revision/latest/scale-to-width-down/450"
+        }
+      ]
+    }
+  ],
+  "closing": [
+    "Все 4 пункта подтверждены."
+  ]
+}

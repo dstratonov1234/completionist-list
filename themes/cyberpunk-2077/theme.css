@@ -1,0 +1,1387 @@
+/* Cyberpunk 2077 — «нетраннерский HUD Найт-Сити»: неоновый жёлтый и циан на почти чёрном,
+   срезанные углы, RGB-расслоение, HUD-уголки, штамп статуса, глитч. Ассеты — assets/*.webp (assets.json).
+   Тон статуса (--cp-tone): брошено — красный, пройдено — жёлтый, в процессе — циан, в планах — фиолетовый. */
+
+html[data-game="cyberpunk-2077"],
+.card[data-game="cyberpunk-2077"] {
+  --cp-y: #fcee0a;
+  --cp-c: #00e5ff;
+  --cp-r: #ff2d55;
+  --cp-v: #c86bff;
+  --cp-ink: #07060a;
+  --cp-tone: var(--cp-y);
+}
+
+html[data-game="cyberpunk-2077"] .cp-s-dropped,
+.card[data-game="cyberpunk-2077"].dropped { --cp-tone: var(--cp-r); }
+html[data-game="cyberpunk-2077"] .cp-s-completed,
+.card[data-game="cyberpunk-2077"].completed { --cp-tone: var(--cp-y); }
+html[data-game="cyberpunk-2077"] .cp-s-in_progress,
+.card[data-game="cyberpunk-2077"].in_progress { --cp-tone: var(--cp-c); }
+html[data-game="cyberpunk-2077"] .cp-s-planned,
+.card[data-game="cyberpunk-2077"].planned { --cp-tone: var(--cp-v); }
+html[data-game="cyberpunk-2077"] .cp-s-unknown { --cp-tone: #9aa1b4; }
+
+/* ---------- срезанные углы и RGB-заголовки (база темы) ---------- */
+
+.card[data-game="cyberpunk-2077"],
+html[data-game="cyberpunk-2077"] .side-card,
+html[data-game="cyberpunk-2077"] .cond,
+html[data-game="cyberpunk-2077"] .cond-summary,
+html[data-game="cyberpunk-2077"] .cond-closing,
+html[data-game="cyberpunk-2077"] .report,
+html[data-game="cyberpunk-2077"] .neighbor {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+.card[data-game="cyberpunk-2077"] .card-title,
+html[data-game="cyberpunk-2077"] .hero h1,
+html[data-game="cyberpunk-2077"] .block .sec-label {
+  text-shadow: 2px 0 0 rgba(255, 0, 60, 0.7), -2px 0 0 rgba(0, 229, 255, 0.7);
+}
+
+html[data-game="cyberpunk-2077"] .block > h2::after {
+  height: 2px;
+  background: linear-gradient(to right, var(--cp-y) 0 38%, transparent 38% 41%, rgba(252, 238, 10, 0.45) 41% 46%, transparent 46%);
+}
+
+html[data-game="cyberpunk-2077"] .status-pill,
+html[data-game="cyberpunk-2077"] .back {
+  clip-path: polygon(0 0, 100% 0, 100% 62%, calc(100% - 9px) 100%, 0 100%);
+}
+
+html[data-game="cyberpunk-2077"] .game-notes {
+  border-left-width: 4px;
+  font-family: "Tektur", sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* Доступный текст для дешифровки: настоящий текст — скринридерам, видимая копия — эффекту. */
+html[data-game="cyberpunk-2077"] .cp-sr {
+  position: absolute;
+  user-select: none;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- фон: ночной город ---------- */
+
+html[data-game="cyberpunk-2077"] .cp-city {
+  position: fixed;
+  inset: -6% 0;
+  z-index: -2;
+  pointer-events: none;
+  background: center 40% / cover no-repeat;
+  opacity: 0.4;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 28%, #000 70%);
+  mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 28%, #000 70%);
+}
+
+html[data-game="cyberpunk-2077"] .cp .report,
+html[data-game="cyberpunk-2077"] .cp .side-card,
+html[data-game="cyberpunk-2077"] .cp .cond,
+html[data-game="cyberpunk-2077"] .cp .cond-summary,
+html[data-game="cyberpunk-2077"] .cp .neighbor {
+  background: rgba(14, 12, 20, 0.86);
+  backdrop-filter: blur(5px);
+}
+
+/* ---------- HUD: уголки экрана, строка состояния, сканер ---------- */
+
+html[data-game="cyberpunk-2077"] .cp-hud {
+  position: fixed;
+  inset: 0;
+  z-index: 46;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+html[data-game="cyberpunk-2077"] .cp-br {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  background: url(assets/corner.webp) top left / contain no-repeat;
+  opacity: 0.75;
+  filter: drop-shadow(0 0 6px rgba(252, 238, 10, 0.35));
+}
+
+html[data-game="cyberpunk-2077"] .cp-br-tl { top: 34px; left: 10px; }
+html[data-game="cyberpunk-2077"] .cp-br-tr { top: 34px; right: 10px; background-image: url(assets/corner-tr.webp); background-position: top right; }
+html[data-game="cyberpunk-2077"] .cp-br-bl { bottom: 10px; left: 10px; background-image: url(assets/corner-bl.webp); background-position: bottom left; }
+html[data-game="cyberpunk-2077"] .cp-br-br { bottom: 10px; right: 10px; background-image: url(assets/corner-br.webp); background-position: bottom right; }
+
+html[data-game="cyberpunk-2077"] .cp-bar {
+  position: absolute;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 26px;
+  padding: 0 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  font: 600 11px/1 "Tektur", ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(242, 239, 226, 0.72);
+  background: linear-gradient(to bottom, rgba(7, 6, 10, 0.94), rgba(7, 6, 10, 0.78));
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(252, 238, 10, 0.32);
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-game="cyberpunk-2077"] .cp-bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 180px;
+  height: 2px;
+  background: linear-gradient(to right, var(--cp-y) 0 70%, transparent 70% 78%, var(--cp-y) 78% 86%, transparent 86%);
+}
+
+html[data-game="cyberpunk-2077"] .cp-bar-id { color: var(--cp-y); }
+
+html[data-game="cyberpunk-2077"] .cp-bar-title {
+  min-width: 0;
+  max-width: 26ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+html[data-game="cyberpunk-2077"] .cp-bar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--cp-tone);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--cp-tone) 60%, transparent);
+}
+
+html[data-game="cyberpunk-2077"] .cp-bar-status b { font-weight: 700; }
+
+html[data-game="cyberpunk-2077"] .cp-bar-status i {
+  width: 7px;
+  height: 7px;
+  background: var(--cp-tone);
+  box-shadow: 0 0 8px var(--cp-tone);
+  transform: rotate(45deg);
+}
+
+html[data-game="cyberpunk-2077"] .cp-bar-geo { margin-left: auto; color: rgba(0, 229, 255, 0.75); }
+html[data-game="cyberpunk-2077"] .cp-bar-up b { color: var(--t-text, #f2efe2); font-weight: 600; }
+html[data-game="cyberpunk-2077"] .cp-bar-clock { color: var(--cp-y); }
+
+html[data-game="cyberpunk-2077"] .cp-scan {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 140px;
+  background: linear-gradient(to bottom, transparent, rgba(0, 229, 255, 0.04) 75%, rgba(0, 229, 255, 0.32) 99%, transparent);
+  transform: translate3d(0, -150px, 0);
+  opacity: 0.55;
+}
+
+/* Не перекрываем строку состояния кнопкой «назад» и липким сайдбаром. */
+html[data-game="cyberpunk-2077"] .cp .back { top: 42px; }
+html[data-game="cyberpunk-2077"] .cp .game-side { top: 40px; }
+
+/* ---------- баннер: штамп статуса, разрывы, логотип ---------- */
+
+html[data-game="cyberpunk-2077"] .cp .hero::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 42%;
+  z-index: -1;
+  pointer-events: none;
+  background: url(assets/circuit.webp) right top / 420px repeat;
+  opacity: 0.22;
+  -webkit-mask-image: radial-gradient(70% 90% at 100% 30%, #000, transparent 75%);
+  mask-image: radial-gradient(70% 90% at 100% 30%, #000, transparent 75%);
+}
+
+html[data-game="cyberpunk-2077"] .cp-stamp {
+  position: absolute;
+  z-index: 2;
+  top: 38%;
+  right: max(28px, calc((100% - 1200px) / 2 + 28px));
+  max-width: calc(100% - 32px);
+  padding: 18px 34px 16px;
+  color: var(--cp-tone);
+  text-align: center;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(7, 6, 10, 0.62), rgba(7, 6, 10, 0.4));
+  transform: rotate(-7deg);
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--cp-tone) 35%, transparent));
+}
+
+html[data-game="cyberpunk-2077"] .cp-stamp-frame {
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  -webkit-mask: url(assets/stamp.webp) center / 100% 100% no-repeat;
+  mask: url(assets/stamp.webp) center / 100% 100% no-repeat;
+}
+
+html[data-game="cyberpunk-2077"] .cp-stamp-word {
+  position: relative;
+  display: block;
+  font: 700 clamp(30px, 5.2vw, 62px)/1 "Tektur", sans-serif;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -4 0 0 0 3.3'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>") 0 0 / 260px;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -4 0 0 0 3.3'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>") 0 0 / 260px;
+}
+
+html[data-game="cyberpunk-2077"] .cp-stamp-word::before,
+html[data-game="cyberpunk-2077"] .cp-stamp-word::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+html[data-game="cyberpunk-2077"] .cp-stamp-word::before { color: var(--cp-c); }
+html[data-game="cyberpunk-2077"] .cp-stamp-word::after { color: var(--cp-r); }
+
+html[data-game="cyberpunk-2077"] .cp-stamp-sub {
+  position: relative;
+  display: block;
+  margin-top: 8px;
+  font: 600 12px/1.2 "Tektur", sans-serif;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+/* Полосы-разрывы: копии арта баннера, вырезанные и сдвинутые (позиции задаёт theme.js). */
+html[data-game="cyberpunk-2077"] .cp-slices {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+html[data-game="cyberpunk-2077"] .cp-slices i {
+  position: absolute;
+  inset: 0;
+  background: var(--cp-src, none) var(--t-hero-pos, center) / cover no-repeat;
+  opacity: 0;
+}
+
+html[data-game="cyberpunk-2077"] .cp-slices i:nth-child(odd) { background-blend-mode: normal; }
+
+html[data-game="cyberpunk-2077"] .hero.cp-burst .cp-slices i { opacity: 1; }
+
+html[data-game="cyberpunk-2077"] .hero.cp-burst::after {
+  /* полоса глитча поверх градиента баннера */
+  background:
+    url(assets/glitch.webp) 0 var(--cp-band, 40%) / 100% 22% no-repeat,
+    linear-gradient(to bottom, color-mix(in srgb, var(--t-bg) 45%, transparent) 0%, transparent 30%, color-mix(in srgb, var(--t-bg) 30%, transparent) 55%, var(--t-bg) 100%),
+    linear-gradient(to right, color-mix(in srgb, var(--t-bg) 65%, transparent), transparent 65%);
+}
+
+html[data-game="cyberpunk-2077"] .hero.cp-burst .hero-logo,
+html[data-game="cyberpunk-2077"] .hero.cp-burst h1 {
+  transform: translate3d(5px, 0, 0) skewX(-5deg);
+  filter: drop-shadow(-4px 0 0 rgba(0, 229, 255, 0.85)) drop-shadow(4px 0 0 rgba(255, 45, 85, 0.85));
+}
+
+html[data-game="cyberpunk-2077"] .hero.cp-burst-b .hero-logo,
+html[data-game="cyberpunk-2077"] .hero.cp-burst-b h1 { transform: translate3d(-6px, 0, 0) skewX(4deg); }
+
+html[data-game="cyberpunk-2077"] .hero.cp-burst .cp-stamp-word { transform: translate3d(-3px, 0, 0); }
+html[data-game="cyberpunk-2077"] .hero.cp-burst .cp-stamp-word::before { opacity: 0.8; transform: translate3d(-5px, 0, 0); clip-path: inset(10% 0 52% 0); }
+html[data-game="cyberpunk-2077"] .hero.cp-burst .cp-stamp-word::after { opacity: 0.8; transform: translate3d(5px, 0, 0); clip-path: inset(58% 0 8% 0); }
+html[data-game="cyberpunk-2077"] .hero.cp-burst-b .cp-stamp-word::before { clip-path: inset(48% 0 20% 0); }
+html[data-game="cyberpunk-2077"] .hero.cp-burst-b .cp-stamp-word::after { clip-path: inset(4% 0 70% 0); }
+
+/* Плашка статуса — угловатый HUD-тег цвета статуса. */
+html[data-game="cyberpunk-2077"] .cp .status-pill {
+  padding: 5px 16px 5px 12px;
+  font-family: "Tektur", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cp-ink);
+  background: var(--cp-tone);
+}
+
+html[data-game="cyberpunk-2077"] .cp .hero-meta > span:not(.status-pill),
+html[data-game="cyberpunk-2077"] .cp .hero-genres .chip {
+  font-family: "Tektur", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- заголовки секций: индекс справа ---------- */
+
+html[data-game="cyberpunk-2077"] .cp .block > h2 .cp-idx {
+  order: 3;
+  text-transform: none;
+  font: 600 11px/1 "Tektur", monospace;
+  letter-spacing: 0.14em;
+  color: rgba(0, 229, 255, 0.75);
+  text-shadow: none;
+}
+
+html[data-game="cyberpunk-2077"] .cp .block-count {
+  border-radius: 0;
+  font-family: "Tektur", sans-serif;
+  color: var(--cp-ink);
+  background: var(--cp-y);
+}
+
+/* ---------- заметка (причина/комментарий) — строка журнала ---------- */
+
+html[data-game="cyberpunk-2077"] .cp .game-notes {
+  position: relative;
+  padding: 12px 16px 12px 18px;
+  border-left-color: var(--cp-tone);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--cp-tone) 12%, transparent), transparent 70%);
+}
+
+html[data-game="cyberpunk-2077"] .cp .game-notes::before {
+  content: "// ЖУРНАЛ";
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  color: var(--cp-tone);
+}
+
+html[data-game="cyberpunk-2077"] .cp.cp-s-dropped .game-notes::before { content: "// ЖУРНАЛ · ПРИЧИНА ОТКЛЮЧЕНИЯ"; }
+
+html[data-game="cyberpunk-2077"] .cp .game-notes::after {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 4px;
+  vertical-align: -0.12em;
+  background: var(--cp-tone);
+}
+
+/* ---------- отчёт: терминальный журнал ---------- */
+
+html[data-game="cyberpunk-2077"] .cp-report {
+  position: relative;
+  padding: 24px 28px 26px;
+  border: 1px solid rgba(252, 238, 10, 0.2);
+  border-left: 3px solid var(--cp-y);
+  background:
+    url(assets/circuit.webp) right -40px top -40px / 300px no-repeat,
+    linear-gradient(180deg, rgba(18, 16, 25, 0.94), rgba(9, 8, 13, 0.95));
+  line-height: 1.65;
+}
+
+html[data-game="cyberpunk-2077"] .cp-report::before {
+  content: "◢ NC//NET · ЖУРНАЛ";
+  display: block;
+  margin-bottom: 14px;
+  font: 600 11px/1 "Tektur", monospace;
+  letter-spacing: 0.24em;
+  color: var(--cp-c);
+}
+
+html[data-game="cyberpunk-2077"] .cp-report h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Tektur", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cp-y);
+}
+
+html[data-game="cyberpunk-2077"] .cp-report h2::before { content: "◢"; font-size: 0.75em; }
+
+html[data-game="cyberpunk-2077"] .cp-report h2::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, rgba(252, 238, 10, 0.5), transparent);
+}
+
+html[data-game="cyberpunk-2077"] .cp-report h3 {
+  font-family: "Tektur", sans-serif;
+  letter-spacing: 0.06em;
+  color: var(--cp-c);
+}
+
+html[data-game="cyberpunk-2077"] .cp-report strong { color: var(--cp-y); font-weight: 600; }
+html[data-game="cyberpunk-2077"] .cp-report a { color: var(--cp-c); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+html[data-game="cyberpunk-2077"] .cp-report ul { padding-left: 1.3em; list-style: none; }
+html[data-game="cyberpunk-2077"] .cp-report ul > li { position: relative; }
+html[data-game="cyberpunk-2077"] .cp-report ul > li::before {
+  content: "▸";
+  position: absolute;
+  left: -1.2em;
+  color: var(--cp-y);
+}
+
+html[data-game="cyberpunk-2077"] .cp-report ol > li::marker { font-family: "Tektur", monospace; color: var(--cp-y); }
+
+html[data-game="cyberpunk-2077"] .cp-report blockquote {
+  position: relative;
+  margin: 1.2em 0;
+  padding: 10px 16px 12px;
+  border-left: 3px solid var(--cp-c);
+  background: rgba(0, 229, 255, 0.06);
+  color: var(--t-text, #f2efe2);
+}
+
+html[data-game="cyberpunk-2077"] .cp-report blockquote::before {
+  content: "▸ ВХОДЯЩЕЕ СООБЩЕНИЕ";
+  display: block;
+  margin-bottom: 4px;
+  font: 600 10px/1.4 "Tektur", monospace;
+  letter-spacing: 0.22em;
+  color: var(--cp-c);
+}
+
+html[data-game="cyberpunk-2077"] .cp-report code {
+  border-radius: 0;
+  color: var(--cp-c);
+  background: rgba(0, 229, 255, 0.08);
+}
+
+html[data-game="cyberpunk-2077"] .cp-report img {
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+html[data-game="cyberpunk-2077"] .cp-report table th {
+  font-family: "Tektur", sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cp-y);
+  background: rgba(252, 238, 10, 0.06);
+}
+
+html[data-game="cyberpunk-2077"] .cp-report th,
+html[data-game="cyberpunk-2077"] .cp-report td { border-color: rgba(252, 238, 10, 0.16); }
+
+/* ---------- соседние игры ---------- */
+
+html[data-game="cyberpunk-2077"] .cp .neighbor small {
+  font-family: "Tektur", sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cp-c);
+}
+
+/* ================= условия закрытия ================= */
+
+/* ---------- брифинг (.cond-summary) ---------- */
+
+html[data-game="cyberpunk-2077"] .cp .cond-summary {
+  position: relative;
+  isolation: isolate;
+  padding: 18px 22px;
+  border: 1px solid rgba(252, 238, 10, 0.22);
+  border-radius: 0;
+  background: linear-gradient(160deg, rgba(20, 18, 28, 0.94), rgba(9, 8, 13, 0.94));
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-summary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url(assets/circuit.webp) right -70px top -90px / 320px no-repeat;
+  opacity: 0.35;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-summary::before {
+  content: "◢ Брифинг // условия закрытия";
+  display: block;
+  margin-bottom: 12px;
+  font: 600 11px/1.2 "Tektur", monospace;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cp-c);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-total b {
+  font-family: "Tektur", sans-serif;
+  font-size: 54px;
+  font-variant-numeric: tabular-nums;
+  color: var(--cp-y);
+  text-shadow: 0 0 22px rgba(252, 238, 10, 0.35);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-total span {
+  font-family: "Tektur", sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-total small {
+  font-family: "Tektur", sans-serif;
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cp-tone);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-summary .progress { border-radius: 0; }
+
+html[data-game="cyberpunk-2077"] .cp-segbar {
+  display: flex;
+  gap: 5px;
+  height: 12px;
+  padding: 0 4px;
+}
+
+html[data-game="cyberpunk-2077"] .cp-segbar i {
+  flex: 1;
+  background: rgba(242, 239, 226, 0.1);
+  transform: skewX(-24deg);
+}
+
+html[data-game="cyberpunk-2077"] .cp-segbar i.on {
+  background: var(--cp-y);
+  box-shadow: 0 0 10px rgba(252, 238, 10, 0.5);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-aim {
+  padding: 10px 14px;
+  border-left: 3px solid var(--cp-c);
+  background: rgba(0, 229, 255, 0.06);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-aim b {
+  display: block;
+  margin-bottom: 2px;
+  font: 600 11px/1.4 "Tektur", monospace;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cp-c);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-setup { padding-left: 0; list-style: none; }
+html[data-game="cyberpunk-2077"] .cp .cond-setup li::before { content: "▸ "; color: var(--cp-y); }
+
+html[data-game="cyberpunk-2077"] .cp .cond-rev {
+  font: 600 10.5px/1.4 "Tektur", monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-rev::before { content: "REV // "; color: var(--cp-y); }
+
+html[data-game="cyberpunk-2077"] .cp .cond-none {
+  padding: 14px 18px;
+  border: 1px dashed rgba(255, 45, 85, 0.45);
+  font-family: "Tektur", sans-serif;
+  letter-spacing: 0.06em;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-none::before {
+  content: "◢ Нет данных // ";
+  color: var(--cp-r);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ---------- контракты (.cond) ---------- */
+
+html[data-game="cyberpunk-2077"] .cp .cond-list { gap: 14px; }
+
+html[data-game="cyberpunk-2077"] .cp .cond {
+  position: relative;
+  grid-template-columns: 210px minmax(0, 1fr);
+  border: 1px solid rgba(242, 239, 226, 0.1);
+  border-radius: 0;
+  background: rgba(14, 12, 20, 0.86);
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond.done {
+  border-color: rgba(252, 238, 10, 0.5);
+  background: linear-gradient(105deg, rgba(252, 238, 10, 0.13), rgba(14, 12, 20, 0.9) 45%);
+  box-shadow: inset 3px 0 0 var(--cp-y);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond.todo:hover,
+html[data-game="cyberpunk-2077"] .cp .cond.todo:focus-within { border-color: rgba(0, 229, 255, 0.45); }
+html[data-game="cyberpunk-2077"] .cp .cond.done:hover,
+html[data-game="cyberpunk-2077"] .cp .cond.done:focus-within { border-color: var(--cp-y); }
+html[data-game="cyberpunk-2077"] .cp .cond:target { box-shadow: inset 0 0 0 2px var(--cp-c); }
+
+html[data-game="cyberpunk-2077"] .cp-job-id {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  font: 600 10.5px/1.4 "Tektur", monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(0, 229, 255, 0.75);
+}
+
+html[data-game="cyberpunk-2077"] .cp-job-id span:first-child { color: var(--cp-y); }
+html[data-game="cyberpunk-2077"] .cp .cond.todo .cp-job-id span:first-child { color: var(--text-dim); }
+html[data-game="cyberpunk-2077"] .cp-job-grp { margin-left: auto; color: var(--text-faint); }
+
+html[data-game="cyberpunk-2077"] .cp .cond-title {
+  font-family: "Tektur", sans-serif;
+  font-size: 19px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond.done .cond-title {
+  color: #fff;
+  text-shadow: 2px 0 0 rgba(255, 0, 60, 0.55), -2px 0 0 rgba(0, 229, 255, 0.55);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond.todo .cond-title { color: color-mix(in srgb, var(--t-text) 82%, var(--t-bg)); }
+
+html[data-game="cyberpunk-2077"] .cp .cond-state {
+  padding: 3px 13px 3px 9px;
+  clip-path: polygon(0 0, 100% 0, 100% 60%, calc(100% - 7px) 100%, 0 100%);
+  font: 600 11px/1.4 "Tektur", sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-state i { font-style: normal; }
+html[data-game="cyberpunk-2077"] .cp .cond.done .cond-state { color: var(--cp-ink); background: var(--cp-y); }
+html[data-game="cyberpunk-2077"] .cp .cond.todo .cond-state { color: rgba(242, 239, 226, 0.66); background: rgba(242, 239, 226, 0.07); }
+
+/* картинка контракта */
+html[data-game="cyberpunk-2077"] .cp .cond-media {
+  min-height: 160px;
+  overflow: hidden;
+  background:
+    url(assets/circuit.webp) center / 240px,
+    radial-gradient(circle at 50% 40%, #1d1a2a, #07060a 78%);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-media img { object-position: 50% 18%; }
+
+html[data-game="cyberpunk-2077"] .cp .cond-group,
+html[data-game="cyberpunk-2077"] .cp .cond { scroll-margin-top: 40px; }
+
+html[data-game="cyberpunk-2077"] .cp .cond-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-num {
+  z-index: 3;
+  padding: 2px 12px 2px 8px;
+  border-radius: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 60%, calc(100% - 6px) 100%, 0 100%);
+  font-family: "Tektur", monospace;
+  letter-spacing: 0.08em;
+  color: var(--cp-y);
+  background: rgba(7, 6, 10, 0.85);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond.todo .cond-num { color: var(--text-dim); }
+
+/* Цель без картинки: глушим общий .empty из списка игр (он растягивает блок на всю сетку). */
+html[data-game="cyberpunk-2077"] .cp .cond-media.empty {
+  grid-column: auto;
+  align-content: center;
+  gap: 6px;
+  padding: 12px;
+  border: 0;
+  color: inherit;
+}
+html[data-game="cyberpunk-2077"] .cp .cond-media.empty .cond-num { clip-path: none; background: none; font-size: 28px; }
+
+html[data-game="cyberpunk-2077"] .cp .cond-media .cp-lock-ico {
+  display: block;
+  width: 44px;
+  height: 44px;
+  background: url(assets/shard.webp) center / contain no-repeat;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond.todo .cond-media.empty .cp-lock-ico { opacity: 0.55; filter: grayscale(0.6); }
+
+/* выполненный контракт: штамп и скан */
+html[data-game="cyberpunk-2077"] .cp-done-stamp {
+  position: absolute;
+  right: 10px;
+  bottom: 12px;
+  z-index: 3;
+  padding: 4px 10px 3px;
+  border: 2px solid currentColor;
+  font: 700 13px/1 "Tektur", sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cp-y);
+  background: rgba(7, 6, 10, 0.72);
+  box-shadow: 0 0 14px rgba(252, 238, 10, 0.35);
+  transform: rotate(-8deg);
+}
+
+html[data-game="cyberpunk-2077"] .cp-done-scan {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 44%, rgba(252, 238, 10, 0.6) 50%, rgba(252, 238, 10, 0.12) 52%, transparent 60%);
+  opacity: 0;
+}
+
+/* невыполненный: картинка под шифром */
+html[data-game="cyberpunk-2077"] .cp-lock {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-radius: 0;
+  cursor: pointer;
+  color: var(--t-text, #f2efe2);
+  font-family: "Tektur", sans-serif;
+  text-transform: uppercase;
+  background:
+    repeating-linear-gradient(to bottom, rgba(7, 6, 10, 0.38) 0 2px, rgba(7, 6, 10, 0.7) 2px 4px),
+    url(assets/circuit.webp) center / 220px;
+  backdrop-filter: blur(8px) saturate(0.3);
+  transition: backdrop-filter 0.3s;
+}
+
+html[data-game="cyberpunk-2077"] .cp-lock b {
+  font-size: 12.5px;
+  letter-spacing: 0.2em;
+  color: var(--cp-r);
+  text-shadow: 0 0 10px rgba(255, 45, 85, 0.6);
+}
+
+html[data-game="cyberpunk-2077"] .cp-lock small {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+}
+
+html[data-game="cyberpunk-2077"] .cp-lock:focus-visible { outline: 2px solid var(--cp-y); outline-offset: -4px; }
+
+@media (hover: hover) {
+  html[data-game="cyberpunk-2077"] .cp .cond-media:hover .cp-lock { backdrop-filter: blur(4px) saturate(0.5); }
+}
+
+html[data-game="cyberpunk-2077"] .cp .cp-decrypting .cp-lock b { color: var(--cp-y); text-shadow: 0 0 10px rgba(252, 238, 10, 0.6); }
+
+html[data-game="cyberpunk-2077"] .cp .cp-open .cp-lock {
+  inset: auto 6px 6px auto;
+  width: auto;
+  flex-direction: row;
+  padding: 4px 10px;
+  background: rgba(7, 6, 10, 0.85);
+  backdrop-filter: none;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+}
+
+html[data-game="cyberpunk-2077"] .cp .cp-open .cp-lock small,
+html[data-game="cyberpunk-2077"] .cp .cp-open .cp-lock .cp-lock-ico { display: none; }
+html[data-game="cyberpunk-2077"] .cp .cp-open .cp-lock b { font-size: 10px; color: var(--cp-c); text-shadow: none; }
+html[data-game="cyberpunk-2077"] .cp .cp-open .cond-media img { filter: grayscale(0.55) brightness(0.9); }
+
+/* факты, чек-лист, заметка, ссылка */
+html[data-game="cyberpunk-2077"] .cp .cond-facts {
+  padding-top: 8px;
+  border-top: 1px dashed rgba(242, 239, 226, 0.12);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-fact dt {
+  font: 600 10.5px/1.5 "Tektur", monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(0, 229, 255, 0.78);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond.todo .cond-fact dd { color: var(--text-dim); }
+html[data-game="cyberpunk-2077"] .cp .cond.done .cond-fact[data-field="gives"] dd { color: var(--cp-y); }
+
+html[data-game="cyberpunk-2077"] .cp .cond-check {
+  border: 1px solid rgba(242, 239, 226, 0.08);
+  border-left: 2px solid var(--cp-c);
+  border-radius: 0;
+  background: rgba(7, 6, 10, 0.55);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-check-head,
+html[data-game="cyberpunk-2077"] .cp .cond-check-label {
+  font-family: "Tektur", monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-check-head b { color: var(--cp-y); }
+
+html[data-game="cyberpunk-2077"] .cp .cond-box {
+  width: 9px;
+  height: 9px;
+  border-radius: 0;
+  border-color: rgba(242, 239, 226, 0.4);
+  transform: rotate(45deg);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-check li.done .cond-box {
+  border-color: var(--cp-y);
+  background: var(--cp-y);
+  box-shadow: 0 0 6px rgba(252, 238, 10, 0.6);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-note {
+  padding: 8px 12px;
+  border-left-color: var(--cp-c);
+  background: rgba(0, 229, 255, 0.06);
+  font-style: normal;
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-note::before {
+  content: "▸ Заметка";
+  display: block;
+  font: 600 10px/1.5 "Tektur", monospace;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cp-c);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-gallery img {
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-link {
+  padding: 5px 14px 5px 10px;
+  border: 1px solid rgba(0, 229, 255, 0.45);
+  clip-path: polygon(0 0, 100% 0, 100% 60%, calc(100% - 7px) 100%, 0 100%);
+  font: 600 11px/1.4 "Tektur", sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cp-c);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-link:hover,
+html[data-game="cyberpunk-2077"] .cp .cond-link:focus-visible { color: var(--cp-ink); background: var(--cp-c); outline: none; }
+
+/* ---------- точка закрытия ---------- */
+
+html[data-game="cyberpunk-2077"] .cp .cond-closing {
+  padding: 16px 20px 10px;
+  border: 1px solid rgba(252, 238, 10, 0.28);
+  background:
+    repeating-linear-gradient(-45deg, rgba(252, 238, 10, 0.05) 0 10px, transparent 10px 20px),
+    rgba(14, 12, 20, 0.88);
+}
+
+html[data-game="cyberpunk-2077"] .cp .cond-closing p { color: var(--t-text, #f2efe2); }
+html[data-game="cyberpunk-2077"] .cp .cond-closing p::before { content: "▸ "; color: var(--cp-y); }
+
+/* ---------- сбоку: биомонитор, датчик, группы, даты ---------- */
+
+html[data-game="cyberpunk-2077"] .cp .side-card {
+  border-color: rgba(252, 238, 10, 0.2);
+  border-radius: 0;
+}
+
+html[data-game="cyberpunk-2077"] .cp-bio {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+html[data-game="cyberpunk-2077"] .cp-bio-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font: 600 10.5px/1.3 "Tektur", monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+html[data-game="cyberpunk-2077"] .cp-bio-head b { color: var(--cp-tone); font-weight: 600; }
+
+html[data-game="cyberpunk-2077"] .cp-ecg {
+  height: 40px;
+  margin-top: 6px;
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(242, 239, 226, 0.06) 1px, transparent 1px) 0 0 / 100% 10px,
+    linear-gradient(90deg, rgba(242, 239, 226, 0.06) 1px, transparent 1px) 0 0 / 12px 100%;
+}
+
+html[data-game="cyberpunk-2077"] .cp-ecg svg {
+  display: block;
+  width: 200%;
+  height: 100%;
+  fill: none;
+  stroke: var(--cp-tone);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 3px var(--cp-tone));
+}
+
+html[data-game="cyberpunk-2077"] .cp-ecg path { vector-effect: non-scaling-stroke; }
+html[data-game="cyberpunk-2077"] .cp-ecg-dropped svg,
+html[data-game="cyberpunk-2077"] .cp-ecg-planned svg,
+html[data-game="cyberpunk-2077"] .cp-ecg-unknown svg { width: 100%; }
+html[data-game="cyberpunk-2077"] .cp-ecg-idle { stroke-dasharray: 4 6; }
+
+html[data-game="cyberpunk-2077"] .cp-gauge {
+  position: relative;
+  width: 168px;
+  aspect-ratio: 1;
+  margin: 4px auto 14px;
+}
+
+html[data-game="cyberpunk-2077"] .cp-gauge svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; }
+html[data-game="cyberpunk-2077"] .cp-seg { stroke: rgba(242, 239, 226, 0.12); stroke-width: 9; }
+html[data-game="cyberpunk-2077"] .cp-seg.on { stroke: var(--cp-y); filter: drop-shadow(0 0 4px rgba(252, 238, 10, 0.6)); }
+html[data-game="cyberpunk-2077"] .cp-gauge-ticks { stroke: rgba(0, 229, 255, 0.45); stroke-width: 1; transform-origin: 60px 60px; }
+
+html[data-game="cyberpunk-2077"] .cp-gauge-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: baseline;
+  justify-content: center;
+  font-family: "Tektur", sans-serif;
+  text-align: center;
+}
+
+html[data-game="cyberpunk-2077"] .cp-gauge-text b { font-size: 46px; line-height: 1; color: var(--cp-y); text-shadow: 0 0 18px rgba(252, 238, 10, 0.4); }
+html[data-game="cyberpunk-2077"] .cp-gauge-text span { font-size: 18px; color: var(--text-dim); }
+
+html[data-game="cyberpunk-2077"] .cp-gauge-text small {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6%;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cp-c);
+}
+
+html[data-game="cyberpunk-2077"] .cp .group-progress li {
+  font-family: "Tektur", sans-serif;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+html[data-game="cyberpunk-2077"] .cp .group-progress a::before { content: "▸ "; color: var(--cp-y); }
+html[data-game="cyberpunk-2077"] .cp .group-progress a:hover,
+html[data-game="cyberpunk-2077"] .cp .group-progress a:focus-visible { color: var(--cp-y); }
+html[data-game="cyberpunk-2077"] .cp .group-progress a:focus-visible { outline: 1px solid var(--cp-y); outline-offset: 2px; }
+html[data-game="cyberpunk-2077"] .cp .group-progress .progress { height: 5px; border-radius: 0; background: rgba(242, 239, 226, 0.08); }
+html[data-game="cyberpunk-2077"] .cp .group-progress .progress > div { border-radius: 0; background: var(--cp-y); }
+
+html[data-game="cyberpunk-2077"] .cp .fact dt {
+  font-family: "Tektur", monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+html[data-game="cyberpunk-2077"] .cp .fact dd { font-family: "Tektur", sans-serif; font-weight: 600; }
+
+/* ---------- анимации условий (только без prefers-reduced-motion) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-job.done:not(.cp-in) .cond-media img { opacity: 0.12; }
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-job.done .cond-media img { transition: opacity 0.7s 0.15s; }
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-job.done:not(.cp-in) .cp-done-stamp { opacity: 0; }
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-job.done.cp-in .cp-done-stamp { animation: cp-mini-stamp 0.36s 0.6s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-job.done.cp-in .cp-done-scan { animation: cp-done-scan 0.9s 0.05s ease-in-out both; }
+
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-segbar:not(.cp-in) i.on,
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-gauge:not(.cp-in) .cp-seg.on { opacity: 0.15; }
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-segbar.cp-in i.on { animation: cp-seg-in 0.3s calc(0.2s + var(--k) * 70ms) both; }
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-gauge.cp-in .cp-seg.on { animation: cp-seg-in 0.35s calc(0.3s + var(--k) * 90ms) both; }
+  html[data-game="cyberpunk-2077"] .cp-gauge-ticks { animation: cp-spin 60s linear infinite; }
+
+  html[data-game="cyberpunk-2077"] .cp-ecg-in_progress svg { animation: cp-ecg 2.4s linear infinite; }
+  html[data-game="cyberpunk-2077"] .cp-ecg-completed svg { animation: cp-ecg 4.5s linear infinite; }
+  html[data-game="cyberpunk-2077"] .cp-ecg-planned svg { animation: cp-blink 3s ease-in-out infinite; }
+}
+
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-job:hover .cond-media img { animation: cp-jitter 0.4s linear 1; }
+  html[data-game="cyberpunk-2077"] .cp-anim .cp-job.done:hover .cond-title { animation: cp-rgb 0.5s linear 1; }
+}
+
+@keyframes cp-mini-stamp {
+  from { opacity: 0; transform: rotate(-8deg) scale(1.9); }
+  to { opacity: 1; transform: rotate(-8deg); }
+}
+
+@keyframes cp-done-scan {
+  0% { opacity: 0; transform: translate3d(0, -55%, 0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(0, 55%, 0); }
+}
+
+@keyframes cp-seg-in {
+  from { opacity: 0.15; }
+}
+
+@keyframes cp-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cp-ecg {
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes cp-jitter {
+  0%, 100% { transform: none; }
+  25% { transform: translate3d(-6px, 0, 0) skewX(4deg); }
+  50% { transform: translate3d(5px, 0, 0); }
+  75% { transform: translate3d(-2px, 0, 0) skewX(-2deg); }
+}
+
+@media (max-width: 560px) {
+  html[data-game="cyberpunk-2077"] .cp .cond { grid-template-columns: minmax(0, 1fr); }
+  html[data-game="cyberpunk-2077"] .cp .cond-media { min-height: 0; aspect-ratio: 16 / 8; }
+  html[data-game="cyberpunk-2077"] .cp .cond-media.empty { aspect-ratio: auto; min-height: 0; grid-auto-flow: column; justify-content: start; padding: 10px 16px; }
+  html[data-game="cyberpunk-2077"] .cp .cond-media.empty .cp-lock-ico { width: 30px; height: 30px; }
+  html[data-game="cyberpunk-2077"] .cp-job-grp { margin-left: 0; }
+  html[data-game="cyberpunk-2077"] .cp .cond-title { font-size: 17px; }
+  html[data-game="cyberpunk-2077"] .cp .cond-total b { font-size: 44px; }
+  html[data-game="cyberpunk-2077"] .cp .cond-summary { padding: 16px; }
+  html[data-game="cyberpunk-2077"] .cp .cond-summary::after { background-size: 220px; }
+}
+
+/* ---------- курсор-прицел ---------- */
+
+html[data-game="cyberpunk-2077"].cp-cross body { cursor: crosshair; }
+
+html[data-game="cyberpunk-2077"] .cp-reticle {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 47;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  pointer-events: none;
+  color: var(--cp-c);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+html[data-game="cyberpunk-2077"] .cp-reticle.on { opacity: 0.9; }
+
+html[data-game="cyberpunk-2077"] .cp-reticle svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.2s;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+html[data-game="cyberpunk-2077"] .cp-ret-ring { stroke-dasharray: 20 6.7; opacity: 0.85; }
+html[data-game="cyberpunk-2077"] .cp-ret-lock { opacity: 0; transition: opacity 0.2s; stroke-width: 2; }
+
+html[data-game="cyberpunk-2077"] .cp-reticle.lock { color: var(--cp-y); }
+html[data-game="cyberpunk-2077"] .cp-reticle.lock svg { transform: rotate(45deg) scale(0.82); }
+html[data-game="cyberpunk-2077"] .cp-reticle.lock .cp-ret-lock { opacity: 1; }
+
+html[data-game="cyberpunk-2077"] .cp-reticle-read {
+  position: absolute;
+  left: 40px;
+  top: 38px;
+  font: 600 9px/1 "Tektur", monospace;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  text-shadow: 0 0 6px currentColor;
+}
+
+/* ---------- вход: глитч-шторка ---------- */
+
+html[data-game="cyberpunk-2077"] .cp-boot {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+html[data-game="cyberpunk-2077"] .cp-boot > i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--i) * 100% / 7);
+  height: calc(100% / 7 + 1px);
+  background: var(--cp-ink);
+}
+
+html[data-game="cyberpunk-2077"] .cp-boot > i::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--cp-tone);
+  box-shadow: 0 0 14px var(--cp-tone);
+}
+
+html[data-game="cyberpunk-2077"] .cp-boot > i.cp-l::after { right: 0; }
+html[data-game="cyberpunk-2077"] .cp-boot > i.cp-r::after { left: 0; background: var(--cp-c); box-shadow: 0 0 14px var(--cp-c); }
+
+html[data-game="cyberpunk-2077"] .cp-boot-glitch {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  top: 38%;
+  height: 24%;
+  background: url(assets/glitch.webp) center / 100% 100% no-repeat;
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+html[data-game="cyberpunk-2077"] .cp-boot-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(640px, calc(100% - 32px));
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-family: "Tektur", monospace;
+  text-transform: uppercase;
+}
+
+html[data-game="cyberpunk-2077"] .cp-boot-text span {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--cp-c);
+}
+
+html[data-game="cyberpunk-2077"] .cp-boot-text b {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(22px, 4vw, 40px);
+  letter-spacing: 0.08em;
+  color: var(--cp-y);
+  text-shadow: 2px 0 0 rgba(255, 0, 60, 0.7), -2px 0 0 rgba(0, 229, 255, 0.7);
+}
+
+/* ---------- анимации (только без prefers-reduced-motion) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-game="cyberpunk-2077"] .cp-scan { animation: cp-scan 9s linear infinite; }
+  html[data-game="cyberpunk-2077"] .cp-bar-status i { animation: cp-blink 1.8s steps(2, jump-none) infinite; }
+
+  html[data-game="cyberpunk-2077"] .cp-boot > i { animation: cp-band-l 0.5s calc(0.42s + var(--d) * 0.045s) cubic-bezier(0.7, 0, 0.25, 1) forwards; }
+  html[data-game="cyberpunk-2077"] .cp-boot > i.cp-r { animation-name: cp-band-r; }
+  html[data-game="cyberpunk-2077"] .cp-boot-glitch { animation: cp-boot-glitch 0.34s 0.2s linear both; }
+  html[data-game="cyberpunk-2077"] .cp-boot-text { animation: cp-boot-text 0.5s 0.05s ease both; }
+
+  html[data-game="cyberpunk-2077"] .cp .hero-title { animation: cp-title-in 0.75s 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  html[data-game="cyberpunk-2077"] .cp .game-layout { animation: rise-in 0.8s 0.75s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  html[data-game="cyberpunk-2077"] .cp-stamp { animation: cp-stamp-in 0.42s 1.15s cubic-bezier(0.3, 1.5, 0.5, 1) both; }
+
+  html[data-game="cyberpunk-2077"] .cp .game-notes::after { animation: cp-blink 1.1s steps(2, jump-none) infinite; }
+}
+
+@keyframes cp-scan {
+  to { transform: translate3d(0, calc(100vh + 10px), 0); }
+}
+
+@keyframes cp-blink {
+  50% { opacity: 0.2; }
+}
+
+@keyframes cp-band-l {
+  to { transform: translate3d(-104%, 0, 0); }
+}
+
+@keyframes cp-band-r {
+  to { transform: translate3d(104%, 0, 0); }
+}
+
+@keyframes cp-boot-glitch {
+  0% { opacity: 0; transform: translate3d(-4%, 0, 0); }
+  30% { opacity: 0.85; transform: translate3d(3%, 0, 0) scaleY(0.6); }
+  100% { opacity: 0; transform: translate3d(-2%, 0, 0) scaleY(1.2); }
+}
+
+@keyframes cp-boot-text {
+  0% { opacity: 0; }
+  20%, 70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.04); }
+}
+
+@keyframes cp-title-in {
+  0% { opacity: 0; clip-path: inset(0 0 100% 0); transform: translate3d(-14px, 0, 0); }
+  30% { opacity: 1; clip-path: inset(38% 0 30% 0); transform: translate3d(10px, 0, 0); }
+  55% { clip-path: inset(0 0 45% 0); transform: translate3d(-5px, 0, 0); }
+  80% { clip-path: inset(0); transform: translate3d(2px, 0, 0); }
+  100% { opacity: 1; clip-path: inset(-20px); transform: none; }
+}
+
+@keyframes cp-stamp-in {
+  from { opacity: 0; transform: rotate(-7deg) scale(1.7); }
+  to { opacity: 1; transform: rotate(-7deg); }
+}
+
+/* ---------- мобильная ширина ---------- */
+
+@media (max-width: 900px) {
+  html[data-game="cyberpunk-2077"] .cp .side-card:has(.cp-gauge) {
+    display: grid;
+    grid-template-columns: 136px minmax(0, 1fr);
+    align-items: center;
+    gap: 0 18px;
+  }
+  html[data-game="cyberpunk-2077"] .cp .side-card:has(.cp-gauge) > :not(.cp-gauge, .group-progress) { grid-column: 1 / -1; }
+  html[data-game="cyberpunk-2077"] .cp .side-card:has(.cp-gauge) .cp-gauge { width: 136px; margin: 0 0 12px; }
+  html[data-game="cyberpunk-2077"] .cp .side-card:has(.cp-gauge) .group-progress { margin-bottom: 12px; border-bottom: 0; }
+  html[data-game="cyberpunk-2077"] .cp .side-card:has(.cp-gauge) .facts { padding-top: 6px; border-top: 1px solid var(--border); }
+  html[data-game="cyberpunk-2077"] .cp-gauge-text b { font-size: 38px; }
+}
+
+@media (max-width: 480px) {
+  html[data-game="cyberpunk-2077"] .cp-bar-id { display: none; }
+}
+
+@media (max-width: 760px) {
+  html[data-game="cyberpunk-2077"] .cp-bar { gap: 12px; padding: 0 12px; }
+  html[data-game="cyberpunk-2077"] .cp-bar-title,
+  html[data-game="cyberpunk-2077"] .cp-bar-geo,
+  html[data-game="cyberpunk-2077"] .cp-bar-up { display: none; }
+  html[data-game="cyberpunk-2077"] .cp-bar-clock { margin-left: auto; }
+  html[data-game="cyberpunk-2077"] .cp-br { width: 32px; height: 32px; opacity: 0.6; }
+  html[data-game="cyberpunk-2077"] .cp-br-tl,
+  html[data-game="cyberpunk-2077"] .cp-br-tr { top: 30px; }
+  html[data-game="cyberpunk-2077"] .cp-br-tl,
+  html[data-game="cyberpunk-2077"] .cp-br-bl { left: 4px; }
+  html[data-game="cyberpunk-2077"] .cp-br-tr,
+  html[data-game="cyberpunk-2077"] .cp-br-br { right: 4px; }
+  html[data-game="cyberpunk-2077"] .cp-br-bl,
+  html[data-game="cyberpunk-2077"] .cp-br-br { bottom: 4px; }
+
+  html[data-game="cyberpunk-2077"] .cp-stamp {
+    top: 78px;
+    right: 16px;
+    padding: 10px 18px 9px;
+  }
+  html[data-game="cyberpunk-2077"] .cp-stamp-word { font-size: 24px; }
+  html[data-game="cyberpunk-2077"] .cp-stamp-sub { margin-top: 5px; font-size: 10px; letter-spacing: 0.16em; }
+  html[data-game="cyberpunk-2077"] .cp .hero::before { inset: 0 0 0 20%; }
+  html[data-game="cyberpunk-2077"] .cp-report { padding: 18px 16px 20px; background-size: 200px, auto; }
+}
+
+/* ================= карточка в списке ================= */
+
+/* HUD-уголки поверх карточки; при наведении/фокусе «захватываются» внутрь. */
+.card[data-game="cyberpunk-2077"]::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  z-index: 4;
+  pointer-events: none;
+  background:
+    url(assets/corner.webp) top left / 34px no-repeat,
+    url(assets/corner-tr.webp) top right / 34px no-repeat,
+    url(assets/corner-bl.webp) bottom left / 34px no-repeat,
+    url(assets/corner-br.webp) bottom right / 34px no-repeat;
+  opacity: 0.5;
+  transition: opacity 0.25s, transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.card[data-game="cyberpunk-2077"]:hover::before,
+.card[data-game="cyberpunk-2077"]:focus-visible::before {
+  opacity: 1;
+  transform: scale(0.975);
+}
+
+.card[data-game="cyberpunk-2077"] .cover::after {
+  inset: 0;
+  height: auto;
+  background:
+    linear-gradient(to top, var(--t-surface), transparent 48%),
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.28) 0 1px, transparent 1px 3px);
+}
+
+.card[data-game="cyberpunk-2077"] .badge {
+  top: 16px;
+  left: 20px;
+  padding: 4px 14px 4px 10px;
+  border-radius: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 60%, calc(100% - 8px) 100%, 0 100%);
+  font-family: "Tektur", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cp-ink);
+  background: var(--cp-tone);
+  box-shadow: none;
+}
+
+.card[data-game="cyberpunk-2077"] .badge.priority { left: auto; right: 20px; color: var(--cp-y); background: rgba(7, 6, 10, 0.8); }
+
+.card[data-game="cyberpunk-2077"] .card-body {
+  background: linear-gradient(to right, var(--cp-y) 0 64px, transparent 64px 70px, rgba(252, 238, 10, 0.4) 70px 84px, transparent 84px) top left / 100% 2px no-repeat;
+}
+
+.card[data-game="cyberpunk-2077"] .card-title { letter-spacing: 0.04em; }
+.card[data-game="cyberpunk-2077"] .card-title::before { content: "◢ "; color: var(--cp-y); font-size: 0.7em; text-shadow: none; }
+
+.card[data-game="cyberpunk-2077"] .meta {
+  font-family: "Tektur", sans-serif;
+  letter-spacing: 0.04em;
+}
+
+.card[data-game="cyberpunk-2077"] .note {
+  padding-left: 10px;
+  border-left: 2px solid var(--cp-tone);
+  border-radius: 0;
+}
+
+.card[data-game="cyberpunk-2077"] .card-body { padding-bottom: 22px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .card[data-game="cyberpunk-2077"]:hover .cover img,
+  .card[data-game="cyberpunk-2077"]:focus-visible .cover img { animation: cp-card-glitch 0.42s linear 1; }
+  .card[data-game="cyberpunk-2077"]:hover .card-title,
+  .card[data-game="cyberpunk-2077"]:focus-visible .card-title { animation: cp-rgb 0.5s linear 1; }
+}
+
+@keyframes cp-card-glitch {
+  0% { transform: scale(1.04); }
+  20% { transform: scale(1.04) translate3d(-7px, 0, 0) skewX(4deg); }
+  40% { transform: scale(1.04) translate3d(6px, 0, 0); }
+  60% { transform: scale(1.04) translate3d(-3px, 0, 0) skewX(-3deg); }
+  100% { transform: scale(1.04); }
+}
+
+@keyframes cp-rgb {
+  0%, 100% { text-shadow: 2px 0 0 rgba(255, 0, 60, 0.7), -2px 0 0 rgba(0, 229, 255, 0.7); }
+  30% { text-shadow: -5px 0 0 rgba(255, 0, 60, 0.85), 5px 0 0 rgba(0, 229, 255, 0.85); transform: translate3d(2px, 0, 0); }
+  60% { text-shadow: 4px 0 0 rgba(255, 0, 60, 0.85), -3px 0 0 rgba(0, 229, 255, 0.85); transform: translate3d(-1px, 0, 0); }
+}

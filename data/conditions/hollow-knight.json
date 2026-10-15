@@ -1,0 +1,138 @@
+{
+  "title": "Окончательное закрытие Hollow Knight",
+  "revision": "Редакция 1 от 01.08.2026 (демо)",
+  "aim": "Все концовки и весь Godmaster, 112% карты и один забег Steel Soul — без погони за спидраном.",
+  "setup": [
+    "Hollow Knight (PC), версия 1.5 со всеми бесплатными DLC.",
+    "Обычный режим; Steel Soul — отдельным сохранением."
+  ],
+  "groups": [
+    {
+      "title": "Сюжет",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Основной сюжет до концовки «Полый рыцарь»",
+          "gives": "Вся история Халлоунеста и первая концовка",
+          "counts": "Титры просмотрены",
+          "done": true,
+          "date": "2026-08-22",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/e/e4/B_Pure_Vessel.png/revision/latest",
+          "link": "https://hollowknight.fandom.com/wiki/Endings_(Hollow_Knight)"
+        },
+        {
+          "n": 2,
+          "title": "Концовка «Запечатанные сёстры»",
+          "gives": "Вторая концовка с Хорнет",
+          "needs": "Амулет «Пустое сердце»",
+          "counts": "Титры просмотрены",
+          "done": true,
+          "date": "2026-08-25",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/16/Hornet_Idle.png/revision/latest",
+          "note": "Самая грустная из всех — до сих пор помню музыку"
+        },
+        {
+          "n": 3,
+          "title": "Концовка «Пробуждение»: бой с Сиянием",
+          "gives": "Истинный финал и бой внутри сна",
+          "needs": "Сновидец пробуждён, Гвоздь Грёз на максимуме",
+          "counts": "Сияние повержено",
+          "done": true,
+          "date": "2026-08-27",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/5/52/B_Radiance.png/revision/latest",
+          "link": "https://hollowknight.fandom.com/wiki/Radiance"
+        }
+      ]
+    },
+    {
+      "title": "Испытания",
+      "note": "Отдельные вызовы, ради которых игра и была закрыта целиком.",
+      "goals": [
+        {
+          "n": 4,
+          "title": "Путь боли в Белом дворце",
+          "gives": "Самая сложная платформенная секция игры и скрытая сцена в конце",
+          "counts": "Секция пройдена до конца",
+          "done": true,
+          "date": "2026-09-08",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/b/b4/White_Palace.png/revision/latest/scale-to-width-down/800",
+          "link": "https://hollowknight.fandom.com/wiki/Path_of_Pain"
+        },
+        {
+          "n": 5,
+          "title": "Король Кошмара Гримм",
+          "gives": "Лучший бой-«танец» в игре",
+          "needs": "Ритуал труппы Гримма",
+          "counts": "Повержен",
+          "done": true,
+          "date": "2026-09-02",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/9/98/Screenshot_HK_Nightmare_King_Grimm_01.png/revision/latest/scale-to-width-down/800",
+          "note": "Попыток 40, не меньше — но этот танец того стоил"
+        },
+        {
+          "n": 6,
+          "title": "Godmaster: все пять пантеонов",
+          "gives": "Испытания боссов подряд и финальная концовка Godmaster",
+          "counts": "Пантеон Халлоунеста пройден, Абсолютное Сияние повержено",
+          "done": true,
+          "date": "2026-09-18",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/13/Godhome_Arena_Absolute_Radiance_Phase_4.png/revision/latest/scale-to-width-down/800",
+          "note": "Последний удар — и руки тряслись ещё минут пять",
+          "checklist": [
+            {
+              "items": [
+                {
+                  "title": "Пантеон Мастера",
+                  "done": true
+                },
+                {
+                  "title": "Пантеон Художника",
+                  "done": true
+                },
+                {
+                  "title": "Пантеон Мудреца",
+                  "done": true
+                },
+                {
+                  "title": "Пантеон Рыцаря",
+                  "done": true
+                },
+                {
+                  "title": "Пантеон Халлоунеста",
+                  "done": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "n": 7,
+          "title": "Забег Steel Soul",
+          "gives": "Вся игра с одной жизнью",
+          "needs": "Отдельное сохранение",
+          "counts": "Сюжет пройден без смерти",
+          "done": true,
+          "date": "2026-09-20",
+          "image": "https://shared.fastly.steamstatic.com/community_assets/images/apps/367520/c2a017099150e32a6d014c318d921a5a2deec181.jpg"
+        }
+      ]
+    },
+    {
+      "title": "Исследование",
+      "goals": [
+        {
+          "n": 8,
+          "title": "112% по счётчику сохранения",
+          "gives": "Весь Халлоунест, все амулеты, гвозди и чары",
+          "counts": "112% в меню сохранения",
+          "done": true,
+          "date": "2026-09-12",
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/ss_bd76bd88bc5334ee56ae3d5f0d8dec4455e8e3b8.jpg"
+        }
+      ]
+    }
+  ],
+  "closing": [
+    "Все 8 пунктов подтверждены. Игра закрыта — возвращаться ради плана больше незачем."
+  ]
+}

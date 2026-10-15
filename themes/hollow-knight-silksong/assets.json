@@ -1,0 +1,35 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "curtain",
+      "prompt": "Full-bleed texture of a heavy crimson silk theatre curtain panel: deep blood-red and dark wine silk with soft vertical folds and pleats, subtle satin sheen on the ridges, a faint repeating gold-thread embroidery of tiny bells and needles woven into the cloth, rich and dark, the fabric fills the entire canvas edge to edge, no border, no text, no people, no characters.",
+      "size": "1024x1536", "background": "opaque", "quality": "medium", "max_width": 768
+    },
+    {
+      "name": "needle",
+      "prompt": "A single slender ornate sewing needle lying perfectly horizontally across the canvas, polished pale silver metal with antique gold inlay, a decorative elongated eye at the left end engraved with tiny filigree, a long sharp point at the right end, a short loose curl of glossy crimson-red silk thread looped through the eye, isolated on a fully transparent background, dark fantasy game UI ornament, no text, no characters.",
+      "size": "1536x1024", "background": "transparent", "quality": "medium", "max_width": 640
+    },
+    {
+      "name": "bell",
+      "prompt": "Small ornate antique gilded bell, a game UI ornament: warm gold metal with delicate engraved filigree bands, a little clapper visible at the bottom, a thin crimson silk loop on top for hanging, soft metallic highlights, front view, centered, isolated on a fully transparent background, no text, no characters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 320
+    },
+    {
+      "name": "knot",
+      "prompt": "Decorative ornamental knot made of glossy crimson-red silk cord, tied in a symmetrical looped knot with four rounded loops and two short tails hanging down, a small polished gold bead at the center, front view, centered, isolated on a fully transparent background, dark fantasy game UI ornament, no text, no characters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 320
+    },
+    {
+      "name": "frame",
+      "prompt": "Single ornate corner ornament of a gilded frame, placed in the top-left corner of the canvas: thin antique-gold filigree with curling thread spirals, a tiny bell and a small needle motif, two long thin gold lines run along the top edge and down the left edge, the rest of the canvas empty, isolated on a fully transparent background, no text, no characters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 256, "mirror": true
+    },
+    {
+      "name": "citadel",
+      "prompt": "Atmospheric dark backdrop for a website background: looking up into a towering ornate gilded citadel of slender spires, hanging cages and thin bridges, silhouetted in deep crimson and near-black haze, many thin red silk threads hanging down from above, a few faint tiny golden bells, painterly ink-wash style, very dark and low contrast so text on top stays readable, wide panorama, no characters, no creatures, no text.",
+      "size": "1536x1024", "background": "opaque", "quality": "medium", "max_width": 1600
+    }
+  ]
+}

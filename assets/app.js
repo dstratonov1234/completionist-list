@@ -9,18 +9,6 @@
   };
   const STATUS_ORDER = ["in_progress", "completed", "planned", "dropped"];
 
-  // Порядок секций на странице игры. layout: "cards" — карточки с большой картинкой, "list" — компактные строки с иконкой.
-  const GOAL_TYPES = {
-    boss: { label: "Боссы", icon: "⚔️", layout: "cards" },
-    ending: { label: "Концовки", icon: "🎬", layout: "cards" },
-    challenge: { label: "Испытания", icon: "🔥", layout: "cards" },
-    dlc: { label: "Дополнения", icon: "🧩", layout: "cards" },
-    location: { label: "Локации", icon: "🗺️", layout: "cards" },
-    collectible: { label: "Коллекции", icon: "💎", layout: "cards" },
-    other: { label: "Прочее", icon: "✨", layout: "cards" },
-    achievement: { label: "Достижения", icon: "🏆", layout: "list" },
-  };
-
   const els = {
     listView: document.getElementById("list-view"),
     header: document.getElementById("site-header"),
@@ -42,6 +30,10 @@
     query: "",
     listScroll: 0,
     reportCache: new Map(),
+    conditionsCache: new Map(),
+    // Версия данных (games.json → updated) — добавляется к файлам тем, чтобы после обновления не висел старый кэш.
+    version: "",
+    pageToken: 0,
     lightbox: { items: [], index: 0 },
   };
 
@@ -108,11 +100,129 @@
       for (const spec of g.theme.fonts ?? []) {
         if (/^[\w\s:@;,.+-]+$/.test(spec)) loadStylesheet(`https://fonts.googleapis.com/css2?family=${spec.trim().replace(/ /g, "+")}&display=swap`);
       }
-      if (g.theme.css === true) loadStylesheet(`themes/${encodeURIComponent(g.id)}.css`);
+      if (g.theme.css === true) loadStylesheet(`themes/${encodeURIComponent(g.id)}/theme.css?v=${state.version}`);
+    }
+  }
+
+  // ---------- per-game modules: themes/<id>/theme.js ----------
+  // Модуль даёт игре собственный UI/UX/VFX: GameThemes.register("<id>", { page(ctx) { …; return cleanup } }).
+  // page() вызывается после отрисовки страницы игры и может перестраивать разметку, добавлять слои,
+  // анимации и интерактив. Всё, что зарегистрировано через ctx (listen, loop, layer, onCleanup),
+  // убирается автоматически при уходе со страницы.
+
+  const modules = { registry: new Map(), loading: new Map(), cleanups: [], token: 0 };
+
+  window.GameThemes = {
+    register(id, mod) {
+      modules.registry.set(id, mod);
+    },
+  };
+
+  function loadModule(id) {
+    if (modules.registry.has(id)) return Promise.resolve(modules.registry.get(id));
+    if (!modules.loading.has(id)) {
+      modules.loading.set(
+        id,
+        new Promise((resolve) => {
+          const s = document.createElement("script");
+          s.src = `themes/${encodeURIComponent(id)}/theme.js?v=${state.version}`;
+          s.onload = () => resolve(modules.registry.get(id) ?? null);
+          s.onerror = () => resolve(null);
+          document.head.append(s);
+        }),
+      );
+    }
+    return modules.loading.get(id);
+  }
+
+  function unmountModule() {
+    modules.token++;
+    for (const fn of modules.cleanups.splice(0).reverse()) {
+      try {
+        fn();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    els.gameView.classList.remove("module-pending");
+  }
+
+  function makeCtx(g, cond, reportReady) {
+    const root = els.gameView;
+    const cleanups = modules.cleanups;
+    return {
+      game: g,
+      root,
+      html: document.documentElement,
+      assets: `themes/${encodeURIComponent(g.id)}/assets/`,
+      reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      finePointer: window.matchMedia("(pointer: fine)").matches,
+      el: {
+        hero: root.querySelector(".hero"),
+        heroTitle: root.querySelector(".hero-title"),
+        layout: root.querySelector(".game-layout"),
+        main: root.querySelector(".game-main"),
+        side: root.querySelector(".game-side"),
+      },
+      conditions: cond,
+      goals: () => allGoals(cond),
+      groups: () => [...root.querySelectorAll(".cond-group")],
+      goalEl: (n) => root.querySelector(`.cond[data-goal="${n}"]`),
+      section: (key) => root.querySelector(`.block[data-section="${key}"]`),
+      reportReady,
+      esc,
+      safeUrl,
+      fmtDate,
+      fmtHours,
+      plural,
+      onCleanup: (fn) => cleanups.push(fn),
+      listen(target, type, fn, opts) {
+        target.addEventListener(type, fn, opts);
+        cleanups.push(() => target.removeEventListener(type, fn, opts));
+      },
+      loop(fn) {
+        let id;
+        let last = performance.now();
+        const tick = (now) => {
+          fn(now, Math.min(0.05, (now - last) / 1000));
+          last = now;
+          id = requestAnimationFrame(tick);
+        };
+        id = requestAnimationFrame(tick);
+        cleanups.push(() => cancelAnimationFrame(id));
+      },
+      layer(className, parent = document.body) {
+        const el = document.createElement("div");
+        el.className = className;
+        el.setAttribute("aria-hidden", "true");
+        parent.append(el);
+        cleanups.push(() => el.remove());
+        return el;
+      },
+      fx: window.GameFX,
+    };
+  }
+
+  async function mountModule(g, cond, reportReady) {
+    if (g.theme?.js !== true) return;
+    const token = ++modules.token;
+    els.gameView.classList.add("module-pending");
+    const reveal = setTimeout(() => els.gameView.classList.remove("module-pending"), 2500);
+    const mod = await loadModule(g.id);
+    clearTimeout(reveal);
+    if (token !== modules.token) return;
+    els.gameView.classList.remove("module-pending");
+    if (!mod?.page) return;
+    try {
+      const cleanup = mod.page(makeCtx(g, cond, reportReady));
+      if (typeof cleanup === "function") modules.cleanups.push(cleanup);
+    } catch (e) {
+      console.error(`theme ${g.id}:`, e);
     }
   }
 
   function clearPageTheme() {
+    unmountModule();
     const root = document.documentElement;
     root.classList.remove("themed");
     delete root.dataset.game;
@@ -249,7 +359,6 @@
     true,
   );
 
-  // Картинка цели без явного fit: широкие кадры (скриншоты) — на всю карточку, арт персонажей — целиком.
   // Вертикальная обложка (бокс-арт) в широкой рамке: показываем целиком поверх размытой копии.
   document.addEventListener(
     "load",
@@ -257,11 +366,6 @@
       const img = e.target;
       if (!(img instanceof HTMLImageElement) || !img.naturalHeight) return;
       const wide = img.naturalWidth / img.naturalHeight > 1.3;
-      const goal = img.closest(".goal-media.auto");
-      if (goal) {
-        goal.classList.toggle("cover", wide);
-        goal.classList.toggle("contain", !wide);
-      }
       const frame = img.parentElement?.matches(".cover, .hero-media") ? img.parentElement : null;
       if (frame) {
         frame.classList.toggle("portrait", !wide);
@@ -314,20 +418,13 @@
 
   function renderStats() {
     const c = counts();
-    const hours = state.games.reduce((sum, g) => sum + (Number(g.playtime) || 0), 0);
-    const rated = state.games.filter((g) => g.status === "completed" && g.rating != null);
-    const avg = rated.length ? rated.reduce((s, g) => s + Number(g.rating), 0) / rated.length : null;
-    const achievements = state.games.reduce((sum, g) => sum + (Number(g.achievements?.done) || 0), 0);
-
+    const goalsDone = state.games.reduce((sum, g) => sum + (Number(g.goals?.done) || 0), 0);
     const tiles = [
-      ["completed", "Пройдено", c.completed],
+      ["completed", "Закрыто игр", c.completed],
       ["in_progress", "В процессе", c.in_progress],
       ["planned", "В планах", c.planned],
-      ["", "Часов", Math.round(hours).toLocaleString("ru-RU")],
+      ["", "Целей выполнено", goalsDone.toLocaleString("ru-RU")],
     ];
-    if (achievements) tiles.push(["", "Ачивок", achievements.toLocaleString("ru-RU")]);
-    if (avg != null) tiles.push(["", "Ср. оценка", avg.toFixed(1)]);
-
     els.stats.innerHTML = tiles
       .map(([cls, label, val]) => `<div class="stat ${cls}"><dt>${label}</dt><dd>${val}</dd></div>`)
       .join("");
@@ -336,7 +433,7 @@
   // Шапка главной подсвечивается артом последней закрытой (или текущей) игры.
   function renderHeaderArt() {
     const g = state.games.filter((x) => x.status === "completed").sort(compare)[0] ?? state.games.filter((x) => x.status === "in_progress").sort(compare)[0];
-    const url = g && (safeUrl(g.hero) || steamAsset(g, "library_hero.jpg") || safeUrl(g.screenshots?.[0]) || coverUrl(g));
+    const url = g && (safeUrl(g.hero) || steamAsset(g, "library_hero.jpg") || coverUrl(g));
     if (url) els.header.style.setProperty("--header-img", `url(${JSON.stringify(url)})`);
   }
 
@@ -364,42 +461,33 @@
       .join("");
   }
 
-  const achText = (g) => (g.achievements?.total ? `${g.achievements.done ?? 0}/${g.achievements.total}` : "");
+  const goalsText = (t) => `${t.done} из ${t.total} ${plural(t.total, "цели", "целей", "целей")}`;
 
   function cardMeta(g) {
     const bits = [];
     if (g.platform) bits.push(`<span class="chip">${esc(g.platform)}</span>`);
-    switch (g.status) {
-      case "completed":
-        if (g.finished) bits.push(`<span>✓ ${esc(fmtDate(g.finished))}</span>`);
-        if (g.playtime != null) bits.push(`<span>⏱ ${esc(fmtHours(g.playtime))}</span>`);
-        if (achText(g)) bits.push(`<span>🏆 ${esc(achText(g))}</span>`);
-        if (g.rating != null) bits.push(`<span class="rating">★ ${esc(g.rating)}/10</span>`);
-        break;
-      case "in_progress":
-        if (g.started) bits.push(`<span>с ${esc(fmtDate(g.started))}</span>`);
-        if (g.playtime != null) bits.push(`<span>⏱ ${esc(fmtHours(g.playtime))}</span>`);
-        if (achText(g)) bits.push(`<span>🏆 ${esc(achText(g))}</span>`);
-        break;
-      case "planned":
-        if (g.added) bits.push(`<span>добавлено ${esc(fmtDate(g.added))}</span>`);
-        break;
-      case "dropped":
-        if (g.finished || g.started) bits.push(`<span>${esc(fmtDate(g.finished || g.started))}</span>`);
-        if (g.playtime != null) bits.push(`<span>⏱ ${esc(fmtHours(g.playtime))}</span>`);
-        break;
-    }
+    const date = {
+      completed: g.finished && `✓ ${fmtDate(g.finished)}`,
+      in_progress: g.started && `с ${fmtDate(g.started)}`,
+      planned: g.added && `добавлено ${fmtDate(g.added)}`,
+      dropped: (g.finished || g.started) && fmtDate(g.finished || g.started),
+    }[g.status];
+    if (date) bits.push(`<span>${esc(date)}</span>`);
     return bits.length ? `<div class="meta">${bits.join("")}</div>` : "";
   }
 
-  const progressBar = (p) =>
-    `<div class="progress" title="${esc(p)}%"><div style="width:${Math.min(100, Math.max(0, Number(p) || 0))}%"></div></div>`;
+  const progressBar = (done, total) => {
+    const p = total ? Math.round((done / total) * 100) : 0;
+    return `<div class="progress" title="${p}%"><div style="width:${p}%"></div></div>`;
+  };
 
   function cardHtml(g) {
     const s = STATUSES[g.status] ?? { badge: g.status };
     const priority = g.status === "planned" && g.priority != null ? `<span class="badge priority">#${esc(g.priority)}</span>` : "";
-    const progress = g.status === "in_progress" && g.progress != null ? progressBar(g.progress) : "";
-    const completion = g.status === "completed" && g.completion ? `<div class="completion-note">${esc(g.completion)}</div>` : "";
+    const t = g.goals?.total ? g.goals : null;
+    const goals = t
+      ? `<div class="card-goals"><span>${esc(goalsText(t))}</span>${g.status === "planned" ? "" : progressBar(t.done, t.total)}</div>`
+      : "";
     const note = g.notes ? `<div class="note">${esc(g.notes)}</div>` : "";
     const footer = g.report ? `<div class="card-footer">Читать отчёт →</div>` : "";
     const vars = themeVars(g.theme);
@@ -410,8 +498,7 @@
         <div class="card-body">
           <h3 class="card-title">${esc(g.title)}</h3>
           ${cardMeta(g)}
-          ${progress}
-          ${completion}
+          ${goals}
           ${note}
           ${footer}
         </div>
@@ -438,161 +525,139 @@
     els.list.innerHTML = games.length ? games.map(cardHtml).join("") : emptyHtml();
   }
 
-  // ---------- game view ----------
+  // ---------- game view: условия закрытия ----------
+  // Страница игры — только про цели, которые пользователь сам поставил себе для закрытия
+  // (data/conditions/<id>.json, импорт из его markdown), прогресс по ним и итоговый отчёт.
 
-  function linkIcon(url) {
-    const host = (() => {
-      try {
-        return new URL(url).hostname.replace(/^www\./, "");
-      } catch {
-        return "";
-      }
-    })();
-    if (/steampowered|steamcommunity/.test(host)) return ["🎮", host];
-    if (/fandom|wiki|fextralife/.test(host)) return ["📖", host];
-    if (/howlongtobeat/.test(host)) return ["⏱", host];
-    if (/youtube|youtu\.be/.test(host)) return ["▶", host];
-    if (/twitch/.test(host)) return ["📺", host];
-    if (/reddit/.test(host)) return ["💬", host];
-    return ["🔗", host];
-  }
+  const allGoals = (c) => (c?.groups ?? []).flatMap((gr) => gr.goals ?? []);
+  const tally = (goals) => ({ done: goals.filter((x) => x.done).length, total: goals.length });
 
-  function gameLinks(g) {
-    const links = (g.links ?? []).filter((l) => safeUrl(l.url));
-    if (g.steamAppId && !links.some((l) => /store\.steampowered\.com/.test(l.url))) {
-      links.unshift({ title: "Steam", url: `https://store.steampowered.com/app/${g.steamAppId}/` });
+  async function loadConditions(g) {
+    if (!g.goals?.total) return null;
+    if (!state.conditionsCache.has(g.id)) {
+      const res = await fetch(`data/conditions/${encodeURIComponent(g.id)}.json`, { cache: "no-cache" }).catch(() => null);
+      state.conditionsCache.set(g.id, res?.ok ? await res.json() : null);
     }
-    return links;
+    return state.conditionsCache.get(g.id);
   }
 
-  function goalMedia(goal, type) {
-    const url = safeUrl(goal.image);
-    const fit = goal.fit === "cover" || goal.fit === "contain" ? goal.fit : "auto contain";
-    const fallback = `<div class="goal-fallback">${GOAL_TYPES[type]?.icon ?? "✨"}</div>`;
-    const caption = esc(goal.title);
-    return `<div class="goal-media ${fit}">${fallback}${
-      url ? imgTag([url], `alt="${caption}" loading="lazy" data-zoom data-caption="${caption}"`) : ""
-    }</div>`;
+  function fact(label, value) {
+    return value == null || value === "" ? "" : `<div class="fact"><dt>${label}</dt><dd>${esc(value)}</dd></div>`;
   }
 
-  function goalFoot(goal) {
-    const bits = [];
-    if (goal.date) bits.push(`<span>${esc(fmtDate(goal.date))}</span>`);
-    if (goal.rarity != null) bits.push(`<span class="${goal.rarity < 10 ? "rare-text" : ""}">${esc(goal.rarity)}% игроков</span>`);
-    if (safeUrl(goal.link)) bits.push(`<a href="${esc(goal.link)}" target="_blank" rel="noopener">Подробнее ↗</a>`);
-    return bits.length ? `<div class="goal-foot">${bits.join("")}</div>` : "";
-  }
+  const FIELDS = [
+    ["gives", "Что даёт"],
+    ["needs", "Что потребуется"],
+    ["unlock", "Открывается"],
+    ["counts", "Как засчитываем"],
+  ];
 
-  function goalCard(goal, type) {
-    const pending = goal.done === false;
+  function checklistHtml(goal) {
+    const groups = goal.checklist ?? [];
+    const items = groups.flatMap((c) => c.items ?? []);
+    if (!items.length) return "";
+    const t = tally(items);
     return `
-      <figure class="goal ${pending ? "pending" : ""}">
-        ${goalMedia(goal, type)}
-        <figcaption>
-          <h4>${pending ? "○ " : ""}${esc(goal.title)}</h4>
-          ${goal.description ? `<p class="goal-desc">${esc(goal.description)}</p>` : ""}
-          ${goal.note ? `<p class="goal-note">${esc(goal.note)}</p>` : ""}
-          ${goalFoot(goal)}
-        </figcaption>
-      </figure>`;
-  }
-
-  function achievementRow(goal) {
-    const pending = goal.done === false;
-    const rare = goal.rarity != null && goal.rarity < 10;
-    const url = safeUrl(goal.image);
-    return `
-      <div class="ach ${pending ? "pending" : ""} ${rare ? "rare" : ""}">
-        <div class="ach-icon">${url ? imgTag([url], `alt="" loading="lazy" data-zoom data-caption="${esc(goal.title)}"`) : "🏆"}</div>
-        <div class="ach-text">
-          <div class="ach-title">${esc(goal.title)}</div>
-          ${goal.description ? `<div class="ach-desc">${esc(goal.description)}</div>` : ""}
-          ${goal.note ? `<div class="goal-note">${esc(goal.note)}</div>` : ""}
-        </div>
-        <div class="ach-side">
-          ${goal.rarity != null ? `<span class="ach-rarity">${esc(goal.rarity)}%</span>` : ""}
-          ${goal.date ? `<span>${esc(fmtDate(goal.date))}</span>` : ""}
-          ${safeUrl(goal.link) ? `<a href="${esc(goal.link)}" target="_blank" rel="noopener">↗</a>` : ""}
-        </div>
+      <div class="cond-check">
+        <div class="cond-check-head">Чек-лист <b>${t.done}/${t.total}</b></div>
+        ${groups
+          .map(
+            (c) => `
+          <div class="cond-check-group">
+            ${c.label ? `<div class="cond-check-label">${esc(c.label)}</div>` : ""}
+            <ul>${(c.items ?? []).map((it) => `<li class="${it.done ? "done" : ""}"><span class="cond-box" aria-hidden="true"></span>${esc(it.title)}<span class="sr-only">${it.done ? " — выполнено" : " — не выполнено"}</span></li>`).join("")}</ul>
+          </div>`,
+          )
+          .join("")}
       </div>`;
   }
 
-  function goalsHtml(g) {
-    const groups = {};
-    for (const goal of g.goals ?? []) {
-      if (!goal?.title) continue;
-      const type = GOAL_TYPES[goal.type] ? goal.type : "other";
-      (groups[type] ??= []).push(goal);
-    }
-    return Object.entries(GOAL_TYPES)
-      .filter(([type]) => groups[type])
-      .map(([type, t]) => {
-        const items = groups[type];
-        const done = items.filter((x) => x.done !== false).length;
-        const count = done === items.length ? items.length : `${done}/${items.length}`;
-        const body =
-          t.layout === "list"
-            ? `<div class="ach-list" data-gallery>${items.map(achievementRow).join("")}</div>`
-            : `<div class="goal-grid" data-gallery>${items.map((x) => goalCard(x, type)).join("")}</div>`;
-        return `<section class="block">${sectionHead(g, type, t.label, t.icon, count)}${body}</section>`;
+  function goalHtml(goal) {
+    const img = safeUrl(goal.image);
+    const facts = FIELDS.filter(([k]) => goal[k])
+      .map(([k, label]) => `<div class="cond-fact" data-field="${k}"><dt>${label}</dt><dd>${esc(goal[k])}</dd></div>`)
+      .concat((goal.extra ?? []).map((x) => `<div class="cond-fact"><dt>${esc(x.label)}</dt><dd>${esc(x.value)}</dd></div>`))
+      .join("");
+    const gallery = (goal.gallery ?? []).map(safeUrl).filter(Boolean);
+    return `
+      <article class="cond ${goal.done ? "done" : "todo"}" data-goal="${esc(goal.n)}" id="goal-${esc(goal.n)}">
+        <div class="cond-media ${img ? "" : "empty"}" data-gallery>
+          ${img ? imgTag([img], `alt="${esc(goal.title)}" loading="lazy" data-zoom data-caption="${esc(goal.title)}"`) : ""}
+          <span class="cond-num">#${esc(goal.n)}</span>
+        </div>
+        <div class="cond-body">
+          <header class="cond-head">
+            <h3 class="cond-title">${esc(goal.title)}</h3>
+            <span class="cond-state">${goal.done ? `✓ Выполнено${goal.date ? ` · ${esc(fmtDate(goal.date))}` : ""}` : "Не выполнено"}</span>
+          </header>
+          ${facts ? `<dl class="cond-facts">${facts}</dl>` : ""}
+          ${checklistHtml(goal)}
+          ${goal.note ? `<blockquote class="cond-note">${esc(goal.note)}</blockquote>` : ""}
+          ${goal.details ? `<p class="cond-details">${esc(goal.details)}</p>` : ""}
+          ${gallery.length ? `<div class="cond-gallery" data-gallery>${gallery.map((u) => imgTag([u], `alt="" loading="lazy" data-zoom data-caption="${esc(goal.title)}"`)).join("")}</div>` : ""}
+          ${safeUrl(goal.link) ? `<a class="cond-link" href="${esc(goal.link)}" target="_blank" rel="noopener">Подробнее ↗</a>` : ""}
+        </div>
+      </article>`;
+  }
+
+  function groupsHtml(g, cond) {
+    return (cond.groups ?? [])
+      .map((gr, i) => {
+        const t = tally(gr.goals ?? []);
+        return `
+          <section class="block cond-group" data-section="group" data-group="${i}">
+            ${sectionHead(g, `group-${i}`, gr.title, "◆", `${t.done}/${t.total}`)}
+            ${gr.note ? `<p class="cond-group-note">${esc(gr.note)}</p>` : ""}
+            <div class="cond-list">${(gr.goals ?? []).map(goalHtml).join("")}</div>
+          </section>`;
       })
       .join("");
   }
 
-  function screenshotsHtml(g) {
-    const shots = (g.screenshots ?? []).map(safeUrl).filter(Boolean);
-    if (!shots.length) return "";
+  function summaryHtml(g, cond) {
+    const t = tally(allGoals(cond));
+    const pct = t.total ? Math.round((t.done / t.total) * 100) : 0;
     return `
-      <section class="block">
-        ${sectionHead(g, "screenshots", "Скриншоты", "🖼")}
-        <div class="shots" data-gallery>
-          ${shots.map((u, i) => `<button class="shot" type="button">${imgTag([u], `alt="Скриншот ${i + 1}" loading="lazy" data-zoom data-caption="${esc(g.title)}"`)}</button>`).join("")}
+      <section class="cond-summary">
+        <div class="cond-total">
+          <b>${t.done}</b><span>из ${t.total}</span>
+          <small>${g.status === "completed" ? "Игра закрыта" : `${pct}% условий закрытия выполнено`}</small>
         </div>
+        ${progressBar(t.done, t.total)}
+        ${cond.aim ? `<p class="cond-aim"><b>Цель закрытия.</b> ${esc(cond.aim)}</p>` : ""}
+        ${cond.setup?.length ? `<ul class="cond-setup">${cond.setup.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : ""}
+        ${cond.revision ? `<p class="cond-rev">${esc(cond.revision)}</p>` : ""}
       </section>`;
   }
 
-  function fact(label, value, cls = "") {
-    return value == null || value === "" ? "" : `<div class="fact ${cls}"><dt>${label}</dt><dd>${esc(value)}</dd></div>`;
-  }
-
-  function scoreHtml(rating) {
-    if (rating == null) return "";
-    const r = Math.max(0, Math.min(10, Number(rating)));
-    const pips = Array.from({ length: 10 }, (_, i) => `<i class="${i < Math.round(r) ? "on" : ""}"></i>`).join("");
-    return `<div class="score"><div><span class="score-num">${esc(rating)}</span><span class="score-max">/10</span></div><div class="pips">${pips}</div></div>`;
-  }
-
-  function sideHtml(g) {
+  function sideHtml(g, cond) {
+    const t = tally(allGoals(cond));
+    const p = t.total ? t.done / t.total : 0;
     const days = g.status === "completed" ? daysBetween(g.started, g.finished) : null;
-    const links = gameLinks(g);
+    const groups = (cond?.groups ?? []).map((gr) => ({ title: gr.title, ...tally(gr.goals ?? []) }));
     return `
       <aside class="game-side">
         <div class="side-card">
-          ${scoreHtml(g.rating)}
-          ${g.status === "in_progress" && g.progress != null ? `<div class="side-progress"><div class="side-label">Прогресс · ${esc(g.progress)}%</div>${progressBar(g.progress)}</div>` : ""}
+          ${
+            cond
+              ? `<div class="ring" style="--p:${p.toFixed(3)}" role="img" aria-label="Выполнено ${t.done} из ${t.total}">
+                   <div class="ring-text"><b>${t.done}</b><small>из ${t.total}</small></div>
+                 </div>
+                 <ul class="group-progress">
+                   ${groups.map((x, i) => `<li><a href="#" data-jump="${i}">${esc(x.title)}</a><b>${x.done}/${x.total}</b>${progressBar(x.done, x.total)}</li>`).join("")}
+                 </ul>`
+              : ""
+          }
           <dl class="facts">
             ${fact("Платформа", g.platform)}
             ${fact("Начато", fmtDate(g.started))}
-            ${fact(g.status === "dropped" ? "Брошено" : "Завершено", fmtDate(g.finished))}
-            ${fact("Время", g.playtime != null ? fmtHours(g.playtime) : null)}
+            ${fact(g.status === "dropped" ? "Брошено" : "Закрыто", fmtDate(g.finished))}
             ${fact("Дней", days != null ? `${days} ${plural(days, "день", "дня", "дней")}` : null)}
-            ${fact("Достижения", achText(g))}
-            ${fact("Приоритет", g.status === "planned" && g.priority != null ? `#${g.priority}` : null)}
+            ${fact("Время", g.playtime != null ? fmtHours(g.playtime) : null)}
+            ${fact("В очереди", g.status === "planned" && g.priority != null ? `#${g.priority}` : null)}
             ${fact("Добавлено", fmtDate(g.added))}
-            ${fact("Разработчик", g.developer)}
-            ${fact("Год выхода", g.year)}
           </dl>
         </div>
-        ${
-          links.length
-            ? `<nav class="side-card links" aria-label="Ссылки">${links
-                .map((l) => {
-                  const [icon, host] = linkIcon(l.url);
-                  return `<a href="${esc(l.url)}" target="_blank" rel="noopener"><span class="link-icon">${icon}</span><span><b>${esc(l.title ?? host)}</b><small>${esc(host)}</small></span><span class="link-arrow">↗</span></a>`;
-                })
-                .join("")}</nav>`
-            : ""
-        }
       </aside>`;
   }
 
@@ -608,14 +673,13 @@
     return `<nav class="neighbors">${link(prev, "prev")}${link(next, "next")}</nav>`;
   }
 
-  function renderGame(g) {
+  function renderGame(g, cond) {
     const s = STATUSES[g.status] ?? { badge: g.status };
-    const heroUrls = [g.hero, steamAsset(g, "library_hero.jpg"), ...(g.screenshots ?? []), coverUrl(g)];
+    const heroUrls = [g.hero, steamAsset(g, "library_hero.jpg"), coverUrl(g)];
     const logoUrls = [g.logo, steamAsset(g, "logo.png")];
     const hasLogo = unique(logoUrls.map(safeUrl)).length > 0;
-    const genres = (g.genres ?? []).map((x) => `<span class="chip">${esc(x)}</span>`).join("");
     const metaBits =
-      [g.platform, g.year, g.developer].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("") +
+      [g.platform].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("") +
       (g.demo ? `<span class="demo-chip" title="Пробная игра для демонстрации сайта">демо</span>` : "");
 
     els.gameView.innerHTML = `
@@ -627,31 +691,41 @@
             ${hasLogo ? imgTag(logoUrls, `class="hero-logo" alt="${esc(g.title)}"`) : ""}
             <h1>${esc(g.title)}</h1>
             <div class="hero-meta"><span class="status-pill">${s.badge}</span>${metaBits}</div>
-            ${genres ? `<div class="hero-genres">${genres}</div>` : ""}
           </div>
         </div>
       </header>
       <div class="wrap game-layout ${esc(g.status)}">
         <div class="game-main">
-          ${g.completion ? `<div class="completion-banner"><span>${g.status === "completed" ? "🏆" : "🎯"}</span><div><small>${g.status === "completed" ? "Закрыто" : "Цель"}</small>${esc(g.completion)}</div></div>` : ""}
-          ${g.description ? `<p class="lead">${esc(g.description)}</p>` : ""}
+          ${cond ? summaryHtml(g, cond) : `<p class="muted cond-none">Условия закрытия для этой игры ещё не добавлены.</p>`}
           ${g.notes ? `<p class="game-notes">${esc(g.notes)}</p>` : ""}
+          ${cond ? groupsHtml(g, cond) : ""}
+          ${
+            cond?.closing?.length
+              ? `<section class="block" data-section="closing">${sectionHead(g, "closing", "Точка закрытия", "⚑")}<div class="cond-closing">${cond.closing.map((p) => `<p>${esc(p)}</p>`).join("")}</div></section>`
+              : ""
+          }
           ${
             g.report || g.status === "completed"
-              ? `<section class="block">${sectionHead(g, "report", "Отчёт", "📝")}<div class="report" id="report" data-gallery>${
+              ? `<section class="block" data-section="report">${sectionHead(g, "report", "Отчёт", "📝")}<div class="report" id="report" data-gallery>${
                   g.report ? `<p class="muted">Загружаю отчёт…</p>` : `<p class="muted">Отчёт пока не добавлен.</p>`
                 }</div></section>`
               : ""
           }
-          ${goalsHtml(g)}
-          ${screenshotsHtml(g)}
           ${neighborsHtml(g)}
         </div>
-        ${sideHtml(g)}
+        ${sideHtml(g, cond)}
       </div>`;
 
-    if (g.report) loadReport(g);
+    return g.report ? loadReport(g) : Promise.resolve();
   }
+
+  // Клик по группе в боковой панели — прокрутка к ней.
+  els.gameView.addEventListener("click", (e) => {
+    const a = e.target.closest("[data-jump]");
+    if (!a) return;
+    e.preventDefault();
+    els.gameView.querySelector(`.cond-group[data-group="${a.dataset.jump}"]`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 
   async function loadReport(g) {
     const target = document.getElementById("report");
@@ -747,6 +821,7 @@
   // ---------- routing ----------
 
   function showList() {
+    state.pageToken++;
     const wasGame = !els.gameView.hidden;
     clearPageTheme();
     els.gameView.hidden = true;
@@ -758,14 +833,18 @@
     if (wasGame) window.scrollTo(0, state.listScroll);
   }
 
-  function showGame(g) {
+  async function showGame(g) {
+    const token = ++state.pageToken;
     if (!els.listView.hidden) state.listScroll = window.scrollY;
     els.listView.hidden = true;
     els.gameView.hidden = false;
     document.title = `${g.title} — ${SITE_TITLE}`;
     applyPageTheme(g);
-    renderGame(g);
+    const cond = await loadConditions(g);
+    if (token !== state.pageToken) return;
+    const reportReady = renderGame(g, cond);
     window.scrollTo(0, 0);
+    mountModule(g, cond, reportReady);
   }
 
   function route() {
@@ -800,6 +879,7 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       state.games = (data.games ?? []).filter((g) => g && g.id && g.title);
+      state.version = encodeURIComponent(data.updated ?? "");
       state.byId = new Map(state.games.map((g) => [g.id, g]));
       if (data.updated) els.updated.textContent = `Обновлено: ${fmtDate(data.updated)}`;
       document.getElementById("demo-note").hidden = !state.games.some((g) => g.demo);

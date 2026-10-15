@@ -1,0 +1,1285 @@
+/* Elden Ring — «Свет благодати»: тонкие золотые линии, римские капители, тёмные полупрозрачные панели,
+   лучи и искры благодати. Ассеты (assets/*.webp) сгенерированы по assets.json. */
+
+/* ==================== карточка в списке: двойная золотая рамка, золотой отблеск ==================== */
+
+.card[data-game="elden-ring"] {
+  border-color: rgba(201, 164, 92, 0.6);
+  border-radius: 0;
+}
+
+/* внутренняя линия рамки с ромбами по углам */
+.card[data-game="elden-ring"]::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  z-index: 4;
+  pointer-events: none;
+  border: 1px solid rgba(201, 164, 92, 0.38);
+  background:
+    url(assets/corner.webp) top left / 30px auto no-repeat,
+    url(assets/corner-tr.webp) top right / 30px auto no-repeat,
+    url(assets/corner-bl.webp) bottom left / 30px auto no-repeat,
+    url(assets/corner-br.webp) bottom right / 30px auto no-repeat;
+  transition: border-color 0.4s;
+}
+
+/* полоса света, пробегающая по карточке при наведении (позиционируется от .card) */
+.card[data-game="elden-ring"] .card-body::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 228, 165, 0.05) 44%, rgba(255, 230, 170, 0.26) 50%, rgba(255, 228, 165, 0.05) 56%, transparent 62%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.card[data-game="elden-ring"]:hover::before,
+.card[data-game="elden-ring"]:focus-visible::before { border-color: rgba(232, 199, 122, 0.75); }
+
+.card[data-game="elden-ring"]:hover,
+.card[data-game="elden-ring"]:focus-visible {
+  border-color: #e8c77a;
+  box-shadow: 0 0 0 1px rgba(232, 199, 122, 0.25), 0 18px 44px -14px rgba(232, 180, 90, 0.55);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card[data-game="elden-ring"]:hover .card-body::after,
+  .card[data-game="elden-ring"]:focus-visible .card-body::after {
+    opacity: 1;
+    transform: translateX(100%);
+    transition: transform 1.1s cubic-bezier(0.25, 0.6, 0.2, 1), opacity 0.2s;
+  }
+}
+
+.card[data-game="elden-ring"] .badge {
+  top: 14px;
+  left: 14px;
+  padding: 3px 10px 2px;
+  border: 1px solid rgba(201, 164, 92, 0.65);
+  border-radius: 0;
+  background: rgba(10, 11, 9, 0.82);
+  color: #ecd291;
+  font-family: var(--t-display);
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.card[data-game="elden-ring"] .badge.priority { left: auto; right: 14px; }
+
+.card[data-game="elden-ring"] .card-body { padding: 14px 20px 20px; font-family: var(--t-body); }
+
+.card[data-game="elden-ring"] .card-title {
+  color: #f1e3bd;
+  font-size: 19px;
+  letter-spacing: 0.22em;
+  text-shadow: 0 0 18px rgba(232, 199, 122, 0.3);
+}
+
+.card[data-game="elden-ring"] .card-title::after {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-top: 8px;
+  background: linear-gradient(90deg, rgba(201, 164, 92, 0.8), rgba(201, 164, 92, 0.15) 70%, transparent);
+}
+
+.card[data-game="elden-ring"] .chip { border-radius: 0; background: rgba(201, 164, 92, 0.12); color: #d9c79e; }
+.card[data-game="elden-ring"] .card-goals { gap: 8px; color: #d2c39d; }
+.card[data-game="elden-ring"] .note { font-style: italic; }
+
+.card[data-game="elden-ring"] .progress {
+  height: 3px;
+  border-radius: 0;
+  overflow: visible;
+  background: rgba(201, 164, 92, 0.16);
+}
+
+.card[data-game="elden-ring"] .progress > div {
+  border-radius: 0;
+  background: linear-gradient(90deg, #8a6a2e, #e8c77a);
+  box-shadow: 0 0 10px rgba(232, 199, 122, 0.6);
+}
+
+/* ==================== фон страницы: руины в дымке, лучи благодати в баннере ==================== */
+
+.er-backdrop {
+  position: fixed;
+  inset: 0 0 -80px;
+  z-index: -2;
+  background: center 65% / cover no-repeat;
+  opacity: 0.5;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 30%, #000 75%);
+  mask-image: linear-gradient(to bottom, transparent 0, rgba(0, 0, 0, 0.55) 30%, #000 75%);
+}
+
+/* лучи благодати поверх арта баннера (слой внутри .hero-media, смешивание screen) */
+.er-rays {
+  position: absolute;
+  left: 72%;
+  top: 34%;
+  width: min(1500px, 160vw);
+  aspect-ratio: 1;
+  background: center / contain no-repeat;
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent);
+  mask-image: radial-gradient(closest-side, #000 55%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .er-rays { animation: er-rays-turn 160s linear infinite, er-breathe 6s ease-in-out infinite alternate; }
+}
+
+@keyframes er-rays-turn {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes er-breathe {
+  from { opacity: 0.4; }
+  to { opacity: 0.68; }
+}
+
+/* ==================== заставка: имя области ==================== */
+
+.er-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.er-intro.er-veil { pointer-events: auto; cursor: pointer; }
+
+.er-intro.er-veil::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #050504;
+  animation: er-fade-out 1.3s 2s ease forwards;
+}
+
+.er-intro-card {
+  position: relative;
+  width: min(920px, 100%);
+  text-align: center;
+  transform: translateY(-6vh);
+}
+
+/* тёмная подложка под текстом, когда заставка идёт поверх страницы */
+.er-intro-card::before {
+  content: "";
+  position: absolute;
+  inset: -40% -10%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(5, 5, 4, 0.78), rgba(5, 5, 4, 0.45) 55%, transparent);
+  animation: er-fade-in 0.8s ease both;
+}
+
+.er-intro-title {
+  padding-left: 0.2em;
+  font-family: var(--t-display);
+  font-size: clamp(32px, 7.4vw, 78px);
+  line-height: 1.1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+  color: #f2dfac;
+  text-shadow: 0 0 34px rgba(232, 199, 122, 0.45), 0 2px 30px #000;
+  animation: er-title-in 1.7s 0.25s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+}
+
+.er-intro-rule {
+  display: block;
+  width: min(600px, 86%);
+  margin: 6px auto 10px;
+  animation: er-rule-in 1.5s 0.55s cubic-bezier(0.3, 0.6, 0.2, 1) both;
+}
+
+.er-intro-sub {
+  font-family: var(--t-body);
+  font-style: italic;
+  font-size: clamp(16px, 2.4vw, 22px);
+  color: #dccba0;
+  text-shadow: 0 2px 16px #000;
+  animation: er-fade-in 1.3s 1s ease both;
+}
+
+.er-intro.er-out { animation: er-fade-out 0.95s ease forwards; pointer-events: none; }
+.er-intro.er-out.er-skip { animation-duration: 0.4s; }
+
+@keyframes er-title-in {
+  from { opacity: 0; transform: scale(1.07); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+@keyframes er-rule-in {
+  from { opacity: 0; transform: scaleX(0.15); }
+}
+
+@keyframes er-fade-in { from { opacity: 0; } }
+@keyframes er-fade-out { to { opacity: 0; } }
+
+/* страница поднимается из темноты, когда сходит чёрный экран */
+@media (prefers-reduced-motion: no-preference) {
+  .er.er-veiled .hero-media img { animation-delay: 1.9s; }
+  .er.er-veiled .hero-title { animation-delay: 2.5s; }
+  .er.er-veiled .game-layout { animation-delay: 2.7s; }
+}
+
+/* ==================== искры благодати (курсор, касание) ==================== */
+
+.er-motes {
+  position: fixed;
+  inset: 0;
+  z-index: 41;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.er-motes i {
+  position: absolute;
+  left: -6px;
+  top: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffbea 0 14%, #f7d88f 30%, rgba(243, 200, 107, 0.35) 52%, transparent 72%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* ==================== баннер ==================== */
+
+html[data-game="elden-ring"] .hero::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 164, 92, 0.75) 25%, rgba(232, 199, 122, 0.9) 50%, rgba(201, 164, 92, 0.75) 75%, transparent);
+}
+
+html[data-game="elden-ring"] .hero-logo {
+  filter: drop-shadow(0 0 22px rgba(232, 199, 122, 0.3)) drop-shadow(0 4px 18px rgba(0, 0, 0, 0.85));
+}
+
+html[data-game="elden-ring"] .back,
+html[data-game="elden-ring"] .status-pill,
+html[data-game="elden-ring"] .hero-meta > span:not(.status-pill),
+html[data-game="elden-ring"] .hero-genres .chip {
+  border-radius: 0;
+  font-family: var(--t-heading);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+html[data-game="elden-ring"] .back {
+  padding: 7px 16px 6px;
+  font-size: 13px;
+  border: 1px solid rgba(201, 164, 92, 0.5);
+  background: rgba(8, 8, 6, 0.62);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+html[data-game="elden-ring"] .back:hover,
+html[data-game="elden-ring"] .back:focus-visible {
+  border-color: #e8c77a;
+  background: rgba(30, 25, 14, 0.8);
+  box-shadow: 0 0 18px rgba(232, 199, 122, 0.3);
+  outline: none;
+}
+
+html[data-game="elden-ring"] .status-pill {
+  padding: 4px 12px 3px;
+  border: 1px solid rgba(232, 199, 122, 0.7);
+  background: rgba(8, 8, 6, 0.6);
+  color: #ecd291;
+  font-size: 13px;
+}
+
+html[data-game="elden-ring"] .hero-meta > span:not(.status-pill) {
+  font-size: 12px;
+  border-color: rgba(201, 164, 92, 0.3);
+}
+
+/* ==================== заголовки секций: ромб — капитель — линия с ромбом на конце ==================== */
+
+html[data-game="elden-ring"] .block > h2 {
+  gap: 12px;
+  font-size: 21px;
+  letter-spacing: 0.2em;
+  color: #efe2bf;
+  text-shadow: 0 0 20px rgba(232, 199, 122, 0.22);
+}
+
+html[data-game="elden-ring"] .block > h2 .sec-icon { display: none; }
+
+html[data-game="elden-ring"] .block > h2::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin: 0 2px;
+  transform: rotate(45deg);
+  border: 1px solid #c9a45c;
+  background: rgba(232, 199, 122, 0.35);
+  box-shadow: 0 0 10px rgba(232, 199, 122, 0.55);
+}
+
+html[data-game="elden-ring"] .block > h2::after {
+  height: 11px;
+  min-width: 40px;
+  margin-left: 4px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 11'%3E%3Cpath d='M16.5 1 21 5.5 16.5 10 12 5.5Z' fill='none' stroke='%23c9a45c'/%3E%3Ccircle cx='7.5' cy='5.5' r='1.3' fill='%23c9a45c'/%3E%3C/svg%3E") right center / 22px 11px no-repeat,
+    linear-gradient(90deg, rgba(201, 164, 92, 0.85), rgba(201, 164, 92, 0.22)) left center / calc(100% - 18px) 1px no-repeat;
+}
+
+html[data-game="elden-ring"] .block-count {
+  padding: 2px 9px 1px;
+  border: 1px solid rgba(201, 164, 92, 0.45);
+  border-radius: 0;
+  background: rgba(201, 164, 92, 0.08);
+  color: #e8c77a;
+  font-family: var(--t-heading);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
+/* ==================== панели: тёмное полупрозрачное стекло с золотой кромкой ==================== */
+
+html[data-game="elden-ring"] .side-card,
+html[data-game="elden-ring"] .report,
+html[data-game="elden-ring"] .neighbor {
+  position: relative;
+  border: 1px solid rgba(201, 164, 92, 0.22);
+  border-radius: 0;
+  background: linear-gradient(180deg, rgba(22, 21, 15, 0.86), rgba(9, 9, 7, 0.9));
+  box-shadow: inset 0 1px 0 rgba(232, 199, 122, 0.1), 0 18px 40px -20px #000;
+  backdrop-filter: blur(6px);
+}
+
+/* золотые уголки у боковой панели и отчёта */
+html[data-game="elden-ring"] .side-card::before,
+html[data-game="elden-ring"] .report::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+  background:
+    url(assets/corner.webp) top left / 34px auto no-repeat,
+    url(assets/corner-tr.webp) top right / 34px auto no-repeat,
+    url(assets/corner-bl.webp) bottom left / 34px auto no-repeat,
+    url(assets/corner-br.webp) bottom right / 34px auto no-repeat;
+  opacity: 0.85;
+}
+
+html[data-game="elden-ring"] .fact {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, rgba(201, 164, 92, 0.32), rgba(201, 164, 92, 0.05)) 1;
+}
+
+html[data-game="elden-ring"] .fact:last-child { border-image: none; }
+
+html[data-game="elden-ring"] .fact dt {
+  font-family: var(--t-heading);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+html[data-game="elden-ring"] .neighbor { transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; }
+
+html[data-game="elden-ring"] .neighbor:hover,
+html[data-game="elden-ring"] .neighbor:focus-visible {
+  border-color: rgba(232, 199, 122, 0.7);
+  background: linear-gradient(90deg, rgba(201, 164, 92, 0.16), rgba(9, 9, 7, 0.9) 70%);
+  outline: none;
+}
+
+html[data-game="elden-ring"] .neighbor.next:hover,
+html[data-game="elden-ring"] .neighbor.next:focus-visible {
+  background: linear-gradient(270deg, rgba(201, 164, 92, 0.16), rgba(9, 9, 7, 0.9) 70%);
+}
+
+html[data-game="elden-ring"] .neighbor small {
+  font-family: var(--t-heading);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+html[data-game="elden-ring"] .neighbor b { font-weight: 400; letter-spacing: 0.12em; color: #efe2bf; }
+
+/* заметка игрока — как надпись-послание: курсив между золотыми линиями */
+html[data-game="elden-ring"] .game-notes {
+  position: relative;
+  margin: 18px 0;
+  padding: 12px 16px 12px 34px;
+  border: none;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, rgba(201, 164, 92, 0.6), transparent 80%) 1;
+  background: linear-gradient(90deg, rgba(201, 164, 92, 0.1), transparent 70%);
+  font-style: italic;
+  color: #e6d8b4;
+}
+
+html[data-game="elden-ring"] .game-notes::before {
+  content: "";
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border: 1px solid #c9a45c;
+  background: rgba(232, 199, 122, 0.3);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+/* ==================== сигил прогресса ==================== */
+
+.er-sigil {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 4px 0 14px;
+  margin-bottom: 8px;
+}
+
+.er-sigil-ring {
+  position: relative;
+  width: min(200px, 72%);
+  aspect-ratio: 1;
+}
+
+/* свечение благодати за сигилом */
+.er-sigil-ring::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(232, 190, 110, 0.32), rgba(232, 190, 110, 0.08) 60%, transparent);
+}
+
+.er-sigil svg { position: relative; display: block; width: 100%; height: 100%; overflow: visible; }
+
+.er-sigil svg * { fill: none; stroke: #c9a45c; }
+
+.er-s-line { stroke-width: 0.8; opacity: 0.45; }
+.er-s-diamonds path { fill: #0d0c09; stroke-width: 1; opacity: 0.9; }
+.er-s-ticks { stroke-width: 4; stroke-dasharray: 0.7 4.3; opacity: 0.5; }
+.er-s-track { stroke-width: 2.5; opacity: 0.16; }
+
+.er-sigil svg .er-s-arc {
+  stroke: #e8c77a;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-dasharray: 1000;
+  filter: drop-shadow(0 0 4px rgba(232, 199, 122, 0.85));
+}
+
+.er-sigil svg .er-s-tip { fill: #fff3cf; stroke: none; filter: drop-shadow(0 0 5px #f3c86b); }
+.er-s-runes { stroke-width: 3; stroke-dasharray: 7 3; opacity: 0.32; }
+.er-s-star { stroke-width: 0.7; opacity: 0.22; }
+
+.er-s-spin,
+.er-s-spin-rev { transform-box: view-box; transform-origin: 50% 50%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .er-sigil-ring::before { animation: er-breathe 5s ease-in-out infinite alternate; }
+  .er-s-spin { animation: er-spin 90s linear infinite; }
+  .er-s-spin-rev { animation: er-spin 60s linear infinite reverse; }
+  .er-sigil svg .er-s-arc { animation: er-arc-in 1.8s 0.4s cubic-bezier(0.3, 0.6, 0.2, 1) both; }
+  .er.er-veiled .er-sigil svg .er-s-arc { animation-delay: 2.9s; }
+  .er-sigil svg .er-s-tip { animation: er-fade-in 0.6s 2s ease both; }
+  .er.er-veiled .er-sigil svg .er-s-tip { animation-delay: 4.5s; }
+}
+
+@keyframes er-spin { to { transform: rotate(360deg); } }
+@keyframes er-arc-in { from { stroke-dashoffset: 1000; } }
+
+.er-sigil-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-align: center;
+}
+
+.er-sigil-num b {
+  font-family: var(--t-display);
+  font-size: clamp(40px, 11vw, 50px);
+  font-weight: 400;
+  background: linear-gradient(180deg, #fff1c8, #e8c77a 55%, #a9813b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(232, 199, 122, 0.35));
+}
+
+.er-sigil-num small,
+.er-sigil-num span {
+  margin-top: 4px;
+  font-family: var(--t-heading);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #cdb98c;
+}
+
+/* ==================== сводка условий закрытия ==================== */
+
+html[data-game="elden-ring"] .cond-summary {
+  position: relative;
+  padding: 24px 28px;
+  border: 1px solid rgba(201, 164, 92, 0.22);
+  border-radius: 0;
+  background: linear-gradient(180deg, rgba(22, 21, 15, 0.86), rgba(9, 9, 7, 0.9));
+  box-shadow: inset 0 1px 0 rgba(232, 199, 122, 0.1), 0 18px 40px -20px #000;
+  backdrop-filter: blur(6px);
+}
+
+html[data-game="elden-ring"] .cond-summary::before,
+html[data-game="elden-ring"] .er-inv-in::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+  background:
+    url(assets/corner.webp) top left / 34px auto no-repeat,
+    url(assets/corner-tr.webp) top right / 34px auto no-repeat,
+    url(assets/corner-bl.webp) bottom left / 34px auto no-repeat,
+    url(assets/corner-br.webp) bottom right / 34px auto no-repeat;
+  opacity: 0.85;
+}
+
+html[data-game="elden-ring"] .cond-total { gap: 2px 12px; }
+
+html[data-game="elden-ring"] .cond-total b {
+  font-family: var(--t-display);
+  font-size: 54px;
+  font-weight: 400;
+  background: linear-gradient(180deg, #fff1c8, #e8c77a 55%, #a9813b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+html[data-game="elden-ring"] .cond-total span {
+  font-family: var(--t-heading);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #cdb98c;
+}
+
+html[data-game="elden-ring"] .cond-total small { font-size: 14.5px; font-style: italic; color: #bba97f; }
+
+html[data-game="elden-ring"] .cond-summary .progress,
+html[data-game="elden-ring"] .group-progress .progress {
+  height: 3px;
+  border-radius: 0;
+  overflow: visible;
+  background: rgba(201, 164, 92, 0.16);
+}
+
+html[data-game="elden-ring"] .cond-summary .progress > div,
+html[data-game="elden-ring"] .group-progress .progress > div {
+  border-radius: 0;
+  background: linear-gradient(90deg, #8a6a2e, #e8c77a);
+  box-shadow: 0 0 10px rgba(232, 199, 122, 0.6);
+}
+
+html[data-game="elden-ring"] .cond-aim b,
+html[data-game="elden-ring"] .cond-aim strong {
+  font-family: var(--t-heading);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #e8c77a;
+}
+
+html[data-game="elden-ring"] .cond-setup { list-style: none; padding-left: 20px; }
+html[data-game="elden-ring"] .cond-setup li { position: relative; }
+
+html[data-game="elden-ring"] .cond-setup li::before {
+  content: "";
+  position: absolute;
+  left: -15px;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border: 1px solid #c9a45c;
+  transform: rotate(45deg);
+}
+
+html[data-game="elden-ring"] .cond-rev { font-style: italic; }
+html[data-game="elden-ring"] .cond-none { font-style: italic; color: #bba97f; }
+
+html[data-game="elden-ring"] .cond-group-note {
+  margin: -6px 0 14px 22px;
+  font-style: italic;
+  color: #c7b78f;
+}
+
+/* точка закрытия — надпись между орнаментом */
+html[data-game="elden-ring"] .cond-closing {
+  padding: 40px 16px 4px;
+  background: url(assets/divider.webp) top center / auto 34px no-repeat;
+  text-align: center;
+  font-size: 17px;
+  font-style: italic;
+}
+
+html[data-game="elden-ring"] .cond-closing p { color: #e6d8b4; }
+
+/* ==================== группа условий как экран инвентаря ==================== */
+
+.er-inv { container: er-inv / inline-size; }
+
+.er-inv-in {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, clamp(270px, 41%, 340px)) minmax(0, 1fr);
+  border: 1px solid rgba(201, 164, 92, 0.24);
+  background: linear-gradient(180deg, rgba(20, 19, 14, 0.9), rgba(8, 8, 6, 0.93));
+  box-shadow: inset 0 1px 0 rgba(232, 199, 122, 0.1), 0 22px 50px -24px #000;
+  backdrop-filter: blur(6px);
+}
+
+.er-inv-grid {
+  padding: 24px 18px 16px 24px;
+  border-right: 1px solid transparent;
+  border-image: linear-gradient(180deg, transparent, rgba(201, 164, 92, 0.35) 20%, rgba(201, 164, 92, 0.35) 80%, transparent) 1;
+}
+
+.er-slots {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 72px));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.er-slot {
+  position: relative;
+  aspect-ratio: 1;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* бронзовая рамка ячейки */
+.er-slot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: url(assets/slot.webp) center / 100% 100% no-repeat;
+  transition: filter 0.2s;
+}
+
+.er-slot.er-empty { cursor: default; opacity: 0.32; }
+
+.er-slot-art {
+  position: absolute;
+  inset: 7%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, #1f1b12, #070706 75%);
+}
+
+.er-slot-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+}
+
+.er-slot-art b {
+  display: none;
+  font-family: var(--t-display);
+  font-size: 22px;
+  font-weight: 400;
+  color: rgba(232, 199, 122, 0.8);
+}
+
+.er-slot-art:not(:has(img)) b { display: block; }
+
+.er-todo .er-slot-art img { filter: grayscale(1) brightness(0.42); }
+.er-todo .er-slot-art b { color: rgba(201, 164, 92, 0.32); }
+
+/* выполненная цель — награда: тёплое свечение внутри, золотой ромб, пробегающий блик */
+.er-done .er-slot-art { box-shadow: inset 0 0 14px rgba(243, 200, 107, 0.35); }
+
+.er-done::before {
+  content: "";
+  position: absolute;
+  right: 5%;
+  bottom: 5%;
+  z-index: 4;
+  width: 9px;
+  height: 9px;
+  border: 1px solid #fff0c2;
+  background: linear-gradient(135deg, #fff1c4, #c9a45c);
+  box-shadow: 0 0 8px rgba(243, 200, 107, 0.9);
+  transform: rotate(45deg);
+}
+
+.er-done .er-slot-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 236, 190, 0.35) 50%, transparent 65%);
+  transform: translateX(-120%);
+}
+
+/* курсор выбора: золотая подсветка ячейки */
+.er-slot-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  background: radial-gradient(closest-side, transparent 55%, rgba(243, 200, 107, 0.4));
+  box-shadow: inset 0 0 0 1px rgba(255, 236, 190, 0.85);
+  transition: opacity 0.2s;
+}
+
+.er-slot[aria-selected="true"] .er-slot-art::after { opacity: 1; }
+.er-slot[aria-selected="true"]::after { filter: brightness(1.55) drop-shadow(0 0 5px rgba(243, 200, 107, 0.85)); }
+.er-slot[role="option"]:hover::after { filter: brightness(1.35); }
+.er-slot[aria-selected="true"]:hover::after { filter: brightness(1.55) drop-shadow(0 0 5px rgba(243, 200, 107, 0.85)); }
+.er-slot:focus-visible { outline: 1px solid #fff0c2; outline-offset: 3px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .er-slot[aria-selected="true"] .er-slot-art::after { animation: er-cursor 1.6s ease-in-out infinite alternate; }
+  .er-done .er-slot-art::before { animation: er-sheen 7s ease-in-out infinite; }
+  .er-done:nth-child(3n + 2) .er-slot-art::before { animation-delay: 2.3s; }
+  .er-done:nth-child(3n) .er-slot-art::before { animation-delay: 4.6s; }
+}
+
+@keyframes er-cursor { from { opacity: 0.65; } to { opacity: 1; } }
+
+@keyframes er-sheen {
+  0%, 70% { transform: translateX(-120%); }
+  85%, 100% { transform: translateX(120%); }
+}
+
+.er-inv-hint {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 14px 0 0;
+  font-family: var(--t-heading);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9d8c66;
+}
+
+.er-inv-hint kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  border: 1px solid rgba(201, 164, 92, 0.4);
+  font-family: var(--t-body);
+  font-size: 11px;
+  color: #d9c79e;
+}
+
+.er-inv-hint kbd:last-of-type { margin-right: 6px; }
+
+/* ---------- панель описания: карточка цели сайта, разложенная как описание предмета ---------- */
+
+.er-inv-panel { container: er-panel / inline-size; min-width: 0; padding: 22px 26px 26px; }
+
+html[data-game="elden-ring"] .er-inv-panel .cond {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: visible;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond-body { display: contents; }
+
+html[data-game="elden-ring"] .er-inv-panel .cond-head {
+  order: -1;
+  display: block;
+  padding-bottom: 10px;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, rgba(201, 164, 92, 0.85), rgba(201, 164, 92, 0.12) 85%) 1;
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond-title {
+  font-family: var(--t-heading);
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f1e3bd;
+  text-shadow: 0 0 20px rgba(232, 199, 122, 0.22);
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond-state {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--t-heading);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond.done .cond-state { color: #ecd291; text-shadow: 0 0 12px rgba(243, 200, 107, 0.45); }
+html[data-game="elden-ring"] .er-inv-panel .cond.todo .cond-state { color: #c08068; }
+
+html[data-game="elden-ring"] .er-inv-panel .cond-media {
+  position: relative;
+  height: clamp(190px, 52cqw, 280px);
+  min-height: 0;
+  border: 1px solid rgba(201, 164, 92, 0.28);
+  background: radial-gradient(closest-side, rgba(70, 60, 40, 0.5), transparent), #080807;
+}
+
+/* у выполненной цели за картинкой — лучи благодати */
+html[data-game="elden-ring"] .er-inv-panel .cond.done .cond-media {
+  background: radial-gradient(closest-side, rgba(232, 190, 110, 0.25), transparent), url(assets/grace.webp) center / 115% auto no-repeat, #050504;
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond-media::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    url(assets/corner.webp) top left / 24px auto no-repeat,
+    url(assets/corner-tr.webp) top right / 24px auto no-repeat,
+    url(assets/corner-bl.webp) bottom left / 24px auto no-repeat,
+    url(assets/corner-br.webp) bottom right / 24px auto no-repeat;
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond-media img {
+  inset: 10px;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  object-fit: contain;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.8));
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond.todo .cond-media img { filter: grayscale(0.9) brightness(0.55); }
+
+html[data-game="elden-ring"] .er-inv-panel .cond-num {
+  left: 10px;
+  top: 10px;
+  z-index: 2;
+  padding: 2px 9px 1px;
+  border: 1px solid rgba(201, 164, 92, 0.5);
+  border-radius: 0;
+  background: rgba(8, 8, 6, 0.78);
+  color: #e8c77a;
+  font-family: var(--t-heading);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+}
+
+/* без картинки — крупный номер в золоте */
+html[data-game="elden-ring"] .er-inv-panel .cond-media.empty {
+  height: 136px;
+  background:
+    radial-gradient(circle, transparent 45px, rgba(201, 164, 92, 0.38) 46px, transparent 47.5px),
+    radial-gradient(circle, transparent 56px, rgba(201, 164, 92, 0.16) 57px, transparent 58.5px),
+    radial-gradient(closest-side, rgba(70, 60, 40, 0.45), transparent),
+    #080807;
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond.done .cond-media.empty {
+  background:
+    radial-gradient(circle, transparent 45px, rgba(232, 199, 122, 0.6) 46px, transparent 47.5px),
+    radial-gradient(closest-side, rgba(232, 190, 110, 0.22), transparent),
+    url(assets/grace.webp) center / 70% auto no-repeat,
+    #050504;
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond-media.empty .cond-num {
+  position: static;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--t-display);
+  font-size: 58px;
+  color: #ecd291;
+  text-shadow: 0 0 24px rgba(243, 200, 107, 0.5);
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond.todo .cond-media.empty .cond-num { color: rgba(201, 164, 92, 0.4); text-shadow: none; }
+
+html[data-game="elden-ring"] .er-inv-panel .cond-facts { gap: 0; font-size: 15px; }
+
+html[data-game="elden-ring"] .er-inv-panel .cond-fact {
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, rgba(201, 164, 92, 0.28), rgba(201, 164, 92, 0.04)) 1;
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond-fact dt {
+  padding-top: 2px;
+  font-family: var(--t-heading);
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b89a5e;
+}
+
+html[data-game="elden-ring"] .er-inv-panel .cond.todo .cond-fact dd { color: #d6cab0; }
+
+html[data-game="elden-ring"] .cond-check {
+  border: 1px solid rgba(201, 164, 92, 0.2);
+  border-radius: 0;
+  background: rgba(201, 164, 92, 0.06);
+}
+
+html[data-game="elden-ring"] .cond-check-head,
+html[data-game="elden-ring"] .cond-check-label {
+  font-family: var(--t-heading);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #cdb98c;
+}
+
+html[data-game="elden-ring"] .cond-check-head b { color: #e8c77a; font-weight: 400; }
+
+html[data-game="elden-ring"] .cond-box {
+  width: 9px;
+  height: 9px;
+  margin: 0 2px;
+  border: 1px solid rgba(201, 164, 92, 0.6);
+  border-radius: 0;
+  transform: rotate(45deg);
+}
+
+html[data-game="elden-ring"] .cond-check li.done .cond-box {
+  border-color: #fff0c2;
+  background: #e8c77a;
+  box-shadow: 0 0 7px rgba(243, 200, 107, 0.85);
+}
+
+html[data-game="elden-ring"] .cond-note {
+  position: relative;
+  padding: 2px 0 2px 20px;
+  border: none;
+  color: #e6d8b4;
+}
+
+html[data-game="elden-ring"] .cond-note::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border: 1px solid #c9a45c;
+  background: rgba(232, 199, 122, 0.3);
+  transform: rotate(45deg);
+}
+
+html[data-game="elden-ring"] .cond-gallery img { border-radius: 0; outline: 1px solid rgba(201, 164, 92, 0.45); outline-offset: 2px; }
+
+html[data-game="elden-ring"] .cond-link {
+  padding: 6px 14px 5px;
+  border: 1px solid rgba(201, 164, 92, 0.5);
+  font-family: var(--t-heading);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ecd291;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+html[data-game="elden-ring"] .cond-link:hover,
+html[data-game="elden-ring"] .cond-link:focus-visible {
+  border-color: #e8c77a;
+  box-shadow: 0 0 16px rgba(232, 199, 122, 0.3);
+  outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-game="elden-ring"] .er-inv-panel .cond.er-enter { animation: er-panel-in 0.45s ease both; }
+}
+
+@keyframes er-panel-in { from { opacity: 0; transform: translateY(6px); } }
+
+@container er-inv (max-width: 720px) {
+  .er-inv-in { grid-template-columns: minmax(0, 1fr); }
+  .er-inv-grid {
+    padding: 18px 16px 12px;
+    border-right: none;
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(90deg, transparent, rgba(201, 164, 92, 0.35) 20%, rgba(201, 164, 92, 0.35) 80%, transparent) 1;
+  }
+  .er-inv-panel { padding: 16px 16px 20px; }
+  html[data-game="elden-ring"] .er-inv-panel .cond-title { font-size: 21px; }
+}
+
+@container er-panel (max-width: 400px) {
+  html[data-game="elden-ring"] .er-inv-panel .cond-fact { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+
+/* ---------- «ВРАГ ПОВЕРЖЕН» ---------- */
+
+.er-felled {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  height: 76px;
+  margin-top: -38px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(4, 4, 3, 0.86) 16%, rgba(4, 4, 3, 0.86) 84%, transparent);
+  animation: er-felled-band 2.8s ease both;
+}
+
+.er-felled::before,
+.er-felled::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232, 199, 122, 0.65), transparent);
+}
+
+.er-felled::before { top: 0; }
+.er-felled::after { bottom: 0; }
+
+.er-felled-text,
+.er-felled-ghost {
+  grid-area: 1 / 1;
+  padding-left: 0.14em;
+  font-family: var(--t-display);
+  font-size: clamp(21px, 6cqw, 40px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: linear-gradient(180deg, #fff4cf, #e8c77a 55%, #b38a43);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.er-felled-text {
+  filter: drop-shadow(0 0 12px rgba(243, 200, 107, 0.55));
+  animation: er-felled-text 2.8s ease both;
+}
+
+.er-felled-ghost { animation: er-felled-ghost 1.6s 0.1s ease-out both; }
+
+@keyframes er-felled-band {
+  0% { opacity: 0; }
+  9%, 80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes er-felled-text {
+  0% { opacity: 0; transform: scale(1.08); }
+  14% { opacity: 1; transform: none; }
+  100% { opacity: 1; transform: scale(0.98); }
+}
+
+@keyframes er-felled-ghost {
+  0% { opacity: 0; transform: none; }
+  15% { opacity: 0.75; }
+  100% { opacity: 0; transform: scale(1.22); }
+}
+
+/* ==================== боковая панель: прогресс по группам ==================== */
+
+html[data-game="elden-ring"] .group-progress {
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, rgba(201, 164, 92, 0.35), rgba(201, 164, 92, 0.05)) 1;
+}
+
+html[data-game="elden-ring"] .group-progress li { gap: 6px 10px; margin-bottom: 12px; }
+
+html[data-game="elden-ring"] .group-progress a {
+  font-family: var(--t-heading);
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #efe2bf;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+
+html[data-game="elden-ring"] .group-progress a:hover,
+html[data-game="elden-ring"] .group-progress a:focus-visible {
+  color: #f6e0a0;
+  text-shadow: 0 0 12px rgba(243, 200, 107, 0.6);
+  outline: none;
+}
+
+html[data-game="elden-ring"] .group-progress a:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+
+html[data-game="elden-ring"] .group-progress b {
+  font-family: var(--t-heading);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: #e8c77a;
+}
+
+/* ==================== отчёт: буквица, капители, орнаментальные цитаты ==================== */
+
+html[data-game="elden-ring"] .report {
+  padding: 30px 34px;
+  font-size: 16.5px;
+  line-height: 1.7;
+}
+
+html[data-game="elden-ring"] .report > p:first-of-type::first-letter {
+  float: left;
+  padding: 6px 10px 0 0;
+  font-family: var(--t-display);
+  font-size: 3.5em;
+  line-height: 0.8;
+  color: #e8c77a;
+  text-shadow: 0 0 18px rgba(232, 199, 122, 0.45);
+}
+
+html[data-game="elden-ring"] .report h1,
+html[data-game="elden-ring"] .report h2,
+html[data-game="elden-ring"] .report h3 {
+  font-family: var(--t-heading);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ecd291;
+}
+
+html[data-game="elden-ring"] .report h2 {
+  padding-bottom: 6px;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, rgba(201, 164, 92, 0.75), transparent 85%) 1;
+}
+
+html[data-game="elden-ring"] .report strong { color: #f4e7c5; }
+
+html[data-game="elden-ring"] .report a {
+  color: #e8c77a;
+  text-decoration-color: rgba(201, 164, 92, 0.45);
+  text-underline-offset: 3px;
+}
+
+html[data-game="elden-ring"] .report blockquote {
+  max-width: 34em;
+  margin: 1.8em auto;
+  padding: 36px 8px 0;
+  border: none;
+  background: url(assets/divider.webp) top center / auto 30px no-repeat;
+  text-align: center;
+  font-size: 1.1em;
+  font-style: italic;
+  color: #efe2bf;
+}
+
+html[data-game="elden-ring"] .report blockquote::after {
+  content: "";
+  display: block;
+  height: 30px;
+  margin-top: 12px;
+  background: url(assets/divider.webp) center / auto 30px no-repeat;
+  transform: scaleY(-1);
+}
+
+html[data-game="elden-ring"] .report hr {
+  height: 36px;
+  margin: 1.6em 0;
+  border: none;
+  background: url(assets/divider.webp) center / auto 36px no-repeat;
+}
+
+html[data-game="elden-ring"] .report ul { list-style: none; padding-left: 1.5em; }
+html[data-game="elden-ring"] .report ul > li { position: relative; }
+
+html[data-game="elden-ring"] .report ul > li::before {
+  content: "";
+  position: absolute;
+  left: -1.1em;
+  top: 0.68em;
+  width: 5px;
+  height: 5px;
+  border: 1px solid #c9a45c;
+  transform: rotate(45deg);
+}
+
+html[data-game="elden-ring"] .report ol li::marker { color: #c9a45c; font-family: var(--t-heading); }
+
+html[data-game="elden-ring"] .report img {
+  border-radius: 0;
+  outline: 1px solid rgba(201, 164, 92, 0.5);
+  outline-offset: 3px;
+}
+
+html[data-game="elden-ring"] .report figcaption { font-style: italic; color: #bfae86; }
+
+html[data-game="elden-ring"] .report th {
+  font-family: var(--t-heading);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ecd291;
+}
+
+html[data-game="elden-ring"] .report th,
+html[data-game="elden-ring"] .report td { border-color: rgba(201, 164, 92, 0.22); }
+
+html[data-game="elden-ring"] .report code { border-radius: 0; background: rgba(201, 164, 92, 0.12); }
+
+/* ==================== мобильная ширина ==================== */
+
+@media (max-width: 560px) {
+  html[data-game="elden-ring"] .block > h2 { font-size: 18px; letter-spacing: 0.14em; }
+  html[data-game="elden-ring"] .report { padding: 22px 18px; }
+  .er-intro-title { letter-spacing: 0.12em; padding-left: 0.12em; }
+  .card[data-game="elden-ring"] .card-title { letter-spacing: 0.16em; }
+}

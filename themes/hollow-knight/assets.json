@@ -1,0 +1,25 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "divider",
+      "prompt": "Ornate thin horizontal divider ornament for a dark fantasy game UI: symmetrical art-nouveau filigree with curling insect-wing and vine motifs, pale silvery-white lines with a soft glow, centered, isolated on a fully transparent background, no text, no characters.",
+      "size": "1536x1024", "background": "transparent", "quality": "medium", "max_width": 1024
+    },
+    {
+      "name": "corner",
+      "prompt": "Single ornate corner ornament for a card frame, placed in the top-left corner of the canvas: thin pale silvery-white art-nouveau filigree with insect-wing curls, thorny vines and a small diamond, two long thin lines run along the top edge and down the left edge, soft pale-blue glow, the rest of the canvas empty, isolated on a fully transparent background, no text, no characters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 512, "mirror": true
+    },
+    {
+      "name": "cavern",
+      "prompt": "Atmospheric dark underground cavern backdrop for a website background: deep navy and blue-black ink-wash painting, faint stalactites, hanging roots and ruined gothic arches silhouetted in the distance, soft pale glow far away, misty, very dark and low contrast so text on top stays readable, wide panorama, no characters, no creatures, no text.",
+      "size": "1536x1024", "background": "opaque", "quality": "medium", "max_width": 1600
+    },
+    {
+      "name": "vessel",
+      "prompt": "Round ornate soul vessel frame for a game UI rating meter: an empty circular glass orb outline with thin pale silvery-white filigree around it, two curling horn-like flourishes on top, small dripping ornaments below, the inside of the circle completely empty and transparent, isolated on a fully transparent background, no text, no characters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 512
+    }
+  ]
+}

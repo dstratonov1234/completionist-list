@@ -1,0 +1,30 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "divider",
+      "prompt": "Ornamental thin horizontal divider for a dark-fantasy game menu: one very thin straight line of aged gold that tapers to fine needle points at both ends, with a small elongated diamond (lozenge) at the exact center flanked by two tiny dots and two short thin parallel lines; minimalist, elegant, engraved metal look with a faint warm glow, perfectly symmetrical, centered, isolated on a fully transparent background, no text, no letters, no symbols, no characters.",
+      "size": "1536x1024", "background": "transparent", "quality": "medium", "max_width": 1200
+    },
+    {
+      "name": "slot",
+      "prompt": "Square inventory slot frame for a dark-fantasy RPG menu, straight front view: a thin square frame of aged bronze-gold metal with a subtle engraved bevel, small notched corners with tiny diamond studs, slightly worn patina, the whole interior of the square completely empty and transparent, isolated on a fully transparent background, no text, no characters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 256
+    },
+    {
+      "name": "corner",
+      "prompt": "Single minimalist corner ornament for a dark-fantasy game menu panel, placed in the top-left corner of the canvas: two very thin straight aged-gold lines meeting at a right angle, one running along the top edge and one down the left edge, both fading out, with a small diamond and a delicate thin curl where they meet, subtle warm glow, the rest of the canvas empty, isolated on a fully transparent background, no text, no characters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 256, "mirror": true
+    },
+    {
+      "name": "grace",
+      "prompt": "Soft radiant burst of golden light rays on a pure black background: many thin luminous golden-amber rays of varying length radiating outward from a small bright warm-white glowing center, like sacred light shining through mist, gentle bloom, a few tiny glowing golden motes drifting, photographic light effect, no objects, no text, no characters, centered, square composition.",
+      "size": "1024x1024", "background": "opaque", "quality": "medium", "max_width": 900
+    },
+    {
+      "name": "backdrop",
+      "prompt": "Very dark atmospheric painterly backdrop for a website background: misty ancient ruined plains at dusk seen from afar, crumbling stone arches and broken columns in silhouette, a distant warm golden haze glowing low on the horizon under a heavy dark overcast sky, desaturated olive-black and umber tones with faint gold, extremely low contrast and dark so text on top stays readable, wide panorama, no people, no creatures, no trees, no text.",
+      "size": "1536x1024", "background": "opaque", "quality": "medium", "max_width": 1600
+    }
+  ]
+}

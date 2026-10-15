@@ -1,0 +1,35 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "city",
+      "prompt": "Dark rainy cyberpunk megacity skyline at night seen from a high rooftop: dense brutalist skyscrapers and megablock towers fading into smog and rain haze, countless tiny window lights in cyan, magenta and warm yellow, wet atmospheric fog, very dark near-black violet and blue palette, underexposed and low contrast so text on top stays readable, wide panorama. Absolutely no signs, no billboards, no holograms with writing, no letters, no text, no logos, no people, no characters.",
+      "size": "1536x1024", "background": "opaque", "quality": "medium", "max_width": 1600
+    },
+    {
+      "name": "corner",
+      "prompt": "Single futuristic HUD corner bracket for a sci-fi game interface, placed in the top-left corner of the canvas: thin sharp neon-yellow angular lines forming an L-shaped bracket with a 45-degree chamfered corner, a few small rectangular tick marks, tiny dots and one short cyan accent segment along the edge, flat vector style, crisp lines with a soft glow, the rest of the canvas empty, isolated on a fully transparent background, no text, no numbers, no letters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 256, "mirror": true
+    },
+    {
+      "name": "circuit",
+      "prompt": "Dark sci-fi circuit-board pattern: thin electric-cyan printed-circuit traces with 45-degree bends, small round via dots and terminal pads, a faint hexagonal grid underneath, sparse and evenly spread across the whole square, glowing thin lines, flat vector style, isolated on a fully transparent background, no text, no numbers, no labels, no chips with markings.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 512, "trim": false
+    },
+    {
+      "name": "stamp",
+      "prompt": "Distressed rubber-stamp border frame: a wide horizontal rectangle outline made of a thick rough ink line plus a thinner inner line, chipped and worn edges, ink speckles and dry-brush texture, solid white ink, the inside of the rectangle completely empty, isolated on a fully transparent background, no text, no letters, no symbols.",
+      "size": "1536x1024", "background": "transparent", "quality": "medium", "max_width": 1024
+    },
+    {
+      "name": "glitch",
+      "prompt": "Abstract digital glitch overlay strip: horizontal data-moshing slices, broken scanline bars and pixel-sorting fragments, RGB channel-split streaks in hot magenta-red, electric cyan and neon yellow, scattered across the full width, sharp-edged rectangles of different lengths, isolated on a fully transparent background, no text, no letters, no numbers.",
+      "size": "1536x1024", "background": "transparent", "quality": "medium", "max_width": 1200
+    },
+    {
+      "name": "shard",
+      "prompt": "Single game UI icon of a futuristic data shard: a small flat angular memory chip with one 45-degree cut corner, a row of gold contact pins at one end and a translucent crystal window in the middle, neon-yellow outline with a soft cyan inner glow, flat vector game icon style, centered, isolated on a fully transparent background, no text, no letters, no logos.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 256
+    }
+  ]
+}

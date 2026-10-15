@@ -31,7 +31,3 @@
 ![Финальная фаза](https://static.wikia.nocookie.net/hollowknight/images/b/b6/Godhome_Arena_Absolute_Radiance_Phase_6.png/revision/latest/scale-to-width-down/800)
 
 > Последний удар — и руки тряслись ещё минут пять.
-
-## Вердикт
-
-10 из 10. Одна из лучших метроидваний, и 112% стоят каждой потраченной минуты.

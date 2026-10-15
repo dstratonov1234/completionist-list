@@ -1,0 +1,44 @@
+{
+  "title": "Окончательное закрытие Hollow Knight: Silksong",
+  "revision": "Черновик от 10.10.2026 (демо)",
+  "aim": "Сюжет и все концовки, ключевые испытания — точный список составлю, когда начну.",
+  "setup": [
+    "Hollow Knight: Silksong (PC)."
+  ],
+  "groups": [
+    {
+      "title": "Сюжет",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Основной сюжет: восхождение к Цитадели",
+          "gives": "Вся история Фарлума",
+          "counts": "Титры",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/26950369fe4b03c2268620eb9815c8a246aa0b06/ss_26950369fe4b03c2268620eb9815c8a246aa0b06.jpg"
+        },
+        {
+          "n": 2,
+          "title": "Все концовки",
+          "gives": "Полная картина финала",
+          "counts": "Каждая концовка просмотрена",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/856e33e755a0b9a785c645d116036516ea08812b/ss_856e33e755a0b9a785c645d116036516ea08812b.jpg"
+        }
+      ]
+    },
+    {
+      "title": "Испытания",
+      "goals": [
+        {
+          "n": 3,
+          "title": "Режим высокой сложности",
+          "gives": "Проверка мастерства",
+          "counts": "Пройден",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1030300/d907d0cc2b10b5ea4788b8d502cc27787d520c1d/ss_d907d0cc2b10b5ea4788b8d502cc27787d520c1d.jpg"
+        }
+      ]
+    }
+  ]
+}
