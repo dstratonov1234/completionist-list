@@ -3,8 +3,9 @@
     python -P scripts/gen-image.py --manifest themes/<id>/assets.json [--key-file <путь>] [--force имя]
     python -P scripts/gen-image.py --list-models [--key-file <путь>]
 
-Ключ берётся из переменной окружения OPENAI_API_KEY или из --key-file. Ключ НИКОГДА не кладётся
-в репозиторий (он публичный) — только в переменную окружения или в файл вне репозитория.
+Ключ берётся из переменной окружения OPENAI_API_KEY, из --key-file или из файла по умолчанию
+~/.config/completionist-list/openai.key. Ключ НИКОГДА не кладётся в репозиторий (он публичный) —
+только в переменную окружения или в файл вне репозитория.
 
 assets.json — список ассетов темы (лежит в репозитории, чтобы можно было перегенерировать):
     {
@@ -34,16 +35,19 @@ import urllib.request
 from PIL import Image
 
 API = "https://api.openai.com/v1"
+# Ключ пользователя, который он разрешил тратить на ассеты тем; лежит вне репозитория.
+DEFAULT_KEY_FILE = os.path.join(os.path.expanduser("~"), ".config", "completionist-list", "openai.key")
 DEFAULT_MODEL = "gpt-image-2.5-flare"
 
 
 def api_key(args):
     key = os.environ.get("OPENAI_API_KEY")
-    if not key and args.key_file:
-        with open(args.key_file, encoding="utf-8") as f:
+    key_file = args.key_file or (DEFAULT_KEY_FILE if os.path.exists(DEFAULT_KEY_FILE) else None)
+    if not key and key_file:
+        with open(key_file, encoding="utf-8") as f:
             key = f.read().strip()
     if not key:
-        sys.exit("Нет ключа: задай OPENAI_API_KEY или --key-file (файл вне репозитория).")
+        sys.exit(f"Нет ключа: задай OPENAI_API_KEY, --key-file или положи ключ в {DEFAULT_KEY_FILE} (вне репозитория).")
     return key
 
 
