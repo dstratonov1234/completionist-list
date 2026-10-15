@@ -6,7 +6,7 @@
 
   // Карточка области: название игры между филигранью и подпись про прогресс.
   function areaCard(el, game, assets, esc, done, total) {
-    const sub = game.status === "completed" ? "Закрыто навсегда" : total ? `Условий выполнено: ${done} из ${total}` : "";
+    const sub = total ? `Условий выполнено: ${done} из ${total}` : "";
     el.innerHTML = `
       <img src="${assets}divider.webp" alt="">
       <div class="hk-area-name">${esc(game.title)}</div>
@@ -141,7 +141,7 @@
             <div class="hk-entry-n">Условие №${esc(g.n)}</div>
             <h3>${esc(g.title)}</h3>
             <img class="hk-entry-divider" src="${assets}divider.webp" alt="">
-            <div class="hk-entry-state">${g.done ? `Выполнено${g.date ? ` · ${esc(ctx.fmtDate(g.date))}` : ""}` : "Ещё не выполнено"}</div>
+            <div class="hk-entry-state">${g.done ? "Выполнено" : "Ещё не выполнено"}</div>
             ${facts ? `<div class="hk-entry-facts">${facts}</div>` : ""}
             ${checklist}
             ${g.note ? `<blockquote>${esc(g.note)}</blockquote>` : ""}

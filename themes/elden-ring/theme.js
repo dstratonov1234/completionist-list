@@ -6,22 +6,15 @@
 (() => {
   "use strict";
 
-  const SUBTITLE = {
-    in_progress: "Благодать указывает путь",
-    completed: "Путь завершён",
-    planned: "Путь ещё впереди",
-  };
-
   // Чёрный экран заставки при входе с главной наплывает за 0.7 с (theme.css, .er-cover) — ждём чуть дольше.
   const COVER_MS = 760;
   // Когда (от начала заставки) сходит чёрный экран и гаснет карточка: полная заставка и повторная за сессию.
   const LIFT = { full: 2000, repeat: 1300 };
   const OUT = { full: 3000, repeat: 2400 };
 
-  // Карточка области: имя игры золотом, орнаментальная линия, подпись о пути.
+  // Карточка области: имя игры золотом, орнаментальная линия, подпись — только прогресс по условиям.
   function introCard(game, assets, esc, done, total) {
-    let sub = SUBTITLE[game.status] ?? "";
-    if (game.status === "in_progress" && total) sub += ` · ${done} из ${total}`;
+    const sub = total ? `Выполнено условий: ${done} из ${total}` : "";
     return `
       <div class="er-intro-card">
         <div class="er-intro-title">${esc(game.title)}</div>

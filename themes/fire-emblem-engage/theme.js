@@ -31,10 +31,9 @@
   // Карточка главы: «Пролог» / «Глава N» / «Эпилог» и подпись про прогресс.
   function chapter(game, done, total) {
     if (!total) return { label: "Пролог", sub: "Условия закрытия ещё не заданы" };
-    const of = `${done} из ${total} ${plural(total, "условия", "условий", "условий")} закрытия`;
-    if (game.status === "completed" || done === total) return { label: "Эпилог", sub: `Игра закрыта · ${of}` };
-    if (game.status === "planned") return { label: "Пролог", sub: `В планах · ${total} ${plural(total, "условие", "условия", "условий")} закрытия` };
-    return { label: done ? `Глава ${done}` : "Пролог", sub: `Выполнено ${of}` };
+    // только по числу выполненных условий — статус игры не называем
+    const sub = `Выполнено ${done} из ${total} ${plural(total, "условия", "условий", "условий")} закрытия`;
+    return { label: done === total ? "Эпилог" : done ? `Глава ${done}` : "Пролог", sub };
   }
 
   // Заставка целиком лежит в одном слое; её CSS-анимации идут от момента создания, так что слой, начатый
@@ -402,7 +401,7 @@
             </header>
             <div class="fe-unit-state">${
               g.done
-                ? `<span class="fe-badge fe-badge-done">✓ Выполнено</span>${g.date ? `<span class="fe-unit-date">${esc(ctx.fmtDate(g.date))}</span>` : ""}`
+                ? `<span class="fe-badge fe-badge-done">✓ Выполнено</span>`
                 : `<span class="fe-badge">Не выполнено</span>`
             }</div>
             ${facts ? `<dl class="fe-stats">${facts}</dl>` : ""}

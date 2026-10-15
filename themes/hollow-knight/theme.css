@@ -79,20 +79,6 @@
 
 .gbanner[data-game="hollow-knight"] .gb-logo { filter: drop-shadow(0 0 14px rgba(170, 200, 255, 0.45)) drop-shadow(0 4px 16px rgba(0, 0, 0, 0.7)); }
 
-.gbanner[data-game="hollow-knight"] .gb-meta span {
-  border-radius: 2px;
-  border-color: rgba(143, 180, 232, 0.25);
-  background: rgba(6, 9, 18, 0.7);
-  font-family: "Cormorant SC", serif;
-  font-size: 14px;
-  letter-spacing: 0.04em;
-}
-
-.gbanner[data-game="hollow-knight"] .gb-meta .gb-status {
-  background: rgba(223, 232, 247, 0.92);
-  color: #0a0f1c;
-}
-
 .gbanner[data-game="hollow-knight"] .gb-notes { font-style: italic; font-size: 16px; }
 
 /* прогресс: сосуд души и тонкая нить света */

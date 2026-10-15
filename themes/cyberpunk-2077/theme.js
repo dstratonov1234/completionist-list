@@ -14,13 +14,8 @@
   const SPACE = /\s/;
   const SVGNS = 'xmlns="http://www.w3.org/2000/svg"';
 
-  // Слова штампа, строки состояния и биомонитора по статусу игры. date — какое поле дат показать.
-  const STATES = {
-    completed: { stamp: "JOB DONE", bar: "Контракт закрыт", sub: "Пройдено", pulse: "Стабилен", date: "finished", prefix: "" },
-    in_progress: { stamp: "JACKED IN", bar: "Соединение активно", sub: "В процессе", pulse: "Активен", date: "started", prefix: "с " },
-    planned: { stamp: "STANDBY", bar: "Ожидание подключения", sub: "В планах", pulse: "Ожидание", date: "added", prefix: "добавлено " },
-  };
-  const UNKNOWN = { stamp: "NO SIGNAL", bar: "Нет данных", sub: "", pulse: "Нет данных", date: "", prefix: "" };
+  // Статус игры и даты на странице не называем: прогресс виден по контрактам. Тон (цвет HUD) — по статусу.
+  const TONES = ["completed", "in_progress", "planned"];
 
   // FNV-1a: стабильные «серийники» и координаты из данных.
   function hash(str) {
@@ -33,7 +28,7 @@
   const scramble = (chars) => chars.map((c) => (SPACE.test(c) ? c : glyph())).join("");
   const pad = (n, w = 2) => String(n).padStart(w, "0");
   const hex4 = (s) => `0x${(hash(s) & 0xffff).toString(16).toUpperCase().padStart(4, "0")}`;
-  const toneOf = (status) => `cp-s-${Object.hasOwn(STATES, status) ? status : "unknown"}`;
+  const toneOf = (status) => `cp-s-${TONES.includes(status) ? status : "unknown"}`;
 
   // Глитч-шторка: 7 полос в случайном порядке (--d), неоновая кромка, глитч-полоса и надпись подключения.
   // Возвращает узел для названия игры — его дешифруют.
@@ -80,8 +75,6 @@
       const { root, el, esc, assets, game } = ctx;
       const html = document.documentElement;
       const motion = !ctx.reducedMotion;
-      const known = Object.hasOwn(STATES, game.status);
-      const st = known ? STATES[game.status] : UNKNOWN;
       const tone = toneOf(game.status);
       const seed = hash(game.id);
       const goals = (typeof ctx.goals === "function" ? ctx.goals() : null) ?? [];
@@ -127,7 +120,6 @@
       backdrop();
       const hud = statusBar();
       stamp();
-      statusPill();
       headings();
       contracts();
       gauge();
@@ -233,7 +225,7 @@
             <span class="cp-bar-clock">--:--:--</span>
           </div>
           ${motion ? `<div class="cp-scan"></div>` : ""}`;
-        decode(h.querySelector(".cp-bar-status b"), st.bar.toUpperCase(), { dur: 900, delay: 350 });
+        decode(h.querySelector(".cp-bar-status b"), "СОЕДИНЕНИЕ УСТАНОВЛЕНО", { dur: 900, delay: 350 });
 
         const clock = h.querySelector(".cp-bar-clock");
         const geo = h.querySelector(".cp-bar-geo");
@@ -250,30 +242,20 @@
         };
       }
 
-      // ---------- штамп статуса в баннере ----------
+      // ---------- штамп в баннере: сколько контрактов выполнено ----------
       function stamp() {
         const hero = el.hero;
-        if (!hero) return;
-        const date = st.date && game[st.date] ? `${st.prefix}${ctx.fmtDate(game[st.date])}` : "";
-        const prog = tally.total ? `${tally.done}/${tally.total}` : "";
-        const sub = [st.sub, date, prog].filter(Boolean).join(" · ");
+        if (!hero || !tally.total) return;
+        const word = `${tally.done}/${tally.total}`;
         const s = document.createElement("div");
         s.className = "cp-stamp";
         s.setAttribute("aria-hidden", "true");
         s.innerHTML = `
           <span class="cp-stamp-frame"></span>
-          <b class="cp-stamp-word" data-text="${esc(st.stamp)}">${esc(st.stamp)}</b>
-          ${sub ? `<span class="cp-stamp-sub">${esc(sub)}</span>` : ""}`;
+          <b class="cp-stamp-word" data-text="${esc(word)}">${esc(word)}</b>
+          <span class="cp-stamp-sub">Выполнено контрактов</span>`;
         hero.append(s);
         ctx.onCleanup(() => s.remove());
-      }
-
-      // Плашка статуса без эмодзи — в HUD-стиле.
-      function statusPill() {
-        const pill = el.hero?.querySelector(".status-pill");
-        if (!pill) return;
-        const text = pill.textContent.replace(/^[^\p{L}\p{N}]+/u, "").trim();
-        if (text) pill.textContent = text;
       }
 
       // ---------- заголовки секций: индекс справа и дешифровка при прокрутке ----------
@@ -314,8 +296,7 @@
           // Плашка состояния без эмодзи: ◆ выполнено / ▲ не выполнено.
           const state = art.querySelector(".cond-state");
           if (state) {
-            const date = done && goal.date ? ` · ${esc(ctx.fmtDate(goal.date))}` : "";
-            state.innerHTML = done ? `<i aria-hidden="true">◆</i> Выполнено${date}` : `<i aria-hidden="true">▲</i> Не выполнено`;
+            state.innerHTML = done ? `<i aria-hidden="true">◆</i> Выполнено` : `<i aria-hidden="true">▲</i> Не выполнено`;
           }
 
           // Картинка: у выполненных — штамп, у невыполненных — замок шифрования.
@@ -432,21 +413,17 @@
         onView(g, () => g.classList.add("cp-in"));
       }
 
-      // ---------- сбоку: биомонитор, зависит от статуса игры ----------
+      // ---------- сбоку: биомонитор ----------
       function biomonitor() {
         const card = el.side?.querySelector(".side-card");
         if (!card) return;
         const beat = (x) => `M${x} 24H${x + 34}l4-4 4 4H${x + 52}l3 4 5-20 5 30 4-14H${x + 84}q8-7 16 0H${x + 120}`;
-        const kind = known ? game.status : "unknown";
-        const line =
-          kind === "planned" || kind === "unknown"
-            ? `<path class="cp-ecg-idle" d="M0 24H240"/>`
-            : `<path d="${beat(0)}"/><path d="${beat(120)}"/>`;
+        const line = `<path d="${beat(0)}"/><path d="${beat(120)}"/>`;
         card.insertAdjacentHTML(
           "afterbegin",
           `<div class="cp-bio" aria-hidden="true">
-             <div class="cp-bio-head"><span>◢ Биомонитор</span><b>${esc(st.pulse)}</b></div>
-             <div class="cp-ecg cp-ecg-${kind}"><svg ${SVGNS} viewBox="0 0 240 40" preserveAspectRatio="none">${line}</svg></div>
+             <div class="cp-bio-head"><span>◢ Биомонитор</span><b>Стабилен</b></div>
+             <div class="cp-ecg"><svg ${SVGNS} viewBox="0 0 240 40" preserveAspectRatio="none">${line}</svg></div>
            </div>`,
         );
       }

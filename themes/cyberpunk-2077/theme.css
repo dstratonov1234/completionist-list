@@ -44,7 +44,6 @@ html[data-game="cyberpunk-2077"] .block > h2::after {
   background: linear-gradient(to right, var(--cp-y) 0 38%, transparent 38% 41%, rgba(252, 238, 10, 0.45) 41% 46%, transparent 46%);
 }
 
-html[data-game="cyberpunk-2077"] .status-pill,
 html[data-game="cyberpunk-2077"] .back {
   clip-path: polygon(0 0, 100% 0, 100% 62%, calc(100% - 9px) 100%, 0 100%);
 }
@@ -293,18 +292,7 @@ html[data-game="cyberpunk-2077"] .hero.cp-burst .cp-stamp-word::after { opacity:
 html[data-game="cyberpunk-2077"] .hero.cp-burst-b .cp-stamp-word::before { clip-path: inset(48% 0 20% 0); }
 html[data-game="cyberpunk-2077"] .hero.cp-burst-b .cp-stamp-word::after { clip-path: inset(4% 0 70% 0); }
 
-/* Плашка статуса — угловатый HUD-тег цвета статуса. */
-html[data-game="cyberpunk-2077"] .cp .status-pill {
-  padding: 5px 16px 5px 12px;
-  font-family: "Tektur", sans-serif;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--cp-ink);
-  background: var(--cp-tone);
-}
-
-html[data-game="cyberpunk-2077"] .cp .hero-meta > span:not(.status-pill),
+html[data-game="cyberpunk-2077"] .cp .hero-meta > span,
 html[data-game="cyberpunk-2077"] .cp .hero-genres .chip {
   font-family: "Tektur", sans-serif;
   font-size: 12px;
@@ -718,9 +706,6 @@ html[data-game="cyberpunk-2077"] .cp-ecg svg {
 }
 
 html[data-game="cyberpunk-2077"] .cp-ecg path { vector-effect: non-scaling-stroke; }
-html[data-game="cyberpunk-2077"] .cp-ecg-planned svg,
-html[data-game="cyberpunk-2077"] .cp-ecg-unknown svg { width: 100%; }
-html[data-game="cyberpunk-2077"] .cp-ecg-idle { stroke-dasharray: 4 6; }
 
 html[data-game="cyberpunk-2077"] .cp-gauge {
   position: relative;
@@ -796,9 +781,7 @@ html[data-game="cyberpunk-2077"] .cp .fact dd { font-family: "Tektur", sans-seri
   html[data-game="cyberpunk-2077"] .cp-anim .cp-gauge.cp-in .cp-seg.on { animation: cp-seg-in 0.35s calc(0.3s + var(--k) * 90ms) both; }
   html[data-game="cyberpunk-2077"] .cp-gauge-ticks { animation: cp-spin 60s linear infinite; }
 
-  html[data-game="cyberpunk-2077"] .cp-ecg-in_progress svg { animation: cp-ecg 2.4s linear infinite; }
-  html[data-game="cyberpunk-2077"] .cp-ecg-completed svg { animation: cp-ecg 4.5s linear infinite; }
-  html[data-game="cyberpunk-2077"] .cp-ecg-planned svg { animation: cp-blink 3s ease-in-out infinite; }
+  html[data-game="cyberpunk-2077"] .cp-ecg svg { animation: cp-ecg 2.4s linear infinite; }
 }
 
 @media (prefers-reduced-motion: no-preference) and (hover: hover) {
@@ -1213,10 +1196,6 @@ html[data-game="cyberpunk-2077"] .cp-reticle-read {
   text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
 }
 
-.gbanner[data-game="cyberpunk-2077"].in_progress .gb-main::before { content: "◢ NC//NET · Соединение активно"; content: "◢ NC//NET · Соединение активно" / ""; }
-.gbanner[data-game="cyberpunk-2077"].completed .gb-main::before { content: "◢ NC//NET · Контракт закрыт"; content: "◢ NC//NET · Контракт закрыт" / ""; }
-.gbanner[data-game="cyberpunk-2077"].planned .gb-main::before { content: "◢ NC//NET · Ожидание подключения"; content: "◢ NC//NET · Ожидание подключения" / ""; }
-
 .gbanner[data-game="cyberpunk-2077"]:hover .gb-main::before,
 .gbanner[data-game="cyberpunk-2077"]:focus-visible .gb-main::before { color: var(--cp-c); }
 
@@ -1230,55 +1209,6 @@ html[data-game="cyberpunk-2077"] .cp-reticle-read {
   color: #fff;
   text-shadow: 2px 0 0 rgba(255, 0, 60, 0.7), -2px 0 0 rgba(0, 229, 255, 0.7);
 }
-
-/* мета: тег статуса цвета статуса и угловатые HUD-плашки */
-.gbanner[data-game="cyberpunk-2077"] .gb-meta {
-  gap: 6px;
-  font: 600 11.5px/1.3 "Tektur", sans-serif;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.gbanner[data-game="cyberpunk-2077"] .gb-meta span {
-  padding: 4px 10px;
-  border: 1px solid rgba(242, 239, 226, 0.15);
-  border-radius: 0;
-  color: rgba(242, 239, 226, 0.84);
-  background: rgba(7, 6, 10, 0.68);
-}
-
-.gbanner[data-game="cyberpunk-2077"] .gb-meta .gb-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 4px 17px 4px 10px;
-  border: 0;
-  clip-path: polygon(0 0, 100% 0, 100% 62%, calc(100% - 9px) 100%, 0 100%);
-  font-weight: 700;
-  color: var(--cp-ink);
-  background: var(--cp-tone);
-}
-
-.gbanner[data-game="cyberpunk-2077"] .gb-status::before {
-  content: "";
-  flex: none;
-  width: 6px;
-  height: 6px;
-  background: currentColor;
-  transform: rotate(45deg);
-}
-
-/* Значок-эмодзи статуса прячем (как на странице игры), подпись — та же, что у статуса на сайте. */
-.gbanner[data-game="cyberpunk-2077"]:is(.completed, .in_progress, .planned) .gb-status { font-size: 0; letter-spacing: 0; }
-
-.gbanner[data-game="cyberpunk-2077"]:is(.completed, .in_progress, .planned) .gb-status::after {
-  font-size: 11.5px;
-  letter-spacing: 0.1em;
-}
-
-.gbanner[data-game="cyberpunk-2077"].completed .gb-status::after { content: "Закрыто"; content: "Закрыто" / ""; }
-.gbanner[data-game="cyberpunk-2077"].in_progress .gb-status::after { content: "В процессе"; content: "В процессе" / ""; }
-.gbanner[data-game="cyberpunk-2077"].planned .gb-status::after { content: "В планах"; content: "В планах" / ""; }
 
 /* заметка — строка журнала */
 .gbanner[data-game="cyberpunk-2077"] .gb-notes {

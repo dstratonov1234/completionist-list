@@ -372,23 +372,6 @@ body.leaving #list-view {
   white-space: nowrap;
 }
 
-.gb-meta { display: flex; flex-wrap: wrap; gap: 6px 8px; font-size: 13px; color: var(--text-dim); }
-
-.gb-meta span {
-  padding: 2px 10px;
-  border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--bg) 70%, transparent);
-  border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
-  backdrop-filter: blur(4px);
-}
-
-.gb-meta .gb-status {
-  border-color: transparent;
-  background: var(--status-color);
-  color: #111;
-  font-weight: 700;
-}
-
 .gb-notes {
   margin: 0;
   max-width: 560px;
@@ -585,22 +568,12 @@ body.leaving #list-view {
   color: rgba(255, 255, 255, 0.9);
 }
 
-.hero-meta > span:not(.status-pill) {
+.hero-meta > span {
   padding: 4px 11px;
   border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(4px);
   font-weight: 500;
-}
-
-.status-pill {
-  display: inline-block;
-  padding: 4px 11px;
-  border-radius: var(--radius-pill);
-  font-size: 13px;
-  font-weight: 700;
-  color: #111;
-  background: var(--status-color);
 }
 
 /* ---------- Game page: layout ---------- */
@@ -864,7 +837,7 @@ html.themed .hero h1 {
 html.themed .hero-media img { object-position: var(--t-hero-pos); }
 html.themed .hero-meta { color: var(--t-text); }
 
-html.themed .hero-meta > span:not(.status-pill) {
+html.themed .hero-meta > span {
   background: color-mix(in srgb, var(--t-bg) 55%, transparent);
   color: var(--t-text);
   border: 1px solid color-mix(in srgb, var(--t-text) 16%, transparent);

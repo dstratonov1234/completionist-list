@@ -79,14 +79,14 @@
         ctx.layer("ss-citadel");
       }
 
-      // ---------- игла с колокольчиком в баннере: очередь / прогресс / итог ----------
+      // ---------- игла с колокольчиком в баннере: прогресс по условиям закрытия ----------
       function ornament() {
         const hero = el.hero;
         if (!hero) return;
         const info = status();
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = `ss-ornament ss-${esc(game.status ?? "planned")}`;
+        btn.className = "ss-ornament";
         btn.setAttribute("aria-label", `${info.label}: ${info.value}${info.sub ? `, ${info.sub}` : ""}. Позвонить в колокольчик`);
         if (info.frac != null) btn.style.setProperty("--frac", info.frac.toFixed(3));
         btn.innerHTML = `
@@ -117,7 +117,7 @@
       }
 
       function status() {
-        // Прогресс — по условиям закрытия (ctx.goals()), иначе по сводке game.goals {done,total}, иначе game.progress.
+        // Прогресс — по условиям закрытия (ctx.goals()), иначе по сводке game.goals {done,total}.
         let all = [];
         try {
           all = typeof ctx.goals === "function" ? [].concat(ctx.goals() ?? []) : [];
@@ -127,33 +127,10 @@
         const sum = game.goals && !Array.isArray(game.goals) && typeof game.goals === "object" ? game.goals : null;
         const total = all.length || Number(sum?.total) || 0;
         const done = all.length ? all.filter((g) => g?.done === true).length : Number(sum?.done) || 0;
-        const pct = total ? (done / total) * 100 : Number.isFinite(Number(game.progress)) && game.progress != null ? Number(game.progress) : null;
         const clamp01 = (n) => Math.max(0, Math.min(1, n));
-        switch (game.status) {
-          case "in_progress":
-            return {
-              label: "Восхождение",
-              value: pct != null ? `${Math.round(pct)}%` : game.playtime != null ? ctx.fmtHours(game.playtime) : "в пути",
-              sub: game.started ? `с ${ctx.fmtDate(game.started)}` : "",
-              frac: pct != null ? clamp01(pct / 100) : null,
-            };
-          case "completed":
-            return {
-              label: "Вершина достигнута",
-              value: total ? `${done}/${total}` : "✦",
-              sub: game.finished ? ctx.fmtDate(game.finished) : "",
-              frac: total ? clamp01(done / total) : 1,
-            };
-          default: {
-            const p = game.priority;
-            return {
-              label: p === 1 ? "Следующая в очереди" : "В очереди",
-              value: p != null ? `№ ${p}` : "❈",
-              sub: game.added ? `добавлена ${ctx.fmtDate(game.added)}` : "",
-              frac: null,
-            };
-          }
-        }
+        // Ни статуса игры, ни дат — только сколько условий вышито.
+        if (!total) return { label: "Условия закрытия", value: "❈", sub: "ещё не заданы", frac: null };
+        return { label: "Вышито условий", value: `${done}/${total}`, sub: "", frac: clamp01(done / total) };
       }
 
       // ---------- гобелен: каждая цель — вышитая заплатка, висящая на шёлковых нитях ----------

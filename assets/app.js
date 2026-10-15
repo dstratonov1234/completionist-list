@@ -1,12 +1,6 @@
 (() => {
   "use strict";
 
-  const STATUSES = {
-    completed: { label: "Закрыто", badge: "🏆 Закрыто" },
-    in_progress: { label: "В процессе", badge: "▶ В процессе" },
-    planned: { label: "В планах", badge: "📌 В планах" },
-  };
-
   const els = {
     listView: document.getElementById("list-view"),
     search: document.getElementById("search"),
@@ -185,7 +179,6 @@
       reportReady: Promise.resolve(),
       esc,
       safeUrl,
-      fmtDate,
       fmtHours,
       plural,
       onCleanup: (fn) => cleanups.push(fn),
@@ -324,31 +317,6 @@
 
   const safeUrl = (u) => (typeof u === "string" && /^https?:\/\//i.test(u) ? u : "");
 
-  const fmtFull = new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
-  const fmtMonth = new Intl.DateTimeFormat("ru-RU", { month: "long", year: "numeric", timeZone: "UTC" });
-
-  // Accepts "YYYY", "YYYY-MM" or "YYYY-MM-DD".
-  function parseDate(s) {
-    if (!s) return null;
-    const [y, m = 1, d = 1] = String(s).split("-").map(Number);
-    if (!y) return null;
-    return new Date(Date.UTC(y, m - 1, d));
-  }
-
-  function fmtDate(s) {
-    const d = parseDate(s);
-    if (!d) return "";
-    const parts = String(s).split("-").length;
-    if (parts === 1) return String(d.getUTCFullYear());
-    return (parts === 2 ? fmtMonth : fmtFull).format(d).replace(/\s*г\.$/, "");
-  }
-
-  function daysBetween(a, b) {
-    const da = parseDate(a), db = parseDate(b);
-    if (!da || !db || String(a).length < 10 || String(b).length < 10) return null;
-    return Math.max(1, Math.round((db - da) / 86400000) + 1);
-  }
-
   const fmtHours = (h) => `${Number(h).toLocaleString("ru-RU", { maximumFractionDigits: 1 })} ч`;
 
   function plural(n, one, few, many) {
@@ -456,15 +424,10 @@
   const logoUrls = (g) => [g.logo, steamAsset(g, "logo.png")];
 
   function bannerHtml(g) {
-    const s = STATUSES[g.status] ?? { badge: g.status };
+    // Ни статуса игры, ни дат: статус виден по категории в списке и по числу выполненных условий.
     const vars = themeVars(g.theme);
     const hasLogo = unique(logoUrls(g).map(safeUrl)).length > 0;
     const t = g.goals?.total ? g.goals : null;
-    const date = {
-      completed: g.finished && `закрыта ${fmtDate(g.finished)}`,
-      in_progress: g.started && `с ${fmtDate(g.started)}`,
-      planned: g.added && `в планах с ${fmtDate(g.added)}`,
-    }[g.status];
     const progress = t
       ? `<div class="gb-count"><b>${t.done}</b><span>из ${t.total}</span></div>
          <div class="gb-label">${plural(t.total, "условие закрытия", "условия закрытия", "условий закрытия")}</div>
@@ -480,10 +443,6 @@
             <div class="gb-title">
               ${hasLogo ? imgTag(logoUrls(g), `class="gb-logo" alt="" loading="lazy"`) : ""}
               <h3 class="gb-name">${esc(g.title)}</h3>
-            </div>
-            <div class="gb-meta">
-              <span class="gb-status">${s.badge}</span>
-              ${date ? `<span>${esc(date)}</span>` : ""}
             </div>
             ${g.notes ? `<p class="gb-notes">${esc(g.notes)}</p>` : ""}
           </div>
@@ -713,7 +672,7 @@
         <div class="cond-body">
           <header class="cond-head">
             <h3 class="cond-title">${esc(goal.title)}</h3>
-            <span class="cond-state">${goal.done ? `✓ Выполнено${goal.date ? ` · ${esc(fmtDate(goal.date))}` : ""}` : "Не выполнено"}</span>
+            <span class="cond-state">${goal.done ? "✓ Выполнено" : "Не выполнено"}</span>
           </header>
           ${facts ? `<dl class="cond-facts">${facts}</dl>` : ""}
           ${checklistHtml(goal)}
@@ -742,7 +701,6 @@
   function sideHtml(g, cond) {
     const t = tally(allGoals(cond));
     const p = t.total ? t.done / t.total : 0;
-    const days = g.status === "completed" ? daysBetween(g.started, g.finished) : null;
     const groups = (cond?.groups ?? []).map((gr) => ({ title: gr.title, ...tally(gr.goals ?? []) }));
     return `
       <aside class="game-side">
@@ -757,14 +715,7 @@
                  </ul>`
               : ""
           }
-          <dl class="facts">
-            ${fact("Начато", fmtDate(g.started))}
-            ${fact("Закрыто", fmtDate(g.finished))}
-            ${fact("Дней", days != null ? `${days} ${plural(days, "день", "дня", "дней")}` : null)}
-            ${fact("Время", g.playtime != null ? fmtHours(g.playtime) : null)}
-            ${fact("В очереди", g.status === "planned" && g.priority != null ? `#${g.priority}` : null)}
-            ${fact("Добавлено", fmtDate(g.added))}
-          </dl>
+          ${g.playtime != null ? `<dl class="facts">${fact("Время", fmtHours(g.playtime))}</dl>` : ""}
         </div>
       </aside>`;
   }
@@ -782,9 +733,8 @@
   }
 
   function renderGame(g, cond) {
-    const s = STATUSES[g.status] ?? { badge: g.status };
     const hasLogo = unique(logoUrls(g).map(safeUrl)).length > 0;
-    const metaBits = g.demo ? `<span class="demo-chip" title="Пробная игра для демонстрации сайта">демо</span>` : "";
+    const demo = g.demo ? `<div class="hero-meta"><span class="demo-chip" title="Пробная игра для демонстрации сайта">демо</span></div>` : "";
 
     els.gameView.innerHTML = `
       <header class="hero ${esc(g.status)} ${hasLogo ? "has-logo" : ""}">
@@ -794,7 +744,7 @@
           <div class="hero-title">
             ${hasLogo ? imgTag(logoUrls(g), `class="hero-logo" alt="${esc(g.title)}"`) : ""}
             <h1>${esc(g.title)}</h1>
-            <div class="hero-meta"><span class="status-pill">${s.badge}</span>${metaBits}</div>
+            ${demo}
           </div>
         </div>
       </header>

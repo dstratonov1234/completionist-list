@@ -20,13 +20,6 @@
   const HOLD = { direct: 0.5, handoff: 0.3 };
   const STEPS = 24;
 
-  // Подзаголовок шторки — в метафоре горы, по статусу игры.
-  const SUMMIT = {
-    completed: "Вершина покорена",
-    in_progress: "Восхождение продолжается",
-    planned: "У подножия горы",
-  };
-
   const FIELDS = [
     ["gives", "Что даёт"],
     ["needs", "Что потребуется"],
@@ -221,7 +214,6 @@
           .join("");
         const gallery = (goal.gallery ?? []).map(ctx.safeUrl).filter(Boolean);
         const stamp = goal.done ? (summit ? "golden" : "berry") : "todo";
-        const mark = shortDate(goal.date);
         return `
           <header class="ce-pc-head">
             <div class="ce-pc-heading">
@@ -229,13 +221,12 @@
               <h3 class="ce-pc-title">${esc(goal.title)}</h3>
               <p class="ce-pc-state">${
                 goal.done
-                  ? `<span class="ce-pc-flag" aria-hidden="true"></span>Отметка взята${goal.date ? ` · ${esc(ctx.fmtDate(goal.date))}` : ""}`
+                  ? `<span class="ce-pc-flag" aria-hidden="true"></span>Отметка взята`
                   : `<span class="ce-pc-ring" aria-hidden="true"></span>Отметка впереди`
               }</p>
             </div>
             <div class="ce-pc-stamp ce-stamp-${stamp}" aria-hidden="true">
               <span></span>
-              ${goal.done && mark ? `<i class="ce-pc-postmark">${esc(mark)}</i>` : ""}
             </div>
           </header>
           ${group?.note ? `<p class="ce-pc-groupnote">${esc(group.note)}</p>` : ""}
@@ -514,11 +505,13 @@
   // волна идёт вверх по склону. paint(p, fill): p — фронт волны (0…end); fill — за фронтом клетки
   // закрыты (наползание), иначе открыты (рассыпание); у фронта — кайма цветами волос.
   function buildWipe(layer, game, esc) {
-    const sub = SUMMIT[game.status] ?? "";
+    // Подпись шторки — только прогресс по условиям, без статуса игры.
+    const { done = 0, total = 0 } = game.goals ?? {};
+    const sub = total ? `Отметок взято: ${done} из ${total}` : "";
     layer.innerHTML = `
       <canvas></canvas>
       <div class="ce-wipe-card">
-        <span class="ce-wipe-berry ${game.status === "completed" ? "ce-gold" : ""}"></span>
+        <span class="ce-wipe-berry ${total && done === total ? "ce-gold" : ""}"></span>
         ${sub ? `<small>${esc(sub)}</small>` : ""}
         <strong>${esc(game.title)}</strong>
       </div>`;
@@ -710,14 +703,6 @@
   }
 
   // ---------- хелперы ----------
-
-  function shortDate(s) {
-    const [y, m, d] = String(s ?? "").split("-");
-    if (!/^\d{4}$/.test(y ?? "")) return "";
-    if (/^\d{2}$/.test(d ?? "") && /^\d{2}$/.test(m ?? "")) return `${d}.${m}`;
-    if (/^\d{2}$/.test(m ?? "")) return `${m}.${y.slice(2)}`;
-    return y;
-  }
 
   function hash(s) {
     let h = 7;

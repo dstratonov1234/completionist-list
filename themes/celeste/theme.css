@@ -184,29 +184,6 @@ html[data-game="celeste"],
 
 /* ---------- фишки: пиксельные рамки ---------- */
 
-.gbanner[data-game="celeste"] .gb-meta { gap: 8px 10px; }
-
-.gbanner[data-game="celeste"] .gb-meta span {
-  padding: 2px 9px;
-  border: none;
-  border-radius: 0;
-  font: 500 14px/1.35 var(--t-heading);
-  letter-spacing: 0.02em;
-  color: var(--t-text);
-  background: color-mix(in srgb, var(--t-bg) 78%, transparent);
-  backdrop-filter: none;
-  box-shadow: 0 -2px 0 0 var(--ce-line), 0 2px 0 0 var(--ce-line), -2px 0 0 0 var(--ce-line), 2px 0 0 0 var(--ce-line);
-}
-
-.gbanner[data-game="celeste"] .gb-meta .gb-status {
-  font-weight: 600;
-  color: var(--ce-ink);
-  background: var(--status-color);
-  box-shadow: 0 -2px 0 0 var(--ce-ink), 0 2px 0 0 var(--ce-ink), -2px 0 0 0 var(--ce-ink), 2px 0 0 0 var(--ce-ink), 4px 4px 0 0 var(--ce-ink);
-}
-
-.gbanner[data-game="celeste"].completed .gb-meta .gb-status { background: var(--ce-gold); }
-
 .gbanner[data-game="celeste"] .gb-notes {
   padding-left: 12px;
   color: var(--t-text);
@@ -639,21 +616,12 @@ html[data-game="celeste"] .back { top: 20px; }
 
 /* ---------- фишки ---------- */
 
-html[data-game="celeste"] .game-view :is(.hero-meta > span:not(.status-pill), .chip, .ce-chip) {
+html[data-game="celeste"] .game-view :is(.hero-meta > span, .chip, .ce-chip) {
   border: none;
   border-radius: 0;
   background: color-mix(in srgb, var(--t-bg) 70%, transparent);
   backdrop-filter: none;
   box-shadow: 0 -2px 0 0 var(--ce-line), 0 2px 0 0 var(--ce-line), -2px 0 0 0 var(--ce-line), 2px 0 0 0 var(--ce-line);
-}
-
-html[data-game="celeste"] .game-view .status-pill {
-  border-radius: 0;
-  font-family: var(--t-heading);
-  font-weight: 600;
-  color: var(--ce-ink);
-  background: var(--ce-gold);
-  box-shadow: 0 -2px 0 0 var(--ce-ink), 0 2px 0 0 var(--ce-ink), -2px 0 0 0 var(--ce-ink), 2px 0 0 0 var(--ce-ink), 4px 4px 0 0 var(--ce-drop);
 }
 
 /* ---------- шапка ---------- */
@@ -1041,21 +1009,6 @@ html[data-game="celeste"] .game-view .ce-climb { container: ce-climb / inline-si
 
 .ce-pc-stamp.ce-stamp-golden > span { background-image: url(assets/golden.webp), linear-gradient(to bottom, #2a1a6a 0 55%, #5a3a86 55% 70%, #3a1d55 70%); background-size: 74% auto, auto; }
 .ce-pc-stamp.ce-stamp-todo > span { background-image: url(assets/heart.webp), linear-gradient(to bottom, #b9b2c4 0 55%, #8c8396 55% 70%, #6e6678 70%); background-size: 44% auto, auto; filter: grayscale(1); opacity: 0.55; }
-
-.ce-pc-postmark {
-  position: absolute;
-  left: -14px;
-  bottom: -12px;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 30px;
-  font: 600 12px/1 var(--t-heading);
-  font-style: normal;
-  color: var(--ce-pen-pink);
-  background: rgba(246, 236, 223, 0.55);
-  box-shadow: 0 -2px 0 0 currentColor, 0 2px 0 0 currentColor, -2px 0 0 0 currentColor, 2px 0 0 0 currentColor;
-}
 
 .ce-pc-groupnote { margin: 10px 0 0; font-size: 13.5px; color: var(--ce-pen-dim); }
 

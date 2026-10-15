@@ -6,12 +6,6 @@
 (() => {
   "use strict";
 
-  const STATUS = { planned: "В планах", in_progress: "В пути", completed: "Пройдено" };
-  const GATE_SUB = {
-    planned: "Приключение впереди",
-    in_progress: "Путешествие продолжается",
-    completed: "Путь пройден",
-  };
   // Облака заставки: x, y (% экрана), ширина (vmax), куда уплывает (-1 влево / 1 вправо), задержка (с), зеркально
   const CLOUDS = [
     [16, 14, 72, -1, 0.0, 0], [84, 10, 78, 1, 0.04, 1], [50, 26, 66, 1, 0.1, 0],
@@ -24,7 +18,9 @@
 
   // Небо, облака и название игры — одна и та же заставка и на главной (cover), и при прямом входе.
   function gateHtml(game, assets, esc) {
-    const sub = GATE_SUB[game.status] ?? "";
+    // подпись — только прогресс по условиям закрытия, без статуса игры
+    const { done = 0, total = 0 } = game.goals ?? {};
+    const sub = total ? `Выполнено условий: ${done} из ${total}` : "";
     return `
       <div class="zt-gate-sky"></div>
       ${CLOUDS.map(
@@ -136,8 +132,6 @@
         const media = hero?.querySelector(".hero-media");
         if (!hero || !media) return null;
 
-        const pill = hero.querySelector(".status-pill");
-        if (pill && STATUS[game.status]) pill.textContent = STATUS[game.status];
         const h1 = el.heroTitle?.querySelector("h1");
         h1?.insertAdjacentHTML("afterend", `<img class="zt-hero-rule" src="${assets}glyph-divider.webp" alt="">`);
 
@@ -319,7 +313,7 @@
           const title = g.title ?? art.querySelector(".cond-title")?.textContent ?? "";
           const steps = (g.checklist ?? []).flatMap((c) => c?.items ?? []);
           const sub = done
-            ? `Выполнено${g.date ? ` · ${ctx.fmtDate(g.date)}` : ""}`
+            ? "Выполнено"
             : steps.length
               ? `Не выполнено · шаги ${steps.filter((s) => s?.done).length}/${steps.length}`
               : "Не выполнено";

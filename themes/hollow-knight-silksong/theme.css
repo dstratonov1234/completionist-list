@@ -82,38 +82,6 @@
   text-shadow: 0 0 22px rgba(229, 72, 60, 0.55), 0 2px 14px rgba(0, 0, 0, 0.85);
 }
 
-/* статус — алая шёлковая лента с вырезом (у закрытой — золотая), остальное — ярлыки */
-.gbanner[data-game="hollow-knight-silksong"] .gb-meta {
-  font-family: var(--t-heading);
-  font-size: 14.5px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  font-variant-numeric: lining-nums;
-}
-
-.gbanner[data-game="hollow-knight-silksong"] .gb-meta span {
-  border-radius: 0;
-  border-color: color-mix(in srgb, var(--t-accent-2) 24%, transparent);
-  background: rgba(16, 7, 8, 0.74);
-  color: color-mix(in srgb, var(--t-text) 86%, var(--t-bg));
-}
-
-.gbanner[data-game="hollow-knight-silksong"] .gb-meta .gb-status {
-  padding-right: 19px;
-  border-color: transparent;
-  color: #fff3ee;
-  background: linear-gradient(180deg, #d9443a, #8e1b1b);
-  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  backdrop-filter: none;
-}
-
-.gbanner.completed[data-game="hollow-knight-silksong"] .gb-meta .gb-status {
-  color: #2a0d08;
-  background: linear-gradient(180deg, #f8d696, #c98a2e);
-  text-shadow: none;
-}
-
 .gbanner[data-game="hollow-knight-silksong"] .gb-notes {
   font-style: italic;
   color: color-mix(in srgb, var(--t-text) 80%, var(--t-bg));
@@ -380,15 +348,6 @@ html[data-game="hollow-knight-silksong"] .ss .game-notes::before {
   background: url(assets/needle.webp) left top / 100% auto no-repeat;
   transform: rotate(-24deg);
   filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.7));
-}
-
-/* статус в баннере — алая лента */
-html[data-game="hollow-knight-silksong"] .ss .status-pill {
-  padding: 4px 18px 4px 12px;
-  border-radius: 0;
-  color: #fff3ee;
-  background: linear-gradient(180deg, #d9443a, #8e1b1b);
-  clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 50%, 100% 100%, 0 100%);
 }
 
 html[data-game="hollow-knight-silksong"] .ss .hero-logo {

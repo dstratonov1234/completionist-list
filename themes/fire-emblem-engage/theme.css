@@ -156,28 +156,6 @@ html[data-game="fire-emblem-engage"],
 
 .gbanner[data-game="fire-emblem-engage"] .gb-name { font-family: "Unbounded", sans-serif; }
 
-.gbanner[data-game="fire-emblem-engage"] .gb-meta span {
-  padding: 3px 16px 3px 14px;
-  border: none;
-  border-radius: 0;
-  background: rgba(21, 26, 61, 0.88);
-  color: var(--fe-dim);
-  font-family: "Unbounded", sans-serif;
-  font-size: 11.5px;
-  letter-spacing: 0.03em;
-  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
-  backdrop-filter: none;
-}
-
-.gbanner[data-game="fire-emblem-engage"] .gb-meta .gb-status {
-  background: linear-gradient(90deg, var(--fe-blue-plate), #2a5bd0);
-  color: #fff;
-  font-weight: 600;
-}
-
-.gbanner[data-game="fire-emblem-engage"].completed .gb-meta .gb-status { background: linear-gradient(90deg, var(--fe-gold-hi), var(--fe-gold)); color: var(--fe-navy); }
-.gbanner[data-game="fire-emblem-engage"].planned .gb-meta .gb-status { background: linear-gradient(90deg, #5b3fb8, #7a52d6); color: #fff; }
-
 .gbanner[data-game="fire-emblem-engage"] .gb-notes { color: var(--fe-dim); }
 
 /* прогресс — мини-шкала Engage: кольцо Эмблемы и цепочка ромбов */
@@ -347,9 +325,6 @@ html[data-game="fire-emblem-engage"] .fe .back:hover { background: rgba(35, 80, 
 html[data-game="fire-emblem-engage"] .fe .back:focus-visible { outline: 2px solid var(--fe-cursor); outline-offset: 3px; }
 
 html[data-game="fire-emblem-engage"] .fe .hero-meta > span { padding: 5px 18px; }
-html[data-game="fire-emblem-engage"] .fe .status-pill { background: linear-gradient(90deg, var(--fe-blue-plate), #2a5bd0); color: #fff; font-weight: 600; }
-html[data-game="fire-emblem-engage"] .fe .hero.completed .status-pill { background: linear-gradient(90deg, var(--fe-gold-hi), var(--fe-gold)); color: var(--fe-navy); }
-html[data-game="fire-emblem-engage"] .fe .hero.planned .status-pill { background: linear-gradient(90deg, #5b3fb8, #7a52d6); }
 html[data-game="fire-emblem-engage"] .fe .hero-meta > .demo-chip { background: rgba(181, 23, 58, 0.75); color: #fff; }
 
 /* заставка закрывает страницу — содержимое ждёт и поднимается вместе с разлётом панелей */
@@ -1407,7 +1382,6 @@ html[data-game="fire-emblem-engage"] .fe-unit {
 }
 
 .fe-badge-done { color: var(--fe-navy); background: linear-gradient(90deg, var(--fe-gold-hi), var(--fe-gold)); }
-.fe-unit-date { font-size: 13px; color: var(--fe-dim); }
 
 .fe-stats { display: grid; gap: 6px; margin: 14px 0 0; }
 
