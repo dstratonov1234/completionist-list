@@ -614,7 +614,9 @@
     const logoUrls = [g.logo, steamAsset(g, "logo.png")];
     const hasLogo = unique(logoUrls.map(safeUrl)).length > 0;
     const genres = (g.genres ?? []).map((x) => `<span class="chip">${esc(x)}</span>`).join("");
-    const metaBits = [g.platform, g.year, g.developer].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("");
+    const metaBits =
+      [g.platform, g.year, g.developer].filter(Boolean).map((x) => `<span>${esc(x)}</span>`).join("") +
+      (g.demo ? `<span class="demo-chip" title="Пробная игра для демонстрации сайта">демо</span>` : "");
 
     els.gameView.innerHTML = `
       <header class="hero ${esc(g.status)} ${hasLogo ? "has-logo" : ""}">
@@ -800,6 +802,7 @@
       state.games = (data.games ?? []).filter((g) => g && g.id && g.title);
       state.byId = new Map(state.games.map((g) => [g.id, g]));
       if (data.updated) els.updated.textContent = `Обновлено: ${fmtDate(data.updated)}`;
+      document.getElementById("demo-note").hidden = !state.games.some((g) => g.demo);
     } catch (err) {
       els.list.innerHTML = `<div class="empty"><strong>Не удалось загрузить список</strong>${esc(err.message)}</div>`;
       return;

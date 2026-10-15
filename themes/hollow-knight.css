@@ -1,0 +1,15 @@
+/* Hollow Knight: бледный свет душ на тёмной синеве Халлоунеста */
+html[data-game="hollow-knight"] .goal-media {
+  background: radial-gradient(circle at 50% 62%, #1b2b4d, #05070d 72%);
+}
+
+html[data-game="hollow-knight"] .hero h1,
+html[data-game="hollow-knight"] .block h2 .sec-label {
+  text-shadow: 0 0 18px rgba(170, 200, 255, 0.35);
+}
+
+.card[data-game="hollow-knight"] .card-title::after {
+  content: " ❦";
+  color: #8fb4e8;
+  font-size: 0.8em;
+}

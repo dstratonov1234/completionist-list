@@ -38,19 +38,29 @@ async function search(term) {
   console.log(JSON.stringify(rows, null, 2));
 }
 
-async function info(appid) {
+// Часть игр в регионе RU скрыта (нет скриншотов, appdetails пустой) — тогда берём регион US, язык оставляем русский.
+async function storeItem(appid, country) {
   const input = {
     ids: [{ appid: Number(appid) }],
-    context: { language: "russian", country_code: "RU" },
+    context: { language: "russian", country_code: country },
     data_request: { include_assets: true, include_basic_info: true, include_release: true, include_screenshots: true },
   };
   const store = await getJson(
     `https://api.steampowered.com/IStoreBrowseService/GetItems/v1/?input_json=${encodeURIComponent(JSON.stringify(input))}`,
   );
   const item = store.response?.store_items?.[0];
-  if (!item || !item.name) throw new Error(`appid ${appid} не найден`);
+  const details = (await getJson(`https://store.steampowered.com/api/appdetails?appids=${appid}&l=russian&cc=${country}`))[appid]?.data;
+  return { item, details };
+}
 
-  const details = (await getJson(`https://store.steampowered.com/api/appdetails?appids=${appid}&l=russian&cc=ru`))[appid]?.data ?? {};
+async function info(appid) {
+  let { item, details } = await storeItem(appid, "RU");
+  if (!details || !item?.screenshots?.all_ages_screenshots?.length) {
+    const us = await storeItem(appid, "US");
+    if (us.item?.name) ({ item, details } = us);
+  }
+  if (!item || !item.name) throw new Error(`appid ${appid} не найден`);
+  details ??= {};
 
   const a = item.assets ?? {};
   const asset = (file) => (file && a.asset_url_format ? ASSET_BASE + a.asset_url_format.replace("${FILENAME}", file) : undefined);

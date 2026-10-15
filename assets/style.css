@@ -166,6 +166,27 @@ img[data-zoom] { cursor: zoom-in; }
 .stat.in_progress dd { color: var(--c-in-progress); }
 .stat.planned dd { color: var(--c-planned); }
 
+/* ---------- Demo notice ---------- */
+
+.demo-note {
+  margin: 20px 0 0;
+  padding: 10px 14px;
+  border: 1px dashed color-mix(in srgb, var(--accent) 60%, var(--border));
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.demo-note b { color: var(--text); }
+
+.hero-meta > .demo-chip {
+  border: 1px dashed currentColor;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
 /* ---------- Toolbar ---------- */
 
 .toolbar {
