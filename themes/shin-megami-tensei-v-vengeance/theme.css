@@ -497,12 +497,16 @@
 
 .smt-side {
   grid-area: side;
+  position: relative;
+  z-index: 13;
   display: flex;
   flex-direction: column;
   gap: 10px;
   min-height: 0;
-  padding: 16px 0 16px 16px;
+  padding: 16px 14px 16px 16px;
   overflow: auto;
+  border-right: 1px solid var(--smt-line);
+  background: linear-gradient(90deg, rgba(8, 3, 5, 0.94), rgba(8, 3, 5, 0.86));
 }
 
 .smt-races { display: flex; flex-direction: column; gap: 6px; }
@@ -590,10 +594,11 @@
 
 .smt-arena { grid-area: arena; position: relative; min-height: 0; }
 
+/* вода уходит под боковые колонки до краёв экрана — без обрыва по краям арены */
 .smt-floor {
   position: absolute;
-  left: 0;
-  right: 0;
+  left: -300px;
+  right: -340px;
   bottom: 0;
   height: 62%;
   overflow: hidden;
@@ -619,10 +624,10 @@
 .smt-summon {
   position: absolute;
   left: 50%;
-  bottom: 15%;
-  width: 420px;
-  height: 84px;
-  margin-left: -210px;
+  bottom: 13%;
+  width: min(40%, 760px);
+  aspect-ratio: 5;
+  translate: -50% 0;
   border: 2px solid var(--smt-cyan);
   border-radius: 50%;
   box-shadow: 0 0 22px var(--smt-cyan), inset 0 0 22px rgba(70, 200, 255, 0.6);
@@ -636,7 +641,8 @@
   to { opacity: 0; transform: scale(1.35); }
 }
 
-.smt-stagebox { position: absolute; inset: 0 0 64px; }
+/* арена — контейнер: цели масштабируются от её размера (cqw/cqh), а не застывают в пикселях */
+.smt-stagebox { position: absolute; inset: 0 0 64px; container-type: size; }
 .smt-lineup { position: absolute; inset: 0; outline: none; }
 
 .smt-demon::before {
@@ -671,27 +677,31 @@
 
 .smt-demon img { display: block; transition: filter 0.4s; }
 
+/* фигура стоит на воде и занимает большую часть высоты арены */
 .smt-demon.fig img {
   width: auto;
-  height: min(460px, 58vh);
-  max-width: min(440px, 34vw);
+  height: 74cqh;
+  max-width: 48cqw;
   object-fit: contain;
   object-position: center bottom;
   -webkit-box-reflect: below 0 linear-gradient(transparent 70%, rgba(255, 255, 255, 0.22));
 }
 
+/* сцена — экран над водой в своих пропорциях, без обрезки; рамка-свечение повторяет край картинки */
+.smt-demon.scene { bottom: 17%; }
+
 .smt-demon.scene img {
-  width: min(460px, 34vw);
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  border: 1px solid rgba(160, 230, 255, 0.55);
-  box-shadow: 0 0 24px rgba(70, 200, 255, 0.35);
-  -webkit-box-reflect: below 6px linear-gradient(transparent 60%, rgba(255, 255, 255, 0.18));
+  width: 64cqw;
+  height: 62cqh;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 0 1px rgba(160, 230, 255, 0.9)) drop-shadow(0 0 22px rgba(70, 200, 255, 0.35));
+  -webkit-box-reflect: below 6px linear-gradient(transparent 62%, rgba(255, 255, 255, 0.16));
 }
 
 .smt-demon.done.fig img { filter: drop-shadow(0 0 16px rgba(70, 200, 255, 0.45)); }
 .smt-demon.fig:not(.done) img { filter: brightness(0) drop-shadow(0 0 1.5px rgba(255, 74, 95, 0.95)) drop-shadow(0 0 12px rgba(255, 74, 95, 0.35)); }
-.smt-demon.scene:not(.done) img { filter: grayscale(1) brightness(0.32) contrast(1.1); }
+.smt-demon.scene:not(.done) img { filter: grayscale(1) brightness(0.4) contrast(1.1) drop-shadow(0 0 1px rgba(255, 106, 124, 0.7)); }
 .smt-demon.side img { filter: brightness(0.45) saturate(0.6); }
 .smt-demon.side.fig:not(.done) img { filter: brightness(0) drop-shadow(0 0 1px rgba(255, 74, 95, 0.6)); }
 .smt-demon.side:hover img { filter: brightness(0.75); }
@@ -699,8 +709,8 @@
 .smt-demon-blank {
   display: grid;
   place-items: center;
-  width: 220px;
-  height: 260px;
+  width: 30cqw;
+  height: 60cqh;
   border: 1px solid var(--smt-line);
   background: rgba(10, 5, 8, 0.7);
   font: italic 900 110px/1 var(--t-display, sans-serif);
@@ -887,16 +897,17 @@ a.smt-prompt:focus-visible { color: #fff; text-shadow: 0 0 8px var(--smt-red); o
     grid-template-rows: var(--smt-hud-h) auto 440px auto;
     grid-template-areas: "hud" "side" "arena" "plate";
   }
-  .smt-side { padding: 12px 14px 0; overflow: visible; }
+  .smt-side { padding: 12px 14px; overflow: visible; border-right: 0; border-bottom: 1px solid var(--smt-line); }
+  .smt-floor { left: 0; right: 0; }
   .smt-races { flex-direction: row; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
   .smt-races::-webkit-scrollbar { display: none; }
   .smt-race { flex: none; width: 230px; }
   .smt-index-head,
   .smt-index-list { display: none; }
   .smt-plate { max-height: none; margin: 12px 14px 90px; }
-  .smt-demon.fig img { height: 320px; max-width: 70vw; }
-  .smt-demon.scene img { width: min(420px, 72vw); }
-  .smt-summon { width: 300px; margin-left: -150px; }
+  .smt-demon.fig img { max-width: 70cqw; }
+  .smt-demon.scene img { width: 86cqw; height: 60cqh; }
+  .smt-summon { width: 70%; }
   .smt-prompts { position: fixed; left: 0; right: 0; bottom: 0; max-width: none; justify-content: center; transform: none; clip-path: none; border-width: 1px 0 0; }
 }
 
@@ -907,11 +918,11 @@ a.smt-prompt:focus-visible { color: #fff; text-shadow: 0 0 8px var(--smt-red); o
   .smt-hud-maglabel { display: none; }
   .smt-hud-mag .smt-gauge { width: 90px; }
   .smt-page { grid-template-rows: var(--smt-hud-h) auto 380px auto; }
-  .smt-demon.fig img { height: 270px; }
   .smt-arrow { width: 38px; height: 38px; }
   .smt-prompts { gap: 12px; padding: 9px 10px; }
   .smt-prompt { font-size: 12px; }
   .smt-prompts .smt-prompt:not(.smt-prompt-back) span + span { display: none; }
+  .smt-prompt-nb { display: none; }
   .smt-slot { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 18px 18px 18px 22px; }
   .smt-slot-data { justify-self: start; min-width: 230px; }
 }

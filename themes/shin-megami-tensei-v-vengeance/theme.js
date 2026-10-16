@@ -386,8 +386,8 @@
               <footer class="smt-prompts">
                 <span class="smt-prompt"><span class="smt-btn">◀▶</span>Условие</span>
                 <span class="smt-prompt"><span class="smt-btn smt-btn-sh">L</span><span class="smt-btn smt-btn-sh">R</span>Группа</span>
-                ${nb.prev ? `<a class="smt-prompt" href="${esc(nb.prev.href)}"><span class="smt-btn smt-btn-sh">ZL</span>${esc(nb.prev.title)}</a>` : ""}
-                ${nb.next ? `<a class="smt-prompt" href="${esc(nb.next.href)}"><span class="smt-btn smt-btn-sh">ZR</span>${esc(nb.next.title)}</a>` : ""}
+                ${nb.prev ? `<a class="smt-prompt smt-prompt-nb" href="${esc(nb.prev.href)}"><span class="smt-btn smt-btn-sh">ZL</span>${esc(nb.prev.title)}</a>` : ""}
+                ${nb.next ? `<a class="smt-prompt smt-prompt-nb" href="${esc(nb.next.href)}"><span class="smt-btn smt-btn-sh">ZR</span>${esc(nb.next.title)}</a>` : ""}
                 <a class="smt-prompt smt-prompt-back" href="#/"><span class="smt-btn smt-btn-b">B</span>Назад</a>
               </footer>
             </section>
