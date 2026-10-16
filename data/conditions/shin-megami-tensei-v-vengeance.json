@@ -356,24 +356,6 @@
         }
       ],
       "note": "Арку, доступную в обоих канонах, достаточно пройти один раз."
-    },
-    {
-      "title": "Условие всего прохождения",
-      "goals": [
-        {
-          "n": 27,
-          "title": "Всё личное прохождение, включая обычные бои и повторные участки, на Normal",
-          "done": false,
-          "extra": [
-            {
-              "label": "Уточнение",
-              "value": "Casual/Safety не входят в план и не засчитываются как его выполнение."
-            }
-          ],
-          "image": "https://static.wikia.nocookie.net/megamitensei/images/6/6b/Nahobino_in_combat.jpg/revision/latest/scale-to-width-down/1280?cb=20240407014228",
-          "link": "https://megamitensei.fandom.com/wiki/Difficulty#Shin_Megami_Tensei_V_/_Vengeance"
-        }
-      ]
     }
   ]
 }
