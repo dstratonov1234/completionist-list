@@ -1,0 +1,15 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "realm",
+      "prompt": "16-bit pixel art fantasy battle background in the style of a classic monster-collecting RPG: a mystical nether realm with a dark castle silhouette on a distant cliff, swirling purple and deep blue sky with faint stars, floating rocks and glowing violet crystals on rocky ground in the foreground, moody dark palette, crisp hard-edged pixels, no anti-aliasing, wide panorama, no characters, no creatures, no text, no letters.",
+      "size": "1536x1024", "background": "opaque", "quality": "medium", "max_width": 1536
+    },
+    {
+      "name": "gem",
+      "prompt": "Single pixel art game icon: a glowing faceted purple-violet magic crystal shard with a bright white highlight and a soft magenta glow, chunky crisp pixels like a 16-bit RPG item sprite, centered, isolated on a fully transparent background, no text.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 192
+    }
+  ]
+}

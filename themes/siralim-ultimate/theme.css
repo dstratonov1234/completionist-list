@@ -1,0 +1,632 @@
+/* Siralim Ultimate — «Экран боя».
+   Пиксельные окна интерфейса Siralim (тёмная заливка, тонкая белая рамка с тёмной внутренней), меню команд
+   с курсором ▶, поле боя на пиксельном реалме, список врагов, карточки отряда с полосой здоровья,
+   окно диалога; на главной — мини-экран боя; заставка — пиксельный портал. */
+
+.gbanner[data-game="siralim-ultimate"],
+.stage-layer[data-game="siralim-ultimate"],
+.sir-portal,
+.sir,
+.sir-backdrop {
+  --sir-ink: #0b0a18;
+  --sir-win: rgba(11, 11, 26, 0.94);
+  --sir-line: #e9ecf5;
+  --sir-line-in: #2d3358;
+  --sir-gold: #ffd04d;
+  --sir-green: #6fe36a;
+  --sir-red: #ff6b6b;
+  --sir-violet: #c99bff;
+  --sir-pixel: "Tiny5", monospace;
+  --sir-text: "Handjet", "Tiny5", sans-serif;
+  --sir-title-h: clamp(240px, 30vw, 360px);
+}
+
+.sir-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* окно интерфейса Siralim */
+.sir-win {
+  position: relative;
+  border: 2px solid var(--sir-line);
+  background: var(--sir-win);
+  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #04040b, 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* курсор меню: белый уголок, прыгает по-пиксельному */
+.sir-cursor {
+  display: inline-block;
+  color: var(--sir-gold);
+  font: 16px/1 var(--sir-pixel);
+  text-shadow: 2px 2px 0 #000;
+}
+
+@keyframes sir-bob { 50% { transform: translateX(3px); } }
+
+.sir-menu-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font: 18px/1 var(--sir-pixel);
+  text-decoration: none;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.sir-menu-item .sir-cursor { visibility: hidden; }
+.sir-menu-item:hover .sir-cursor,
+.sir-menu-item:focus-visible .sir-cursor { visibility: visible; animation: sir-bob 0.6s steps(2) infinite; }
+.sir-menu-item:hover,
+.sir-menu-item:focus-visible { color: var(--sir-gold); outline: none; }
+
+/* карточка отряда: номер и полоса здоровья (полная зелёная — выполнено) */
+.sir-card {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  border: 2px solid var(--sir-line);
+  background: rgba(11, 11, 26, 0.92);
+  box-shadow: inset 0 0 0 2px var(--sir-line-in);
+  color: #fff;
+}
+
+.sir-card-n { font: 16px/1 var(--sir-pixel); color: var(--sir-violet); text-shadow: 2px 2px 0 #000; }
+.sir-card.on .sir-card-n { color: var(--sir-green); }
+
+.sir-hp {
+  position: relative;
+  display: block;
+  height: 8px;
+  border: 1px solid #000;
+  background: #3a1420;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.sir-hp i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: linear-gradient(180deg, #a8ff9c 0 30%, var(--sir-green) 30% 70%, #2f9a35 70%);
+}
+
+.sir-card.on .sir-hp i { width: 100%; }
+
+/* ====================================================================================
+   Главная: мини-экран боя
+   ==================================================================================== */
+
+.gbanner[data-game="siralim-ultimate"] {
+  border: 2px solid var(--sir-line);
+  border-radius: 0;
+  background: var(--sir-ink);
+  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #04040b, 0 10px 26px rgba(0, 0, 0, 0.5);
+}
+
+.gbanner[data-game="siralim-ultimate"]:hover,
+.gbanner[data-game="siralim-ultimate"]:focus-visible {
+  transform: none;
+  border-color: var(--sir-gold);
+  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #04040b, 0 0 10px rgba(255, 208, 77, 0.45);
+}
+
+.sir-ban {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 18px;
+  min-height: 210px;
+  padding: 22px 22px 18px 28px;
+}
+
+.sir-ban-art { position: absolute; inset: 0; z-index: -2; }
+
+.sir-ban-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.sir-ban-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(11, 10, 24, 0.92) 0%, rgba(11, 10, 24, 0.55) 40%, rgba(11, 10, 24, 0.1) 70%, rgba(11, 10, 24, 0.5) 100%),
+    linear-gradient(0deg, rgba(11, 10, 24, 0.9), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.18) 0 2px, transparent 2px 4px);
+}
+
+.gbanner[data-game="siralim-ultimate"]:hover .sir-ban-art img { transform: scale(1.03); }
+
+.sir-ban-main { position: relative; display: flex; align-items: center; gap: 10px; align-self: center; min-width: 0; }
+.sir-ban-main .sir-cursor { font-size: 22px; opacity: 0; transition: opacity 0.2s; }
+.gbanner[data-game="siralim-ultimate"]:hover .sir-ban-main .sir-cursor,
+.gbanner[data-game="siralim-ultimate"]:focus-visible .sir-ban-main .sir-cursor { opacity: 1; animation: sir-bob 0.6s steps(2) infinite; }
+
+.sir-ban-logo {
+  display: block;
+  width: min(380px, 100%);
+  max-height: 120px;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 0 10px rgba(201, 155, 255, 0.55)) drop-shadow(3px 3px 0 #000);
+}
+
+.sir-ban-name { font: 34px/1 var(--sir-pixel); color: #fff; text-shadow: 3px 3px 0 #000; }
+
+.sir-ban-party {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 2px solid var(--sir-line);
+  background: var(--sir-win);
+  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #04040b;
+}
+
+.sir-ban-count { display: flex; align-items: center; gap: 6px; font: 18px/1 var(--sir-pixel); color: #fff; text-shadow: 2px 2px 0 #000; }
+.sir-ban-count img { width: 18px; image-rendering: pixelated; }
+.sir-ban-count b { font-size: 30px; font-weight: 400; color: var(--sir-green); }
+
+.sir-ban-cards { display: grid; grid-template-columns: repeat(6, 38px); gap: 6px; }
+.sir-card-sm { justify-items: center; width: 38px; padding: 5px 4px; }
+.sir-card-sm .sir-hp { width: 100%; height: 6px; }
+.sir-ban-empty { font: 13px/1.3 var(--sir-pixel); color: rgba(255, 255, 255, 0.7); }
+
+/* ====================================================================================
+   Главная: фон при наведении — титульный экран
+   ==================================================================================== */
+
+.stage-layer[data-game="siralim-ultimate"] { background: var(--sir-ink); }
+
+.stage-layer[data-game="siralim-ultimate"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(assets/realm.webp) center bottom / cover no-repeat;
+  image-rendering: pixelated;
+  opacity: 0.35;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 40%);
+}
+
+.sir-stage-frame { position: absolute; inset: 0 0 auto; }
+
+/* ====================================================================================
+   Заставка: пиксельный портал (слой живёт и на главной — без html[data-game])
+   ==================================================================================== */
+
+.sir-portal { position: fixed; inset: 0; z-index: 75; pointer-events: none; }
+.sir-portal canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+
+.sir-portal-title {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(1000px, 92vw);
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+.sir-portal-title span {
+  display: inline-block;
+  padding: 10px 22px;
+  border: 3px solid #fff;
+  background: rgba(11, 10, 24, 0.86);
+  box-shadow: inset 0 0 0 3px #4b3a8a, 0 0 0 3px #000;
+  font: clamp(26px, 5vw, 64px)/1.05 "Tiny5", monospace;
+  color: #fff;
+  text-shadow: 4px 4px 0 #2a1650;
+}
+
+.sir-portal-title.in { animation: sir-title-in 0.45s steps(6) forwards; }
+.sir-portal-title.out { animation: sir-title-out 0.25s steps(4) forwards; }
+
+@keyframes sir-title-in {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes sir-title-out {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  to { opacity: 0; transform: translate(-50%, -50%) scale(1.15); }
+}
+
+/* ====================================================================================
+   Страница игры
+   ==================================================================================== */
+
+.sir-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: center bottom / cover no-repeat;
+  image-rendering: pixelated;
+  opacity: 0.35;
+  transform: scale(1.1);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 40%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 40%);
+}
+
+.sir-page {
+  position: relative;
+  overflow-x: clip;
+  min-height: 100vh;
+  padding-bottom: 60px;
+  color: #eeeef8;
+  font: 19px/1.35 var(--sir-text);
+}
+
+/* ---------- титульный экран ---------- */
+
+.sir-title {
+  position: relative;
+  isolation: isolate;
+  height: var(--sir-title-h);
+  overflow: hidden;
+  border-bottom: 2px solid var(--sir-line);
+  box-shadow: 0 2px 0 var(--sir-line-in);
+}
+
+.sir-title-art { position: absolute; inset: 0; z-index: -3; }
+.sir-title-art img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+
+.sir-title-art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(11, 10, 24, 0.9) 0%, rgba(11, 10, 24, 0.45) 45%, rgba(11, 10, 24, 0.05) 75%),
+    linear-gradient(0deg, rgba(11, 10, 24, 0.92), transparent 55%);
+}
+
+/* лёгкие строки экрана, как у пиксельной игры на ЭЛТ */
+.sir-title-scan {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.16) 0 2px, transparent 2px 4px);
+  pointer-events: none;
+}
+
+.sir-title-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 14px;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 26px;
+}
+
+.sir-title-logo {
+  display: block;
+  width: min(460px, 70vw);
+  max-height: 150px;
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(0 0 14px rgba(201, 155, 255, 0.6)) drop-shadow(4px 4px 0 #000);
+}
+
+.sir-title-name { margin: 0; font: clamp(32px, 6vw, 64px)/1 var(--sir-pixel); color: #fff; text-shadow: 4px 4px 0 #000; }
+
+.sir-title-menu { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; }
+.sir-title-menu .sir-menu-item .sir-cursor { visibility: visible; animation: sir-bob 0.6s steps(2) infinite; }
+
+.sir-gems { display: inline-flex; align-items: center; gap: 8px; font: 20px/1 var(--sir-pixel); color: #fff; text-shadow: 2px 2px 0 #000; }
+.sir-gems img { width: 22px; image-rendering: pixelated; filter: drop-shadow(0 0 6px rgba(201, 155, 255, 0.8)); }
+.sir-gems b { font-size: 30px; font-weight: 400; color: var(--sir-green); }
+
+/* ---------- строка сообщения ---------- */
+
+.sir-msg {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 1152px;
+  margin: 18px auto 0;
+  padding: 10px 14px;
+  border: 2px solid var(--sir-line);
+  background: var(--sir-win);
+  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #04040b;
+}
+
+.sir-msg-text { flex: 1; min-height: 1.2em; margin: 0; font: 17px/1.2 var(--sir-pixel); color: #fff; text-shadow: 2px 2px 0 #000; }
+
+.sir-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  color: #fff;
+  font: 15px/1 var(--sir-pixel);
+  text-decoration: none;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.sir-back:hover,
+.sir-back:focus-visible { color: var(--sir-gold); outline: none; }
+
+.sir-key {
+  display: inline-block;
+  padding: 3px 6px 2px;
+  border: 2px solid #fff;
+  background: #232848;
+  box-shadow: 0 2px 0 #000;
+  font: 12px/1 var(--sir-pixel);
+}
+
+/* ---------- экран боя ---------- */
+
+.sir-battle {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr) 260px;
+  grid-template-areas: "cmd field enemies" "party party party";
+  gap: 12px;
+  max-width: 1200px;
+  margin: 12px auto 0;
+  padding: 0 24px;
+}
+
+.sir-commands { grid-area: cmd; }
+
+.sir-cmd-list {
+  list-style: none;
+  margin: 0;
+  padding: 10px 8px;
+  max-height: 420px;
+  overflow-y: auto;
+  outline: none;
+}
+
+.sir-cmd-list:focus-visible { box-shadow: inset 0 0 0 2px var(--sir-gold); }
+
+.sir-cmd {
+  display: grid;
+  grid-template-columns: 16px 26px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  padding: 7px 8px 7px 4px;
+  cursor: pointer;
+  color: #fff;
+  font: 15px/1.15 var(--sir-pixel);
+  text-shadow: 2px 2px 0 #000;
+}
+
+.sir-cmd .sir-cursor { visibility: hidden; font-size: 14px; }
+.sir-cmd-n { color: var(--sir-violet); }
+.sir-cmd.done .sir-cmd-n { color: var(--sir-green); }
+.sir-cmd-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sir-cmd:hover { background: rgba(255, 255, 255, 0.06); }
+.sir-cmd[aria-selected="true"] { background: linear-gradient(90deg, #2b2f60, rgba(43, 47, 96, 0.2)); color: var(--sir-gold); }
+.sir-cmd[aria-selected="true"] .sir-cursor { visibility: visible; animation: sir-bob 0.6s steps(2) infinite; }
+
+.sir-field {
+  grid-area: field;
+  display: grid;
+  place-items: center;
+  min-height: 420px;
+  overflow: hidden;
+  background: #0b0a18 url(assets/realm.webp) center bottom / cover no-repeat;
+  image-rendering: pixelated;
+}
+
+.sir-field-art { position: relative; display: grid; place-items: center; width: 100%; height: 100%; padding: 22px; }
+
+.sir-field-art img {
+  display: block;
+  width: min(100%, 560px);
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 2px solid var(--sir-line);
+  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #000, 0 14px 30px rgba(0, 0, 0, 0.6);
+  cursor: zoom-in;
+}
+
+/* спрайт с вики — крупно и с чёткими пикселями */
+.sir-field.sprite .sir-field-art img {
+  width: auto;
+  height: min(300px, 60%);
+  aspect-ratio: auto;
+  border: 0;
+  box-shadow: none;
+  image-rendering: pixelated;
+  filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.6));
+}
+
+.sir-field:not(.done) .sir-field-art img { filter: grayscale(0.7) brightness(0.65); }
+.sir-field-blank { font: 120px/1 var(--sir-pixel); color: rgba(255, 255, 255, 0.18); }
+
+/* удар: короткая вспышка картинки */
+.sir-field.sir-flash .sir-field-art img { animation: sir-flash 0.28s steps(2) 1; }
+@keyframes sir-flash { 50% { filter: brightness(2.6) saturate(0.4); } }
+
+.sir-field-fx { position: absolute; inset: 0; pointer-events: none; }
+
+.sir-dmg {
+  position: absolute;
+  top: 34%;
+  transform: translateX(-50%);
+  font: 30px/1 var(--sir-pixel);
+  color: #d8d8e8;
+  text-shadow: 3px 3px 0 #000, -1px -1px 0 #000;
+  animation: sir-dmg 1s steps(10) forwards;
+}
+
+.sir-dmg.on { color: var(--sir-green); }
+
+@keyframes sir-dmg {
+  0% { opacity: 0; transform: translate(-50%, 10px); }
+  15% { opacity: 1; transform: translate(-50%, -6px); }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(-50%, -46px); }
+}
+
+.sir-enemies { grid-area: enemies; display: flex; flex-direction: column; min-height: 0; }
+
+.sir-enemies-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px 8px;
+  border-bottom: 2px solid var(--sir-line-in);
+  font: 15px/1 var(--sir-pixel);
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.sir-enemies-head b { font-weight: 400; color: var(--sir-green); }
+
+.sir-enemy-list { list-style: none; margin: 0; padding: 6px 10px 10px; max-height: 370px; overflow-y: auto; }
+
+.sir-enemy {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 6px;
+  padding: 3px 0;
+  font: 14px/1.2 var(--sir-pixel);
+  color: var(--sir-red);
+  text-shadow: 2px 2px 0 #000;
+}
+
+.sir-enemy i { font-style: normal; }
+.sir-enemy.on { color: #c9cbe0; }
+.sir-enemy.on i { color: var(--sir-green); }
+
+.sir-enemy-label {
+  margin: 8px 0 3px;
+  font: 12px/1 var(--sir-pixel);
+  color: var(--sir-gold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sir-enemy-label:first-child { margin-top: 2px; }
+
+/* ---------- отряд ---------- */
+
+.sir-party {
+  grid-area: party;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.sir-card-lg {
+  margin: 0;
+  padding: 10px 10px 12px;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s steps(2), border-color 0.15s;
+}
+
+.sir-card-lg .sir-card-n { font-size: 20px; }
+
+.sir-card-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.3em;
+  font: 15px/1.15 var(--sir-text);
+  color: #d9daea;
+}
+
+.sir-card-lg:hover { transform: translateY(-2px); }
+.sir-card-lg.cur { border-color: var(--sir-gold); box-shadow: inset 0 0 0 2px #6b5520, 0 0 10px rgba(255, 208, 77, 0.4); }
+.sir-card-lg:focus-visible { outline: 2px solid var(--sir-gold); outline-offset: 3px; }
+
+/* ---------- окно диалога ---------- */
+
+.sir-dialog {
+  max-width: 1152px;
+  margin: 14px auto 0;
+  padding: 0 18px 16px;
+}
+
+.sir-dialog-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  margin: 0 -18px 12px;
+  padding: 12px 18px 10px;
+  border-bottom: 2px solid var(--sir-line-in);
+  font: 21px/1.2 var(--sir-text);
+  font-weight: 600;
+  color: #fff;
+}
+
+.sir-dialog-n { font: 18px/1 var(--sir-pixel); color: var(--sir-violet); text-shadow: 2px 2px 0 #000; }
+
+.sir-state {
+  padding: 3px 8px 2px;
+  border: 2px solid var(--sir-red);
+  font: 12px/1 var(--sir-pixel);
+  color: var(--sir-red);
+  text-shadow: 1px 1px 0 #000;
+}
+
+.sir-state.on { border-color: var(--sir-green); color: var(--sir-green); }
+
+.sir-dialog-body { display: flex; flex-direction: column; gap: 6px; cursor: default; }
+.sir-line { margin: 0; }
+.sir-line b { font-weight: 600; color: var(--sir-gold); }
+.sir-details { color: #fff; }
+.sir-note { margin: 4px 0 0; padding-left: 12px; border-left: 3px solid var(--sir-violet); font-style: italic; }
+.sir-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 4px; }
+.sir-gallery img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border: 2px solid var(--sir-line); cursor: zoom-in; }
+.sir-lore { align-self: flex-start; margin-top: 8px; font-size: 15px; }
+
+.sir-nav .sir-menu-item .sir-cursor { visibility: visible; }
+
+.sir-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1152px;
+  margin: 26px auto 0;
+  padding: 0 24px;
+}
+
+/* ---------- узкий экран ---------- */
+
+@media (max-width: 980px) {
+  .sir-battle { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "field field" "cmd enemies" "party party"; }
+  .sir-field { min-height: 300px; }
+  .sir-cmd-list,
+  .sir-enemy-list { max-height: 300px; }
+}
+
+@media (max-width: 640px) {
+  .sir-battle { grid-template-columns: minmax(0, 1fr); grid-template-areas: "field" "cmd" "enemies" "party"; padding: 0 12px; }
+  .sir-msg,
+  .sir-dialog { margin-left: 12px; margin-right: 12px; }
+  .sir-msg { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .sir-field { min-height: 240px; }
+  .sir-party { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sir-title-text { padding: 0 16px 20px; }
+  .sir-ban { grid-template-columns: minmax(0, 1fr); padding: 18px 16px 16px; }
+  .sir-ban-party { justify-items: start; }
+  .sir-ban-cards { grid-template-columns: repeat(6, 32px); }
+  .sir-card-sm { width: 32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sir-cursor,
+  .sir-card-lg,
+  .sir-ban-art img { animation: none !important; transition: none; }
+}

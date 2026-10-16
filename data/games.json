@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-15",
-  "build": "707f92dfaa",
+  "build": "f8f5643a86",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -42,6 +42,44 @@
         "headingSpacing": "0.05em",
         "radius": 2,
         "heroPosition": "right 28%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "siralim-ultimate",
+      "title": "Siralim Ultimate",
+      "status": "completed",
+      "started": "2026-09",
+      "finished": "2026-10-15",
+      "aliases": [
+        "Siralim"
+      ],
+      "steamAppId": 1289810,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1289810/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1289810/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1289810/logo.png",
+      "goals": {
+        "done": 6,
+        "total": 6
+      },
+      "theme": {
+        "bg": "#0b0a18",
+        "surface": "#15132a",
+        "text": "#eeeef8",
+        "accent": "#6fe36a",
+        "accent2": "#c99bff",
+        "fonts": [
+          "Tiny5",
+          "Handjet:wght@400;500;600;700"
+        ],
+        "displayFont": "Tiny5",
+        "headingFont": "Tiny5",
+        "bodyFont": "Handjet",
+        "bodySize": 18,
+        "headingWeight": 400,
+        "radius": 0,
+        "heroPosition": "center 35%",
         "css": true,
         "js": true
       }
