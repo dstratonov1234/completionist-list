@@ -1,10 +1,16 @@
-// Shin Megami Tensei V: Vengeance — «Компендиум демонов».
-// Условия закрытия — записи компендиума: карточки с номером-«уровнем»; у невыполненных — красная плашка
-// «Не выполнено», как «Unreg.» у незарегистрированного демона, и приглушённый арт. Карточка открывает экран
-// анализа: арт на светящейся воде, сведения и чек-лист по бокам, ◀ ▶ листают цели. Прогресс — фаза луны
-// (как счётчик луны в углу экрана игры), по группам — значки ходов (Press Turn). Магацухи: красные капли
-// поднимаются по экрану и тянутся за курсором. Вход — багровые круги расцветают из баннера ещё на главной
-// (cover), заливают экран, проявляется название; на странице игры круги лопаются и открывают её.
+// Shin Megami Tensei V: Vengeance — «Компендиум».
+// Всё своё, по мотивам интерфейса SMT V:
+//  · баннер на главной — слот сохранения: арт, логотип, фаза луны по прогрессу и шкала Магацухи,
+//    при наведении въезжает голубая полоса выбора, как курсор в меню;
+//  · страница — экран игры: сверху HUD (луна с числом выполненных, шкала Магацухи), титульный экран
+//    компендиума, вкладки «рас» (группы условий) с подсказками L/R и значками ходов, арена — цели стоят
+//    на светящейся воде, выбранная крупно в центре, остальные по бокам; невыполненные — силуэты, как
+//    незарегистрированные демоны; при выборе под ногами вспыхивает круг призыва; по бокам — таблички
+//    экрана статуса (номер-«уровень», раса, сведения, «навыки» — чек-лист); ниже — список компендиума;
+//    в углу — подсказки кнопок (B — назад, L/R — группа, ◀▶ — условие);
+//  · капли Магацухи поднимаются по экрану, тянутся за курсором и за выполненными целями;
+//  · заставка — плоские багровые круги, как на обложке Vengeance, расцветают из баннера ещё на главной,
+//    поверх проступает огромная «V» и название; на странице круги лопаются и открывают экран.
 (() => {
   "use strict";
 
@@ -15,25 +21,48 @@
     ["counts", "Как засчитываем"],
   ];
 
-  // ---------- заставка: круги Магацухи ----------
-  const PALETTE = ["#5a0a16", "#7d0f20", "#a3162c", "#c81f38", "#3a0610", "#e8344b", "#8e1226"];
-  const BASE = "#2a050c";
-  const COVER_MS = 720; // круги закрывают экран целиком к этому моменту
-  const GROW = 0.42; // с — рост одного круга
-  const SPREAD = 0.34; // с — волна от точки клика до дальнего угла
-  const FILL = [0.36, 0.66]; // с — подложка под кругами проявляется плавно, чтобы не осталось просветов
-  const OPEN = { pop: 0.34, spread: 0.42, fill: 0.26 }; // с — лопание кругов при открытии
-  const HOLD = { direct: 650, repeat: 260, handoff: 280 }; // мс — пауза с названием перед открытием
-
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
+  const SCALE = [1, 0.56, 0.4]; // арена: масштаб выбранной цели и соседей
   const easeOut = (x) => 1 - Math.pow(1 - x, 3);
   const easeIn = (x) => x * x * x;
+  let uid = 0;
+
+  // ---------- луна: фаза по доле выполненных условий (0 — новолуние, 1 — полнолуние) ----------
+  function litPath(cx, cy, r, k) {
+    if (k <= 0.001) return "";
+    if (k >= 0.999) return `M${cx - r},${cy}a${r},${r} 0 1,0 ${2 * r},0a${r},${r} 0 1,0 ${-2 * r},0Z`;
+    const rx = (r * Math.abs(1 - 2 * k)).toFixed(2);
+    return `M${cx},${cy - r}A${r},${r} 0 0,1 ${cx},${cy + r}A${rx},${r} 0 0,${k < 0.5 ? 0 : 1} ${cx},${cy - r}Z`;
+  }
+
+  function moonSvg(assets, k, cls) {
+    const id = `smt-lit-${++uid}`;
+    return `
+      <svg class="${cls}" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+        <defs><clipPath id="${id}"><path d="${litPath(100, 100, 85.5, k)}"/></clipPath></defs>
+        <image class="smt-moon-dark" href="${assets}moon.webp" x="6" y="6" width="188" height="190"/>
+        <image href="${assets}moon.webp" x="6" y="6" width="188" height="190" clip-path="url(#${id})"/>
+      </svg>`;
+  }
+
+  const gauge = (k) => `<span class="smt-gauge" style="--p:${clamp01(k).toFixed(3)}"><i></i></span>`;
+
+  // ---------- заставка: плоские круги Магацухи и «V» ----------
+  const PALETTE = ["#6e0c1b", "#8e1226", "#b3182f", "#d42340", "#4a0812", "#ec3a52", "#5a0a16"];
+  const BASE = "#250409";
+  const COVER_MS = 760;
+  const GROW = 0.42; // с — рост одного круга
+  const SPREAD = 0.34; // с — волна от точки клика до дальнего угла
+  const FILL = [0.36, 0.66]; // с — подложка проявляется плавно, чтобы не осталось просветов
+  const VSLASH = [0.34, 0.62]; // с — две черты «V» прочерчиваются
+  const OPEN = { pop: 0.34, spread: 0.42, fill: 0.26, v: 0.18 };
+  const HOLD = { direct: 650, repeat: 260, handoff: 280 };
 
   function makeBloom(layer, game, esc, ox, oy) {
     const canvas = document.createElement("canvas");
     const title = document.createElement("div");
     title.className = "smt-bloom-title";
-    title.innerHTML = `<span>${esc(game.title)}</span><i></i>`;
+    title.innerHTML = `<span>${esc(game.title)}</span>`;
     layer.append(canvas, title);
     const dpr = Math.min(1.5, window.devicePixelRatio || 1);
     const w = window.innerWidth;
@@ -44,23 +73,29 @@
     g.scale(dpr, dpr);
     const diag = Math.hypot(w, h);
     const far = Math.max(Math.hypot(ox, oy), Math.hypot(w - ox, oy), Math.hypot(ox, h - oy), Math.hypot(w - ox, h - oy)) || 1;
-    const n = Math.round(42 + Math.min(1.6, (w * h) / (1440 * 900)) * 34);
-    const circles = [{ x: ox, y: oy, r: diag * 0.2, c: "#a3162c", d: 0, delay: 0 }];
+    const n = Math.round(44 + Math.min(1.6, (w * h) / (1440 * 900)) * 34);
+    const circles = [{ x: ox, y: oy, r: diag * 0.2, c: "#b3182f", ring: false, d: 0, delay: 0 }];
     for (let i = 0; i < n; i++) {
       const x = Math.random() * w;
       const y = Math.random() * h;
       const d = Math.hypot(x - ox, y - oy) / far;
-      circles.push({ x, y, r: diag * (0.05 + Math.random() * 0.15), c: PALETTE[i % PALETTE.length], d, delay: d * SPREAD + Math.random() * 0.07 });
+      circles.push({ x, y, r: diag * (0.04 + Math.random() * 0.15), c: PALETTE[i % PALETTE.length], ring: i % 5 === 0, d, delay: d * SPREAD + Math.random() * 0.07 });
     }
-    // мелкие брызги при лопании
-    for (const c of circles) c.pop = Math.random() * 0.12 + (1 - c.d) * OPEN.spread * 0.15 + c.d * OPEN.spread * 0.85;
-    return { layer, canvas, title, g, w, h, circles, drops: [], ox, oy };
+    for (const c of circles) c.pop = Math.random() * 0.12 + c.d * OPEN.spread;
+    // «V» Vengeance: две черты сходятся под названием
+    const cx = w / 2;
+    const v = [
+      [cx - Math.min(w * 0.3, h * 0.55), h * 0.12],
+      [cx, h * 0.8],
+      [cx + Math.min(w * 0.34, h * 0.62), h * 0.06],
+    ];
+    return { layer, canvas, title, g, w, h, circles, drops: [], v };
   }
 
   function grid(g, w, h, alpha) {
     if (alpha <= 0) return;
     g.save();
-    g.globalAlpha = alpha * 0.22;
+    g.globalAlpha = alpha * 0.2;
     g.strokeStyle = "#ff4a5f";
     g.lineWidth = 1;
     g.beginPath();
@@ -70,25 +105,56 @@
     g.restore();
   }
 
-  function disc(g, x, y, r, color, alpha) {
+  // плоский круг, как на обложке: заливка, тёмное ядро-тень и тонкий светлый край; часть — только кольца
+  function disc(g, c, x, y, r, alpha) {
     if (r <= 0.5 || alpha <= 0) return;
     g.globalAlpha = alpha;
-    const grad = g.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.05, x, y, r);
-    grad.addColorStop(0, "#ff6a7c");
-    grad.addColorStop(0.18, color);
-    grad.addColorStop(1, "#14020590");
-    g.fillStyle = grad;
     g.beginPath();
     g.arc(x, y, r, 0, Math.PI * 2);
-    g.fill();
-    g.globalAlpha = alpha * 0.55;
-    g.strokeStyle = "#ff8090";
-    g.lineWidth = 1.2;
-    g.stroke();
+    if (c.ring) {
+      g.lineWidth = Math.max(2, r * 0.06);
+      g.strokeStyle = c.c;
+      g.stroke();
+    } else {
+      g.fillStyle = c.c;
+      g.fill();
+      g.globalAlpha = alpha * 0.35;
+      g.beginPath();
+      g.arc(x + r * 0.12, y + r * 0.14, r * 0.72, 0, Math.PI * 2);
+      g.fillStyle = "#1a0207";
+      g.fill();
+      g.globalAlpha = alpha * 0.7;
+      g.beginPath();
+      g.arc(x, y, r, 0, Math.PI * 2);
+      g.lineWidth = 1.2;
+      g.strokeStyle = "#ff7a8b";
+      g.stroke();
+    }
     g.globalAlpha = 1;
   }
 
-  // Наплыв: t — секунды от начала. Возвращает true, когда экран закрыт полностью.
+  function vslash(g, b, p, alpha) {
+    if (p <= 0 || alpha <= 0) return;
+    const [a, m, c] = b.v;
+    const seg = (from, to, k) => [from[0] + (to[0] - from[0]) * k, from[1] + (to[1] - from[1]) * k];
+    const l1 = clamp01(p * 2);
+    const l2 = clamp01(p * 2 - 1);
+    g.save();
+    g.lineCap = "round";
+    g.lineJoin = "miter";
+    for (const [width, color, a2] of [[34, "#7a0a1a", 0.9], [18, "#ff3b54", 1], [5, "#fff2f4", 1]]) {
+      g.globalAlpha = alpha * a2;
+      g.lineWidth = width;
+      g.strokeStyle = color;
+      g.beginPath();
+      g.moveTo(...a);
+      g.lineTo(...seg(a, m, l1));
+      if (l2 > 0) g.lineTo(...seg(m, c, l2));
+      g.stroke();
+    }
+    g.restore();
+  }
+
   function drawIn(b, t) {
     const { g, w, h } = b;
     g.clearRect(0, 0, w, h);
@@ -99,12 +165,12 @@
       g.fillRect(0, 0, w, h);
       g.globalAlpha = 1;
     }
-    for (const c of b.circles) disc(g, c.x, c.y, c.r * easeOut(clamp01((t - c.delay) / GROW)), c.c, 1);
+    for (const c of b.circles) disc(g, c, c.x, c.y, c.r * easeOut(clamp01((t - c.delay) / GROW)), 1);
     grid(g, w, h, fill);
-    return t >= FILL[1];
+    vslash(g, b, easeOut(clamp01((t - VSLASH[0]) / (VSLASH[1] - VSLASH[0]))), 1);
+    return t >= Math.max(FILL[1], VSLASH[1]);
   }
 
-  // Лопание: u — секунды от начала открытия. Возвращает true, когда всё исчезло.
   function drawOut(b, u, dt) {
     const { g, w, h } = b;
     g.clearRect(0, 0, w, h);
@@ -131,10 +197,10 @@
         continue;
       }
       alive = true;
-      const s = 1 - easeIn(k);
-      disc(g, c.x, c.y - k * 26, c.r * (1 + k * 0.12) * s, c.c, 1 - k * 0.4);
+      disc(g, c, c.x, c.y - k * 26, c.r * (1 + k * 0.12) * (1 - easeIn(k)), 1 - k * 0.4);
     }
     grid(g, w, h, fill);
+    vslash(g, b, 1, 1 - clamp01(u / OPEN.v));
     for (const d of b.drops) {
       d.t += dt;
       if (d.t >= d.life) continue;
@@ -145,7 +211,7 @@
       g.globalAlpha = 1 - d.t / d.life;
       g.fillStyle = "#ff4a5f";
       g.beginPath();
-      g.arc(d.x, d.y, d.r * (1 - d.t / d.life * 0.5), 0, Math.PI * 2);
+      g.arc(d.x, d.y, d.r * (1 - (d.t / d.life) * 0.5), 0, Math.PI * 2);
       g.fill();
     }
     g.globalAlpha = 1;
@@ -162,18 +228,54 @@
     }
   }
 
+  // ---------- первый кадр страницы: арт титульного экрана (страница и фон главной при наведении) ----------
+  function titleArt(art) {
+    return `<div class="smt-title-art">${art.hero('alt=""')}</div><div class="smt-title-grid"></div>`;
+  }
+
   GameThemes.register("shin-megami-tensei-v-vengeance", {
-    // С главной: из баннера расцветают багровые круги и заливают растворяющийся список, проявляется название.
+    // ---------- главная: слот сохранения ----------
+    banner(b) {
+      const { done, total } = b.progress;
+      const k = total ? done / total : 0;
+      const logo = b.art.logo('class="smt-slot-logo" alt=""');
+      b.el.innerHTML = `
+        <span class="smt-slot">
+          <span class="smt-slot-art">${b.art.hero('alt="" loading="lazy"')}</span>
+          <span class="smt-slot-grid"></span>
+          <span class="smt-slot-cursor"></span>
+          <span class="smt-slot-main">
+            ${logo || `<span class="smt-slot-name" aria-hidden="true">${b.esc(b.game.title)}</span>`}
+            <span class="smt-sr">${b.esc(b.game.title)}</span>
+          </span>
+          <span class="smt-slot-data">
+            ${moonSvg(b.assets, k, "smt-slot-moon")}
+            <span class="smt-slot-count">${total ? `<b>${done}</b><span>/${total}</span>` : `<span>—</span>`}</span>
+            <span class="smt-slot-label">${total ? b.plural(total, "условие закрытия", "условия закрытия", "условий закрытия") : "Условия ещё не заданы"}</span>
+            ${total ? gauge(k) : ""}
+          </span>
+        </span>`;
+    },
+
+    // ---------- главная: фон при наведении — первый кадр страницы (HUD и титульный экран) ----------
+    stage(s) {
+      s.el.innerHTML = `
+        <div class="smt-stage-frame">
+          <div class="smt-hud smt-hud-ghost"></div>
+          <div class="smt-title smt-title-ghost">${titleArt(s.art)}</div>
+        </div>`;
+    },
+
+    // ---------- главная: начало заставки ----------
     cover(t) {
       const banner = document.querySelector('.gbanner[data-game="shin-megami-tensei-v-vengeance"]')?.getBoundingClientRect();
       const ox = banner ? banner.left + banner.width * 0.62 : window.innerWidth / 2;
       const oy = banner ? banner.top + banner.height / 2 : window.innerHeight / 2;
-      const layer = t.layer("smt-bloom");
-      const b = makeBloom(layer, t.game, t.esc, ox, oy);
+      const b = makeBloom(t.layer("smt-bloom"), t.game, t.esc, ox, oy);
       t.data.bloom = b;
       t.data.started = performance.now();
       t.data.seen = seenBefore();
-      setTimeout(() => b.title.classList.add("in"), 300);
+      setTimeout(() => b.title.classList.add("in"), 380);
       return new Promise((resolve) => {
         const start = performance.now();
         let done = false;
@@ -189,34 +291,366 @@
           else requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
-        setTimeout(finish, COVER_MS + 200); // если rAF стоит (фоновая вкладка) — экран всё равно закрыт
+        setTimeout(finish, COVER_MS + 200);
       });
     },
 
+    // ---------- страница игры — целиком своя ----------
     page(ctx) {
-      const { root, el, esc, assets, game } = ctx;
+      const { root, esc, assets, game } = ctx;
       const cond = ctx.conditions;
-      const goals = ctx.goals();
+      const groups = (cond?.groups ?? []).filter((gr) => (gr.goals ?? []).length);
+      const goals = groups.flatMap((gr) => gr.goals);
       const done = goals.filter((g) => g.done).length;
       const total = goals.length;
+      const k = total ? done / total : 0;
       const motion = !ctx.reducedMotion;
       const frame = []; // задачи единственного rAF-цикла
-      root.classList.add("smt");
+      const sel = { race: 0, i: 0 };
 
-      intro();
+      root.classList.add("smt");
+      root.innerHTML = pageHtml();
+      const $ = (q) => root.querySelector(q);
+      const arena = $(".smt-arena");
+      const lineup = $(".smt-lineup");
+
       backdrop();
-      compendium();
-      moon();
-      turns();
+      if (groups.length) {
+        index(false);
+        races();
+        keys();
+        selectRace(firstRace(), firstGoal(firstRace()), false);
+      }
       magatsuhi();
+      intro();
       if (frame.length) ctx.loop((now, dt) => frame.forEach((fn) => fn(now, dt)));
 
-      return () => {
-        root.classList.remove("smt");
-        document.documentElement.classList.remove("smt-lock");
-      };
+      return () => root.classList.remove("smt");
 
-      // ---------- вход: круги лопаются и открывают страницу ----------
+      // ---------- разметка ----------
+      function pageHtml() {
+        const logo = ctx.art.logo('class="smt-title-logo" alt=""');
+        const nb = ctx.neighbors ?? {};
+        return `
+          <div class="smt-page">
+            <header class="smt-hud">
+              <div class="smt-hud-moon" role="img" aria-label="Выполнено ${done} из ${total}">
+                ${moonSvg(assets, k, "smt-hud-moonsvg")}
+                <span class="smt-hud-moonval"><b>${done}</b>/${total}</span>
+              </div>
+              <div class="smt-hud-mag" aria-hidden="true">
+                <span class="smt-hud-maglabel">Магацухи</span>
+                ${gauge(k)}
+              </div>
+            </header>
+
+            <section class="smt-title">
+              ${titleArt(ctx.art)}
+              <div class="smt-title-text">
+                ${logo}
+                <h1 class="${logo ? "smt-sr" : "smt-title-name"}">${esc(game.title)}</h1>
+                <p class="smt-title-kicker">Компендиум условий закрытия</p>
+                ${total ? `<p class="smt-title-count"><b>${done}</b><span>/${total}</span><small>выполнено</small></p>` : ""}
+              </div>
+            </section>
+
+            ${
+              groups.length
+                ? `
+            <nav class="smt-races" aria-label="Группы условий">
+              <button type="button" class="smt-btn smt-btn-sh" data-race-step="-1" aria-label="Предыдущая группа">L</button>
+              <div class="smt-race-tabs" role="tablist">
+                ${groups
+                  .map((gr, ri) => {
+                    const d = gr.goals.filter((g) => g.done).length;
+                    return `
+                  <button type="button" role="tab" class="smt-race" id="smt-race-${ri}" data-race="${ri}" aria-controls="smt-arena" aria-selected="false" tabindex="-1">
+                    <span class="smt-race-name">${esc(gr.title)}</span>
+                    <span class="smt-race-count">${d}/${gr.goals.length}</span>
+                    <span class="smt-race-turns" aria-hidden="true">${gr.goals.map((g) => `<i class="${g.done ? "on" : ""}"></i>`).join("")}</span>
+                  </button>`;
+                  })
+                  .join("")}
+              </div>
+              <button type="button" class="smt-btn smt-btn-sh" data-race-step="1" aria-label="Следующая группа">R</button>
+            </nav>
+            <p class="smt-race-note" hidden></p>
+
+            <section class="smt-arena" id="smt-arena" role="tabpanel">
+              <div class="smt-floor" aria-hidden="true"><i class="smt-caustics"></i><i class="smt-summon"></i></div>
+              <div class="smt-plate smt-plate-l" aria-live="polite"></div>
+              <div class="smt-stagebox" data-gallery>
+                <div class="smt-lineup" role="listbox" aria-label="Условия группы" tabindex="0"></div>
+                <button type="button" class="smt-arrow smt-arrow-l" data-step="-1" aria-label="Предыдущее условие">◀</button>
+                <button type="button" class="smt-arrow smt-arrow-r" data-step="1" aria-label="Следующее условие">▶</button>
+              </div>
+              <div class="smt-plate smt-plate-r"></div>
+            </section>
+
+            <section class="smt-index" aria-labelledby="smt-index-head">
+              <h2 class="smt-sec" id="smt-index-head">Список компендиума</h2>
+              <ol class="smt-index-list"></ol>
+            </section>`
+                : `<p class="smt-empty">Условия закрытия для этой игры ещё не заданы.</p>`
+            }
+
+            <footer class="smt-prompts">
+              ${groups.length ? `<span class="smt-prompt"><span class="smt-btn">◀▶</span>Условие</span><span class="smt-prompt"><span class="smt-btn">L</span><span class="smt-btn">R</span>Группа</span>` : ""}
+              ${nb.prev ? `<a class="smt-prompt" href="${esc(nb.prev.href)}"><span class="smt-btn">ZL</span>${esc(nb.prev.title)}</a>` : ""}
+              ${nb.next ? `<a class="smt-prompt" href="${esc(nb.next.href)}"><span class="smt-btn">ZR</span>${esc(nb.next.title)}</a>` : ""}
+              <a class="smt-prompt smt-prompt-back" href="#/"><span class="smt-btn smt-btn-b">B</span>Назад</a>
+            </footer>
+          </div>`;
+      }
+
+      function stateTag(g) {
+        return g.done ? `<span class="smt-tag smt-tag-on">Выполнено</span>` : `<span class="smt-tag">Не выполнено</span>`;
+      }
+
+      // ---------- фон: багровая сетка с каплями, лёгкий параллакс ----------
+      function backdrop() {
+        const bg = ctx.layer("smt-backdrop");
+        bg.style.backgroundImage = `url("${assets}grid.webp")`;
+        if (!motion) return;
+        let y = -1;
+        frame.push(() => {
+          if (window.scrollY === y) return;
+          y = window.scrollY;
+          bg.style.transform = `translate3d(0, ${(-y * 0.08).toFixed(1)}px, 0) scale(1.12)`;
+        });
+      }
+
+      // ---------- вкладки рас ----------
+      function firstRace() {
+        const ri = groups.findIndex((gr) => gr.goals.some((g) => !g.done));
+        return ri < 0 ? 0 : ri;
+      }
+
+      function firstGoal(ri) {
+        const i = groups[ri].goals.findIndex((g) => !g.done);
+        return i < 0 ? 0 : i;
+      }
+
+      function races() {
+        ctx.listen($(".smt-races"), "click", (e) => {
+          const tab = e.target.closest(".smt-race");
+          if (tab) return selectRace(+tab.dataset.race, 0, true);
+          const st = e.target.closest("[data-race-step]");
+          if (st) stepRace(+st.dataset.raceStep, true);
+        });
+        ctx.listen($(".smt-race-tabs"), "keydown", (e) => {
+          const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+          if (d) {
+            e.preventDefault();
+            stepRace(d, true);
+          } else if (e.key === "Home" || e.key === "End") {
+            e.preventDefault();
+            selectRace(e.key === "Home" ? 0 : groups.length - 1, 0, true);
+          } else return;
+          root.querySelector(`#smt-race-${sel.race}`)?.focus();
+        });
+      }
+
+      function stepRace(d, user) {
+        selectRace((sel.race + d + groups.length) % groups.length, 0, user);
+      }
+
+      function selectRace(ri, i, user) {
+        sel.race = ri;
+        root.querySelectorAll(".smt-race").forEach((t, j) => {
+          t.setAttribute("aria-selected", String(j === ri));
+          t.tabIndex = j === ri ? 0 : -1;
+        });
+        arena.setAttribute("aria-labelledby", `smt-race-${ri}`);
+        if (user) {
+          const tab = root.querySelector(`#smt-race-${ri}`);
+          const box = $(".smt-race-tabs");
+          if (tab && box) box.scrollTo({ left: tab.offsetLeft - (box.clientWidth - tab.clientWidth) / 2, behavior: motion ? "smooth" : "auto" });
+        }
+        const note = $(".smt-race-note");
+        note.textContent = groups[ri].note ?? "";
+        note.hidden = !groups[ri].note;
+        lineup.innerHTML = groups[ri].goals
+          .map(
+            (g, j) => `
+            <button type="button" role="option" class="smt-demon ${g.done ? "done" : ""} ${g.imageFit === "contain" ? "fig" : "scene"}" data-i="${j}" aria-selected="false" tabindex="-1" aria-label="№${esc(g.n)}. ${esc(g.title)}">
+              ${ctx.safeUrl(g.image) ? `<img src="${esc(g.image)}" alt="" draggable="false">` : `<span class="smt-demon-blank">${esc(g.n)}</span>`}
+            </button>`,
+          )
+          .join("");
+        // ширины картинок известны только после загрузки — тогда и перестраиваем ряд
+        lineup.querySelectorAll("img").forEach((img) => img.complete || img.addEventListener("load", layoutLineup, { once: true }));
+        selectGoal(i, user && motion);
+      }
+
+      // ---------- арена: ряд целей на воде ----------
+      // Соседи выстраиваются вплотную по реальной ширине картинок: выбранная — крупно, по бокам — меньше.
+      function layoutLineup() {
+        const items = [...lineup.children];
+        const width = (el, a) => (el.offsetWidth || 200) * (SCALE[a] ?? 0.4);
+        const gap = Math.max(10, (lineup.clientWidth || 600) * 0.03);
+        const xs = items.map(() => 0);
+        for (const dir of [-1, 1]) {
+          let x = width(items[sel.i] ?? items[0], 0) / 2;
+          for (let a = 1, j = sel.i + dir; j >= 0 && j < items.length; a++, j += dir) {
+            const half = width(items[j], Math.min(a, 2)) / 2;
+            x += gap + half;
+            xs[j] = dir * x;
+            x += half;
+          }
+        }
+        items.forEach((el, j) => {
+          const o = j - sel.i;
+          const a = Math.abs(o);
+          const s = SCALE[Math.min(a, 2)];
+          const x = xs[j];
+          el.style.transform = `translateX(-50%) translateX(${x.toFixed(1)}px) scale(${s})`;
+          el.style.zIndex = String(10 - a);
+          el.style.opacity = a > 2 ? "0" : a === 0 ? "1" : a === 1 ? "0.7" : "0.35";
+          el.style.visibility = a > 2 ? "hidden" : "visible";
+          el.classList.toggle("side", a > 0);
+        });
+      }
+
+      function selectGoal(i, pulse) {
+        const list = groups[sel.race].goals;
+        sel.i = (i + list.length) % list.length;
+        const g = list[sel.i];
+        [...lineup.children].forEach((el, j) => {
+          el.setAttribute("aria-selected", String(j === sel.i));
+          el.querySelector("img")?.removeAttribute("data-zoom");
+        });
+        layoutLineup();
+        // увеличение — только у выбранной цели; ставим после клика, чтобы выбор соседа не открыл лайтбокс
+        requestAnimationFrame(() => {
+          const img = lineup.children[sel.i]?.querySelector("img");
+          if (img) {
+            img.setAttribute("data-zoom", "");
+            img.setAttribute("data-caption", g.title);
+          }
+        });
+        plates(g);
+        index(true);
+        arena.classList.toggle("done", !!g.done);
+        if (pulse) {
+          for (const c of ["smt-summon-on", "smt-scan"]) {
+            arena.classList.remove(c);
+            void arena.offsetWidth;
+            arena.classList.add(c);
+          }
+        }
+      }
+
+      function plates(g) {
+        const facts = FIELDS.filter(([key]) => g[key])
+          .map(([key, label]) => [label, g[key]])
+          .concat((g.extra ?? []).filter((x) => x?.label).map((x) => [x.label, x.value]))
+          .map(([dt, dd]) => `<div class="smt-row"><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`)
+          .join("");
+        const checklist = (g.checklist ?? [])
+          .map(
+            (c) => `
+            <div class="smt-skills">
+              <h3 class="smt-sec">${esc(c.label || "Навыки")}</h3>
+              <ul>${(c.items ?? []).map((it) => `<li class="${it.done ? "on" : ""}"><i aria-hidden="true"></i><span>${esc(it.title)}</span><b>${it.done ? "✓" : ""}</b></li>`).join("")}</ul>
+            </div>`,
+          )
+          .join("");
+        const gallery = (g.gallery ?? []).map(ctx.safeUrl).filter(Boolean);
+        const link = ctx.safeUrl(g.link);
+        $(".smt-plate-l").innerHTML = `
+          <div class="smt-id">
+            <span class="smt-lv" aria-hidden="true"><small>№</small><b>${esc(g.n)}</b></span>
+            <div class="smt-id-text">
+              <span class="smt-id-race">${esc(groups[sel.race].title)}</span>
+              <h2 class="smt-id-name">${esc(g.title)}</h2>
+            </div>
+          </div>
+          ${stateTag(g)}
+          ${facts ? `<h3 class="smt-sec">Сведения</h3><dl class="smt-rows">${facts}</dl>` : ""}`;
+        const more = [
+          checklist,
+          g.note ? `<blockquote class="smt-note">${esc(g.note)}</blockquote>` : "",
+          g.details ? `<p class="smt-details">${esc(g.details)}</p>` : "",
+          gallery.length ? `<div class="smt-gallery" data-gallery>${gallery.map((u) => `<img src="${esc(u)}" alt="" loading="lazy" data-zoom data-caption="${esc(g.title)}">`).join("")}</div>` : "",
+          link ? `<a class="smt-lore" href="${esc(link)}" target="_blank" rel="noopener"><span class="smt-btn">Y</span>Подробнее ↗</a>` : "",
+        ].join("");
+        const r = $(".smt-plate-r");
+        r.innerHTML = more;
+        r.hidden = !more;
+      }
+
+      // ---------- список компендиума ----------
+      function index(update) {
+        const list = $(".smt-index-list");
+        if (!list) return;
+        if (!update) {
+          list.innerHTML = groups
+            .flatMap((gr, ri) =>
+              gr.goals.map(
+                (g, j) => `
+                <li><button type="button" class="smt-entry ${g.done ? "done" : ""}" data-race="${ri}" data-i="${j}">
+                  <span class="smt-entry-n">${esc(g.n)}</span>
+                  <span class="smt-entry-race">${esc(gr.title)}</span>
+                  <span class="smt-entry-name">${esc(g.title)}</span>
+                  ${stateTag(g)}
+                </button></li>`,
+              ),
+            )
+            .join("");
+          ctx.listen(list, "click", (e) => {
+            const b = e.target.closest(".smt-entry");
+            if (!b) return;
+            selectRace(+b.dataset.race, +b.dataset.i, true);
+            arena.scrollIntoView({ block: "center", behavior: motion ? "smooth" : "auto" });
+          });
+          return;
+        }
+        list.querySelectorAll(".smt-entry").forEach((b) => b.classList.toggle("cur", +b.dataset.race === sel.race && +b.dataset.i === sel.i));
+      }
+
+      // ---------- управление: стрелки, клики, свайпы, L/R ----------
+      function keys() {
+        ctx.listen(lineup, "click", (e) => {
+          const d = e.target.closest(".smt-demon");
+          if (d && +d.dataset.i !== sel.i) selectGoal(+d.dataset.i, motion);
+        });
+        ctx.listen($(".smt-stagebox"), "click", (e) => {
+          const a = e.target.closest(".smt-arrow");
+          if (a) selectGoal(sel.i + +a.dataset.step, motion);
+        });
+        ctx.listen(lineup, "keydown", (e) => {
+          const n = groups[sel.race].goals.length;
+          const to = { ArrowRight: sel.i + 1, ArrowLeft: sel.i - 1, Home: 0, End: n - 1 }[e.key];
+          if (to == null) return;
+          e.preventDefault();
+          selectGoal(to, motion);
+        });
+        // L / R с клавиатуры — Q и E, как плечевые кнопки
+        ctx.listen(window, "keydown", (e) => {
+          if (e.ctrlKey || e.metaKey || e.altKey || document.querySelector("dialog[open]")) return;
+          if (e.target.closest?.("input, textarea, [contenteditable]")) return;
+          const key = e.key.toLowerCase();
+          if (key === "q" || key === "й") stepRace(-1, true);
+          else if (key === "e" || key === "у") stepRace(1, true);
+        });
+        let x0 = null;
+        ctx.listen(lineup, "pointerdown", (e) => (x0 = e.pointerType === "mouse" ? null : e.clientX), { passive: true });
+        ctx.listen(
+          lineup,
+          "pointerup",
+          (e) => {
+            if (x0 == null) return;
+            const dx = e.clientX - x0;
+            x0 = null;
+            if (Math.abs(dx) > 40) selectGoal(sel.i + (dx < 0 ? 1 : -1), motion);
+          },
+          { passive: true },
+        );
+        ctx.listen(window, "resize", layoutLineup, { passive: true });
+      }
+
+      // ---------- вход: круги лопаются, «V» гаснет ----------
       function intro() {
         const handed = ctx.handoff?.layers.find((l) => l.classList.contains("smt-bloom"));
         if (!motion) return handed?.remove();
@@ -225,11 +659,10 @@
         if (b) {
           drawIn(b, 99);
           const since = performance.now() - (ctx.handoff.data.started ?? 0);
-          hold = Math.max(HOLD.handoff, (ctx.handoff.data.seen ? 0 : 1150) - since);
+          hold = Math.max(HOLD.handoff, (ctx.handoff.data.seen ? 0 : 1200) - since);
         } else {
           handed?.remove();
-          const layer = ctx.layer("smt-bloom smt-direct");
-          b = makeBloom(layer, game, esc, window.innerWidth / 2, window.innerHeight / 2);
+          b = makeBloom(ctx.layer("smt-bloom smt-direct"), game, esc, window.innerWidth / 2, window.innerHeight / 2);
           drawIn(b, 99);
           b.title.classList.add("in");
           hold = seenBefore() ? HOLD.repeat : HOLD.direct;
@@ -246,7 +679,6 @@
           if (start || finished) return;
           start = performance.now();
           bloom.title.classList.add("out");
-          bloom.layer.classList.add("smt-opening");
           let last = start;
           const tick = (now) => {
             if (finished) return;
@@ -256,236 +688,14 @@
             else requestAnimationFrame(tick);
           };
           requestAnimationFrame(tick);
-          timers.push(setTimeout(end, 1800)); // запасной путь, если rAF стоит
+          timers.push(setTimeout(end, 1800));
         };
         const timers = [setTimeout(open, hold)];
         ctx.onCleanup(() => (timers.forEach(clearTimeout), end()));
         for (const type of ["pointerdown", "keydown", "wheel"]) ctx.listen(window, type, open, { passive: true, once: true });
       }
 
-      // ---------- фон: багровая сетка с каплями, лёгкий параллакс ----------
-      function backdrop() {
-        const bg = ctx.layer("smt-backdrop");
-        bg.style.backgroundImage = `url("${assets}grid.webp")`;
-        if (!motion) return;
-        let y = -1;
-        frame.push(() => {
-          if (window.scrollY === y) return;
-          y = window.scrollY;
-          bg.style.transform = `translate3d(0, ${(-y * 0.08).toFixed(1)}px, 0) scale(1.12)`;
-        });
-      }
-
-      // ---------- компендиум: карточки целей и экран анализа ----------
-      function compendium() {
-        const sections = ctx.groups();
-        if (!cond || !sections.length || !total) return;
-        const order = [];
-        sections.forEach((sec, gi) => {
-          const gr = cond.groups[gi];
-          const list = sec.querySelector(".cond-list");
-          if (!gr || !list) return;
-          sec.classList.add("smt-race");
-          const grid = document.createElement("div");
-          grid.className = "smt-grid";
-          grid.innerHTML = (gr.goals ?? []).map((g) => cardHtml(g)).join("");
-          list.replaceWith(grid);
-          for (const g of gr.goals ?? []) order.push({ g, gr });
-        });
-        const analyze = analyzer(order);
-        ctx.listen(root, "click", (e) => {
-          const card = e.target.closest(".smt-card");
-          if (card && root.contains(card)) analyze.open(card.dataset.n, card);
-        });
-      }
-
-      function tags(g) {
-        return (g.extra ?? [])
-          .filter((x) => x?.label && x.value && String(x.value).length <= 28)
-          .map((x) => `<span class="smt-chip">${esc(x.label)}: ${esc(x.value)}</span>`)
-          .join("");
-      }
-
-      function stateTag(g) {
-        return g.done ? `<span class="smt-tag smt-tag-on">Выполнено</span>` : `<span class="smt-tag">Не выполнено</span>`;
-      }
-
-      function artHtml(g, cls, zoom) {
-        const img = ctx.safeUrl(g.image);
-        if (!img) return `<span class="${cls} smt-noart"><b>${esc(g.n)}</b></span>`;
-        const fit = g.imageFit === "contain" ? "smt-fit" : "";
-        const z = zoom ? ` data-zoom data-caption="${esc(g.title)}"` : ` loading="lazy"`;
-        return `<span class="${cls} ${fit}"><img src="${esc(img)}" alt="${zoom ? esc(g.title) : ""}"${z}></span>`;
-      }
-
-      function cardHtml(g) {
-        const steps = (g.checklist ?? []).flatMap((c) => c?.items ?? []);
-        const stepCount = steps.length ? `<span class="smt-chip">Шаги: ${steps.filter((s) => s?.done).length}/${steps.length}</span>` : "";
-        return `
-          <button type="button" class="smt-card ${g.done ? "smt-reg" : "smt-unreg"}" data-n="${esc(g.n)}" aria-haspopup="dialog">
-            ${artHtml(g, "smt-card-art", false)}
-            <span class="smt-lv" aria-hidden="true"><small>№</small><b>${esc(g.n)}</b></span>
-            <span class="smt-card-body">
-              <span class="smt-card-name">${esc(g.title)}</span>
-              <span class="smt-card-meta">${stateTag(g)}${tags(g)}${stepCount}</span>
-            </span>
-          </button>`;
-      }
-
-      function analyzer(order) {
-        const dlg = document.createElement("dialog");
-        dlg.className = "smt-analyze";
-        dlg.setAttribute("aria-labelledby", "smt-an-name");
-        root.append(dlg);
-        let cur = 0;
-        let opener = null;
-        ctx.onCleanup(() => {
-          if (dlg.open) dlg.close();
-          dlg.remove();
-        });
-
-        const factsHtml = (g) =>
-          FIELDS.filter(([k]) => g[k])
-            .map(([k, label]) => `<div class="smt-stat"><dt>${label}</dt><dd>${esc(g[k])}</dd></div>`)
-            .concat((g.extra ?? []).filter((x) => x?.label).map((x) => `<div class="smt-stat"><dt>${esc(x.label)}</dt><dd>${esc(x.value)}</dd></div>`))
-            .join("");
-
-        const checklistHtml = (g) =>
-          (g.checklist ?? [])
-            .map(
-              (c) => `
-              <div class="smt-skills">
-                <div class="smt-skills-head">${esc(c.label || "Чек-лист")}</div>
-                <ul>${(c.items ?? []).map((it) => `<li class="${it.done ? "on" : ""}"><i aria-hidden="true"></i><span>${esc(it.title)}</span><b>${it.done ? "✓" : ""}</b></li>`).join("")}</ul>
-              </div>`,
-            )
-            .join("");
-
-        const render = () => {
-          const { g, gr } = order[cur];
-          const facts = factsHtml(g);
-          const gallery = (g.gallery ?? []).map(ctx.safeUrl).filter(Boolean);
-          const link = ctx.safeUrl(g.link);
-          const more = [
-            checklistHtml(g),
-            g.note ? `<blockquote class="smt-an-note">${esc(g.note)}</blockquote>` : "",
-            g.details ? `<p class="smt-an-details">${esc(g.details)}</p>` : "",
-            gallery.length ? `<div class="smt-an-gallery" data-gallery>${gallery.map((u) => `<img src="${esc(u)}" alt="" loading="lazy" data-zoom data-caption="${esc(g.title)}">`).join("")}</div>` : "",
-            link ? `<a class="smt-an-link" href="${esc(link)}" target="_blank" rel="noopener">Подробнее ↗</a>` : "",
-          ].join("");
-          dlg.classList.toggle("smt-reg", !!g.done);
-          dlg.innerHTML = `
-            <div class="smt-an">
-              <header class="smt-an-head">
-                <span class="smt-lv smt-lv-big" aria-hidden="true"><small>№</small><b>${esc(g.n)}</b></span>
-                <div class="smt-an-id">
-                  <span class="smt-an-race">${esc(gr.title)}</span>
-                  <h3 id="smt-an-name">${esc(g.title)}</h3>
-                </div>
-                ${stateTag(g)}
-                <button type="button" class="smt-an-close" aria-label="Закрыть">✕</button>
-              </header>
-              <div class="smt-an-body">
-                <figure class="smt-an-stage" data-gallery>
-                  ${artHtml(g, "smt-an-art", true)}
-                </figure>
-                ${facts ? `<section class="smt-an-col smt-an-stats" aria-label="Сведения"><div class="smt-an-sub">Сведения</div><dl>${facts}</dl></section>` : ""}
-                ${more ? `<section class="smt-an-col smt-an-more" aria-label="Подробности">${more}</section>` : ""}
-              </div>
-              <footer class="smt-an-foot">
-                <button type="button" class="smt-an-step" data-step="-1" aria-label="Предыдущее условие"><span aria-hidden="true">◀</span> Пред.</button>
-                <span class="smt-an-pos">${cur + 1} / ${order.length}</span>
-                <button type="button" class="smt-an-step" data-step="1" aria-label="Следующее условие">След. <span aria-hidden="true">▶</span></button>
-              </footer>
-            </div>`;
-          if (motion) {
-            dlg.classList.remove("smt-scan");
-            void dlg.offsetWidth;
-            dlg.classList.add("smt-scan");
-          }
-        };
-
-        const step = (d) => {
-          cur = (cur + d + order.length) % order.length;
-          render();
-          dlg.querySelector(`.smt-an-step[data-step="${d}"]`)?.focus();
-        };
-
-        ctx.listen(dlg, "click", (e) => {
-          if (e.target === dlg || e.target.closest(".smt-an-close")) return dlg.close();
-          const s = e.target.closest(".smt-an-step");
-          if (s) step(Number(s.dataset.step));
-        });
-        ctx.listen(dlg, "keydown", (e) => {
-          if (e.key === "ArrowRight") (e.preventDefault(), step(1));
-          else if (e.key === "ArrowLeft") (e.preventDefault(), step(-1));
-        });
-        ctx.listen(dlg, "close", () => {
-          document.documentElement.classList.remove("smt-lock");
-          // вернуть фокус на карточку той цели, на которой закрыли экран
-          const n = order[cur]?.g.n;
-          (root.querySelector(`.smt-card[data-n="${CSS.escape(String(n))}"]`) ?? opener)?.focus({ preventScroll: false });
-        });
-
-        return {
-          open(n, card) {
-            const i = order.findIndex((x) => String(x.g.n) === String(n));
-            if (i < 0) return;
-            cur = i;
-            opener = card;
-            render();
-            document.documentElement.classList.add("smt-lock");
-            dlg.showModal();
-            dlg.querySelector(".smt-an-close")?.focus();
-          },
-        };
-      }
-
-      // ---------- прогресс — фаза луны ----------
-      function litPath(cx, cy, r, k) {
-        if (k <= 0.001) return "";
-        if (k >= 0.999) return `M${cx - r},${cy}a${r},${r} 0 1,0 ${2 * r},0a${r},${r} 0 1,0 ${-2 * r},0Z`;
-        const rx = (r * Math.abs(1 - 2 * k)).toFixed(2);
-        return `M${cx},${cy - r}A${r},${r} 0 0,1 ${cx},${cy + r}A${rx},${r} 0 0,${k < 0.5 ? 0 : 1} ${cx},${cy - r}Z`;
-      }
-
-      function moon() {
-        const ring = el.side?.querySelector(".ring");
-        if (!ring || !total) return;
-        const k = done / total;
-        const box = document.createElement("div");
-        box.className = `smt-moon ${k >= 1 ? "smt-full" : ""}`;
-        box.setAttribute("role", "img");
-        box.setAttribute("aria-label", `Выполнено ${done} из ${total}`);
-        box.style.setProperty("--k", k.toFixed(3));
-        box.innerHTML = `
-          <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false">
-            <defs><clipPath id="smt-lit"><path d="${litPath(100, 100, 85.5, k)}"/></clipPath></defs>
-            <image class="smt-moon-dark" href="${assets}moon.webp" x="6" y="6" width="188" height="190"/>
-            <image class="smt-moon-lit" href="${assets}moon.webp" x="6" y="6" width="188" height="190" clip-path="url(#smt-lit)"/>
-          </svg>
-          <div class="smt-moon-count"><b>${done}</b><span>/${total}</span></div>
-          <small>условий выполнено</small>`;
-        ring.replaceWith(box);
-      }
-
-      // ---------- по группам — значки ходов ----------
-      function turns() {
-        const items = [...(el.side?.querySelectorAll(".group-progress li") ?? [])];
-        if (!cond || !items.length) return;
-        items.forEach((li, i) => {
-          const gs = cond.groups[i]?.goals ?? [];
-          const bar = li.querySelector(".progress");
-          if (!gs.length || !bar) return;
-          const icons = document.createElement("span");
-          icons.className = "smt-turns";
-          icons.setAttribute("aria-hidden", "true");
-          icons.innerHTML = gs.map((g) => `<i class="${g.done ? "on" : ""}"></i>`).join("");
-          bar.replaceWith(icons);
-        });
-      }
-
-      // ---------- Магацухи: капли поднимаются по экрану и тянутся за курсором ----------
+      // ---------- Магацухи: капли поднимаются по экрану, тянутся за курсором и за выполненной целью ----------
       function magatsuhi() {
         if (!motion) return;
         const layer = ctx.layer("smt-mag");
@@ -505,7 +715,6 @@
         resize();
         ctx.listen(window, "resize", resize, { passive: true });
 
-        // светящаяся капля — один спрайт, дальше только drawImage
         const sprite = document.createElement("canvas");
         sprite.width = sprite.height = 64;
         const sg = sprite.getContext("2d");
@@ -518,43 +727,47 @@
         sg.fillRect(0, 0, 64, 64);
 
         const orbs = [];
-        const ambient = () => Math.round(18 * Math.min(1.6, Math.max(0.4, (w * h) / (1440 * 900))));
-        const spawn = (x, y, trail) =>
+        const ambient = () => Math.round(16 * Math.min(1.6, Math.max(0.4, (w * h) / (1440 * 900))));
+        const spawn = (x, y, kind) =>
           orbs.push({
             x,
             y,
-            vx: (Math.random() - 0.5) * (trail ? 40 : 8),
-            vy: -(trail ? 20 + Math.random() * 40 : 12 + Math.random() * 26),
-            r: trail ? 3 + Math.random() * 6 : 2 + Math.random() * 5,
-            a: trail ? 0.8 : 0.18 + Math.random() * 0.3,
-            life: trail ? 0.7 + Math.random() * 0.5 : 9 + Math.random() * 8,
+            vx: (Math.random() - 0.5) * (kind === "trail" ? 40 : kind === "aura" ? 24 : 8),
+            vy: -(kind === "ambient" ? 12 + Math.random() * 26 : 30 + Math.random() * 50),
+            r: kind === "ambient" ? 2 + Math.random() * 5 : 3 + Math.random() * 6,
+            a: kind === "ambient" ? 0.16 + Math.random() * 0.28 : 0.85,
+            life: kind === "ambient" ? 9 + Math.random() * 8 : 0.8 + Math.random() * 0.6,
             t: 0,
-            trail,
+            kind,
             ph: Math.random() * 6.28,
           });
-        for (let i = 0; i < ambient(); i++) (spawn(Math.random() * w, Math.random() * h, false), (orbs[orbs.length - 1].t = Math.random() * 6));
+        for (let i = 0; i < ambient(); i++) (spawn(Math.random() * w, Math.random() * h, "ambient"), (orbs[orbs.length - 1].t = Math.random() * 6));
 
-        let px = 0;
-        let py = 0;
         let lastSpawn = 0;
         if (ctx.finePointer) {
           ctx.listen(
             window,
             "pointermove",
             (e) => {
-              px = e.clientX;
-              py = e.clientY;
               const now = performance.now();
-              if (now - lastSpawn > 34 && !document.querySelector("dialog[open]")) {
+              if (now - lastSpawn > 34) {
                 lastSpawn = now;
-                spawn(px, py, true);
+                spawn(e.clientX, e.clientY, "trail");
               }
             },
             { passive: true },
           );
         }
 
+        let auraT = 0;
         frame.push((now, dt) => {
+          // выбранная выполненная цель «дышит» Магацухи
+          auraT += dt;
+          if (arena?.classList.contains("done") && auraT > 0.09) {
+            auraT = 0;
+            const fig = lineup?.children[sel.i]?.getBoundingClientRect();
+            if (fig && fig.bottom > 0 && fig.top < h) spawn(fig.left + fig.width * (0.2 + Math.random() * 0.6), fig.bottom - fig.height * Math.random() * 0.3, "aura");
+          }
           g.clearRect(0, 0, w, h);
           let amb = 0;
           for (let i = orbs.length - 1; i >= 0; i--) {
@@ -564,16 +777,16 @@
               orbs.splice(i, 1);
               continue;
             }
-            if (!o.trail) amb++;
-            o.x += (o.vx + Math.sin(now / 900 + o.ph) * (o.trail ? 0 : 10)) * dt;
+            if (o.kind === "ambient") amb++;
+            o.x += (o.vx + Math.sin(now / 900 + o.ph) * (o.kind === "ambient" ? 10 : 0)) * dt;
             o.y += o.vy * dt;
-            const fade = o.trail ? 1 - o.t / o.life : Math.min(1, o.t / 1.5, (o.life - o.t) / 2);
-            const s = o.r * 4 * (o.trail ? 1 - (o.t / o.life) * 0.5 : 1);
+            const fade = o.kind === "ambient" ? Math.min(1, o.t / 1.5, (o.life - o.t) / 2) : 1 - o.t / o.life;
+            const s = o.r * 4 * (o.kind === "ambient" ? 1 : 1 - (o.t / o.life) * 0.5);
             g.globalAlpha = Math.max(0, o.a * fade);
             g.drawImage(sprite, o.x - s / 2, o.y - s / 2, s, s);
           }
           g.globalAlpha = 1;
-          for (let i = amb; i < ambient(); i++) spawn(Math.random() * w, h + 10, false);
+          for (let i = amb; i < ambient(); i++) spawn(Math.random() * w, h + 10, "ambient");
         });
       }
     },

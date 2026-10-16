@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-15",
-  "build": "08529a6ce3",
+  "build": "707f92dfaa",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -41,11 +41,6 @@
         "headingCase": "uppercase",
         "headingSpacing": "0.05em",
         "radius": 2,
-        "ornament": "◆",
-        "textures": [
-          "grain",
-          "vignette"
-        ],
         "heroPosition": "right 28%",
         "css": true,
         "js": true

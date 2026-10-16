@@ -126,6 +126,59 @@
     return modules.loading.get(id);
   }
 
+  // Общий контекст темы на главной (banner, stage): данные игры, ассеты и картинки с запасными адресами.
+  function themeBase(g, extra) {
+    const hasLogo = unique(logoUrls(g).map(safeUrl)).length > 0;
+    return {
+      game: g,
+      assets: `themes/${encodeURIComponent(g.id)}/assets/`,
+      progress: { done: g.goals?.done ?? 0, total: g.goals?.total ?? 0 },
+      reducedMotion: reduceMotion(),
+      finePointer: window.matchMedia("(pointer: fine)").matches,
+      art: {
+        hero: (attrs = 'alt=""') => imgTag(heroUrls(g), attrs),
+        logo: (attrs = 'alt=""') => (hasLogo ? imgTag(logoUrls(g), attrs) : ""),
+        cover: (attrs = 'alt=""') => imgTag([coverUrl(g)], attrs),
+      },
+      esc,
+      safeUrl,
+      plural,
+      ...extra,
+    };
+  }
+
+  // Тема строит свой баннер целиком: banner(b), b.el — <a class="gbanner">, его содержимое тема заменяет.
+  // Пока модуль грузится, баннер скрыт (.module-pending), чтобы не мелькал общий вид.
+  function decorateBanners() {
+    for (const el of els.list.querySelectorAll(".gbanner")) {
+      const g = state.byId.get(el.dataset.game);
+      if (g?.theme?.js !== true) continue;
+      const mod = modules.registry.get(g.id);
+      if (mod) {
+        buildBanner(mod, g, el);
+        continue;
+      }
+      el.classList.add("module-pending");
+      const reveal = setTimeout(() => el.classList.remove("module-pending"), 2500);
+      loadModule(g.id).then((m) => {
+        clearTimeout(reveal);
+        if (m && el.isConnected) buildBanner(m, g, el);
+        el.classList.remove("module-pending");
+        if (m?.stage) rebuildStage(g);
+      });
+    }
+  }
+
+  function buildBanner(mod, g, el) {
+    if (!mod.banner || el.classList.contains("custom")) return;
+    try {
+      mod.banner(themeBase(g, { el }));
+      el.classList.add("custom");
+    } catch (e) {
+      console.error(`theme ${g.id} banner:`, e);
+    }
+  }
+
   function unmountModule() {
     modules.token++;
     for (const fn of modules.cleanups.splice(0).reverse()) {
@@ -171,6 +224,9 @@
         side: root.querySelector(".game-side"),
       },
       conditions: cond,
+      // соседние игры по порядку списка: { id, title, href } или null — для своей навигации темы
+      neighbors: neighborsOf(g),
+      art: themeBase(g).art,
       goals: () => allGoals(cond),
       groups: () => [...root.querySelectorAll(".cond-group")],
       goalEl: (n) => root.querySelector(`.cond[data-goal="${n}"]`),
@@ -477,6 +533,7 @@
       (q
         ? `<div class="empty"><strong>Ничего не найдено</strong>Попробуй другой запрос.</div>`
         : `<div class="empty"><strong>Список пока пуст</strong>Скоро здесь появятся игры.</div>`);
+    decorateBanners();
   }
 
   function toggleCat(btn) {
@@ -506,9 +563,30 @@
     layer.className = `stage-layer ${vars ? "themed-card" : ""}`;
     layer.dataset.game = g.id;
     if (vars) layer.setAttribute("style", styleAttr(vars));
-    layer.innerHTML = `<div class="stage-hero"><div class="hero-media" style="background:${gradient(g.title)}">${imgTag(heroUrls(g), 'alt=""')}</div></div>`;
+    fillStage(g, layer);
     stageEl.append(layer);
     return layer;
+  }
+
+  // Стартовый кадр страницы игры: общий (баннер-арт) или свой у темы — stage(s), s.el — слой сцены.
+  function fillStage(g, layer) {
+    const mod = g.theme?.js === true ? modules.registry.get(g.id) : null;
+    if (mod?.stage) {
+      try {
+        layer.innerHTML = "";
+        mod.stage(themeBase(g, { el: layer }));
+        layer.classList.add("custom");
+        return;
+      } catch (e) {
+        console.error(`theme ${g.id} stage:`, e);
+      }
+    }
+    layer.innerHTML = `<div class="stage-hero"><div class="hero-media" style="background:${gradient(g.title)}">${imgTag(heroUrls(g), 'alt=""')}</div></div>`;
+  }
+
+  function rebuildStage(g) {
+    const layer = stageEl.querySelector(`.stage-layer[data-game="${CSS.escape(g.id)}"]`);
+    if (layer && !layer.classList.contains("custom")) fillStage(g, layer);
   }
 
   function setStage(g, { instant = false } = {}) {
@@ -717,6 +795,13 @@
           ${g.playtime != null ? `<dl class="facts">${fact("Время", fmtHours(g.playtime))}</dl>` : ""}
         </div>
       </aside>`;
+  }
+
+  function neighborsOf(g) {
+    const list = ordered();
+    const i = list.findIndex((x) => x.id === g.id);
+    const pick = (x) => (x ? { id: x.id, title: x.title, href: `#/game/${encodeURIComponent(x.id)}` } : null);
+    return { prev: pick(list[i - 1]), next: pick(list[i + 1]) };
   }
 
   function neighborsHtml(g) {

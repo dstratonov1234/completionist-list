@@ -932,8 +932,10 @@ html.themed .neighbor:hover {
 @keyframes fog-drift { from { transform: translate3d(-6%, 0, 0) scale(1.05); } to { transform: translate3d(6%, -3%, 0) scale(1.15); } }
 
 /* Пока грузится модуль игры (themes/<id>/theme.js), не показываем стандартную раскладку — чтобы не мигала. */
-.game-view.module-pending .game-layout,
-.game-view.module-pending .hero-title { visibility: hidden; }
+/* пока модуль темы грузится, страница скрыта целиком: тема может построить её по-своему */
+.game-view.module-pending > * { visibility: hidden; }
+.gbanner.module-pending { opacity: 0; }
+.gbanner { transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s, border-color 0.35s, opacity 0.3s; }
 
 /* ---------- Условия закрытия (стандартная раскладка; темы игр перестраивают её по-своему) ---------- */
 
