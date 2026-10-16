@@ -305,7 +305,7 @@
 .ds-items img { display: block; flex: 0 1 280px; min-width: 0; aspect-ratio: 16 / 9; object-fit: cover; box-shadow: 0 0 0 1px var(--ds-line), 0 8px 16px rgba(0, 0, 0, 0.75); cursor: zoom-in; }
 @media (min-width: 1150px) {
   .ds-arena.items-row .ds-items { width: 70%; margin: 10px auto 0; }
-  .ds-arena.items-side .ds-items { position: absolute; right: 18px; top: 18px; flex-direction: column; gap: 10px; margin: 0; }
+  .ds-arena.items-side .ds-items { position: absolute; right: 18px; top: 18px; flex-direction: column; gap: 10px; width: auto; margin: 0; }
   .ds-arena.items-side .ds-items img { flex: none; width: 212px; height: 119px; }
   /* имя с полосой и победная надпись — мимо колонки предметов */
   .ds-arena.items-side .ds-arena-boss { left: 40px; right: 254px; width: auto; transform: none; }
