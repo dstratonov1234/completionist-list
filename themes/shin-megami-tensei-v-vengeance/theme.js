@@ -15,17 +15,9 @@
 (() => {
   "use strict";
 
-  const FIELDS = [
-    ["gives", "Что даёт"],
-    ["needs", "Что потребуется"],
-    ["unlock", "Открывается"],
-    ["counts", "Как засчитываем"],
-  ];
-
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
   const SCALE = [1, 0.56, 0.4]; // арена: масштаб выбранной цели и соседей
   const easeOut = (x) => 1 - Math.pow(1 - x, 3);
-  const easeIn = (x) => x * x * x;
   let uid = 0;
 
   // ---------- луна: фаза по доле выполненных условий (0 — новолуние, 1 — полнолуние) ----------
@@ -46,7 +38,8 @@
       </svg>`;
   }
 
-  const gauge = (k) => `<span class="smt-gauge" style="--p:${clamp01(k).toFixed(3)}"><i></i></span>`;
+  // значки ходов Press Turn — по одному на условие; выполненные горят голубым, как в бою
+  const turnsHtml = (list) => list.map((g) => `<i class="${g.done ? "on" : ""}"></i>`).join("");
 
   // ---------- заставка: плоские круги Магацухи и «V» ----------
   const PALETTE = ["#6e0c1b", "#8e1226", "#b3182f", "#d42340", "#4a0812", "#ec3a52", "#5a0a16"];
@@ -57,13 +50,17 @@
   const FILL = [0.36, 0.66]; // с — подложка проявляется плавно, чтобы не осталось просветов
   const VSLASH = [0.34, 0.62]; // с — две черты «V» прочерчиваются
   const OPEN = { pop: 0.34, spread: 0.42, fill: 0.26, v: 0.18 };
-  const HOLD = { direct: 650, repeat: 260, handoff: 280 };
+  const HOLD = { direct: 650, repeat: 260, handoff: 280, first: 800 };
+  const easeInOut = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
 
-  function makeBloom(layer, game, esc, ox, oy) {
+  // ox, oy — откуда расцветают круги (центр луны баннера); r0 — с какого радиуса растёт первый круг (сама луна)
+  function makeBloom(layer, game, esc, ox, oy, r0 = 0) {
     const canvas = document.createElement("canvas");
     const title = document.createElement("div");
     title.className = "smt-bloom-title";
-    title.innerHTML = `<span>${esc(game.title)}</span>`;
+    title.innerHTML = game.logo
+      ? `<span class="smt-bloom-logo"><img src="${esc(game.logo)}" alt="${esc(game.title)}"></span>`
+      : `<span>${esc(game.title)}</span>`;
     layer.append(canvas, title);
     const dpr = Math.min(1.5, window.devicePixelRatio || 1);
     const w = window.innerWidth;
@@ -75,23 +72,44 @@
     const diag = Math.hypot(w, h);
     const far = Math.max(Math.hypot(ox, oy), Math.hypot(w - ox, oy), Math.hypot(ox, h - oy), Math.hypot(w - ox, h - oy)) || 1;
     const n = Math.round(44 + Math.min(1.6, (w * h) / (1440 * 900)) * 34);
-    const circles = [{ x: ox, y: oy, r: diag * 0.2, c: "#b3182f", ring: false, d: 0, delay: 0 }];
+    const circles = [{ x: ox, y: oy, r: diag * 0.2, r0, c: "#b3182f", ring: false, d: 0, delay: 0 }];
     for (let i = 0; i < n; i++) {
       const x = Math.random() * w;
       const y = Math.random() * h;
       const d = Math.hypot(x - ox, y - oy) / far;
       circles.push({ x, y, r: diag * (0.04 + Math.random() * 0.15), c: PALETTE[i % PALETTE.length], ring: i % 5 === 0, d, delay: d * SPREAD + Math.random() * 0.07 });
     }
-    for (const c of circles) c.pop = Math.random() * 0.12 + c.d * OPEN.spread;
-    // «V» Vengeance: две черты сходятся под названием
+    for (const c of circles) {
+      c.pop = Math.random() * 0.12 + c.d * OPEN.spread;
+      c.ph = Math.random() * Math.PI * 2;
+      c.r0 ??= 0;
+    }
+    // «V» Vengeance: две черты сходятся над названием — надпись стоит под остриём, черты её не перечёркивают
     const cx = w / 2;
     const v = [
-      [cx - Math.min(w * 0.3, h * 0.55), h * 0.12],
-      [cx, h * 0.8],
-      [cx + Math.min(w * 0.34, h * 0.62), h * 0.06],
+      [cx - Math.min(w * 0.3, h * 0.5), h * 0.06],
+      [cx, h * 0.64],
+      [cx + Math.min(w * 0.34, h * 0.56), h * 0.02],
     ];
-    return { layer, canvas, title, g, w, h, circles, drops: [], v };
+    return { layer, canvas, title, g, w, h, circles, drops: [], v, t0: performance.now(), draw: null, stopped: false };
   }
+
+  // Один цикл на заставку: круги живут (дышат и дрейфуют) от первого кадра на главной до открытия страницы;
+  // что рисовать, задаёт тот, кто сейчас ведёт заставку (b.draw) — без паузы и скачка на стыке.
+  function runBloom(b) {
+    let last = performance.now();
+    const tick = (now) => {
+      if (b.stopped || !b.layer.isConnected) return;
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      b.draw?.(now, dt);
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // дыхание круга: чуть меняется радиус и плывёт центр; bt — секунды с начала заставки
+  const breath = (c, bt) => ({ k: 1 + 0.07 * Math.sin(bt * 2.8 + c.ph), dy: Math.sin(bt * 1.9 + c.ph) * 10 });
 
   function grid(g, w, h, alpha) {
     if (alpha <= 0) return;
@@ -141,9 +159,10 @@
     const l1 = clamp01(p * 2);
     const l2 = clamp01(p * 2 - 1);
     g.save();
-    g.lineCap = "round";
+    g.lineCap = "butt";
     g.lineJoin = "miter";
-    for (const [width, color, a2] of [[34, "#7a0a1a", 0.9], [18, "#ff3b54", 1], [5, "#fff2f4", 1]]) {
+    // острая красная черта без белого сердечника
+    for (const [width, color, a2] of [[36, "#ff3b54", 1], [27, "#14020a", 1], [3, "#ff6a7c", 0.9]]) {
       g.globalAlpha = alpha * a2;
       g.lineWidth = width;
       g.strokeStyle = color;
@@ -156,7 +175,7 @@
     g.restore();
   }
 
-  function drawIn(b, t) {
+  function drawIn(b, t, bt = t) {
     const { g, w, h } = b;
     g.clearRect(0, 0, w, h);
     const fill = clamp01((t - FILL[0]) / (FILL[1] - FILL[0]));
@@ -166,13 +185,17 @@
       g.fillRect(0, 0, w, h);
       g.globalAlpha = 1;
     }
-    for (const c of b.circles) disc(g, c, c.x, c.y, c.r * easeOut(clamp01((t - c.delay) / GROW)), 1);
+    for (const c of b.circles) {
+      const life = clamp01((t - c.delay) / GROW);
+      const br = breath(c, bt);
+      disc(g, c, c.x, c.y + br.dy * life, (c.r0 + (c.r - c.r0) * easeOut(life)) * (1 + (br.k - 1) * life), 1);
+    }
     grid(g, w, h, fill);
     vslash(g, b, easeOut(clamp01((t - VSLASH[0]) / (VSLASH[1] - VSLASH[0]))), 1);
     return t >= Math.max(FILL[1], VSLASH[1]);
   }
 
-  function drawOut(b, u, dt) {
+  function drawOut(b, u, dt, bt) {
     const { g, w, h } = b;
     g.clearRect(0, 0, w, h);
     const fill = 1 - clamp01(u / OPEN.fill);
@@ -198,7 +221,9 @@
         continue;
       }
       alive = true;
-      disc(g, c, c.x, c.y - k * 26, c.r * (1 + k * 0.12) * (1 - easeIn(k)), 1 - k * 0.4);
+      // круги лопаются сразу (easeInOut, а не медленный easeIn) и остаются плотными — без розовой дымки над водой
+      const br = breath(c, bt);
+      disc(g, c, c.x, c.y + br.dy - k * 26, c.r * br.k * (1 + k * 0.12) * (1 - easeInOut(k)), 1);
     }
     grid(g, w, h, fill);
     vslash(g, b, 1, 1 - clamp01(u / OPEN.v));
@@ -230,28 +255,27 @@
   }
 
   GameThemes.register("shin-megami-tensei-v-vengeance", {
-    // ---------- главная: слот сохранения ----------
-    // Композиция — по центру: большая луна в фазе прогресса с числом выполненных, под ней логотип, по бокам
-    // из красной тьмы проступают демоны с обложки, внизу — значки ходов (по одному на условие).
-    // При наведении луна разгорается, поднимаются капли Магацухи, смыкаются скобки захвата цели.
+    // ---------- главная: панель меню с луной ----------
+    // Композиция — по центру связка «луна + логотип»: луна в фазе прогресса с числом выполненных, справа от неё
+    // крупный логотип; по бокам зеркально демоны с обложки в своих цветах, середина утоплена во тьму; внизу
+    // значки ходов Press Turn — по одному на условие. Выделение — как выбранный пункт меню SMT V: панель
+    // выезжает вправо, рамка и метка становятся золотыми, демоны и луна разгораются, по значкам ходов пробегает
+    // вспышка.
     banner(b) {
       const { done, total } = b.progress;
       const k = total ? done / total : 0;
-      const logo = b.art.logo('class="smt-ban-logo" alt=""');
-      const turns = total ? Array.from({ length: Math.min(total, 40) }, (_, i) => `<i class="${i < done ? "on" : ""}"></i>`).join("") : "";
-      const orbs = Array.from({ length: 7 }, (_, i) => `<i style="--x:${12 + i * 13}%;--d:${(i * 0.23).toFixed(2)}s;--s:${6 + (i % 3) * 4}px"></i>`).join("");
+      const logo = b.art.logo('alt=""');
+      const turns = total ? Array.from({ length: Math.min(total, 40) }, (_, i) => `<i class="${i < done ? "on" : ""}" style="--i:${i}"></i>`).join("") : "";
       b.el.innerHTML = `
         <span class="smt-ban">
           <span class="smt-ban-art"><span class="smt-ban-side smt-ban-l">${b.art.hero('alt="" loading="lazy"')}</span><span class="smt-ban-side smt-ban-r">${b.art.hero('alt="" loading="lazy"')}</span></span>
           <span class="smt-ban-glow"></span>
-          <span class="smt-ban-orbs" aria-hidden="true">${orbs}</span>
-          <span class="smt-ban-lock" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           <span class="smt-ban-center">
             <span class="smt-ban-moon">
               ${moonSvg(b.assets, k, "smt-ban-moonsvg")}
               <span class="smt-ban-count">${total ? `<b>${done}</b><span>/${total}</span>` : `<span>—</span>`}</span>
             </span>
-            ${logo || `<span class="smt-ban-name" aria-hidden="true">${b.esc(b.game.title)}</span>`}
+            ${logo ? `<span class="smt-ban-logo">${logo}</span>` : `<span class="smt-ban-name" aria-hidden="true">${b.esc(b.game.title)}</span>`}
             <span class="smt-sr">${b.esc(b.game.title)}. ${total ? `Выполнено ${done} из ${total} условий закрытия` : "Условия ещё не заданы"}</span>
           </span>
           ${turns ? `<span class="smt-ban-turns" aria-hidden="true">${turns}</span>` : ""}
@@ -259,31 +283,34 @@
     },
 
     // ---------- главная: при наведении над главной собирается Магацухи ----------
-    // Багровая сетка проступает, снизу поднимаются капли, в углу всходит луна в фазе прогресса,
-    // сквозь красную дымку видны демоны с обложки. Только CSS: анимации идут, пока у слоя класс .on.
+    // Снизу за списком всходит огромная луна в фазе прогресса, со всего экрана к ней стягиваются капли
+    // Магацухи и гаснут в ней; проступает багровая сетка, справа сквозь дымку — демоны с обложки.
+    // Только CSS: анимации идут, пока у слоя класс .on.
     stage(s) {
       const { done, total } = s.progress;
       const k = total ? done / total : 0;
-      const orbs = Array.from({ length: 24 }, (_, i) => {
-        const x = (i * 61) % 100;
-        return `<i style="--x:${x}%;--d:${((i * 0.29) % 2.4).toFixed(2)}s;--t:${(4.2 + (i % 5) * 0.8).toFixed(1)}s;--s:${8 + (i % 4) * 7}px"></i>`;
+      const orbs = Array.from({ length: 26 }, (_, i) => {
+        const x = (i * 37 + 5) % 100;
+        const y = 8 + ((i * 53) % 70);
+        return `<i style="--x:${x}vw;--y:${y}vh;--d:${((i * 0.31) % 2.8).toFixed(2)}s;--t:${(3.2 + (i % 5) * 0.6).toFixed(1)}s;--s:${8 + (i % 4) * 6}px"></i>`;
       }).join("");
       s.el.innerHTML = `
         <div class="smt-hv">
           <div class="smt-hv-art">${s.art.hero('alt=""')}</div>
           <div class="smt-hv-haze"></div>
           <div class="smt-hv-grid"></div>
-          <div class="smt-hv-orbs">${orbs}</div>
           <div class="smt-hv-moon">${moonSvg(s.assets, k, "smt-hv-moonsvg")}</div>
+          <div class="smt-hv-orbs">${orbs}</div>
         </div>`;
     },
 
     // ---------- главная: начало заставки ----------
     cover(t) {
-      const banner = document.querySelector('.gbanner[data-game="shin-megami-tensei-v-vengeance"]')?.getBoundingClientRect();
-      const ox = banner ? banner.left + banner.width * 0.62 : window.innerWidth / 2;
-      const oy = banner ? banner.top + banner.height / 2 : window.innerHeight / 2;
-      const b = makeBloom(t.layer("smt-bloom"), t.game, t.esc, ox, oy);
+      // первый круг — сама луна баннера: из неё и расцветает Магацухи
+      const moon = document.querySelector('.gbanner[data-game="shin-megami-tensei-v-vengeance"] .smt-ban-moon')?.getBoundingClientRect();
+      const ox = moon ? moon.left + moon.width / 2 : window.innerWidth / 2;
+      const oy = moon ? moon.top + moon.height / 2 : window.innerHeight / 2;
+      const b = makeBloom(t.layer("smt-bloom"), t.game, t.esc, ox, oy, moon ? moon.width * 0.43 : 0);
       t.data.bloom = b;
       t.data.started = performance.now();
       t.data.seen = seenBefore();
@@ -294,16 +321,18 @@
         const finish = () => {
           if (done) return;
           done = true;
-          drawIn(b, 99);
           resolve();
         };
-        const tick = (now) => {
-          if (done) return;
-          if (drawIn(b, (now - start) / 1000)) finish();
-          else requestAnimationFrame(tick);
+        b.draw = (now) => {
+          const sec = (now - start) / 1000;
+          if (drawIn(b, sec)) finish();
         };
-        requestAnimationFrame(tick);
-        setTimeout(finish, COVER_MS + 200);
+        runBloom(b); // цикл не останавливается: круги дышат, пока страница не откроет заставку
+        setTimeout(() => {
+          if (done) return;
+          drawIn(b, 99);
+          finish();
+        }, COVER_MS + 200);
       });
     },
 
@@ -340,7 +369,7 @@
 
       // ---------- разметка: HUD сверху, слева расы и записи компендиума, в центре арена, справа статус ----------
       function pageHtml() {
-        const logo = ctx.art.logo('class="smt-hud-logo" alt=""');
+        const logo = ctx.art.logo('alt=""');
         const nb = ctx.neighbors ?? {};
         return `
           <div class="smt-page ${groups.length ? "" : "smt-page-empty"}">
@@ -350,14 +379,11 @@
                 <span class="smt-hud-moonval"><b>${done}</b>/${total}</span>
               </div>
               <div class="smt-hud-title">
-                ${logo}
+                ${logo ? `<span class="smt-hud-logo">${logo}</span>` : ""}
                 <h1 class="${logo ? "smt-sr" : "smt-hud-name"}">${esc(game.title)}</h1>
                 <span class="smt-hud-kicker">Компендиум условий закрытия</span>
               </div>
-              <div class="smt-hud-mag" aria-hidden="true">
-                <span class="smt-hud-maglabel">Магацухи</span>
-                ${gauge(k)}
-              </div>
+              <div class="smt-hud-turns" style="--cols:${Math.max(1, Math.ceil(total / 2))}" aria-hidden="true">${turnsHtml(goals)}</div>
             </header>
 
             ${
@@ -372,7 +398,7 @@
                   <button type="button" role="tab" class="smt-race" id="smt-race-${ri}" data-race="${ri}" aria-controls="smt-arena" aria-selected="false" tabindex="-1">
                     <span class="smt-race-name">${esc(gr.title)}</span>
                     <span class="smt-race-count">${d}/${gr.goals.length}</span>
-                    <span class="smt-race-turns" aria-hidden="true">${gr.goals.map((g) => `<i class="${g.done ? "on" : ""}"></i>`).join("")}</span>
+                    <span class="smt-race-turns" aria-hidden="true">${turnsHtml(gr.goals)}</span>
                   </button>`;
                   })
                   .join("")}
@@ -389,11 +415,15 @@
                 <button type="button" class="smt-arrow smt-arrow-r" data-step="1" aria-label="Следующее условие">▶</button>
               </div>
               <footer class="smt-prompts">
-                <span class="smt-prompt"><span class="smt-btn">◀▶</span>Условие</span>
-                <span class="smt-prompt"><span class="smt-btn smt-btn-sh">L</span><span class="smt-btn smt-btn-sh">R</span>Группа</span>
-                ${nb.prev ? `<a class="smt-prompt smt-prompt-nb" href="${esc(nb.prev.href)}"><span class="smt-btn smt-btn-sh">ZL</span>${esc(nb.prev.title)}</a>` : ""}
-                ${nb.next ? `<a class="smt-prompt smt-prompt-nb" href="${esc(nb.next.href)}"><span class="smt-btn smt-btn-sh">ZR</span>${esc(nb.next.title)}</a>` : ""}
-                <a class="smt-prompt smt-prompt-back" href="#/"><span class="smt-btn smt-btn-b">B</span>Назад</a>
+                <span class="smt-prompt">
+                  <button type="button" class="smt-btn" data-step="-1" aria-label="Предыдущее условие">◀</button><button type="button" class="smt-btn" data-step="1" aria-label="Следующее условие">▶</button>Условие
+                </span>
+                <span class="smt-prompt">
+                  <button type="button" class="smt-btn smt-btn-sh" data-race="-1" aria-label="Предыдущая группа"><span class="smt-kb">Q</span><span class="smt-pad">L</span></button><button type="button" class="smt-btn smt-btn-sh" data-race="1" aria-label="Следующая группа"><span class="smt-kb">E</span><span class="smt-pad">R</span></button>Группа
+                </span>
+                ${nb.prev ? `<a class="smt-prompt smt-prompt-nb" href="${esc(nb.prev.href)}">◂ ${esc(nb.prev.title)}</a>` : ""}
+                ${nb.next ? `<a class="smt-prompt smt-prompt-nb" href="${esc(nb.next.href)}">${esc(nb.next.title)} ▸</a>` : ""}
+                <a class="smt-prompt smt-prompt-back" href="#/"><span class="smt-btn smt-btn-b"><span class="smt-kb">Esc</span><span class="smt-pad">B</span></span>Назад</a>
               </footer>
             </section>
 
@@ -402,7 +432,7 @@
             <section class="smt-arena smt-arena-empty">
               <div class="smt-floor" aria-hidden="true"><i class="smt-caustics"></i></div>
               <p class="smt-empty">Условия закрытия для этой игры ещё не заданы.</p>
-              <footer class="smt-prompts"><a class="smt-prompt smt-prompt-back" href="#/"><span class="smt-btn smt-btn-b">B</span>Назад</a></footer>
+              <footer class="smt-prompts"><a class="smt-prompt smt-prompt-back" href="#/"><span class="smt-btn smt-btn-b"><span class="smt-kb">Esc</span><span class="smt-pad">B</span></span>Назад</a></footer>
             </section>`
             }
           </div>`;
@@ -565,6 +595,7 @@
           .join("");
         const gallery = (g.gallery ?? []).map(ctx.safeUrl).filter(Boolean);
         const link = ctx.safeUrl(g.link);
+        $(".smt-plate").classList.toggle("is-done", !!g.done);
         $(".smt-plate").innerHTML = `
           <div class="smt-id">
             <span class="smt-lv" aria-hidden="true"><small>№</small><b>${esc(g.n)}</b></span>
@@ -591,20 +622,26 @@
           const a = e.target.closest(".smt-arrow");
           if (a) selectGoal(sel.i + +a.dataset.step, motion);
         });
-        ctx.listen(lineup, "keydown", (e) => {
+        ctx.listen($(".smt-prompts"), "click", (e) => {
+          const b = e.target.closest("button");
+          if (!b) return;
+          if (b.dataset.step) selectGoal(sel.i + +b.dataset.step, motion);
+          else if (b.dataset.race) stepRace(+b.dataset.race, true);
+        });
+        // ←/→/Home/End — условия, Q/E — группы (плечевые L/R) — со всей страницы, без клика по арене;
+        // во вкладках групп стрелки остаются за вкладками
+        ctx.listen(window, "keydown", (e) => {
+          if (e.ctrlKey || e.metaKey || e.altKey || document.querySelector("dialog[open]")) return;
+          if (e.target.closest?.("input, textarea, select, [contenteditable]")) return;
+          const key = e.key.toLowerCase();
+          if (key === "q" || key === "й") return stepRace(-1, true);
+          if (key === "e" || key === "у") return stepRace(1, true);
+          if (e.target.closest?.(".smt-races")) return;
           const n = groups[sel.race].goals.length;
           const to = { ArrowRight: sel.i + 1, ArrowLeft: sel.i - 1, Home: 0, End: n - 1 }[e.key];
           if (to == null) return;
           e.preventDefault();
           selectGoal(to, motion);
-        });
-        // L / R с клавиатуры — Q и E, как плечевые кнопки
-        ctx.listen(window, "keydown", (e) => {
-          if (e.ctrlKey || e.metaKey || e.altKey || document.querySelector("dialog[open]")) return;
-          if (e.target.closest?.("input, textarea, [contenteditable]")) return;
-          const key = e.key.toLowerCase();
-          if (key === "q" || key === "й") stepRace(-1, true);
-          else if (key === "e" || key === "у") stepRace(1, true);
         });
         let x0 = null;
         ctx.listen(lineup, "pointerdown", (e) => (x0 = e.pointerType === "mouse" ? null : e.clientX), { passive: true });
@@ -629,13 +666,16 @@
         let b = handed && ctx.handoff.data?.bloom;
         let hold;
         if (b) {
-          drawIn(b, 99);
+          // с главной заставка приходит живой — её цикл продолжается, страница только сменит рисунок
           const since = performance.now() - (ctx.handoff.data.started ?? 0);
-          hold = Math.max(HOLD.handoff, (ctx.handoff.data.seen ? 0 : 1200) - since);
+          hold = Math.max(HOLD.handoff, (ctx.handoff.data.seen ? 0 : HOLD.first) - since);
         } else {
           handed?.remove();
           b = makeBloom(ctx.layer("smt-bloom smt-direct"), game, esc, window.innerWidth / 2, window.innerHeight / 2);
-          drawIn(b, 99);
+          const t0 = b.t0;
+          b.draw = (now) => drawIn(b, 9, (now - t0) / 1000);
+          drawIn(b, 9, 0);
+          runBloom(b);
           b.title.classList.add("in");
           hold = seenBefore() ? HOLD.repeat : HOLD.direct;
         }
@@ -645,21 +685,16 @@
         const end = () => {
           if (finished) return;
           finished = true;
+          bloom.stopped = true;
           bloom.layer.remove();
         };
         const open = () => {
           if (start || finished) return;
           start = performance.now();
           bloom.title.classList.add("out");
-          let last = start;
-          const tick = (now) => {
-            if (finished) return;
-            const dt = Math.min(0.05, (now - last) / 1000);
-            last = now;
-            if (drawOut(bloom, (now - start) / 1000, dt)) end();
-            else requestAnimationFrame(tick);
+          bloom.draw = (now, dt) => {
+            if (drawOut(bloom, (now - start) / 1000, dt, (now - bloom.t0) / 1000)) end();
           };
-          requestAnimationFrame(tick);
           timers.push(setTimeout(end, 1800));
         };
         const timers = [setTimeout(open, hold)];
