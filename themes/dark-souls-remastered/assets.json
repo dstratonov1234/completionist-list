@@ -1,0 +1,37 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "stone",
+      "prompt": "Dark ancient weathered stone wall texture of a ruined gothic kingdom: near black large worn masonry blocks with subtle warm ash-grey tones, faint moss and cracks, soft even lighting, very low contrast so text on top stays readable, no text, no symbols.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "medium",
+      "max_width": 900
+    },
+    {
+      "name": "bonfire",
+      "prompt": "A dark fantasy bonfire without fire: a long medieval sword with a twisted spiral coiled blade plunged vertically into a small mound of grey ash, charred bones and a few skulls, rusted dark iron, side-lit, front view, centered, full object visible, isolated on a fully transparent background, no flames, no glow, no text.",
+      "size": "1024x1536",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 520
+    },
+    {
+      "name": "mist",
+      "prompt": "Soft white volumetric mist clouds for a dark fantasy game fog wall: billowing translucent cloud masses, airy and luminous, very soft edges, no wavy lines, no streaks, no fibers, large soft puffs with gentle bright highlights, fills the frame and fades to fully transparent near all four edges, isolated on a fully transparent background, no text, no figures.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 1280
+    },
+    {
+      "name": "boss",
+      "prompt": "Silhouette of a towering monstrous demon boss from a dark fantasy game, seen from the side facing left, hunched horned beast with a massive stone club, emerging from dark smoke and fog, almost pure black silhouette with a faint cold rim light along its edges, the lower part dissolving into smoke, isolated on a fully transparent background, no text, no ground.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 900
+    }
+  ]
+}

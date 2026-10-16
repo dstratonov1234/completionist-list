@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-16",
-  "build": "6d91854260",
+  "build": "0bd7f65795",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -283,6 +283,47 @@
         "headingWeight": 600,
         "headingSpacing": "0.06em",
         "radius": 2,
+        "heroPosition": "center 30%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "dark-souls-remastered",
+      "title": "Dark Souls: Remastered",
+      "status": "in_progress",
+      "started": "2025-02-16",
+      "aliases": [
+        "DS",
+        "DSR",
+        "Dark Souls",
+        "Дарк Соулс"
+      ],
+      "steamAppId": 570940,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570940/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570940/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570940/logo.png",
+      "goals": {
+        "done": 11,
+        "total": 14
+      },
+      "theme": {
+        "bg": "#0a0908",
+        "surface": "#15120f",
+        "text": "#e6dccb",
+        "accent": "#d6b06a",
+        "accent2": "#dfe7ef",
+        "fonts": [
+          "Forum",
+          "EB Garamond:wght@400;500;600;700"
+        ],
+        "displayFont": "Forum",
+        "headingFont": "Forum",
+        "bodyFont": "EB Garamond",
+        "bodySize": 17,
+        "headingWeight": 400,
+        "headingSpacing": "0.12em",
+        "radius": 0,
         "heroPosition": "center 30%",
         "css": true,
         "js": true

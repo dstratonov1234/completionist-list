@@ -1,0 +1,158 @@
+{
+  "title": "Dark Souls: Remastered — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Основной сюжет до Gwyn + концовка To Link the Fire",
+          "done": true,
+          "date": "2025-04-12",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/5/53/Gwyn.jpg/revision/latest/scale-to-width-down/1280?cb=20120802182640",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/1/19/Kiln_of_the_First_Flame_DS1.jpg/revision/latest/scale-to-width-down/800?cb=20160627163130",
+            "https://static.wikia.nocookie.net/darksouls/images/d/d7/Gwyn-Lord_of_Cinder.jpg/revision/latest/scale-to-width-down/1280?cb=20160511105443"
+          ],
+          "link": "https://darksouls.wiki.fextralife.com/Gwyn_Lord_of_Cinder"
+        },
+        {
+          "n": 2,
+          "title": "Обязательные боссы: Asylum Demon, Taurus Demon, Bell Gargoyles, Chaos Witch Quelaag, Iron Golem, Ornstein & Smough, Great Grey Wolf Sif, Pinwheel, Gravelord Nito, Four Kings, Seath the Scaleless, Bed of Chaos, Gwyn",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/b/b3/Ornstein_%26_Smough_-_Cutscene_End.png/revision/latest/scale-to-width-down/1280?cb=20250518195402",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/b/bc/Sif_Intro.png/revision/latest/scale-to-width-down/800?cb=20190714003403"
+          ],
+          "link": "https://darksouls.wiki.fextralife.com/Ornstein_and_Smough"
+        },
+        {
+          "n": 3,
+          "title": "Crossbreed Priscilla, Dark Sun Gwyndolin, Demon Firesage, Havel, King Jeremiah",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/c/c7/Crossbreed-priscilla.jpg/revision/latest/scale-to-width-down/1280?cb=20130110220241",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/1/1f/Gwyndolin_Ingame.jpg/revision/latest/scale-to-width-down/800?cb=20160630212846",
+            "https://static.wikia.nocookie.net/darksouls/images/a/aa/Demon_Firesage.jpg/revision/latest/scale-to-width-down/800?cb=20160608105549"
+          ],
+          "link": "https://darksouls.wiki.fextralife.com/Crossbreed_Priscilla"
+        },
+        {
+          "n": 4,
+          "title": "Painted World of Ariamis целиком, включая возврат в Undead Asylum за Peculiar Doll",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/7/74/Painted_World_of_Ariamis_01.jpg/revision/latest/scale-to-width-down/1280?cb=20130720053403",
+          "link": "https://darksouls.wiki.fextralife.com/Painted_World_of_Ariamis"
+        },
+        {
+          "n": 5,
+          "title": "Darkroot Basin: Hydra, Golden Crystal Golem, спасение Dusk",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/c/cb/Hydra1424.jpg/revision/latest/scale-to-width-down/1280?cb=20161213043533",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/e/ec/Golden_crystal_golem.jpg/revision/latest/scale-to-width-down/800?cb=20130125185723"
+          ],
+          "link": "https://darksouls.wiki.fextralife.com/Darkroot_Basin"
+        },
+        {
+          "n": 6,
+          "title": "DLC: Sanctuary Guardian, Knight Artorias, Black Dragon Kalameet (сбит Гофом), Manus",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/d/d5/DS1_PtDE_screenshot_%28Knight_Artorias_1%29.jpg/revision/latest/scale-to-width-down/1280?cb=20231113202208",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/f/fa/Manus%2C_Father_of_the_Abyss_Ingame.jpg/revision/latest/scale-to-width-down/1280?cb=20160702022012",
+            "https://static.wikia.nocookie.net/darksouls/images/4/4a/DS1_PtDE_screenshot_%28Black_Dragon_Kalameet_2%29.jpg/revision/latest/scale-to-width-down/800?cb=20231113202212"
+          ],
+          "link": "https://darksouls.wiki.fextralife.com/Artorias_the_Abysswalker"
+        },
+        {
+          "n": 7,
+          "title": "DLC-арки: Ciaran (отдана Soul of Artorias), спасение щенка Сифа, Gough, Elizabeth",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/5/56/DS1_PtDE_screenshot_%28Hawkeye_Gough_1%29.jpg/revision/latest/scale-to-width-down/1280?cb=20231113202210",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/c/ce/DS1_PtDE_screenshot_%28Elizabeth%29.jpg/revision/latest/scale-to-width-down/800?cb=20231113202215",
+            "https://static.wikia.nocookie.net/darksouls/images/2/2e/Sif_chasm.jpg/revision/latest?cb=20130127221910",
+            "https://static.wikia.nocookie.net/darksouls/images/0/04/Ciaran.jpg/revision/latest?cb=20130128150809"
+          ],
+          "link": "https://darksouls.wiki.fextralife.com/Lord's_Blade_Ciaran"
+        },
+        {
+          "n": 8,
+          "title": "Great Hollow, Valley of Drakes, Crystal Cave, The Abyss, Tomb of the Giants, Lost Izalith, Oolacile Township, Chasm of the Abyss",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/7/74/Crystal_Cave.jpg/revision/latest/scale-to-width-down/1280?cb=20160518111412",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/f/f7/LostIzalith.jpg/revision/latest/scale-to-width-down/800?cb=20160608105514",
+            "https://static.wikia.nocookie.net/darksouls/images/d/de/DS1_PtDE_screenshot_%28Oolacile_Township_1%29.jpg/revision/latest/scale-to-width-down/800?cb=20231113202215"
+          ],
+          "link": "https://darksouls.wiki.fextralife.com/Crystal_Cave"
+        },
+        {
+          "n": 9,
+          "title": "Rhea: спасение в Tomb of the Giants",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/e/e0/Reah_of_Thorolund_in_Tomb_of_the_Giants%2C_half_body_%28Dark_Souls_Remastered%29.webp/revision/latest/scale-to-width-down/800?cb=20231114195728",
+          "imageFit": "contain",
+          "link": "https://darksouls.wiki.fextralife.com/Rhea_of_Thorolund"
+        },
+        {
+          "n": 10,
+          "title": "Solaire: жук-паразит убит, Солер не сошёл с ума",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/c/c6/DS1_Promotional_screenshot_%28Warrior_of_Sunlight%29.jpg/revision/latest/scale-to-width-down/1280?cb=20231203223854",
+          "link": "https://darksouls.wiki.fextralife.com/Solaire_of_Astora",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/8/82/DDjxd.jpg/revision/latest/scale-to-width-down/1280?cb=20120817083253"
+          ]
+        },
+        {
+          "n": 19,
+          "title": "Path of the Dragon у Everlasting Dragon, превращение через Dragon Head Stone",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/darksouls/images/b/b4/DS1R_Stone_Dragon_%28full_body%29.webp/revision/latest/scale-to-width-down/1280?cb=20231124235020",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/d/d5/Dragon_Head_Stone_Fire.png/revision/latest?cb=20131219120230",
+            "https://static.wikia.nocookie.net/darksouls/images/2/20/Everlasting_Dragon.jpg/revision/latest?cb=20121215005423"
+          ],
+          "link": "https://darksouls.wiki.fextralife.com/Path_of_the_Dragon"
+        },
+        {
+          "n": 22,
+          "title": "Одно PvP-вторжение",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/darksouls/images/3/33/DS1_Promotional_screenshot_%28New_Londo_Ruins_PvP%29.jpg/revision/latest/scale-to-width-down/1280?cb=20231204001002",
+          "link": "https://darksouls.wiki.fextralife.com/Cracked_Red_Eye_Orb"
+        },
+        {
+          "n": 23,
+          "title": "Один кооп белым фантомом до победы над боссом",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/darksouls/images/5/58/DS1_promotional_screenshot_%28Taurus_Demon_co-op%29.jpg/revision/latest/scale-to-width-down/1280?cb=20231206215001",
+          "link": "https://darksouls.wiki.fextralife.com/White_Sign_Soapstone"
+        },
+        {
+          "n": 24,
+          "title": "Все остальные боссы основной игры и DLC: Capra, Gaping Dragon, Moonlight Butterfly, Stray Demon, Ceaseless Discharge, Centipede Demon и другие",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/darksouls/images/5/5c/DS1_promotional_screenshot_%28Gaping_Dragon_co-op%29.jpg/revision/latest/scale-to-width-down/1280?cb=20231210165501",
+          "gallery": [
+            "https://static.wikia.nocookie.net/darksouls/images/2/20/CapraDemon.jpg/revision/latest/scale-to-width-down/800?cb=20160517145311",
+            "https://static.wikia.nocookie.net/darksouls/images/8/87/Ceaseless_Discharge_Cliff_3.png/revision/latest/scale-to-width-down/800?cb=20141006052438"
+          ],
+          "link": "https://darksouls.wiki.fextralife.com/Bosses"
+        }
+      ]
+    }
+  ]
+}
