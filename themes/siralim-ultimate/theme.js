@@ -30,6 +30,7 @@
   const COVER_MS = 720;
   const OPEN_MS = 760;
   const HOLD = { direct: 600, repeat: 240, handoff: 260 };
+  const SPIN = 0.0105; // скорость водоворота, рад/мс — как у спрайта на главной (6 кадров за 0,6 с)
   // палитра водоворота: от тёмного фиолетового к светлому краю
   const SWIRL = [
     [24, 10, 48],
@@ -54,8 +55,39 @@
     const img = g.createImageData(w, h);
     const cx = ox / PX;
     const cy = oy / PX;
-    const far = Math.max(Math.hypot(cx, cy), Math.hypot(w - cx, cy), Math.hypot(cx, h - cy), Math.hypot(w - cx, h - cy)) + 4;
-    return { layer, canvas, title, g, img, w, h, cx, cy, far };
+    const p = { layer, canvas, title, g, img, w, h, cx, cy, t0: performance.now(), radius: () => 0, after: null, stopped: false };
+    p.far = farOf(p);
+    return p;
+  }
+
+  // радиус, при котором портал закрывает весь экран из своего центра
+  function farOf(p) {
+    const { w, h, cx, cy } = p;
+    return Math.max(Math.hypot(cx, cy), Math.hypot(w - cx, cy), Math.hypot(cx, h - cy), Math.hypot(w - cx, h - cy)) + 4;
+  }
+
+  // Один цикл на портал: водоворот крутится без остановки, пока портал на экране, — от заставки на главной
+  // до открытия страницы. Радиус и центр задаёт тот, кто сейчас ведёт портал (p.radius), поэтому на стыке
+  // заставки и страницы нет ни паузы, ни скачка.
+  function runPortal(p) {
+    const tick = (now) => {
+      if (p.stopped || !p.layer.isConnected) return;
+      drawPortal(p, p.radius(now), (now - p.t0) * SPIN);
+      p.after?.(now);
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  // цвет «пикселя» водоворота — общий для заставки и спрайта на главной
+  function swirlAt(x, y, dx, dy, r, spin) {
+    const dist = Math.hypot(dx, dy);
+    if (dist > r) return null;
+    if (dist > r - 2.2) return EDGE[(x + y) & 1 ? 0 : 1];
+    if (dist > r - 4) return EDGE[2];
+    const band = Math.sin(Math.atan2(dy, dx) * 3 + dist * 0.22 - spin) * 0.5 + 0.5;
+    const depth = clamp01(dist / Math.max(24, r));
+    return SWIRL[Math.min(4, Math.floor((band * 0.65 + depth * 0.35) * 5))];
   }
 
   // Портал радиусом r (в «пикселях»): внутри — закрученные полосы, по краю — светлое кольцо.
@@ -65,21 +97,10 @@
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         const i = (y * w + x) * 4;
-        const dx = x - cx;
-        const dy = y - cy;
-        const dist = Math.hypot(dx, dy);
-        if (dist > r) {
+        const c = swirlAt(x, y, x - cx, y - cy, r, spin);
+        if (!c) {
           d[i + 3] = 0;
           continue;
-        }
-        let c;
-        if (dist > r - 2.2) c = EDGE[(x + y) & 1 ? 0 : 1];
-        else if (dist > r - 4) c = EDGE[2];
-        else {
-          const a = Math.atan2(dy, dx);
-          const band = Math.sin(a * 3 + dist * 0.22 - spin) * 0.5 + 0.5;
-          const depth = clamp01(dist / Math.max(24, r));
-          c = SWIRL[Math.min(4, Math.floor((band * 0.65 + depth * 0.35) * 5))];
         }
         d[i] = c[0];
         d[i + 1] = c[1];
@@ -99,6 +120,19 @@
       return false;
     }
   }
+
+  // Где на арте (library_hero 1920×620) головы существ: [x, y низа полоски здоровья] — в порядке выбора.
+  // Все точки — в средней части арта, которая видна и на телефоне, и не под табличкой игры.
+  const SPOTS = [
+    [965, 146], // ящер со скрещёнными руками
+    [1165, 146], // фараон
+    [1360, 222], // минотавр
+    [1505, 126], // сова
+    [785, 298], // в очках
+    [700, 165], // жаба
+    [1000, 338], // черепа
+    [615, 352], // в капюшоне
+  ];
 
   // ---------- карточки отряда: по карточке на условие, полоса здоровья — выполнено или нет ----------
   function partyHtml(list, esc, cls) {
@@ -126,17 +160,8 @@
       const spin = (f / frames) * Math.PI * 2;
       for (let y = 0; y < size; y++) {
         for (let x = 0; x < size; x++) {
-          const dx = x - size / 2 + 0.5;
-          const dy = y - size / 2 + 0.5;
-          const dist = Math.hypot(dx, dy);
-          if (dist > r) continue;
-          let col;
-          if (dist > r - 1.6) col = EDGE[(x + y) & 1 ? 0 : 1];
-          else if (dist > r - 3) col = EDGE[2];
-          else {
-            const band = Math.sin(Math.atan2(dy, dx) * 3 + dist * 0.42 - spin) * 0.5 + 0.5;
-            col = SWIRL[Math.min(4, Math.floor((band * 0.65 + (dist / r) * 0.35) * 5))];
-          }
+          const col = swirlAt(x, y, x - size / 2 + 0.5, y - size / 2 + 0.5, r, spin);
+          if (!col) continue;
           const i = (y * size * frames + f * size + x) * 4;
           d[i] = col[0];
           d[i + 1] = col[1];
@@ -150,41 +175,50 @@
   }
 
   GameThemes.register("siralim-ultimate", {
-    // ---------- главная: мини-экран боя ----------
-    // Композиция — «отряд в бою»: сверху пиксельная строка сообщения с логотипом и кристаллами, внизу во всю
-    // ширину крупные карточки отряда (по одной на условие, полоса здоровья полная — выполнено), между ними
-    // арт как поле боя. При наведении курсор ▶ скачет по карточкам, как при выборе цели.
+    // ---------- главная: окно с артом ----------
+    // Композиция — арт открыт почти целиком и сам становится отрядом в бою: над головами существ на арте
+    // висят маленькие полоски здоровья, по одной на условие (зелёная — выполнено). В левом верхнем углу —
+    // одна табличка игры: логотип и счёт с кристаллом. При наведении над полосками по очереди прыгает
+    // курсор выбора цели, как в бою. Условий больше, чем мест на арте, — одна полоса по нижнему краю.
     banner(b) {
       const { done, total } = b.progress;
-      const logo = b.art.logo('class="sir-ban-logo" alt=""');
-      const n = Math.min(total, 12);
-      const cards = Array.from({ length: n }, (_, i) => ({ n: i + 1, done: i < done }));
+      const logo = b.art.logo('alt=""');
+      const hero = b.art.hero('alt="" loading="lazy"');
+      const onArt = total > 0 && total <= SPOTS.length;
+      const mobs = onArt
+        ? SPOTS.slice(0, total)
+            .sort((a, c) => a[0] - c[0])
+            .map(([x, y], i) => `<span class="sir-ban-mob${i < done ? " on" : ""}" style="--x:${((x / 1920) * 100).toFixed(2)}%;--y:${((y / 620) * 100).toFixed(2)}%;--i:${i}"><i></i></span>`)
+            .join("")
+        : "";
+      const segs = total > SPOTS.length && total <= 40 ? Array.from({ length: total }, (_, i) => `<i class="${i < done ? "on" : ""}"></i>`).join("") : "";
       b.el.innerHTML = `
         <span class="sir-ban">
-          <span class="sir-ban-art">${b.art.hero('alt="" loading="lazy"')}</span>
-          <span class="sir-ban-msg">
-            ${logo || `<span class="sir-ban-name" aria-hidden="true">${b.esc(b.game.title)}</span>`}
-            <span class="sir-sr">${b.esc(b.game.title)}. ${total ? `Выполнено ${done} из ${total} условий закрытия` : "Условия ещё не заданы"}</span>
-            <span class="sir-ban-count" aria-hidden="true"><img src="${b.assets}gem.webp" alt=""><b>${done}</b>/${total || "—"}</span>
+          <span class="sir-ban-art">
+            <span class="sir-ban-scene n${onArt ? total : 0}">${hero}${mobs ? `<span class="sir-ban-mobs" aria-hidden="true">${mobs}</span>` : ""}</span>
           </span>
+          <span class="sir-ban-tag">
+            ${logo ? `<span class="sir-ban-logo">${logo}</span>` : `<span class="sir-ban-name" aria-hidden="true">${b.esc(b.game.title)}</span>`}
+            <span class="sir-ban-count" aria-hidden="true"><img src="${b.assets}gem.webp" alt=""><b>${done}</b><span>/${total || "—"}</span></span>
+          </span>
+          <span class="sir-sr">${b.esc(b.game.title)}. ${total ? `Выполнено ${done} из ${total} условий закрытия` : "Условия ещё не заданы"}</span>
           ${
-            n
-              ? `<span class="sir-ban-party" style="--n:${n}" aria-hidden="true">
-                  <span class="sir-ban-hop">▼</span>
-                  ${partyHtml(cards, b.esc, "sir-card-ban")}
-                </span>`
-              : `<span class="sir-ban-empty">Условия ещё не заданы</span>`
+            total > SPOTS.length
+              ? `<span class="sir-ban-hp${segs ? "" : " flat"}" style="--n:${Math.min(total, 40)};--k:${(done / total).toFixed(4)}" aria-hidden="true">${segs}</span>`
+              : ""
           }
         </span>`;
     },
 
     // ---------- главная: при наведении открывается портал в реалм ----------
-    // Пиксельный реалм проступает за списком, в небе раскручивается водоворот (покадровый спрайт),
-    // вверх плывут кристаллы. Только CSS: анимации идут, пока у слоя класс .on.
+    // Пиксельный реалм проступает за списком, вокруг самого баннера раскручивается водоворот (покадровый
+    // спрайт; центр и размер — от баннера, --bcx/--bcy/--bh), вверх плывут кристаллы. По клику из того же
+    // центра вырастает портал заставки. Только CSS: анимации идут, пока у слоя класс .on.
     stage(s) {
+      const bh = document.querySelector('.gbanner[data-game="siralim-ultimate"]')?.offsetHeight || 210;
       let sprite = "";
       try {
-        sprite = portalSprite(6, 48);
+        sprite = portalSprite(6, Math.round((bh * 2.2) / PX));
       } catch {}
       const motes = Array.from({ length: 14 }, (_, i) => {
         const x = (i * 53 + 7) % 100;
@@ -199,34 +233,40 @@
         </div>`;
     },
 
-    // ---------- главная: портал открывается из баннера ----------
+    // ---------- главная: портал вырастает из центра водоворота вокруг баннера ----------
     cover(t) {
       const banner = document.querySelector('.gbanner[data-game="siralim-ultimate"]')?.getBoundingClientRect();
-      const ox = banner ? banner.left + banner.width * 0.3 : window.innerWidth / 2;
+      const ox = banner ? banner.left + banner.width / 2 : window.innerWidth / 2;
       const oy = banner ? banner.top + banner.height / 2 : window.innerHeight / 2;
       const p = makePortal(t.layer("sir-portal"), t.game, t.esc, ox, oy);
       t.data.portal = p;
       t.data.started = performance.now();
       t.data.seen = seenBefore();
       setTimeout(() => p.title.classList.add("in"), 360);
+      const start = performance.now();
+      // начинаем с размера водоворота за баннером (stage, диаметр 2,2 высоты плашки) и коротко проявляемся
+      // поверх него — это тот же портал выходит вперёд и раскрывается на весь экран
+      const r0 = Math.min(p.far, ((banner?.height ?? 0) * 1.1) / PX);
+      p.radius = (now) => r0 + (p.far - r0) * easeOut(clamp01((now - start) / COVER_MS));
+      p.canvas.classList.add("fresh");
+      requestAnimationFrame(() => requestAnimationFrame(() => p.canvas.classList.remove("fresh")));
+      runPortal(p); // крутится и дальше, пока страница не откроет портал
       return new Promise((resolve) => {
-        const start = performance.now();
         let done = false;
         const finish = () => {
           if (done) return;
           done = true;
-          drawPortal(p, p.far, 0);
+          p.radius = () => p.far;
+          p.after = null;
           resolve();
         };
-        const tick = (now) => {
+        p.after = (now) => now - start >= COVER_MS && finish();
+        // запасной путь, если rAF стоит (фоновая вкладка): закрыть экран сразу
+        setTimeout(() => {
           if (done) return;
-          const k = (now - start) / COVER_MS;
-          drawPortal(p, p.far * easeOut(clamp01(k)), k * 7);
-          if (k >= 1) finish();
-          else requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-        setTimeout(finish, COVER_MS + 200);
+          drawPortal(p, p.far, (performance.now() - p.t0) * SPIN);
+          finish();
+        }, COVER_MS + 200);
       });
     },
 
@@ -487,6 +527,8 @@
       }
 
       // ---------- вход: портал схлопывается к центру ----------
+      // С главной портал приходит уже крутящимся (его цикл не останавливается) — страница только меняет
+      // ему радиус и центр. Прямой заход — свой портал, сразу на весь экран.
       function intro() {
         const handed = ctx.handoff?.layers.find((l) => l.classList.contains("sir-portal"));
         if (!motion) return handed?.remove();
@@ -500,10 +542,12 @@
           p = makePortal(ctx.layer("sir-portal sir-direct"), game, esc, window.innerWidth / 2, window.innerHeight / 2);
           p.title.classList.add("in");
           hold = seenBefore() ? HOLD.repeat : HOLD.direct;
+          p.radius = () => p.far;
+          drawPortal(p, p.far, 0);
+          runPortal(p);
         }
-        drawPortal(p, p.far, 0);
         const portal = p;
-        // портал схлопывается к центру экрана: сначала смещаем его центр, затем сжимаем радиус
+        // портал схлопывается к центру экрана: центр плавно съезжает туда за первую половину, радиус сжимается
         const tx = portal.w / 2;
         const ty = portal.h / 2;
         const sx = portal.cx;
@@ -513,24 +557,22 @@
         const end = () => {
           if (finished) return;
           finished = true;
+          portal.stopped = true;
           portal.layer.remove();
         };
         const open = () => {
           if (start || finished) return;
           start = performance.now();
           portal.title.classList.add("out");
-          const tick = (now) => {
-            if (finished) return;
+          portal.after = null;
+          portal.radius = (now) => {
             const k = clamp01((now - start) / OPEN_MS);
-            const e = easeInOut(k);
-            portal.cx = sx + (tx - sx) * Math.min(1, k * 2);
-            portal.cy = sy + (ty - sy) * Math.min(1, k * 2);
-            const far = Math.max(Math.hypot(portal.cx, portal.cy), Math.hypot(portal.w - portal.cx, portal.cy), Math.hypot(portal.cx, portal.h - portal.cy), Math.hypot(portal.w - portal.cx, portal.h - portal.cy)) + 4;
-            drawPortal(portal, far * (1 - e), 3 + k * 9);
-            if (k >= 1) end();
-            else requestAnimationFrame(tick);
+            const m = easeInOut(Math.min(1, k * 2));
+            portal.cx = sx + (tx - sx) * m;
+            portal.cy = sy + (ty - sy) * m;
+            if (k >= 1) portal.after = end;
+            return farOf(portal) * (1 - easeInOut(k));
           };
-          requestAnimationFrame(tick);
           later(end, OPEN_MS + 900);
         };
         later(open, hold);

@@ -12,6 +12,10 @@
 //   {"mouse": [["mouseMoved",x,y], ["mousePressed",x,y], ["mouseReleased",x,y]]}
 //   {"key": "Escape", "vk": 27}        нажать клавишу
 //   {"shot": "имя", "full": true}      скриншот (full — всю страницу)
+//   {"traceStart": true} … {"traceStop": "имя"}   трасса производительности (style, layout, шрифты, JS) —
+//                                      <outPrefix>-<имя>.json, открывается в DevTools → Performance
+//   {"cdp": ["Domain.method", {...}], "save": "имя"}   любой вызов CDP (например Profiler.start/stop);
+//                                      с save — ответ в <outPrefix>-<имя>.json, иначе печатается
 //   {"castStart": "имя"} … {"castStop": true}   запись кадров скринкаста (20–50 к/с) — для плавности переходов:
 //                                      файлы <outPrefix>-<имя><№>_<мс от начала>.jpg
 // В конце печатаются ошибки консоли страницы (должно быть «errors: 0»).
@@ -115,6 +119,25 @@ try {
     }
     if (s.mouse) for (const [type, x, y] of s.mouse) await mouse(type, x, y);
     if (s.key) await send("Input.dispatchKeyEvent", { type: "keyDown", key: s.key, code: s.key, windowsVirtualKeyCode: s.vk ?? 0 });
+    if (s.traceStart) {
+      events.length = 0;
+      await send("Tracing.start", {
+        transferMode: "ReportEvents",
+        traceConfig: { includedCategories: ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "loading", "v8.execute", "fonts"] },
+      });
+    }
+    if (s.traceStop) {
+      await send("Tracing.end");
+      for (let k = 0; k < 100 && !events.some((e) => e.method === "Tracing.tracingComplete"); k++) await sleep(100);
+      const trace = events.filter((e) => e.method === "Tracing.dataCollected").flatMap((e) => e.params.value);
+      writeFileSync(`${out}-${s.traceStop}.json`, JSON.stringify({ traceEvents: trace }));
+      console.log("trace", s.traceStop, trace.length, "events");
+    }
+    if (s.cdp) {
+      const r = await send(s.cdp[0], s.cdp[1] ?? {});
+      if (s.save) writeFileSync(`${out}-${s.save}.json`, JSON.stringify(r));
+      else console.log("cdp:", s.cdp[0], JSON.stringify(r).slice(0, 300));
+    }
     if (s.castStart) {
       cast.name = s.castStart;
       cast.frames = [];

@@ -608,11 +608,39 @@
 
   const bannerGame = (el) => state.byId.get(el?.closest?.(".gbanner")?.dataset.game);
 
+  // Сцене темы — где баннер, на который навели: центр и размер в координатах окна (--bcx, --bcy, --bw, --bh),
+  // чтобы задумка наведения могла выстроиться вокруг самого баннера, а заставка — начаться оттуда же.
+  function placeStage(g, banner) {
+    if (!banner) return;
+    stage.banner = banner;
+    const r = banner.getBoundingClientRect();
+    const layer = stageLayer(g);
+    layer.style.setProperty("--bcx", `${Math.round(r.left + r.width / 2)}px`);
+    layer.style.setProperty("--bcy", `${Math.round(r.top + r.height / 2)}px`);
+    layer.style.setProperty("--bw", `${Math.round(r.width)}px`);
+    layer.style.setProperty("--bh", `${Math.round(r.height)}px`);
+  }
+
+  let placing = 0;
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (placing || !stage.current || state.entering || state.arriving || location.hash.startsWith("#/game/")) return;
+      placing = requestAnimationFrame(() => {
+        placing = 0;
+        const g = state.byId.get(stage.current);
+        if (g && stage.banner?.isConnected && stage.banner.dataset.game === g.id) placeStage(g, stage.banner);
+      });
+    },
+    { passive: true },
+  );
+
   els.list.addEventListener("pointerover", (e) => {
     if (e.pointerType !== "mouse") return;
     const g = bannerGame(e.target);
     if (!g) return;
     setStage(g);
+    placeStage(g, e.target.closest(".gbanner"));
     if (g.theme?.js === true) loadModule(g.id); // чтобы заставка могла начаться сразу по клику
   });
 
@@ -629,6 +657,7 @@
     const g = bannerGame(e.target);
     if (!g) return;
     setStage(g);
+    placeStage(g, e.target.closest(".gbanner"));
     if (g.theme?.js === true) loadModule(g.id);
   });
 
@@ -651,6 +680,8 @@
     }
     state.entering = true;
     setStage(g);
+    // Выбранный баннер держит своё выделение, пока главная растворяется (мышь с него в этот момент «уходит»)
+    els.list.querySelector(`.gbanner[data-game="${CSS.escape(g.id)}"]`)?.classList.add("picked");
     document.body.classList.add("leaving");
     requestAnimationFrame(() => clearTimeout(stage.leaveTimer));
     const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -902,6 +933,7 @@
     els.gameView.innerHTML = "";
     els.listView.hidden = false;
     document.body.classList.remove("leaving");
+    for (const b of els.list.querySelectorAll(".gbanner.picked")) b.classList.remove("picked");
     document.title = SITE_TITLE;
     state.currentGame = null;
     stageEl.hidden = false;

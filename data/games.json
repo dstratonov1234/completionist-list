@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-15",
-  "build": "2341684a6b",
+  "build": "e1d825e47f",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -71,11 +71,11 @@
         "accent2": "#c99bff",
         "fonts": [
           "Tiny5",
-          "Handjet:wght@400;500;600;700"
+          "Pixelify Sans:wght@400;500;600;700"
         ],
         "displayFont": "Tiny5",
         "headingFont": "Tiny5",
-        "bodyFont": "Handjet",
+        "bodyFont": "Pixelify Sans",
         "bodySize": 18,
         "headingWeight": 400,
         "radius": 0,

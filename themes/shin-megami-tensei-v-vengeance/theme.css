@@ -154,7 +154,7 @@
 
 /* выделение — как выбранный пункт меню: плашка выезжает вправо, по рамке бежит свет алый → голубой,
    слева загорается метка выбора, наискосок проходит блик */
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked),
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible {
   transform: translateX(8px);
   box-shadow: none;
@@ -193,9 +193,9 @@
   pointer-events: none;
 }
 
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban::before,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked) .smt-ban::before,
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible .smt-ban::before { transform: none; }
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban::after,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked) .smt-ban::after,
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible .smt-ban::after { left: 120%; transition: left 0.8s ease-out; }
 
 /* демоны с обложки по обе стороны (справа — как на обложке, слева — зеркально), в середине — тьма под луну */
@@ -317,7 +317,7 @@
   opacity: 0;
 }
 
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-orbs i,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked) .smt-ban-orbs i,
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible .smt-ban-orbs i { animation: smt-ban-rise 2.6s linear var(--d) infinite; }
 
 @keyframes smt-ban-rise {
@@ -326,15 +326,15 @@
   100% { transform: translateY(-240px); opacity: 0; }
 }
 
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-lock i,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked) .smt-ban-lock i,
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible .smt-ban-lock i { opacity: 1; transform: none; }
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-moon { transform: translateY(-4px) scale(1.05); }
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-moonsvg { filter: drop-shadow(0 0 22px rgba(255, 106, 124, 0.8)); }
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-glow { transform: scale(1.25); }
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-side img { filter: grayscale(0.4) sepia(0.5) hue-rotate(-30deg) saturate(2) brightness(0.9) contrast(1.1); }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked) .smt-ban-moon { transform: translateY(-4px) scale(1.05); }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked) .smt-ban-moonsvg { filter: drop-shadow(0 0 22px rgba(255, 106, 124, 0.8)); }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked) .smt-ban-glow { transform: scale(1.25); }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked) .smt-ban-side img { filter: grayscale(0.4) sepia(0.5) hue-rotate(-30deg) saturate(2) brightness(0.9) contrast(1.1); }
 
 @media (prefers-reduced-motion: reduce) {
-  .gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover,
+  .gbanner[data-game="shin-megami-tensei-v-vengeance"]:is(:hover, .picked),
   .gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible { transform: none; animation: none; }
   .gbanner[data-game="shin-megami-tensei-v-vengeance"] .smt-ban::after { display: none; }
   .gbanner[data-game="shin-megami-tensei-v-vengeance"] .smt-ban-orbs { display: none; }

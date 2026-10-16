@@ -17,7 +17,7 @@
   --sir-red: #ff6b6b;
   --sir-violet: #c99bff;
   --sir-pixel: "Tiny5", monospace;
-  --sir-text: "Handjet", "Tiny5", sans-serif;
+  --sir-text: "Pixelify Sans", "Tiny5", sans-serif;
 }
 
 .sir-sr {
@@ -97,143 +97,230 @@
 .sir-card.on .sir-hp i { width: 100%; }
 
 /* ====================================================================================
-   Главная: плашка — отряд в бою
+   Главная: плашка — окно с артом, арт — отряд в бою
    ==================================================================================== */
 
-/* силуэт — пиксельное окно игры: углы ступеньками по 4 px, толстая пиксельная рамка
-   (фон самой ссылки виден в 4 px вокруг плашки, внутри — тёмная вторая линия) */
+/* силуэт — пиксельное окно игры: углы ступеньками по 6 px, толстая пиксельная рамка
+   (фон самой ссылки виден в 4 px вокруг плашки); в покое рамка приглушённая */
 .gbanner[data-game="siralim-ultimate"] {
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  background: var(--sir-line);
-  clip-path: polygon(0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px));
+  background: #8e96b8;
+  clip-path: polygon(0 12px, 6px 12px, 6px 6px, 12px 6px, 12px 0, calc(100% - 12px) 0, calc(100% - 12px) 6px, calc(100% - 6px) 6px, calc(100% - 6px) 12px, 100% 12px, 100% calc(100% - 12px), calc(100% - 6px) calc(100% - 12px), calc(100% - 6px) calc(100% - 6px), calc(100% - 12px) calc(100% - 6px), calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 6px), 6px calc(100% - 6px), 6px calc(100% - 12px), 0 calc(100% - 12px));
   transition: transform 0.16s steps(2);
 }
 
-/* выделение — по-пиксельному: рамка мигает золотом покадрово, окно подскакивает на 4 px,
-   курсор скачет по карточкам; при нажатии окно вдавливается, как кнопка */
-.gbanner[data-game="siralim-ultimate"]:hover,
+/* выделение — по-пиксельному: рамка покадрово мигает белым и становится золотой, окно подскакивает
+   на 4 px, над существами прыгает курсор выбора цели; при нажатии окно вдавливается, как кнопка */
+.gbanner[data-game="siralim-ultimate"]:is(:hover, .picked),
 .gbanner[data-game="siralim-ultimate"]:focus-visible {
   transform: translateY(-4px);
   box-shadow: none;
   outline: none;
   background: var(--sir-gold);
-  animation: sir-frame-blink 0.5s steps(1) 2;
+  animation: sir-frame-blink 0.4s steps(1) 2;
 }
 
 .gbanner[data-game="siralim-ultimate"]:active { transform: translateY(2px); }
 
-@keyframes sir-frame-blink { 50% { background: #fff; } }
+@keyframes sir-frame-blink {
+  0% { background: #fff; }
+  50% { background: var(--sir-gold); }
+}
 
 .sir-ban {
-  margin: 4px;
-  min-height: 202px;
-  background: var(--sir-ink);
-  box-shadow: inset 0 0 0 3px var(--sir-line-in);
-  clip-path: polygon(0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px));
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 12px 14px 14px;
-}
-
-/* арт — поле боя между строкой сообщения и отрядом */
-.sir-ban-art { position: absolute; inset: 0; z-index: -2; }
-
-.sir-ban-art img {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 32%;
-  transition: transform 0.8s steps(8);
+  min-height: 202px;
+  margin: 4px;
+  overflow: hidden;
+  background: var(--sir-ink);
+  clip-path: polygon(0 12px, 6px 12px, 6px 6px, 12px 6px, 12px 0, calc(100% - 12px) 0, calc(100% - 12px) 6px, calc(100% - 6px) 6px, calc(100% - 6px) 12px, 100% 12px, 100% calc(100% - 12px), calc(100% - 6px) calc(100% - 12px), calc(100% - 6px) calc(100% - 6px), calc(100% - 12px) calc(100% - 6px), calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 6px), 6px calc(100% - 6px), 6px calc(100% - 12px), 0 calc(100% - 12px));
 }
+
+/* арт открыт почти целиком; затемнены только угол под табличкой и низ */
+.sir-ban-art { position: absolute; inset: 0; container-type: size; }
+
+/* коробка арта = object-fit: cover по центру, сдвиг по высоте 30 % — полоски здоровья стоят
+   в процентах арта и едут вместе с ним при любой ширине плашки */
+.sir-ban-scene {
+  --sw: max(100cqw, 100cqh * 3.0968);
+  --sh: max(100cqh, 100cqw * 0.3229);
+  position: absolute;
+  left: calc((100cqw - var(--sw)) / 2);
+  top: calc((100cqh - var(--sh)) * 0.3);
+  width: var(--sw);
+  height: var(--sh);
+}
+
+.sir-ban-scene > img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .sir-ban-art::after {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(11, 10, 24, 0.75) 0%, rgba(11, 10, 24, 0.05) 35%, rgba(11, 10, 24, 0.15) 55%, rgba(11, 10, 24, 0.85) 100%),
-    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0 2px, transparent 2px 4px);
+    radial-gradient(ellipse 300px 110px at 0 0, rgba(11, 10, 24, 0.7), transparent 70%),
+    linear-gradient(0deg, rgba(11, 10, 24, 0.45), transparent 40px);
+  pointer-events: none;
 }
 
-.gbanner[data-game="siralim-ultimate"]:hover .sir-ban-art img { transform: scale(1.04); }
-
-/* строка сообщения сверху */
-.sir-ban-msg {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  height: 50px;
-  padding: 0 14px;
-  border: 2px solid var(--sir-line);
-  background: rgba(11, 11, 26, 0.9);
-  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #04040b;
-}
-
-.sir-ban-logo {
-  display: block;
-  height: 40px;
-  max-width: 60%;
-  object-fit: contain;
-  object-position: left center;
-  filter: drop-shadow(0 0 8px rgba(201, 155, 255, 0.6)) drop-shadow(2px 2px 0 #000);
-}
-
-.sir-ban-name { font: 24px/1 var(--sir-pixel); color: #fff; text-shadow: 3px 3px 0 #000; }
-
-.sir-ban-count { display: flex; flex: none; align-items: center; gap: 6px; font: 18px/1 var(--sir-pixel); color: #fff; text-shadow: 2px 2px 0 #000; }
-.sir-ban-count img { width: 18px; image-rendering: pixelated; }
-.sir-ban-count b { font-size: 30px; font-weight: 400; color: var(--sir-green); }
-
-/* отряд — крупные карточки во всю ширину */
-.sir-ban-party {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
-  gap: 8px;
-}
-
-.sir-card-ban { padding: 8px 10px 10px; gap: 8px; }
-.sir-card-ban .sir-card-n { font-size: 24px; }
-.sir-card-ban .sir-hp { height: 9px; }
-.sir-card-ban.on::after { content: "✓"; position: absolute; right: 8px; top: 6px; font: 16px/1 var(--sir-pixel); color: var(--sir-green); text-shadow: 2px 2px 0 #000; }
-.gbanner[data-game="siralim-ultimate"]:hover .sir-card-ban { border-color: #fff; }
-
-/* курсор выбора цели — скачет по карточкам при наведении */
-.sir-ban-hop {
+/* полоски здоровья над существами — по одной на условие; зелёная — выполнено, пустая — нет */
+.sir-ban-mob {
   position: absolute;
-  top: -20px;
-  left: calc(50% / var(--n));
-  font: 16px/1 var(--sir-pixel);
+  z-index: 1;
+  left: var(--x);
+  top: var(--y);
+  width: 58px;
+  height: 12px;
+  padding: 2px;
+  background: #04040b;
+  box-shadow: 0 0 0 1px rgba(233, 236, 245, 0.55), 2px 2px 0 1px rgba(0, 0, 0, 0.6);
+  transform: translate(-50%, -100%);
+}
+
+.sir-ban-mob i { display: block; height: 100%; background: #3a1420; }
+.sir-ban-mob.on i { background: var(--sir-green); box-shadow: inset 0 2px 0 #b8f7b2, inset 0 -2px 0 #2f9a2b; }
+
+/* курсор выбора цели — по очереди над каждой полоской */
+.sir-ban-mob::before {
+  content: "▼";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 3px);
+  font: 19px/1 var(--sir-pixel);
   color: var(--sir-gold);
   text-shadow: 2px 2px 0 #000;
   transform: translateX(-50%);
   opacity: 0;
 }
 
-.gbanner[data-game="siralim-ultimate"]:hover .sir-ban-hop,
-.gbanner[data-game="siralim-ultimate"]:focus-visible .sir-ban-hop {
-  opacity: 1;
-  animation: sir-ban-hop calc(var(--n) * 0.32s) steps(var(--n), jump-none) infinite;
+.gbanner[data-game="siralim-ultimate"]:is(:hover, .picked) .sir-ban-mob::before,
+.gbanner[data-game="siralim-ultimate"]:focus-visible .sir-ban-mob::before {
+  animation-timing-function: steps(1), steps(1);
+  animation-iteration-count: infinite;
+  animation-delay: calc(var(--i) * 0.36s), 0s;
 }
 
-@keyframes sir-ban-hop {
-  from { left: calc(50% / var(--n)); }
-  to { left: calc(100% - 50% / var(--n)); }
+.gbanner[data-game="siralim-ultimate"]:is(:hover, :focus-visible, .picked) .sir-ban-scene.n1 .sir-ban-mob::before { animation-name: sir-tgt-1, sir-tgt-bob; animation-duration: 0.36s, 0.36s; }
+@keyframes sir-tgt-1 { 0% { opacity: 1; } 100.000% { opacity: 0; } 100% { opacity: 0; } }
+.gbanner[data-game="siralim-ultimate"]:is(:hover, :focus-visible, .picked) .sir-ban-scene.n2 .sir-ban-mob::before { animation-name: sir-tgt-2, sir-tgt-bob; animation-duration: 0.72s, 0.36s; }
+@keyframes sir-tgt-2 { 0% { opacity: 1; } 50.000% { opacity: 0; } 100% { opacity: 0; } }
+.gbanner[data-game="siralim-ultimate"]:is(:hover, :focus-visible, .picked) .sir-ban-scene.n3 .sir-ban-mob::before { animation-name: sir-tgt-3, sir-tgt-bob; animation-duration: 1.08s, 0.36s; }
+@keyframes sir-tgt-3 { 0% { opacity: 1; } 33.333% { opacity: 0; } 100% { opacity: 0; } }
+.gbanner[data-game="siralim-ultimate"]:is(:hover, :focus-visible, .picked) .sir-ban-scene.n4 .sir-ban-mob::before { animation-name: sir-tgt-4, sir-tgt-bob; animation-duration: 1.44s, 0.36s; }
+@keyframes sir-tgt-4 { 0% { opacity: 1; } 25.000% { opacity: 0; } 100% { opacity: 0; } }
+.gbanner[data-game="siralim-ultimate"]:is(:hover, :focus-visible, .picked) .sir-ban-scene.n5 .sir-ban-mob::before { animation-name: sir-tgt-5, sir-tgt-bob; animation-duration: 1.80s, 0.36s; }
+@keyframes sir-tgt-5 { 0% { opacity: 1; } 20.000% { opacity: 0; } 100% { opacity: 0; } }
+.gbanner[data-game="siralim-ultimate"]:is(:hover, :focus-visible, .picked) .sir-ban-scene.n6 .sir-ban-mob::before { animation-name: sir-tgt-6, sir-tgt-bob; animation-duration: 2.16s, 0.36s; }
+@keyframes sir-tgt-6 { 0% { opacity: 1; } 16.667% { opacity: 0; } 100% { opacity: 0; } }
+.gbanner[data-game="siralim-ultimate"]:is(:hover, :focus-visible, .picked) .sir-ban-scene.n7 .sir-ban-mob::before { animation-name: sir-tgt-7, sir-tgt-bob; animation-duration: 2.52s, 0.36s; }
+@keyframes sir-tgt-7 { 0% { opacity: 1; } 14.286% { opacity: 0; } 100% { opacity: 0; } }
+.gbanner[data-game="siralim-ultimate"]:is(:hover, :focus-visible, .picked) .sir-ban-scene.n8 .sir-ban-mob::before { animation-name: sir-tgt-8, sir-tgt-bob; animation-duration: 2.88s, 0.36s; }
+@keyframes sir-tgt-8 { 0% { opacity: 1; } 12.500% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes sir-tgt-bob { 50% { transform: translate(-50%, -3px); } }
+
+/* табличка игры — маленькое окошко интерфейса в левом верхнем углу */
+.sir-ban-tag {
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 12px 5px 10px;
+  border: 2px solid var(--sir-line);
+  background: rgba(11, 11, 26, 0.86);
+  box-shadow: inset 0 0 0 2px var(--sir-line-in), 2px 2px 0 2px #04040b;
 }
 
-.sir-ban-empty { align-self: flex-start; padding: 6px 10px; border: 2px solid var(--sir-line); background: rgba(11, 11, 26, 0.9); font: 14px/1.3 var(--sir-pixel); color: rgba(255, 255, 255, 0.8); }
+/* у логотипа прозрачные поля сверху и снизу (~15 %) — срезаем их рамкой, без object-view-box */
+.sir-ban-logo { display: block; flex: none; height: 40px; overflow: hidden; }
+
+.sir-ban-logo img {
+  display: block;
+  width: auto;
+  height: 58px;
+  margin: -9px 0;
+  filter: drop-shadow(0 0 6px rgba(201, 155, 255, 0.5));
+}
+
+.sir-ban-name { font: 20px/1 var(--sir-pixel); color: #fff; text-shadow: 2px 2px 0 #000; }
+
+/* счёт — цифрами Pixelify Sans (у Tiny5 «6» похожа на «Б»), по базовой линии */
+.sir-ban-count { display: flex; flex: none; align-items: baseline; font: 600 21px/1 var(--sir-text); color: rgba(255, 255, 255, 0.85); text-shadow: 2px 2px 0 #000; }
+.sir-ban-count img { align-self: center; width: 16px; margin-right: 6px; image-rendering: pixelated; }
+.sir-ban-count b { font: 700 33px/1 var(--sir-text); color: var(--sir-green); }
+
+/* условий больше, чем мест на арте: одна полоса здоровья по нижнему краю */
+.sir-ban-hp {
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: 2px;
+  height: 14px;
+  padding: 2px;
+  background: #04040b;
+  box-shadow: 0 0 0 2px var(--sir-line-in);
+}
+
+.sir-ban-hp i { background: #3a1420; }
+.sir-ban-hp i.on,
+.sir-ban-hp.flat::before { background: var(--sir-green); box-shadow: inset 0 3px 0 #b8f7b2, inset 0 -3px 0 #2f9a2b; }
+.sir-ban-hp.flat { display: block; }
+.sir-ban-hp.flat::before { content: ""; display: block; width: calc(var(--k) * 100%); height: 100%; }
+
+/* блик — два прохода тонкой полоской по верху делений */
+.sir-ban-hp::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc((100% - 4px) / var(--n));
+  height: 3px;
+  background: #fff;
+  opacity: 0;
+}
+
+.gbanner[data-game="siralim-ultimate"]:is(:hover, .picked) .sir-ban-hp::after,
+.gbanner[data-game="siralim-ultimate"]:focus-visible .sir-ban-hp::after {
+  animation: sir-ban-shine calc(var(--n) * 0.06s + 0.3s) steps(var(--n), jump-none) 2;
+}
+
+@keyframes sir-ban-shine {
+  from { left: 2px; opacity: 1; }
+  99% { opacity: 1; }
+  to { left: calc(100% - 2px - (100% - 4px) / var(--n)); opacity: 0; }
+}
+
+.sir-ban-hp.flat::after { display: none; }
+
+@media (max-width: 600px) {
+  .sir-ban { min-height: 168px; }
+  /* на узкой плашке табличка уходит в левый нижний угол — верх арта занят полосками над головами */
+  .sir-ban-tag { left: 8px; top: auto; bottom: 8px; gap: 8px; padding: 4px 8px; }
+  .sir-ban-art::after { background: radial-gradient(ellipse 220px 90px at 0 100%, rgba(11, 10, 24, 0.75), transparent 70%); }
+  .sir-ban-logo { height: 30px; }
+  .sir-ban-logo img { height: 44px; margin: -7px 0; }
+  .sir-ban-count { font-size: 17px; }
+  .sir-ban-count b { font-size: 26px; }
+  .sir-ban-count img { width: 13px; margin-right: 4px; }
+  .sir-ban-mob { width: 34px; height: 9px; padding: 1px; }
+  .sir-ban-mob::before { font-size: 13px; }
+  .sir-ban-hp { left: 8px; right: 8px; bottom: 8px; height: 12px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .gbanner[data-game="siralim-ultimate"]:hover .sir-ban-hop { animation: none; }
-  .gbanner[data-game="siralim-ultimate"]:hover,
+  .gbanner[data-game="siralim-ultimate"]:is(:hover, .picked),
   .gbanner[data-game="siralim-ultimate"]:focus-visible { transform: none; animation: none; }
+  .gbanner[data-game="siralim-ultimate"] .sir-ban-mob::before,
+  .gbanner[data-game="siralim-ultimate"] .sir-ban-hp::after { display: none; }
 }
 
 /* ====================================================================================
@@ -262,11 +349,13 @@
 }
 
 /* водоворот: спрайт из 6 кадров, листается шагами, а сам портал раскрывается из точки */
+/* водоворот — вокруг самого баннера: центр и размер от баннера (переменные слоя от движка);
+   кольцо выглядывает над и под плашкой, «пиксель» спрайта равен «пикселю» портала заставки */
 .sir-hv-portal {
   position: absolute;
-  left: 50%;
-  top: 20%;
-  width: clamp(180px, 22vw, 320px);
+  left: var(--bcx, 50%);
+  top: var(--bcy, 30%);
+  width: calc(var(--bh, 210px) * 2.2);
   aspect-ratio: 1;
   transform: translate(-50%, -50%) scale(0);
   transition: transform 0.7s steps(7) 0.2s;
@@ -323,7 +412,8 @@
    ==================================================================================== */
 
 .sir-portal { position: fixed; inset: 0; z-index: 75; pointer-events: none; }
-.sir-portal canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+.sir-portal canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; transition: opacity 0.16s linear; }
+.sir-portal canvas.fresh { opacity: 0; }
 
 .sir-portal-title {
   position: absolute;
@@ -676,17 +766,9 @@
   .sir-lore { font-size: 15px; }
   .sir-dmg { font-size: 26px; }
   .sir-nav { width: 100%; }
-  .sir-ban { padding: 10px; }
-  .sir-ban-msg { height: 44px; padding: 0 10px; }
-  .sir-ban-logo { height: 32px; }
-  .sir-ban-party { gap: 5px; }
-  .sir-card-ban { padding: 6px 5px 7px; }
-  .sir-card-ban .sir-card-n { font-size: 17px; }
-  .sir-card-ban.on::after { font-size: 11px; right: 4px; top: 5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .sir-cursor,
-  .sir-card-lg,
-  .sir-ban-art img { animation: none !important; transition: none; }
+  .sir-card-lg { animation: none !important; transition: none; }
 }
