@@ -120,15 +120,15 @@
   top: 0;
   font: italic 900 62px/1 var(--t-display, sans-serif);
   letter-spacing: -0.01em;
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(127, 220, 255, 0.9);
+  color: rgba(17, 176, 242, 0.32);
+  text-shadow: 0 0 1px rgba(170, 235, 255, 0.7), 0 0 12px rgba(17, 176, 242, 0.35);
   white-space: nowrap;
   transition: opacity 0.25s ease 0.3s, transform 0.25s ease 0.3s;
 }
 
-.p3-ban-word > .p3-w2 { opacity: 0; transform: translateY(6px); color: rgba(61, 255, 149, 0.85); -webkit-text-stroke-color: #c9ffe1; text-shadow: 0 0 18px rgba(61, 255, 149, 0.6); }
+.p3-ban-word > .p3-w2 { opacity: 0; transform: translateY(6px); color: rgba(61, 255, 149, 0.5); text-shadow: 0 0 1px rgba(201, 255, 225, 0.8), 0 0 16px rgba(61, 255, 149, 0.5); }
 
-.p3-ban-num { position: relative; line-height: 1; text-shadow: 0 3px 0 var(--p3-navy), 0 0 14px rgba(5, 10, 28, 0.9); }
+.p3-ban-num { position: relative; line-height: 1; text-shadow: 0 0 1px #06103a, 2px 2px 0 #06103a, -2px 2px 0 #06103a, 2px -2px 0 #06103a, -2px -2px 0 #06103a, 0 2px 0 #06103a, 0 -2px 0 #06103a, 2px 0 0 #06103a, -2px 0 0 #06103a, 0 5px 0 var(--p3-navy); }
 .p3-ban-num b { font: italic 900 50px/1 var(--t-display, sans-serif); color: #fff; }
 .p3-ban-num span { margin-left: 2px; font: italic 800 24px/1 var(--t-display, sans-serif); color: var(--p3-sky-hi); }
 
@@ -427,14 +427,16 @@
   right: 0;
   top: -4px;
   font: italic 900 76px/1 var(--t-display, sans-serif);
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(127, 220, 255, 0.85);
+  /* как WEEKDAY в календаре игры: полупрозрачная подложка, а не второй слой тонких линий;
+     без обводки — у вариативного шрифта она рисует перекрытия контуров внутри букв */
+  color: rgba(17, 176, 242, 0.3);
+  text-shadow: 0 0 1px rgba(170, 235, 255, 0.7), 0 0 14px rgba(17, 176, 242, 0.35);
   white-space: nowrap;
 }
 
-.p3-cal-num { position: relative; display: block; font: italic 800 30px/1 var(--t-display, sans-serif); color: var(--p3-sky-hi); text-shadow: 0 3px 0 var(--p3-navy); }
+.p3-cal-num { position: relative; display: block; font: italic 800 30px/1 var(--t-display, sans-serif); color: var(--p3-sky-hi); text-shadow: 0 0 1px #06103a, 2px 2px 0 #06103a, -2px 2px 0 #06103a, 2px -2px 0 #06103a, -2px -2px 0 #06103a, 0 2px 0 #06103a, 0 -2px 0 #06103a, 2px 0 0 #06103a, -2px 0 0 #06103a, 0 5px 0 var(--p3-navy); }
 .p3-cal-num b { font-size: 58px; font-weight: 900; color: #fff; }
-.p3-cal-label { position: relative; display: block; margin-top: 4px; font: 700 12px/1 var(--t-heading, sans-serif); letter-spacing: 0.22em; text-transform: uppercase; color: var(--p3-sky-hi); }
+.p3-cal-label { position: relative; display: block; margin-top: 6px; text-shadow: 0 0 6px #06103a, 0 1px 0 #06103a; font: 700 12px/1 var(--t-heading, sans-serif); letter-spacing: 0.22em; text-transform: uppercase; color: var(--p3-sky-hi); }
 
 /* ---------- часы и карта ---------- */
 
