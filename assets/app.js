@@ -801,7 +801,8 @@
       if (e.key === "ArrowRight") showLightbox(state.lightbox.index + 1);
       return;
     }
-    if (e.key === "Escape" && !els.gameView.hidden) location.hash = "#/";
+    // Esc в открытом окне темы (экран анализа и т.п.) закрывает только окно, со страницы не уводит
+    if (e.key === "Escape" && !els.gameView.hidden && !document.querySelector("dialog[open]")) location.hash = "#/";
   });
 
   // ---------- routing ----------

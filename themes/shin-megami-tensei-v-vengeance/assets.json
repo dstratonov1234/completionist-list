@@ -1,0 +1,30 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "grid",
+      "prompt": "Dark crimson abstract backdrop for a website background, inspired by a demonic JRPG key art: a deep black-to-blood-red gradient covered by a fine thin square grid of faint red lines, scattered glossy red circular droplets and bubbles of many sizes (some sharp, some blurred like bokeh), a few thin flowing smoke-like lines, heavy black vignette on the left half so text stays readable, wide panorama, no characters, no creatures, no text, no letters, no symbols.",
+      "size": "1536x1024", "background": "opaque", "quality": "medium", "max_width": 1600
+    },
+    {
+      "name": "frame",
+      "prompt": "Single corner piece of a sleek futuristic game menu frame, placed in the top-left corner of the canvas: two thin parallel silver-white metallic lines meeting at a sharp angle with a small notch cut, a tiny diamond and a short bright cyan accent line, subtle chrome gradient, minimal and precise like a modern JRPG status screen, two long thin lines run along the top edge and down the left edge, the rest of the canvas empty, isolated on a fully transparent background, no text, no characters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 512, "mirror": true
+    },
+    {
+      "name": "moon",
+      "prompt": "A full moon disc seen straight on, pale silver-lavender surface with soft grey craters and maria, faint cold glow at the rim, slightly eerie and luminous, perfectly round and centered, isolated on a fully transparent background, no stars, no clouds, no text.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 512
+    },
+    {
+      "name": "turn",
+      "prompt": "Small glowing game UI icon: an eight-pointed star emblem with a white-hot core inside a thin circle ring, electric cyan and blue light, crisp edges with a soft bloom, symmetrical, centered, isolated on a fully transparent background, no text, no letters.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 256
+    },
+    {
+      "name": "water",
+      "prompt": "Mystical dark reflective water floor seen at a low angle, glowing electric blue and cyan light ripples and caustics spreading toward the horizon, thin luminous mist above the surface, the upper half fading to pure black, ethereal stage for a character showcase, no characters, no creatures, no text.",
+      "size": "1536x1024", "background": "opaque", "quality": "medium", "max_width": 1280
+    }
+  ]
+}

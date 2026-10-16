@@ -6,6 +6,8 @@
 //   # Заголовок · ## Конечный список:
 //   ### Группа → необязательный абзац → таблица | # | Цель | Что нового даёт | Что потребуется / Открывается | Как засчитываем | Статус |
 //   **Чек-лист для #N:** → строки «☐ Пункт · ☑ Пункт», можно с префиксом «Базовые:»
+//   Цель может быть и нумерованным пунктом вне таблицы: «27. Текст цели» — строки с отступом под ним
+//   идут в «Уточнение». Пометки о редакциях в названиях групп («(добавлено в редакции 4)») убираются.
 // Остальные разделы и шапка («Цель», «Игра», редакция, «Точка закрытия», «Сознательно не делаем», «Источники», …)
 // на сайт не идут:
 // игра закрыта, когда выполнены все условия, — отдельная «точка закрытия» на сайте не нужна.
@@ -69,7 +71,7 @@ function parseTable(block, i) {
   const out = [];
   for (let j = i + 2; j < block.length && block[j].trim().startsWith("|"); j++) {
     const cells = row(block[j]);
-    const goal = { extra: [] };
+    const goal = { done: false, extra: [] };
     header.forEach((key, k) => {
       const raw = cells[k] ?? "";
       if (key === "n") goal.n = Number(raw.replace(/\D/g, ""));
@@ -125,7 +127,8 @@ let group = null;
 for (let i = 0; i < listBlock.length; i++) {
   const l = listBlock[i];
   if (/^###\s/.test(l)) {
-    group = { title: plain(l.replace(/^###\s+/, "")), goals: [] };
+    const title = plain(l.replace(/^###\s+/, "")).replace(/\s*\((?:добавлен[оа]?|изменен[оа]?|обновлен[оа]?)?\s*в?\s*редакци[ия]\s*\d+\)/gi, "");
+    group = { title, goals: [] };
     groups.push(group);
     continue;
   }
@@ -136,6 +139,19 @@ for (let i = 0; i < listBlock.length; i++) {
       byN.set(g.n, g);
     }
     while (i + 1 < listBlock.length && listBlock[i + 1].trim().startsWith("|")) i++;
+    continue;
+  }
+  // Цель нумерованным пунктом: «27. Текст» + строки с отступом под ним.
+  const item = l.match(/^(\d+)\.\s+(.+)/);
+  if (item) {
+    const goal = { n: Number(item[1]), title: plain(item[2].replace(/\s*[☐☑✅]\s*$/, "")).replace(/\.$/, ""), done: isDone(item[2]) };
+    const more = [];
+    while (i + 1 < listBlock.length && /^\s+\S/.test(listBlock[i + 1]) && !/^\s*(\||#|\d+\.\s)/.test(listBlock[i + 1])) {
+      more.push(listBlock[++i].trim());
+    }
+    if (more.length) goal.extra = [{ label: "Уточнение", value: plain(more.join(" ")) }];
+    group.goals.push(goal);
+    byN.set(goal.n, goal);
     continue;
   }
   const check = l.match(/чек-?лист\s+для\s+#?(\d+)/i);

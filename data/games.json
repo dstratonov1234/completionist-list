@@ -1,5 +1,55 @@
 {
   "updated": "2026-10-15",
-  "build": "5cb762e472",
-  "games": []
+  "build": "08529a6ce3",
+  "games": [
+    {
+      "id": "shin-megami-tensei-v-vengeance",
+      "title": "Shin Megami Tensei V: Vengeance",
+      "status": "in_progress",
+      "started": "2026-10-15",
+      "aliases": [
+        "SMT V",
+        "SMT 5",
+        "SMTV",
+        "Shin Megami Tensei 5",
+        "Vengeance"
+      ],
+      "steamAppId": 1875830,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1875830/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1875830/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1875830/logo.png",
+      "goals": {
+        "done": 0,
+        "total": 27
+      },
+      "theme": {
+        "bg": "#0a0507",
+        "surface": "#160b10",
+        "text": "#f3eef0",
+        "accent": "#ff4a5f",
+        "accent2": "#46c8ff",
+        "fonts": [
+          "Sofia Sans Extra Condensed:ital,wght@0,700;0,800;0,900;1,800;1,900",
+          "Sofia Sans Condensed:wght@500;600;700;800",
+          "Sofia Sans:ital,wght@0,400;0,500;0,600;0,700;1,400"
+        ],
+        "displayFont": "Sofia Sans Extra Condensed",
+        "headingFont": "Sofia Sans Condensed",
+        "bodyFont": "Sofia Sans",
+        "bodySize": 15,
+        "headingWeight": 800,
+        "headingCase": "uppercase",
+        "headingSpacing": "0.05em",
+        "radius": 2,
+        "ornament": "◆",
+        "textures": [
+          "grain",
+          "vignette"
+        ],
+        "heroPosition": "right 28%",
+        "css": true,
+        "js": true
+      }
+    }
+  ]
 }

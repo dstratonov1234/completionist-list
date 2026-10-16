@@ -1,0 +1,882 @@
+/* Shin Megami Tensei V: Vengeance — «Компендиум демонов».
+   Багровая сетка с каплями Магацухи, тонкие металлические рамки меню, голубое свечение Нахобино. */
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"],
+.stage-layer[data-game="shin-megami-tensei-v-vengeance"],
+.smt-bloom,
+.smt,
+.smt-backdrop {
+  --smt-red: #ff4a5f;
+  --smt-red-deep: #a3162c;
+  --smt-cyan: #46c8ff;
+  --smt-ink: #0a0507;
+  --smt-panel: rgba(13, 6, 10, 0.84);
+  --smt-line: rgba(222, 228, 240, 0.28);
+  --smt-line-hi: rgba(236, 240, 248, 0.7);
+}
+
+/* ====================================================================================
+   Баннер на главной
+   ==================================================================================== */
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] {
+  border-radius: 2px;
+  border-color: rgba(255, 74, 95, 0.32);
+  background: var(--smt-ink);
+}
+
+/* уголки металлической рамки меню */
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]::before,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  width: 64px;
+  height: 72px;
+  pointer-events: none;
+  background: url(assets/frame.webp) left top / contain no-repeat;
+  opacity: 0.8;
+  transition: opacity 0.3s;
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]::before { top: 6px; left: 6px; }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]::after { right: 6px; bottom: 6px; background-image: url(assets/frame-br.webp); background-position: right bottom; }
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-media::after {
+  background:
+    linear-gradient(90deg, var(--smt-ink) 0%, rgba(10, 5, 7, 0.86) 30%, rgba(10, 5, 7, 0.12) 64%, rgba(10, 5, 7, 0.4) 100%),
+    linear-gradient(0deg, rgba(10, 5, 7, 0.7), transparent 55%),
+    repeating-linear-gradient(0deg, rgba(255, 74, 95, 0.07) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(255, 74, 95, 0.07) 0 1px, transparent 1px 26px);
+}
+
+/* у логотипа из Steam широкие прозрачные поля — показываем только сам знак (где умеют object-view-box) */
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-logo {
+  max-width: min(400px, 88%);
+  max-height: 92px;
+  object-view-box: inset(27% 3% 33% 3%);
+  filter: drop-shadow(0 0 14px rgba(255, 74, 95, 0.28)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.85));
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-name {
+  font-style: italic;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/* прогресс — панель меню: диск луны, число условий и шкала Магацухи */
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-progress {
+  position: relative;
+  padding: 14px 16px 14px 74px;
+  border-radius: 0;
+  border: 1px solid var(--smt-line);
+  background: linear-gradient(180deg, rgba(14, 7, 11, 0.9), rgba(8, 4, 6, 0.86));
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.6);
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-progress::before {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 50px;
+  height: 50px;
+  margin-top: -25px;
+  background: url(assets/moon.webp) center / contain no-repeat;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 8px rgba(200, 210, 255, 0.35));
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-count b {
+  font-family: var(--t-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 40px;
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255, 74, 95, 0.45);
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-count span { color: var(--smt-cyan); font-weight: 700; }
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-label {
+  font-family: var(--t-heading);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(236, 228, 232, 0.7);
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-progress .progress {
+  height: 8px;
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.07);
+  transform: skewX(-24deg);
+  box-shadow: inset 0 0 0 1px rgba(255, 74, 95, 0.25);
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-progress .progress > div {
+  border-radius: 0;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 7px, rgba(10, 5, 7, 0.85) 7px 9px),
+    linear-gradient(90deg, #8e1226, var(--smt-red) 70%, #ffb3bd);
+  box-shadow: 0 0 8px rgba(255, 74, 95, 0.7);
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible {
+  border-color: var(--smt-red);
+  box-shadow: 0 0 0 1px rgba(255, 74, 95, 0.45), 0 0 10px rgba(255, 74, 95, 0.4), 0 22px 44px -20px rgba(255, 74, 95, 0.6);
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover::before,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover::after { opacity: 1; }
+
+/* ====================================================================================
+   Сцена главной при наведении — верх страницы игры
+   ==================================================================================== */
+
+.stage-layer[data-game="shin-megami-tensei-v-vengeance"] {
+  background: var(--smt-ink);
+}
+
+.stage-layer[data-game="shin-megami-tensei-v-vengeance"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(assets/grid.webp) center 30% / cover no-repeat;
+  opacity: 0.5;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 45%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 45%);
+}
+
+.stage-layer[data-game="shin-megami-tensei-v-vengeance"] .stage-hero { border-bottom: 1px solid var(--smt-line); }
+
+/* ====================================================================================
+   Заставка: круги Магацухи (слои живут и на главной, поэтому без html[data-game])
+   ==================================================================================== */
+
+.smt-bloom {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  pointer-events: none;
+}
+
+.smt-bloom canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.smt-bloom-title {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(1000px, 92vw);
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+}
+
+.smt-bloom-title span {
+  display: block;
+  font-family: var(--t-display, "Sofia Sans Extra Condensed"), sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(34px, 6.4vw, 88px);
+  line-height: 0.95;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 26px rgba(255, 74, 95, 0.65), 3px 3px 0 #2a050c;
+}
+
+.smt-bloom-title i {
+  display: block;
+  width: 0;
+  height: 3px;
+  margin: 16px auto 0;
+  background: linear-gradient(90deg, transparent, var(--smt-red) 20%, #fff 50%, var(--smt-cyan) 80%, transparent);
+  box-shadow: 0 0 12px rgba(255, 74, 95, 0.8);
+}
+
+.smt-bloom-title.in { animation: smt-title-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+.smt-bloom-title.in i { animation: smt-rule-in 0.6s 0.12s ease forwards; }
+.smt-bloom-title.out { animation: smt-title-out 0.32s ease forwards; }
+.smt-bloom-title.out i { width: 70%; }
+
+@keyframes smt-title-in {
+  from { opacity: 0; transform: translate(-50%, -40%) skewX(-10deg); }
+  to { opacity: 1; transform: translate(-50%, -50%) skewX(0); }
+}
+
+@keyframes smt-rule-in { to { width: 70%; } }
+
+@keyframes smt-title-out {
+  from { opacity: 1; transform: translate(-50%, -50%); }
+  to { opacity: 0; transform: translate(-50%, -62%) scale(1.04); }
+}
+
+/* ====================================================================================
+   Страница игры
+   ==================================================================================== */
+
+html.smt-lock { overflow: hidden; scrollbar-gutter: stable; }
+
+.smt-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: center 30% / cover no-repeat;
+  opacity: 0.5;
+  transform: scale(1.12);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 45%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 45%);
+}
+
+.smt-mag {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.smt-mag canvas { width: 100%; height: 100%; display: block; }
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .hero { border-bottom: 1px solid var(--smt-line); }
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .hero-logo {
+  max-width: min(560px, 86%);
+  max-height: 170px;
+  object-view-box: inset(27% 3% 33% 3%);
+  filter: drop-shadow(0 0 18px rgba(255, 74, 95, 0.3)) drop-shadow(0 4px 18px rgba(0, 0, 0, 0.9));
+}
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .hero h1 { font-style: italic; font-weight: 900; text-transform: uppercase; }
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .back {
+  border-radius: 0;
+  border: 1px solid var(--smt-line);
+  background: rgba(10, 5, 7, 0.72);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 13px;
+  clip-path: polygon(0 0, 100% 0, 100% 60%, calc(100% - 9px) 100%, 0 100%);
+}
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .back:hover,
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .back:focus-visible { background: rgba(163, 22, 44, 0.85); outline: none; }
+
+/* ---------- заголовки групп — вкладки меню ---------- */
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .cond-group > h2 {
+  position: relative;
+  padding: 9px 22px 9px 16px;
+  border-left: 3px solid var(--smt-red);
+  background: linear-gradient(90deg, rgba(255, 74, 95, 0.2), rgba(255, 74, 95, 0.04) 65%, transparent);
+  font-size: 19px;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 16px) 100%, 0 100%);
+}
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .cond-group > h2 .sec-icon { color: var(--smt-red); font-size: 13px; }
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .block-count {
+  margin-left: auto;
+  border-radius: 0;
+  background: none;
+  font-family: var(--t-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+  color: var(--smt-cyan);
+}
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .cond-group-note {
+  margin: -4px 0 14px;
+  padding-left: 19px;
+  font-style: italic;
+  color: rgba(236, 228, 232, 0.72);
+}
+
+/* ---------- компендиум: карточки целей ---------- */
+
+.smt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
+  gap: 14px;
+}
+
+.smt-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--smt-line);
+  border-radius: 0;
+  background: linear-gradient(180deg, rgba(20, 10, 16, 0.92), rgba(10, 5, 8, 0.94));
+  color: var(--t-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.25s, box-shadow 0.25s;
+}
+
+.smt-card::before,
+.smt-card::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  width: 26px;
+  height: 30px;
+  pointer-events: none;
+  background: url(assets/frame.webp) left top / contain no-repeat;
+  opacity: 0.75;
+}
+
+.smt-card::before { top: 3px; left: 3px; }
+.smt-card::after { right: 3px; bottom: 3px; background-image: url(assets/frame-br.webp); background-position: right bottom; }
+
+.smt-card-art {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #05060d url(assets/water.webp) center bottom / cover no-repeat;
+}
+
+.smt-card-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s;
+}
+
+.smt-card-art.smt-fit img {
+  object-fit: contain;
+  object-position: center bottom;
+  padding: 10px 10px 12%;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.65));
+}
+
+.smt-noart { display: grid; place-items: center; }
+
+.smt-noart b {
+  font-family: var(--t-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 64px;
+  color: rgba(255, 255, 255, 0.16);
+}
+
+/* не выполнено — как незарегистрированный демон: приглушённый арт и красная плашка */
+.smt-unreg .smt-card-art img { filter: grayscale(0.85) brightness(0.48) contrast(1.05); }
+.smt-unreg .smt-card-art.smt-fit img { filter: grayscale(0.85) brightness(0.48) drop-shadow(0 8px 10px rgba(0, 0, 0, 0.65)); }
+
+.smt-reg {
+  border-color: rgba(70, 200, 255, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(70, 200, 255, 0.18), 0 0 18px -8px rgba(70, 200, 255, 0.55);
+}
+
+.smt-lv {
+  position: absolute;
+  z-index: 3;
+  top: 10px;
+  left: 10px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid var(--smt-line-hi);
+  background: radial-gradient(circle at 35% 30%, #2a1620, #0a0507 70%);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6), 0 4px 10px rgba(0, 0, 0, 0.6);
+  line-height: 1;
+}
+
+.smt-lv small { font-size: 9px; font-weight: 700; letter-spacing: 0.08em; color: rgba(236, 228, 232, 0.7); }
+
+.smt-lv b {
+  font-family: var(--t-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 22px;
+  color: #fff;
+}
+
+.smt-reg .smt-lv { border-color: var(--smt-cyan); box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.6), 0 0 12px rgba(70, 200, 255, 0.6); }
+
+.smt-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 10px;
+  padding: 11px 13px 14px;
+}
+
+.smt-card-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-family: var(--t-heading);
+  font-weight: 700;
+  font-size: 16.5px;
+  line-height: 1.2;
+}
+
+.smt-card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+
+.smt-tag {
+  display: inline-block;
+  padding: 2px 9px;
+  border: 1px solid var(--smt-red);
+  background: rgba(255, 74, 95, 0.12);
+  color: #ff7d8d;
+  font-family: var(--t-heading);
+  font-weight: 800;
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: skewX(-12deg);
+}
+
+.smt-tag-on {
+  border-color: var(--smt-cyan);
+  background: rgba(70, 200, 255, 0.14);
+  color: #8fdcff;
+  box-shadow: 0 0 8px rgba(70, 200, 255, 0.35);
+}
+
+.smt-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid rgba(222, 228, 240, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(236, 228, 232, 0.78);
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.smt-card:hover,
+.smt-card:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--smt-red);
+  box-shadow: 0 0 0 1px rgba(255, 74, 95, 0.35), 0 14px 28px -12px rgba(255, 74, 95, 0.55);
+  outline: none;
+}
+
+.smt-reg:hover,
+.smt-reg:focus-visible { border-color: var(--smt-cyan); box-shadow: 0 0 0 1px rgba(70, 200, 255, 0.4), 0 14px 28px -12px rgba(70, 200, 255, 0.55); }
+
+.smt-card:focus-visible { outline: 2px solid var(--smt-cyan); outline-offset: 3px; }
+.smt-card:hover .smt-card-art img { transform: scale(1.04); }
+.smt-unreg:hover .smt-card-art img { filter: grayscale(0.4) brightness(0.72); }
+.smt-unreg:hover .smt-card-art.smt-fit img { filter: grayscale(0.4) brightness(0.72) drop-shadow(0 8px 10px rgba(0, 0, 0, 0.65)); }
+
+/* ---------- экран анализа ---------- */
+
+dialog.smt-analyze {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--t-text);
+  font-family: var(--t-body);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+dialog.smt-analyze::backdrop {
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 74, 95, 0.05) 0 1px, transparent 1px 28px),
+    repeating-linear-gradient(90deg, rgba(255, 74, 95, 0.05) 0 1px, transparent 1px 28px),
+    radial-gradient(ellipse at 50% 40%, rgba(60, 8, 18, 0.88), rgba(5, 2, 4, 0.96) 70%);
+}
+
+.smt-an {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 16px;
+  max-width: 1200px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 22px 24px 18px;
+}
+
+.smt-an-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--smt-line);
+}
+
+.smt-lv-big { position: relative; top: auto; left: auto; width: 64px; height: 64px; }
+.smt-lv-big b { font-size: 30px; }
+.smt-reg .smt-lv-big { border-color: var(--smt-cyan); }
+
+.smt-an-race {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--t-heading);
+  font-weight: 700;
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--smt-cyan);
+}
+
+.smt-an-id h3 {
+  margin: 0;
+  font-family: var(--t-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(24px, 3.2vw, 40px);
+  line-height: 1.02;
+  color: #fff;
+  text-shadow: 0 0 18px rgba(255, 74, 95, 0.35);
+}
+
+.smt-an-close,
+.smt-an-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--smt-line-hi);
+  border-radius: 0;
+  background: rgba(10, 5, 7, 0.8);
+  color: #fff;
+  font-family: var(--t-heading);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.smt-an-close { padding: 0; font-size: 16px; }
+
+.smt-an-close:hover,
+.smt-an-close:focus-visible,
+.smt-an-step:hover,
+.smt-an-step:focus-visible { border-color: var(--smt-red); background: rgba(163, 22, 44, 0.85); outline: none; }
+
+.smt-an-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) minmax(0, 1fr);
+  grid-template-areas: "stats stage more";
+  gap: 18px;
+  align-items: start;
+}
+
+.smt-an-stage {
+  grid-area: stage;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: min(480px, 62vh);
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--smt-line);
+  background: #03040a url(assets/water.webp) center bottom / cover no-repeat;
+}
+
+.smt-an-art { display: block; width: 100%; height: 100%; }
+.smt-an-art:not(.smt-fit) { position: absolute; inset: 0; }
+
+.smt-an-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: zoom-in;
+}
+
+.smt-an-art.smt-fit {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 18px 18px 15%;
+}
+
+.smt-an-art.smt-fit img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: min(400px, 52vh);
+  object-fit: contain;
+  -webkit-box-reflect: below 2px linear-gradient(transparent 62%, rgba(255, 255, 255, 0.28));
+  filter: drop-shadow(0 0 22px rgba(70, 200, 255, 0.25));
+}
+
+.smt-analyze:not(.smt-reg) .smt-an-art img { filter: grayscale(0.7) brightness(0.62); }
+.smt-analyze:not(.smt-reg) .smt-an-art.smt-fit img { filter: grayscale(0.7) brightness(0.62) drop-shadow(0 0 22px rgba(70, 200, 255, 0.15)); }
+
+.smt-an-art.smt-noart { display: grid; place-items: center; }
+.smt-an-art.smt-noart b { font-size: 120px; }
+
+.smt-an-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--smt-line);
+  background: var(--smt-panel);
+}
+
+.smt-an-stats { grid-area: stats; }
+.smt-an-more { grid-area: more; }
+
+.smt-an-col::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 30px;
+  height: 34px;
+  background: url(assets/frame.webp) left top / contain no-repeat;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.smt-an-sub,
+.smt-skills-head {
+  align-self: flex-start;
+  padding: 3px 16px 3px 10px;
+  border: 1px solid var(--smt-line-hi);
+  background: linear-gradient(180deg, #1d1118, #0c060a);
+  font-family: var(--t-heading);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+
+.smt-an-stats dl { display: flex; flex-direction: column; gap: 12px; margin: 0; }
+
+.smt-stat dt {
+  margin-bottom: 3px;
+  font-family: var(--t-heading);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--smt-cyan);
+}
+
+.smt-stat dd { margin: 0; font-size: 14.5px; line-height: 1.45; }
+
+.smt-skills ul { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+
+.smt-skills li {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border: 1px solid rgba(222, 228, 240, 0.12);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  font-size: 13.5px;
+}
+
+.smt-skills li i { width: 10px; height: 10px; transform: rotate(45deg); background: rgba(255, 74, 95, 0.5); }
+.smt-skills li.on i { background: var(--smt-cyan); box-shadow: 0 0 6px var(--smt-cyan); }
+.smt-skills li b { color: var(--smt-cyan); }
+.smt-skills li:not(.on) span { color: rgba(236, 228, 232, 0.72); }
+
+.smt-an-note {
+  margin: 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--smt-red);
+  background: rgba(255, 74, 95, 0.08);
+  font-style: italic;
+}
+
+.smt-an-details { margin: 0; font-size: 14px; line-height: 1.5; color: rgba(236, 228, 232, 0.86); }
+
+.smt-an-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 6px; }
+.smt-an-gallery img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border: 1px solid var(--smt-line); cursor: zoom-in; }
+
+.smt-an-link {
+  align-self: flex-start;
+  padding: 6px 14px;
+  border: 1px solid var(--smt-cyan);
+  color: #8fdcff;
+  font-family: var(--t-heading);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.smt-an-link:hover,
+.smt-an-link:focus-visible { background: rgba(70, 200, 255, 0.16); outline: none; }
+
+.smt-an-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--smt-line);
+}
+
+.smt-an-pos {
+  min-width: 70px;
+  text-align: center;
+  font-family: var(--t-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 22px;
+  color: var(--smt-cyan);
+}
+
+/* смена записи: короткая развёртка, как при переключении демонов в меню */
+.smt-analyze.smt-scan .smt-an-body { animation: smt-an-in 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.smt-analyze.smt-scan .smt-an-stage::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--smt-cyan), transparent);
+  box-shadow: 0 0 12px var(--smt-cyan);
+  animation: smt-scanline 0.6s ease-out both;
+}
+
+@keyframes smt-an-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes smt-scanline { from { top: 0; opacity: 1; } to { top: 100%; opacity: 0; } }
+
+/* ---------- боковая панель: луна и значки ходов ---------- */
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .side-card {
+  position: relative;
+  border-radius: 0;
+  border-color: var(--smt-line);
+  background: var(--smt-panel);
+}
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .side-card::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 30px;
+  height: 34px;
+  background: url(assets/frame.webp) left top / contain no-repeat;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.smt-moon {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 4px 0 14px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--smt-line);
+}
+
+.smt-moon svg {
+  width: 170px;
+  height: 170px;
+  filter: drop-shadow(0 0 calc(6px + var(--k) * 16px) rgba(206, 212, 255, calc(0.12 + var(--k) * 0.35)));
+}
+
+.smt-moon-dark { opacity: 0.13; }
+
+.smt-moon-count { line-height: 1; }
+
+.smt-moon-count b {
+  font-family: var(--t-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 46px;
+  color: #fff;
+}
+
+.smt-moon-count span {
+  font-family: var(--t-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 24px;
+  color: var(--smt-cyan);
+}
+
+.smt-moon small {
+  font-family: var(--t-heading);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(236, 228, 232, 0.7);
+}
+
+.smt-turns { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 3px; }
+
+.smt-turns i {
+  width: 15px;
+  height: 15px;
+  background: url(assets/turn.webp) center / contain no-repeat;
+  opacity: 0.38;
+  filter: grayscale(1) brightness(1.2);
+}
+
+.smt-turns i.on { opacity: 1; filter: drop-shadow(0 0 4px rgba(70, 200, 255, 0.85)); }
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .group-progress b {
+  font-family: var(--t-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--smt-cyan);
+}
+
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .group-progress a:hover { color: var(--smt-red); }
+
+/* соседние игры */
+html[data-game="shin-megami-tensei-v-vengeance"] .smt .neighbor { border-radius: 0; border-color: var(--smt-line); background: var(--smt-panel); }
+
+/* ---------- узкий экран ---------- */
+
+@media (max-width: 860px) {
+  .smt-an { padding: 14px 14px 12px; gap: 12px; }
+  .smt-an-head { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .smt-an-head .smt-tag { grid-column: 2; grid-row: 2; justify-self: start; }
+  .smt-an-close { grid-column: 3; grid-row: 1; }
+  .smt-lv-big { width: 52px; height: 52px; }
+  .smt-lv-big b { font-size: 24px; }
+  .smt-an-body { grid-template-columns: minmax(0, 1fr); grid-template-areas: "stage" "stats" "more"; }
+  .smt-an-stage { min-height: 300px; }
+  .smt-an-art.smt-fit img { max-height: 280px; }
+}
+
+@media (max-width: 560px) {
+  .smt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .smt-card-name { font-size: 14.5px; }
+  .smt-card-body { padding: 9px 10px 11px; gap: 8px; }
+  .smt-lv { width: 38px; height: 38px; top: 6px; left: 6px; }
+  .smt-lv b { font-size: 18px; }
+  .gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-progress { padding-left: 64px; }
+  .gbanner[data-game="shin-megami-tensei-v-vengeance"] .gb-progress::before { width: 42px; height: 42px; margin-top: -21px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smt-card,
+  .smt-card-art img { transition: none; }
+  .smt-card:hover { transform: none; }
+}

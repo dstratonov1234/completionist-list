@@ -1,0 +1,379 @@
+{
+  "title": "Окончательное закрытие Shin Megami Tensei V: Vengeance",
+  "groups": [
+    {
+      "title": "Сюжет и финалы",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Лично пройти Canon of Creation до True Neutral, включая полный трёхфазный Lucifer",
+          "gives": "Расширенный финал Creation, скрытая ветка Nuwa, уникальный финальный бой",
+          "counts": "Флаг концовки в сейве или слова игрока",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/8/8c/Lucifer_SMTV.png/revision/latest/scale-to-width-down/1280?cb=20200722181359",
+          "link": "https://megamitensei.fandom.com/wiki/Lucifer#Shin_Megami_Tensei_V:_Vengeance"
+        },
+        {
+          "n": 2,
+          "title": "Лично пройти Canon of Vengeance до Law / Tao",
+          "gives": "Новая история Vengeance, Shinjuku, Qadištu, Tehom перед финалом",
+          "counts": "Флаг концовки в сейве или слова игрока",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/5/53/Tao_Isonokami_Render.png/revision/latest/scale-to-width-down/800?cb=20210911024759",
+          "link": "https://megamitensei.fandom.com/wiki/Alignment#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 3,
+          "title": "Посмотреть остальные четыре развязки в записи",
+          "gives": "Заключительные сцены и эпилоги других выборов, без повторения глав",
+          "counts": "Отметка watched_ending после подтверждения",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/c/ca/The_Protagonist_with_Tao_and_Yoko.png/revision/latest/scale-to-width-down/1280?cb=20240614112043",
+          "link": "https://megamitensei.fandom.com/wiki/Alignment#Shin_Megami_Tensei_V"
+        }
+      ]
+    },
+    {
+      "title": "Супербоссы и именные испытания (все на Normal)",
+      "goals": [
+        {
+          "n": 4,
+          "title": "Shiva — A Universe in Peril",
+          "gives": "Сильнейший необязательный бой с призывами",
+          "counts": "Подтверждение победы на Normal",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/5/5e/00673_Shiva.png/revision/latest/scale-to-width-down/800?cb=20221028012738",
+          "link": "https://megamitensei.fandom.com/wiki/Shiva#Shin_Megami_Tensei_V",
+          "imageFit": "contain"
+        },
+        {
+          "n": 5,
+          "title": "Цепочка девяти Fiends и Demi-fiend",
+          "gives": "Отдельная серия боссов и бой с героем Nocturne",
+          "counts": "Квест и подтверждение победы на Normal",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/1/1f/Demi-fiend_%28SMTV_Render%29.png/revision/latest/scale-to-width-down/800?cb=20211111071638",
+          "link": "https://megamitensei.fandom.com/wiki/Demi-fiend#Shin_Megami_Tensei_V",
+          "imageFit": "contain"
+        },
+        {
+          "n": 6,
+          "title": "Обычный Masakado — Guardian of Tokyo",
+          "gives": "Цепочка Yoshitsune, Seven Stars и четырёх хранителей",
+          "counts": "Подтверждение победы на Normal",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/0/0c/Masakado_A_%28Dx2_Art%29.png/revision/latest/scale-to-width-down/800?cb=20210813090946",
+          "link": "https://megamitensei.fandom.com/wiki/Masakado#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 7,
+          "title": "Satan — The Great Adversary",
+          "gives": "Финальный супербосс Vengeance после Samael",
+          "counts": "Подтверждение победы на Normal",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/2/2f/Satan_SMT_IV_A.png/revision/latest/scale-to-width-down/800?cb=20240505205252",
+          "link": "https://megamitensei.fandom.com/wiki/Satan#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 8,
+          "title": "A Goddess in Training — Artemis",
+          "gives": "Бывший DLC: Quetzalcoatl и Artemis",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/8/8c/Artemis_SMT5.png/revision/latest/scale-to-width-down/800?cb=20211111065151",
+          "link": "https://megamitensei.fandom.com/wiki/Artemis#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 9,
+          "title": "The Rage of a Queen — Cleopatra",
+          "gives": "Бывший DLC: бой с Cleopatra",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/e/e2/Cleopatra_SMT5.png/revision/latest/scale-to-width-down/800?cb=20211021064702",
+          "link": "https://megamitensei.fandom.com/wiki/Cleopatra#Shin_Megami_Tensei_V",
+          "imageFit": "contain"
+        },
+        {
+          "n": 10,
+          "title": "The Doctor's Last Wish — Mephisto",
+          "gives": "Бывший DLC: поздний бой с Mephisto",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/b/b5/Mephisto_SMT5.png/revision/latest/scale-to-width-down/800?cb=20211021064722",
+          "link": "https://megamitensei.fandom.com/wiki/Mephisto#Shin_Megami_Tensei_V",
+          "imageFit": "contain"
+        },
+        {
+          "n": 11,
+          "title": "The Guardian of Light — Marici",
+          "gives": "Бесплатное обновление 1.0.3",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/0/0b/Marici_%28Dx2_Art%29.png/revision/latest/scale-to-width-down/800?cb=20210704104251",
+          "link": "https://megamitensei.fandom.com/wiki/Marici#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        }
+      ]
+    },
+    {
+      "title": "Платные дополнения",
+      "goals": [
+        {
+          "n": 12,
+          "title": "Sakura Cinders of the East",
+          "gives": "Oyamatsumi, затем Konohana Sakuya (Lv 50); с середины игры",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/1/11/Konohanasakuya_Artwork.png/revision/latest/scale-to-width-down/800?cb=20240424015850",
+          "link": "https://megamitensei.fandom.com/wiki/Konohana_Sakuya#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 13,
+          "title": "Holy Will and Profane Dissent",
+          "gives": "Встреча с Danu, бой с Dagda (Lv 80, три атаки за ход)",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/9/9a/Dagda_SMTIV_Final.png/revision/latest/scale-to-width-down/800?cb=20211123031133",
+          "link": "https://megamitensei.fandom.com/wiki/Dagda#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        }
+      ]
+    },
+    {
+      "title": "Сюжетные арки и новый геймплей",
+      "goals": [
+        {
+          "n": 14,
+          "title": "A Power Beyond Control → The Destined Leader",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "Оба"
+            }
+          ],
+          "gives": "Арка Amanozako, Zaou-Gongen; заодно страховка True Neutral",
+          "counts": "The Destined Leader сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/3/37/Amanozako.png/revision/latest/scale-to-width-down/800?cb=20221009051742",
+          "link": "https://megamitensei.fandom.com/wiki/Amanozako#Shin_Megami_Tensei_V",
+          "imageFit": "contain"
+        },
+        {
+          "n": 15,
+          "title": "От The Tyrant of Tennozu до A Plot Revealed",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "Оба"
+            }
+          ],
+          "gives": "Арка Demeter и олимпийцев, Zeus Lv 86",
+          "counts": "A Plot Revealed сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/1/1a/Zeus_SMT5.png/revision/latest?cb=20210927110504",
+          "link": "https://megamitensei.fandom.com/wiki/Zeus#Shin_Megami_Tensei_V",
+          "imageFit": "contain"
+        },
+        {
+          "n": 16,
+          "title": "The Golden Dragon's Arrival → The Benevolent One",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "Оба"
+            }
+          ],
+          "gives": "Huang Long с призывами",
+          "counts": "The Benevolent One сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/a/a3/Kohryu_%28Dx2_Art%29.png/revision/latest/scale-to-width-down/800?cb=20210703223834",
+          "link": "https://megamitensei.fandom.com/wiki/Kohryu#Shin_Megami_Tensei_V_/_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 17,
+          "title": "Heroes of the Celts",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "Уточняется перед блоком"
+            }
+          ],
+          "gives": "Продолжение арки Fionn",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/7/70/Fionn_Mac_Cumhaill.png/revision/latest?cb=20210911014724",
+          "link": "https://megamitensei.fandom.com/wiki/Fionn_mac_Cumhaill#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 18,
+          "title": "Rascal of the Norse",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "Уточняется перед блоком"
+            }
+          ],
+          "gives": "Продолжение арки Idun, бой с Thor",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/d/df/SMTV_Idun_render.png/revision/latest/scale-to-width-down/800?cb=20240229192604",
+          "link": "https://megamitensei.fandom.com/wiki/Idun#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 19,
+          "title": "Supply Run",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "CoV"
+            }
+          ],
+          "gives": "Арка Yuzuru. Пропускается навсегда",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/e/ef/Yuzuru_Atsuta_Render.png/revision/latest/scale-to-width-down/800?cb=20210911025353",
+          "link": "https://megamitensei.fandom.com/wiki/Yuzuru_Atsuta#Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 20,
+          "title": "Rite of Resurrection",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "CoV"
+            }
+          ],
+          "gives": "Арка Khonsu в Vengeance. Пропускается навсегда",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/0/05/KhonsuRaSMT5.png/revision/latest/scale-to-width-down/1280?cb=20220130001333",
+          "link": "https://megamitensei.fandom.com/wiki/Khonsu#Shin_Megami_Tensei_V"
+        },
+        {
+          "n": 21,
+          "title": "Guide to the Lost → Devotion to Order",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "CoV"
+            }
+          ],
+          "gives": "Арка Armaiti, бой с Mara",
+          "counts": "Devotion to Order сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/d/d6/Armaiti_%28DSSH_Art%29.png/revision/latest/scale-to-width-down/800?cb=20210912224709",
+          "link": "https://megamitensei.fandom.com/wiki/Armaiti#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 22,
+          "title": "The Hunter in White",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "CoV"
+            }
+          ],
+          "gives": "Kresnik против Kudlak; выбор Law",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/2/22/Kresnik_%28Devil_Summoner_Art%29.png/revision/latest/scale-to-width-down/800?cb=20240504041231",
+          "link": "https://megamitensei.fandom.com/wiki/Kresnik#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 23,
+          "title": "Heroes of Heaven and Earth",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "CoV"
+            }
+          ],
+          "gives": "Amatsukami и бой с Yamata-no-Orochi",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/1/11/00093_Yamata-no-Orochi.png/revision/latest/scale-to-width-down/800?cb=20220802230917",
+          "link": "https://megamitensei.fandom.com/wiki/Yamata-no-Orochi#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 24,
+          "title": "God of Old, Devourer of Kin",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "CoV"
+            }
+          ],
+          "gives": "Saturnus после арки Zeus",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/4/4a/SH_Saturnus.png/revision/latest/scale-to-width-down/800?cb=20240505233425",
+          "link": "https://megamitensei.fandom.com/wiki/Saturnus#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 25,
+          "title": "Alice's Wonderland",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "CoV"
+            }
+          ],
+          "gives": "Эпизод, где играешь за Alice",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/5/5f/Alice-0.png/revision/latest/scale-to-width-down/800?cb=20231020023714",
+          "link": "https://megamitensei.fandom.com/wiki/Alice#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        },
+        {
+          "n": 26,
+          "title": "Supersonic Racing",
+          "extra": [
+            {
+              "label": "Канон",
+              "value": "Tokyo; пропускаемость не проверена"
+            }
+          ],
+          "gives": "Погоня за Turbo Granny в Tokyo",
+          "counts": "Квест сдан",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/a/a9/Turbo_Ba_chan.png/revision/latest/scale-to-width-down/800?cb=20211127115658",
+          "link": "https://megamitensei.fandom.com/wiki/Turbo_Granny#Shin_Megami_Tensei_V:_Vengeance",
+          "imageFit": "contain"
+        }
+      ],
+      "note": "Арку, доступную в обоих канонах, достаточно пройти один раз."
+    },
+    {
+      "title": "Условие всего прохождения",
+      "goals": [
+        {
+          "n": 27,
+          "title": "Всё личное прохождение, включая обычные бои и повторные участки, на Normal",
+          "done": false,
+          "extra": [
+            {
+              "label": "Уточнение",
+              "value": "Casual/Safety не входят в план и не засчитываются как его выполнение."
+            }
+          ],
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/6/6b/Nahobino_in_combat.jpg/revision/latest/scale-to-width-down/1280?cb=20240407014228",
+          "link": "https://megamitensei.fandom.com/wiki/Difficulty#Shin_Megami_Tensei_V_/_Vengeance"
+        }
+      ]
+    }
+  ]
+}
