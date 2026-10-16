@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-16",
-  "build": "f3f224ccba",
+  "build": "6d91854260",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -241,6 +241,47 @@
         "headingWeight": 400,
         "radius": 0,
         "heroPosition": "center 22%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "hollow-knight",
+      "title": "Hollow Knight",
+      "status": "in_progress",
+      "started": "2026-10-16",
+      "playtime": 46.7,
+      "aliases": [
+        "HK",
+        "Холлоу Найт",
+        "Полый рыцарь"
+      ],
+      "steamAppId": 367520,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/3c3489495136b26b34f8a9543c7f5645b99d388c/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/0daf3933d392d7bb7c5a890917e20c917fcc458e/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/367520/logo.png",
+      "goals": {
+        "done": 15,
+        "total": 21
+      },
+      "theme": {
+        "bg": "#060912",
+        "surface": "#0e1424",
+        "text": "#e9e6ee",
+        "accent": "#8fb4e8",
+        "accent2": "#dfe8f7",
+        "fonts": [
+          "Cormorant SC:wght@400;600;700",
+          "Cormorant Garamond:wght@400;500;600;700"
+        ],
+        "displayFont": "Cormorant SC",
+        "headingFont": "Cormorant SC",
+        "bodyFont": "Cormorant Garamond",
+        "bodySize": 17,
+        "headingWeight": 600,
+        "headingSpacing": "0.06em",
+        "radius": 2,
+        "heroPosition": "center 30%",
         "css": true,
         "js": true
       }

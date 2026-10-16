@@ -1,0 +1,254 @@
+{
+  "title": "Hollow Knight — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Основной сюжет: Monomon, Lurien, Herrah → Hollow Knight",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/4/4b/Screenshot_HK_Hollow_Knight_02.png/revision/latest/scale-to-width-down/800?cb=20200102140054",
+          "link": "https://hollowknight.wiki/w/The_Hollow_Knight"
+        },
+        {
+          "n": 2,
+          "title": "Void Heart",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/14/Screenshot_HK_Void_01.png/revision/latest/scale-to-width-down/800?cb=20200805183750",
+          "link": "https://hollowknight.wiki/w/Void_Heart",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/5/5c/Screenshot_HK_Void_Heart_01.png/revision/latest/scale-to-width-down/800?cb=20200408155254"
+          ]
+        },
+        {
+          "n": 3,
+          "title": "Концовка Dream No More (бой с Radiance)",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/4/4b/Screenshot_HK_Dream_No_More.png/revision/latest/scale-to-width-down/800?cb=20200803152920",
+          "link": "https://hollowknight.wiki/w/Endings_(Hollow_Knight)",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/3/32/Screenshot_HK_Radiance_03.png/revision/latest/scale-to-width-down/800?cb=20200102210737"
+          ]
+        },
+        {
+          "n": 4,
+          "title": "Seer: Awoken Dream Nail и Ascension",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/7/79/Screenshot_HK_Seer_02.png/revision/latest/scale-to-width-down/800?cb=20200101233918",
+          "link": "https://hollowknight.wiki/w/Seer"
+        },
+        {
+          "n": 5,
+          "title": "Failed Champion, Soul Tyrant, Lost Kin",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/9/9a/Screenshot_HK_Failed_Champion_01.png/revision/latest/scale-to-width-down/800?cb=20200122233823",
+          "link": "https://hollowknight.wiki/w/Failed_Champion",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/8/84/Screenshot_HK_Soul_Tyrant_01.png/revision/latest/scale-to-width-down/800?cb=20200124113753",
+            "https://static.wikia.nocookie.net/hollowknight/images/5/55/Screenshot_HK_Lost_Kin_02.png/revision/latest/scale-to-width-down/800?cb=20200124123128"
+          ]
+        },
+        {
+          "n": 6,
+          "title": "Warrior Dreams: Xero, Gorb, Elder Hu, Marmu, No Eyes, Galien, Markoth",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/5/5e/Screenshot_HK_Xero_03.png/revision/latest/scale-to-width-down/800?cb=20200125144535",
+          "link": "https://hollowknight.wiki/w/Warrior_Dreams",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/e/e1/Screenshot_HK_Markoth_01.png/revision/latest/scale-to-width-down/800?cb=20190403034849",
+            "https://static.wikia.nocookie.net/hollowknight/images/1/1b/Screenshot_HK_Galien_01.png/revision/latest/scale-to-width-down/800?cb=20190222001501"
+          ]
+        },
+        {
+          "n": 7,
+          "title": "Nosk, Traitor Lord, Uumuu, Pale Lurker, The Collector, Watcher Knights, God Tamer, Enraged Guardian",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/7/77/Screenshot_HK_Traitor_Lord_04.png/revision/latest/scale-to-width-down/800?cb=20200102182556",
+          "link": "https://hollowknight.wiki/w/Bosses_(Hollow_Knight)",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/6/61/Screenshot_HK_Nosk_05.png/revision/latest/scale-to-width-down/800?cb=20200124140257",
+            "https://static.wikia.nocookie.net/hollowknight/images/4/40/Screenshot_HK_Collector_05.png/revision/latest/scale-to-width-down/800?cb=20200124131018"
+          ]
+        },
+        {
+          "n": 8,
+          "title": "Nailmasters Mato, Sheo, Oro",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/0/0d/Screenshot_HK_Nailmaster_Oro_01.png/revision/latest/scale-to-width-down/800?cb=20190403034104",
+          "link": "https://hollowknight.wiki/w/Nailmaster_Oro",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/a/ae/Screenshot_HK_Nailmaster_Mato_04.png/revision/latest/scale-to-width-down/800?cb=20210112201443"
+          ]
+        },
+        {
+          "n": 9,
+          "title": "Colosseum of Fools: три испытания",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/9/98/Screenshot_HK_Colosseum_of_Fools_05.png/revision/latest/scale-to-width-down/800?cb=20190219060235",
+          "link": "https://hollowknight.wiki/w/Colosseum_of_Fools"
+        },
+        {
+          "n": 10,
+          "title": "White Palace + Path of Pain",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/f/fb/Screenshot_HK_White_Palace_01.png/revision/latest/scale-to-width-down/800?cb=20190610153110",
+          "link": "https://hollowknight.wiki/w/White_Palace",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/e/ee/Path_Of_Pain_Kingsmoulds_Room.png/revision/latest/scale-to-width-down/800?cb=20190610153305"
+          ]
+        },
+        {
+          "n": 11,
+          "title": "Истории Quirrel, Grey Mourner, Cloth, Tiso, Bretta, Zote, Hornet",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/4/47/Screenshot_HK_Quirrel_01.png/revision/latest/scale-to-width-down/800?cb=20191028021106",
+          "link": "https://hollowknight.wiki/w/Quirrel",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/7/79/Screenshot_HK_Cloth_01.png/revision/latest/scale-to-width-down/800?cb=20200101233722",
+            "https://static.wikia.nocookie.net/hollowknight/images/6/67/Screenshot_HK_Grey_Mourner_07.png/revision/latest/scale-to-width-down/800?cb=20200621115928"
+          ]
+        },
+        {
+          "n": 12,
+          "title": "Hidden Dreams: Grey Prince Zote, White Defender (5 из 5), Stag Nest",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/6/67/Screenshot_HK_Grey_Prince_Zote_05.png/revision/latest/scale-to-width-down/800?cb=20200125133605",
+          "link": "https://hollowknight.wiki/w/Hidden_Dreams",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/9/9b/Screenshot_HK_White_Defender_01.png/revision/latest/scale-to-width-down/800?cb=20220622094953",
+            "https://static.wikia.nocookie.net/hollowknight/images/8/86/Screenshot_HK_Last_Stag_02.png/revision/latest/scale-to-width-down/800?cb=20200103110046"
+          ]
+        },
+        {
+          "n": 13,
+          "title": "Grimm Troupe: Troupe Master Grimm + финал квеста (Banishment)",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/b/b5/Screenshot_HK_Grimm_05.png/revision/latest/scale-to-width-down/800?cb=20200106141859",
+          "link": "https://hollowknight.wiki/w/Grimm_Troupe",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/4/44/Screenshot_HK_Brumm_03.png/revision/latest/scale-to-width-down/800?cb=20200102173048"
+          ]
+        },
+        {
+          "n": 14,
+          "title": "Lifeblood: Hive Knight",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/19/Screenshot_HK_Hive_Knight_01.png/revision/latest/scale-to-width-down/800?cb=20200124134449",
+          "link": "https://hollowknight.wiki/w/Hive_Knight"
+        },
+        {
+          "n": 15,
+          "title": "Pantheon of the Master (Oro & Mato), Pantheon of the Artist (Paintmaster Sheo)",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/4/40/Screenshot_HK_Brothers_Oro_%26_Mato_04.png/revision/latest/scale-to-width-down/800?cb=20200116124416",
+          "link": "https://hollowknight.wiki/w/Pantheon_of_the_Master",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/a/ac/Screenshot_HK_Paintmaster_Sheo_03.png/revision/latest/scale-to-width-down/800?cb=20200116124714"
+          ]
+        },
+        {
+          "n": 16,
+          "title": "Nailsmith у Sheo",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/15/Screenshot_HK_Nailsmith_04.png/revision/latest/scale-to-width-down/800?cb=20191026134425",
+          "link": "https://hollowknight.wiki/w/Nailsmith",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/d/da/Screenshot_HK_Nailmaster_Sheo_01.png/revision/latest/scale-to-width-down/800?cb=20190313161122"
+          ]
+        },
+        {
+          "n": 17,
+          "title": "Mr. Mushroom",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/a/a1/Screenshot_HK_Mister_Mushroom_09.png/revision/latest/scale-to-width-down/800?cb=20200103122031",
+          "link": "https://hollowknight.wiki/w/Mister_Mushroom_(Hollow_Knight)",
+          "checklist": [
+            {
+              "label": "Маршрут",
+              "items": [
+                {
+                  "title": "Fungal Wastes",
+                  "done": false
+                },
+                {
+                  "title": "Kingdom's Edge, у Isma's Grove",
+                  "done": false
+                },
+                {
+                  "title": "Deepnest, рядом с Galien",
+                  "done": false
+                },
+                {
+                  "title": "Howling Cliffs, хижина Mato",
+                  "done": false
+                },
+                {
+                  "title": "Ancient Basin, рядом с Monarch Wings",
+                  "done": false
+                },
+                {
+                  "title": "Fog Canyon, рядом с Overgrown Mound",
+                  "done": false
+                },
+                {
+                  "title": "King's Pass",
+                  "done": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "n": 18,
+          "title": "Pantheon of the Sage",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/3/39/Screenshot_HK_Great_Nailsage_Sly_02.png/revision/latest/scale-to-width-down/800?cb=20200116125000",
+          "link": "https://hollowknight.wiki/w/Pantheon_of_the_Sage"
+        },
+        {
+          "n": 19,
+          "title": "Pantheon of the Knight",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/c/c4/Screenshot_HK_Pure_Vessel_01.png/revision/latest/scale-to-width-down/800?cb=20200116125445",
+          "link": "https://hollowknight.wiki/w/Pantheon_of_the_Knight"
+        },
+        {
+          "n": 20,
+          "title": "Delicate Flower → Godseeker",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/1d/Screenshot_HK_Traitors%27_Child_01.png/revision/latest/scale-to-width-down/800?cb=20200621134536",
+          "link": "https://hollowknight.wiki/w/Delicate_Flower",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/6/66/Screenshot_HK_Godseeker_05.png/revision/latest/scale-to-width-down/800?cb=20200103103959"
+          ]
+        },
+        {
+          "n": 21,
+          "title": "Pantheon of Hallownest → концовка Delicate Flower",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/hollowknight/images/7/7e/Screenshot_HK_Absolute_Radiance_01.png/revision/latest/scale-to-width-down/800?cb=20200116125819",
+          "link": "https://hollowknight.wiki/w/Pantheon_of_Hallownest",
+          "gallery": [
+            "https://static.wikia.nocookie.net/hollowknight/images/6/63/Screenshot_HK_Pantheon_of_Hallownest_03.png/revision/latest/scale-to-width-down/800?cb=20210417132034"
+          ]
+        }
+      ]
+    }
+  ]
+}

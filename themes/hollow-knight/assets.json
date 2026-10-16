@@ -1,0 +1,62 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "divider",
+      "prompt": "Ornate thin horizontal divider ornament for a dark fantasy game UI: symmetrical art-nouveau filigree with curling insect-wing and vine motifs, pale silvery-white lines with a soft glow, centered, isolated on a fully transparent background, no text, no characters.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 1024
+    },
+    {
+      "name": "cavern",
+      "prompt": "Atmospheric dark underground cavern backdrop for a website background: deep navy and blue-black ink-wash painting, faint stalactites, hanging roots and ruined gothic arches silhouetted in the distance, soft pale glow far away, misty, very dark and low contrast so text on top stays readable, wide panorama, no characters, no creatures, no text.",
+      "size": "1536x1024",
+      "background": "opaque",
+      "quality": "medium",
+      "max_width": 1600
+    },
+    {
+      "name": "vessel",
+      "prompt": "Round ornate soul vessel frame for a game UI rating meter: an empty circular glass orb outline with thin pale silvery-white filigree around it, two curling horn-like flourishes on top, small dripping ornaments below, the inside of the circle completely empty and transparent, isolated on a fully transparent background, no text, no characters.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 512
+    },
+    {
+      "name": "roots",
+      "prompt": "A long horizontal strip of flat pure black silhouette: hanging roots, moss clumps and thin dangling vines growing down from a cave ceiling along the top edge, ragged irregular lower edge with a few long hanging tendrils, 2D hand-drawn dark fairytale game foreground style, solid black shapes only, isolated on a fully transparent background, no text, no creatures.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 1400
+    },
+    {
+      "name": "ledge",
+      "prompt": "A long horizontal strip of flat pure black silhouette: a rocky cave ground ledge running along the bottom edge with grass tufts, small round mushrooms, thorny twigs and pebbles sticking up along its top edge, 2D hand-drawn dark fairytale game foreground style, solid black shapes only, isolated on a fully transparent background, no text, no creatures.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 1400,
+      "note": "после генерации обрезать снизу: оставить 40 px под первой полностью непрозрачной строкой (тонкая полоса земли)"
+    },
+    {
+      "name": "tendrils",
+      "prompt": "Writhing black void tendrils rising upward from the bottom edge like living ink smoke or shadow tentacles curling at their tips, pure matte black with very faint deep blue rim light along the edges, soft wispy edges, hand-painted 2D dark fairytale game style, wide composition filling the lower part of the frame, isolated on a fully transparent background, no eyes, no faces, no creatures, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 1400
+    },
+    {
+      "name": "mappaper",
+      "prompt": "Seamless dark navy blue old map paper texture for a website background: very dark slate-blue parchment with faint pale quill scratches, tiny ink specks and soft uneven grain, even lighting, no lines of a map, no symbols, no text, tileable.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "medium",
+      "max_width": 768
+    }
+  ]
+}
