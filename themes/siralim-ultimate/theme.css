@@ -100,27 +100,43 @@
    Главная: плашка — отряд в бою
    ==================================================================================== */
 
+/* силуэт — пиксельное окно игры: углы ступеньками по 4 px, толстая пиксельная рамка
+   (фон самой ссылки виден в 4 px вокруг плашки, внутри — тёмная вторая линия) */
 .gbanner[data-game="siralim-ultimate"] {
-  border: 3px solid var(--sir-line);
+  border: 0;
   border-radius: 0;
-  background: var(--sir-ink);
-  box-shadow: inset 0 0 0 3px var(--sir-line-in), 0 0 0 3px #04040b, 0 10px 26px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
+  background: var(--sir-line);
+  clip-path: polygon(0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px));
+  transition: transform 0.16s steps(2);
 }
 
+/* выделение — по-пиксельному: рамка мигает золотом покадрово, окно подскакивает на 4 px,
+   курсор скачет по карточкам; при нажатии окно вдавливается, как кнопка */
 .gbanner[data-game="siralim-ultimate"]:hover,
 .gbanner[data-game="siralim-ultimate"]:focus-visible {
-  transform: none;
-  border-color: var(--sir-gold);
-  box-shadow: inset 0 0 0 3px #6b5520, 0 0 0 3px #04040b, 0 0 10px rgba(255, 208, 77, 0.45);
+  transform: translateY(-4px);
+  box-shadow: none;
+  outline: none;
+  background: var(--sir-gold);
+  animation: sir-frame-blink 0.5s steps(1) 2;
 }
 
+.gbanner[data-game="siralim-ultimate"]:active { transform: translateY(2px); }
+
+@keyframes sir-frame-blink { 50% { background: #fff; } }
+
 .sir-ban {
+  margin: 4px;
+  min-height: 202px;
+  background: var(--sir-ink);
+  box-shadow: inset 0 0 0 3px var(--sir-line-in);
+  clip-path: polygon(0 8px, 4px 8px, 4px 4px, 8px 4px, 8px 0, calc(100% - 8px) 0, calc(100% - 8px) 4px, calc(100% - 4px) 4px, calc(100% - 4px) 8px, 100% 8px, 100% calc(100% - 8px), calc(100% - 4px) calc(100% - 8px), calc(100% - 4px) calc(100% - 4px), calc(100% - 8px) calc(100% - 4px), calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 4px), 4px calc(100% - 4px), 4px calc(100% - 8px), 0 calc(100% - 8px));
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 14px;
-  min-height: 210px;
   padding: 12px 14px 14px;
 }
 
@@ -216,6 +232,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .gbanner[data-game="siralim-ultimate"]:hover .sir-ban-hop { animation: none; }
+  .gbanner[data-game="siralim-ultimate"]:hover,
+  .gbanner[data-game="siralim-ultimate"]:focus-visible { transform: none; animation: none; }
 }
 
 /* ====================================================================================

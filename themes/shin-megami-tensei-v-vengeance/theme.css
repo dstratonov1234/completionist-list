@@ -129,21 +129,74 @@
    Главная: плашка — луна по центру
    ==================================================================================== */
 
+/* силуэт — панель меню SMT V со срезанными углами (слева сверху и справа снизу);
+   рамка — это фон самой ссылки, видный в 1 px вокруг плашки и повторяющий срезы */
 .gbanner[data-game="shin-megami-tensei-v-vengeance"] {
-  border: 1px solid var(--smt-line);
+  --cut-a: 22px;
+  --cut-b: 34px;
+  border: 0;
   border-radius: 0;
-  background: #060203;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: none;
+  background: linear-gradient(105deg, rgba(222, 228, 240, 0.34), rgba(222, 228, 240, 0.34)) 0 0 / 300% 100%;
+  clip-path: polygon(var(--cut-a) 0, 100% 0, 100% calc(100% - var(--cut-b)), calc(100% - var(--cut-b)) 100%, 0 100%, 0 var(--cut-a));
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
+.smt-ban {
+  position: relative;
+  display: block;
+  min-height: 208px;
+  margin: 1px;
+  overflow: hidden;
+  background: #060203;
+  clip-path: polygon(calc(var(--cut-a) - 0.4px) 0, 100% 0, 100% calc(100% - var(--cut-b) + 0.4px), calc(100% - var(--cut-b) + 0.4px) 100%, 0 100%, 0 calc(var(--cut-a) - 0.4px));
+}
+
+/* выделение — как выбранный пункт меню: плашка выезжает вправо, по рамке бежит свет алый → голубой,
+   слева загорается метка выбора, наискосок проходит блик */
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover,
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible {
-  transform: none;
-  border-color: rgba(255, 74, 95, 0.7);
-  box-shadow: 0 0 10px rgba(255, 74, 95, 0.45), 0 10px 30px rgba(0, 0, 0, 0.5);
+  transform: translateX(8px);
+  box-shadow: none;
+  outline: none;
+  background-image: linear-gradient(105deg, #ff4a5f 0%, #fff 18%, #46c8ff 34%, #ff4a5f 52%, #fff 68%, #46c8ff 84%, #ff4a5f 100%);
+  animation: smt-frame-run 2.2s linear infinite;
 }
 
-.smt-ban { position: relative; display: block; min-height: 210px; overflow: hidden; }
+@keyframes smt-frame-run { to { background-position: 150% 0; } }
+
+.smt-ban::before {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  top: var(--cut-a);
+  bottom: 0;
+  width: 4px;
+  background: var(--smt-cyan);
+  box-shadow: 0 0 10px var(--smt-cyan);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.smt-ban::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  bottom: 0;
+  left: -30%;
+  width: 18%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+  transform: skewX(-24deg);
+  pointer-events: none;
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban::before,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible .smt-ban::before { transform: none; }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban::after,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible .smt-ban::after { left: 120%; transition: left 0.8s ease-out; }
 
 /* демоны с обложки по обе стороны (справа — как на обложке, слева — зеркально), в середине — тьма под луну */
 .smt-ban-art { position: absolute; inset: 0; }
@@ -281,6 +334,9 @@
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-side img { filter: grayscale(0.4) sepia(0.5) hue-rotate(-30deg) saturate(2) brightness(0.9) contrast(1.1); }
 
 @media (prefers-reduced-motion: reduce) {
+  .gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover,
+  .gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible { transform: none; animation: none; }
+  .gbanner[data-game="shin-megami-tensei-v-vengeance"] .smt-ban::after { display: none; }
   .gbanner[data-game="shin-megami-tensei-v-vengeance"] .smt-ban-orbs { display: none; }
   .smt-ban-lock i,
   .smt-ban-moon { transition: opacity 0.2s; }
