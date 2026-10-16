@@ -34,7 +34,7 @@ def main():
     p.add_argument("out")
     p.add_argument("--size", default="1280x800")
     p.add_argument("ids", nargs="*")
-    args = p.parse_args()
+    args = p.parse_intermixed_args()
     w, h = map(int, args.size.split("x"))
     out = os.path.abspath(args.out)
     os.makedirs(out, exist_ok=True)

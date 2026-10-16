@@ -4,8 +4,9 @@
 //    полоса здоровья полная — выполнено), при наведении у логотипа прыгает курсор меню ▶;
 //  · при наведении на баннер за главной открывается портал в реалм: пиксельный реалм проступает, в небе
 //    раскручивается покадровый пиксельный водоворот, вверх плывут кристаллы;
-//  · страница — окно игры посередине на фоне реалма: строка заголовка с логотипом и кристаллами, строка
-//    сообщения («Выберите условие.» печатается по буквам), меню команд слева — список условий с курсором ▶, поле боя в центре на
+//  · страница — экран боя 16:9 посередине на фоне реалма, вписан в окно и масштабируется целиком: строка
+//    сообщения с логотипом и кристаллами («Выберите условие.» печатается по буквам), поле боя, поверх него —
+//    окошко меню команд слева (список условий с курсором ▶), картинка цели в центре на
 //    пиксельном реалме (картинка цели, вспышка удара и всплывающая надпись, как цифры урона), справа —
 //    список «врагов» (чек-лист цели: красным — не побеждён, ✓ — побеждён), снизу — карточки отряда,
 //    под ними — окно диалога с именем цели и подробностями, текст печатается по буквам;
@@ -258,28 +259,30 @@
         return i < 0 ? 0 : i;
       }
 
-      // ---------- разметка ----------
+      // ---------- разметка: экран боя 16:9 — строка сообщения, поле с окошками поверх, отряд, диалог ----------
       function pageHtml() {
-        const logo = ctx.art.logo('class="sir-titlebar-logo" alt=""');
+        const logo = ctx.art.logo('class="sir-msg-logo" alt=""');
         const nb = ctx.neighbors ?? {};
         return `
           <div class="sir-page">
           <div class="sir-window">
-            <header class="sir-titlebar">
+          <div class="sir-screen ${total ? "" : "sir-screen-empty"}">
+            <header class="sir-msg">
               ${logo}
-              <h1 class="${logo ? "sir-sr" : "sir-titlebar-name"}">${esc(game.title)}</h1>
+              <h1 class="${logo ? "sir-sr" : "sir-msg-name"}">${esc(game.title)}</h1>
+              <p class="sir-msg-text" aria-live="polite"></p>
               ${total ? `<span class="sir-gems" aria-label="Выполнено ${done} из ${total}"><img src="${assets}gem.webp" alt=""><b>${done}</b>/${total}</span>` : ""}
               <a class="sir-back" href="#/"><span class="sir-key">Esc</span>К списку</a>
             </header>
-
-            <div class="sir-msg">
-              <p class="sir-msg-text" aria-live="polite"></p>
-            </div>
 
             ${
               total
                 ? `
             <section class="sir-battle" id="sir-battle" aria-label="Условия закрытия">
+              <div class="sir-field" data-gallery>
+                <div class="sir-field-art"></div>
+                <div class="sir-field-fx" aria-hidden="true"></div>
+              </div>
               <div class="sir-win sir-commands">
                 <ul class="sir-cmd-list" role="listbox" aria-label="Условия закрытия" tabindex="0">
                   ${goals
@@ -294,27 +297,24 @@
                     .join("")}
                 </ul>
               </div>
-              <div class="sir-win sir-field" data-gallery>
-                <div class="sir-field-art"></div>
-                <div class="sir-field-fx" aria-hidden="true"></div>
-              </div>
               <div class="sir-win sir-enemies">
                 <div class="sir-enemies-head"></div>
                 <ul class="sir-enemy-list"></ul>
               </div>
-              <div class="sir-party" role="group" aria-label="Отряд условий">
-                ${goals
-                  .map(
-                    ({ g }, i) => `
-                  <button type="button" class="sir-card sir-card-lg ${g.done ? "on" : ""}" data-i="${i}" aria-label="Условие ${esc(g.n)}: ${esc(g.title)}">
-                    <span class="sir-card-n">${esc(g.n)}</span>
-                    <span class="sir-card-name">${esc(g.title)}</span>
-                    <span class="sir-hp"><i></i></span>
-                  </button>`,
-                  )
-                  .join("")}
-              </div>
             </section>
+
+            <div class="sir-party" role="group" aria-label="Отряд условий">
+              ${goals
+                .map(
+                  ({ g }, i) => `
+                <button type="button" class="sir-card sir-card-lg ${g.done ? "on" : ""}" data-i="${i}" aria-label="Условие ${esc(g.n)}: ${esc(g.title)}">
+                  <span class="sir-card-n">${esc(g.n)}</span>
+                  <span class="sir-card-name">${esc(g.title)}</span>
+                  <span class="sir-hp"><i></i></span>
+                </button>`,
+                )
+                .join("")}
+            </div>
 
             <section class="sir-win sir-dialog" aria-live="polite">
               <header class="sir-dialog-name"></header>
@@ -323,7 +323,7 @@
                 : `<section class="sir-win sir-dialog"><div class="sir-dialog-body"><p>Условия закрытия для этой игры ещё не заданы.</p></div></section>`
             }
           </div>
-
+          </div>
             ${
               nb.prev || nb.next
                 ? `<nav class="sir-nav">

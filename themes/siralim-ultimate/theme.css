@@ -306,7 +306,7 @@
 }
 
 /* ====================================================================================
-   Страница игры
+   Страница игры — экран боя 16:9, вписан в окно браузера и масштабируется целиком
    ==================================================================================== */
 
 .sir-backdrop {
@@ -321,159 +321,114 @@
 
 .sir-page {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
   overflow-x: clip;
   min-height: 100vh;
-  padding: 34px 20px 60px;
+  padding: 16px;
   color: #eeeef8;
-  font: 19px/1.35 var(--sir-text);
+  font-family: var(--sir-text);
 }
 
-/* ---------- окно игры ---------- */
-
+/* рамка-корпус экрана; внутри — «пиксельный» экран, все размеры в долях экрана (cqw/cqh) */
 .sir-window {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 0 14px 16px;
+  container-type: size;
+  width: min(100%, calc((100vh - 66px) * 16 / 9));
+  aspect-ratio: 16 / 9;
   border: 4px solid var(--sir-line);
-  background: rgba(8, 8, 20, 0.9);
+  background: rgba(8, 8, 20, 0.92);
   box-shadow: inset 0 0 0 4px var(--sir-line-in), 0 0 0 4px #04040b, 0 30px 70px rgba(0, 0, 0, 0.65);
 }
 
-/* строка заголовка окна: логотип, кристаллы, выход */
-.sir-titlebar {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin: 0 -14px 14px;
-  padding: 10px 18px;
-  border-bottom: 4px solid var(--sir-line-in);
-  background: linear-gradient(180deg, #1b1840, #100e26);
+.sir-screen {
+  display: grid;
+  grid-template-rows: 8cqh minmax(0, 1fr) 13cqh 19cqh;
+  gap: 1.3cqh;
+  width: 100%;
+  height: 100%;
+  padding: 1.4cqh 1.2cqw;
 }
 
-.sir-titlebar-logo {
-  display: block;
-  height: 46px;
-  max-width: 220px;
-  object-fit: contain;
-  object-position: left center;
-  filter: drop-shadow(0 0 8px rgba(201, 155, 255, 0.6)) drop-shadow(2px 2px 0 #000);
-}
+.sir-screen-empty { grid-template-rows: 8cqh minmax(0, 1fr); }
 
-.sir-titlebar-name { margin: 0; font: 26px/1 var(--sir-pixel); color: #fff; text-shadow: 3px 3px 0 #000; }
-.sir-titlebar .sir-back { margin-left: auto; }
-
-.sir-gems { display: inline-flex; align-items: center; gap: 8px; font: 20px/1 var(--sir-pixel); color: #fff; text-shadow: 2px 2px 0 #000; }
-.sir-gems img { width: 22px; image-rendering: pixelated; filter: drop-shadow(0 0 6px rgba(201, 155, 255, 0.8)); }
-.sir-gems b { font-size: 30px; font-weight: 400; color: var(--sir-green); }
-
-/* ---------- строка сообщения ---------- */
+/* ---------- строка сообщения: логотип, текст, кристаллы, выход ---------- */
 
 .sir-msg {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin: 0;
-  padding: 10px 14px;
+  gap: 1.6cqw;
+  min-width: 0;
+  padding: 0 1.2cqw;
   border: 2px solid var(--sir-line);
-  background: var(--sir-win);
+  background: linear-gradient(180deg, #1b1840, #100e26);
   box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #04040b;
 }
 
-.sir-msg-text { flex: 1; min-height: 1.2em; margin: 0; font: 17px/1.2 var(--sir-pixel); color: #fff; text-shadow: 2px 2px 0 #000; }
-
-.sir-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.sir-msg-logo {
+  display: block;
   flex: none;
-  color: #fff;
-  font: 15px/1 var(--sir-pixel);
-  text-decoration: none;
-  text-shadow: 2px 2px 0 #000;
+  height: 6cqh;
+  max-width: 14cqw;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 0 0.8cqh rgba(201, 155, 255, 0.6)) drop-shadow(2px 2px 0 #000);
 }
 
+.sir-msg-name { flex: none; margin: 0; font: 2.6cqh/1 var(--sir-pixel); color: #fff; text-shadow: 2px 2px 0 #000; }
+
+.sir-msg-text {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font: 2.3cqh/1.2 var(--sir-pixel);
+  color: #fff;
+  text-overflow: ellipsis;
+  text-shadow: 2px 2px 0 #000;
+  white-space: nowrap;
+}
+
+.sir-gems { display: inline-flex; flex: none; align-items: center; gap: 0.6cqw; font: 2.4cqh/1 var(--sir-pixel); color: #fff; text-shadow: 2px 2px 0 #000; }
+.sir-gems img { height: 3.4cqh; image-rendering: pixelated; filter: drop-shadow(0 0 0.6cqh rgba(201, 155, 255, 0.8)); }
+.sir-gems b { font-size: 3.6cqh; font-weight: 400; color: var(--sir-green); }
+
+.sir-back { display: inline-flex; flex: none; align-items: center; gap: 0.6cqw; color: #fff; font: 2cqh/1 var(--sir-pixel); text-decoration: none; text-shadow: 2px 2px 0 #000; }
 .sir-back:hover,
 .sir-back:focus-visible { color: var(--sir-gold); outline: none; }
+.sir-key { display: inline-block; padding: 0.4cqh 0.5cqw 0.3cqh; border: 2px solid #fff; background: #232848; box-shadow: 0 2px 0 #000; font: 1.6cqh/1 var(--sir-pixel); }
 
-.sir-key {
-  display: inline-block;
-  padding: 3px 6px 2px;
-  border: 2px solid #fff;
-  background: #232848;
-  box-shadow: 0 2px 0 #000;
-  font: 12px/1 var(--sir-pixel);
-}
-
-/* ---------- экран боя ---------- */
+/* ---------- поле боя: реалм, по центру — цель, поверх — окошки меню и врагов ---------- */
 
 .sir-battle {
-  display: grid;
-  grid-template-columns: 270px minmax(0, 1fr) 260px;
-  grid-template-areas: "cmd field enemies" "party party party";
-  gap: 12px;
-  margin: 12px 0 0;
-}
-
-.sir-commands { grid-area: cmd; }
-
-.sir-cmd-list {
-  list-style: none;
-  margin: 0;
-  padding: 10px 8px;
-  max-height: 420px;
-  overflow-y: auto;
-  outline: none;
-}
-
-.sir-cmd-list:focus-visible { box-shadow: inset 0 0 0 2px var(--sir-gold); }
-
-.sir-cmd {
-  display: grid;
-  grid-template-columns: 16px 26px minmax(0, 1fr);
-  align-items: center;
-  gap: 6px;
-  padding: 7px 8px 7px 4px;
-  cursor: pointer;
-  color: #fff;
-  font: 15px/1.15 var(--sir-pixel);
-  text-shadow: 2px 2px 0 #000;
-}
-
-.sir-cmd .sir-cursor { visibility: hidden; font-size: 14px; }
-.sir-cmd-n { color: var(--sir-violet); }
-.sir-cmd.done .sir-cmd-n { color: var(--sir-green); }
-.sir-cmd-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.sir-cmd:hover { background: rgba(255, 255, 255, 0.06); }
-.sir-cmd[aria-selected="true"] { background: linear-gradient(90deg, #2b2f60, rgba(43, 47, 96, 0.2)); color: var(--sir-gold); }
-.sir-cmd[aria-selected="true"] .sir-cursor { visibility: visible; animation: sir-bob 0.6s steps(2) infinite; }
-
-.sir-field {
-  grid-area: field;
-  display: grid;
-  place-items: center;
-  min-height: 420px;
+  position: relative;
+  min-height: 0;
   overflow: hidden;
-  background: #0b0a18 url(assets/realm.webp) center bottom / cover no-repeat;
+  border: 2px solid var(--sir-line);
+  background: #0b0a18 url(assets/realm.webp) center 70% / cover no-repeat;
   image-rendering: pixelated;
+  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #04040b;
 }
 
-.sir-field-art { position: relative; display: grid; place-items: center; width: 100%; height: 100%; padding: 22px; }
+.sir-field { position: absolute; inset: 0 25cqw 0 27cqw; display: grid; place-items: center; }
+.sir-field-art { position: relative; display: grid; place-items: center; width: 100%; height: 100%; padding: 2.4cqh 0; }
 
 .sir-field-art img {
   display: block;
-  width: min(100%, 560px);
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   border: 2px solid var(--sir-line);
-  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #000, 0 14px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 0 0 2px var(--sir-line-in), 0 0 0 2px #000, 0 1.6cqh 3cqh rgba(0, 0, 0, 0.6);
   cursor: zoom-in;
 }
 
 /* спрайт с вики — крупно и с чёткими пикселями */
 .sir-field.sprite .sir-field-art img {
-  width: auto;
-  height: min(300px, 60%);
-  aspect-ratio: auto;
+  height: 80%;
+  max-height: none;
   border: 0;
   box-shadow: none;
   image-rendering: pixelated;
@@ -481,9 +436,7 @@
 }
 
 .sir-field:not(.done) .sir-field-art img { filter: grayscale(0.7) brightness(0.65); }
-.sir-field-blank { font: 120px/1 var(--sir-pixel); color: rgba(255, 255, 255, 0.18); }
-
-/* удар: короткая вспышка картинки */
+.sir-field-blank { font: 16cqh/1 var(--sir-pixel); color: rgba(255, 255, 255, 0.2); }
 .sir-field.sir-flash .sir-field-art img { animation: sir-flash 0.28s steps(2) 1; }
 @keyframes sir-flash { 50% { filter: brightness(2.6) saturate(0.4); } }
 
@@ -491,9 +444,9 @@
 
 .sir-dmg {
   position: absolute;
-  top: 34%;
+  top: 30%;
   transform: translateX(-50%);
-  font: 30px/1 var(--sir-pixel);
+  font: 4.4cqh/1 var(--sir-pixel);
   color: #d8d8e8;
   text-shadow: 3px 3px 0 #000, -1px -1px 0 #000;
   animation: sir-dmg 1s steps(10) forwards;
@@ -508,29 +461,55 @@
   100% { opacity: 0; transform: translate(-50%, -46px); }
 }
 
-.sir-enemies { grid-area: enemies; display: flex; flex-direction: column; min-height: 0; }
+/* окошко меню команд — слева сверху, по размеру содержимого */
+.sir-commands { position: absolute; left: 1.2cqw; top: 1.6cqh; width: 24cqw; max-height: calc(100% - 3.2cqh); display: flex; }
+
+.sir-cmd-list { flex: 1; min-height: 0; margin: 0; padding: 1.2cqh 0.6cqw; overflow-y: auto; list-style: none; outline: none; }
+.sir-cmd-list:focus-visible { box-shadow: inset 0 0 0 2px var(--sir-gold); }
+
+.sir-cmd {
+  display: grid;
+  grid-template-columns: 1.3cqw 2.2cqw minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5cqw;
+  padding: 0.75cqh 0.6cqw 0.75cqh 0.3cqw;
+  cursor: pointer;
+  color: #fff;
+  font: 2.05cqh/1.15 var(--sir-pixel);
+  text-shadow: 2px 2px 0 #000;
+}
+
+.sir-cmd .sir-cursor { visibility: hidden; font-size: 1.9cqh; }
+.sir-cmd-n { color: var(--sir-violet); }
+.sir-cmd.done .sir-cmd-n { color: var(--sir-green); }
+.sir-cmd-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sir-cmd:hover { background: rgba(255, 255, 255, 0.06); }
+.sir-cmd[aria-selected="true"] { background: linear-gradient(90deg, #2b2f60, rgba(43, 47, 96, 0.2)); color: var(--sir-gold); }
+.sir-cmd[aria-selected="true"] .sir-cursor { visibility: visible; animation: sir-bob 0.6s steps(2) infinite; }
+
+/* окошко врагов — справа сверху, по размеру содержимого, длинный список прокручивается */
+.sir-enemies { position: absolute; right: 1.2cqw; top: 1.6cqh; width: 22cqw; max-height: calc(100% - 3.2cqh); display: flex; flex-direction: column; }
 
 .sir-enemies-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px 8px;
+  padding: 1.2cqh 0.9cqw 0.9cqh;
   border-bottom: 2px solid var(--sir-line-in);
-  font: 15px/1 var(--sir-pixel);
+  font: 2cqh/1 var(--sir-pixel);
   color: #fff;
   text-shadow: 2px 2px 0 #000;
 }
 
 .sir-enemies-head b { font-weight: 400; color: var(--sir-green); }
-
-.sir-enemy-list { list-style: none; margin: 0; padding: 6px 10px 10px; max-height: 370px; overflow-y: auto; }
+.sir-enemy-list { flex: 1; min-height: 0; margin: 0; padding: 0.6cqh 0.8cqw 1cqh; overflow-y: auto; list-style: none; }
 
 .sir-enemy {
   display: grid;
-  grid-template-columns: 16px minmax(0, 1fr);
-  gap: 6px;
-  padding: 3px 0;
-  font: 14px/1.2 var(--sir-pixel);
+  grid-template-columns: 1.2cqw minmax(0, 1fr);
+  gap: 0.5cqw;
+  padding: 0.35cqh 0;
+  font: 1.85cqh/1.2 var(--sir-pixel);
   color: var(--sir-red);
   text-shadow: 2px 2px 0 #000;
 }
@@ -538,120 +517,111 @@
 .sir-enemy i { font-style: normal; }
 .sir-enemy.on { color: #c9cbe0; }
 .sir-enemy.on i { color: var(--sir-green); }
-
-.sir-enemy-label {
-  margin: 8px 0 3px;
-  font: 12px/1 var(--sir-pixel);
-  color: var(--sir-gold);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.sir-enemy-label:first-child { margin-top: 2px; }
+.sir-enemy-label { margin: 1cqh 0 0.4cqh; font: 1.6cqh/1 var(--sir-pixel); color: var(--sir-gold); letter-spacing: 0.06em; text-transform: uppercase; }
+.sir-enemy-label:first-child { margin-top: 0.3cqh; }
 
 /* ---------- отряд ---------- */
 
-.sir-party {
-  grid-area: party;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px;
-}
+.sir-party { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; gap: 0.9cqw; min-height: 0; }
 
 .sir-card-lg {
   margin: 0;
-  padding: 10px 10px 12px;
+  padding: 1cqh 0.8cqw 1.1cqh;
   font: inherit;
   text-align: left;
   cursor: pointer;
   transition: transform 0.15s steps(2), border-color 0.15s;
 }
 
-.sir-card-lg .sir-card-n { font-size: 20px; }
+.sir-card-lg .sir-card-n { font-size: 2.6cqh; }
 
 .sir-card-name {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: 2.3em;
-  font: 15px/1.15 var(--sir-text);
+  font: 1.9cqh/1.15 var(--sir-text);
   color: #d9daea;
 }
 
+.sir-card-lg .sir-hp { height: 1cqh; margin-top: auto; }
 .sir-card-lg:hover { transform: translateY(-2px); }
 .sir-card-lg.cur { border-color: var(--sir-gold); box-shadow: inset 0 0 0 2px #6b5520, 0 0 10px rgba(255, 208, 77, 0.4); }
 .sir-card-lg:focus-visible { outline: 2px solid var(--sir-gold); outline-offset: 3px; }
 
 /* ---------- окно диалога ---------- */
 
-.sir-dialog {
-  margin: 14px 0 0;
-  padding: 0 18px 16px;
-}
+.sir-dialog { display: flex; flex-direction: column; min-height: 0; padding: 0 1.4cqw 1.2cqh; overflow: hidden; }
 
 .sir-dialog-name {
   display: flex;
+  flex: none;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 14px;
-  margin: 0 -18px 12px;
-  padding: 12px 18px 10px;
+  gap: 0.6cqh 1cqw;
+  margin: 0 -1.4cqw 1cqh;
+  padding: 1cqh 1.4cqw 0.8cqh;
   border-bottom: 2px solid var(--sir-line-in);
-  font: 21px/1.2 var(--sir-text);
-  font-weight: 600;
+  font: 600 2.7cqh/1.2 var(--sir-text);
   color: #fff;
 }
 
-.sir-dialog-n { font: 18px/1 var(--sir-pixel); color: var(--sir-violet); text-shadow: 2px 2px 0 #000; }
+.sir-dialog-n { font: 2.3cqh/1 var(--sir-pixel); color: var(--sir-violet); text-shadow: 2px 2px 0 #000; }
 
-.sir-state {
-  padding: 3px 8px 2px;
-  border: 2px solid var(--sir-red);
-  font: 12px/1 var(--sir-pixel);
-  color: var(--sir-red);
-  text-shadow: 1px 1px 0 #000;
-}
-
+.sir-state { padding: 0.4cqh 0.6cqw 0.3cqh; border: 2px solid var(--sir-red); font: 1.5cqh/1 var(--sir-pixel); color: var(--sir-red); text-shadow: 1px 1px 0 #000; }
 .sir-state.on { border-color: var(--sir-green); color: var(--sir-green); }
 
-.sir-dialog-body { display: flex; flex-direction: column; gap: 6px; cursor: default; }
+.sir-dialog-body { display: flex; flex-direction: column; gap: 0.5cqh; min-height: 0; overflow-y: auto; font: 2.5cqh/1.35 var(--sir-text); cursor: default; }
 .sir-line { margin: 0; }
 .sir-line b { font-weight: 600; color: var(--sir-gold); }
 .sir-details { color: #fff; }
-.sir-note { margin: 4px 0 0; padding-left: 12px; border-left: 3px solid var(--sir-violet); font-style: italic; }
-.sir-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; margin-top: 4px; }
+.sir-note { margin: 0.4cqh 0 0; padding-left: 1cqw; border-left: 3px solid var(--sir-violet); font-style: italic; }
+.sir-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(9cqw, 1fr)); gap: 0.6cqw; }
 .sir-gallery img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border: 2px solid var(--sir-line); cursor: zoom-in; }
-.sir-lore { align-self: flex-start; margin-top: 8px; font-size: 15px; }
+.sir-lore { align-self: flex-start; margin-top: 0.6cqh; font-size: 2cqh; }
 
+.sir-nav { display: flex; justify-content: space-between; gap: 16px; width: min(100%, calc((100vh - 66px) * 16 / 9)); }
 .sir-nav .sir-menu-item .sir-cursor { visibility: visible; }
 
-.sir-nav {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  max-width: 1152px;
-  margin: 26px auto 0;
-  padding: 0 24px;
-}
+/* ---------- узкий экран: экран 16:9 не помещается — окошки друг под другом ---------- */
 
-/* ---------- узкий экран ---------- */
-
-@media (max-width: 980px) {
-  .sir-battle { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "field field" "cmd enemies" "party party"; }
-  .sir-field { min-height: 300px; }
-  .sir-cmd-list,
-  .sir-enemy-list { max-height: 300px; }
-}
-
-@media (max-width: 640px) {
-  .sir-page { padding: 12px 8px 40px; }
-  .sir-window { padding: 0 8px 12px; border-width: 3px; }
-  .sir-titlebar { margin: 0 -8px 10px; padding: 8px 10px; gap: 12px; flex-wrap: wrap; }
-  .sir-titlebar-logo { height: 34px; max-width: 140px; }
-  .sir-battle { grid-template-columns: minmax(0, 1fr); grid-template-areas: "field" "cmd" "enemies" "party"; }
-  .sir-field { min-height: 240px; }
-  .sir-party { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 760px), (max-height: 520px) {
+  .sir-page { justify-content: flex-start; padding: 10px 8px 40px; }
+  .sir-window { container-type: normal; width: 100%; aspect-ratio: auto; border-width: 3px; }
+  .sir-screen { display: flex; flex-direction: column; gap: 10px; height: auto; padding: 8px; }
+  .sir-msg { flex-wrap: wrap; gap: 8px 12px; padding: 8px 10px; }
+  .sir-msg-logo { height: 34px; max-width: 140px; }
+  .sir-msg-text { flex-basis: 100%; order: 5; font-size: 15px; white-space: normal; }
+  .sir-gems { font-size: 18px; }
+  .sir-gems img { height: 20px; }
+  .sir-gems b { font-size: 26px; }
+  .sir-back { margin-left: auto; font-size: 14px; }
+  .sir-key { font-size: 11px; padding: 3px 5px 2px; }
+  .sir-battle { display: flex; flex-direction: column; gap: 10px; padding: 10px; overflow: visible; }
+  .sir-field { position: relative; inset: auto; min-height: 220px; }
+  .sir-field-art { padding: 0; }
+  .sir-field-art img { max-height: 240px; }
+  .sir-commands,
+  .sir-enemies { position: relative; left: auto; right: auto; top: auto; width: auto; max-height: 300px; }
+  .sir-cmd { grid-template-columns: 16px 24px minmax(0, 1fr); gap: 6px; padding: 7px 8px 7px 4px; font-size: 15px; }
+  .sir-cmd .sir-cursor { font-size: 14px; }
+  .sir-enemies-head { padding: 10px 12px 8px; font-size: 15px; }
+  .sir-enemy-list { padding: 6px 10px 10px; }
+  .sir-enemy { grid-template-columns: 16px minmax(0, 1fr); gap: 6px; font-size: 14px; }
+  .sir-enemy-label { font-size: 12px; }
+  .sir-party { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .sir-card-lg { padding: 10px; }
+  .sir-card-lg .sir-card-n { font-size: 18px; }
+  .sir-card-name { font-size: 15px; }
+  .sir-card-lg .sir-hp { height: 8px; }
+  .sir-dialog { padding: 0 14px 14px; }
+  .sir-dialog-name { margin: 0 -14px 10px; padding: 10px 14px 8px; font-size: 19px; gap: 6px 12px; }
+  .sir-dialog-n { font-size: 16px; }
+  .sir-state { font-size: 11px; padding: 3px 7px 2px; }
+  .sir-dialog-body { font-size: 18px; overflow: visible; }
+  .sir-lore { font-size: 15px; }
+  .sir-dmg { font-size: 26px; }
+  .sir-nav { width: 100%; }
   .sir-ban { grid-template-columns: minmax(0, 1fr); padding: 18px 16px 16px; }
   .sir-ban-party { justify-items: start; }
   .sir-ban-cards { grid-template-columns: repeat(6, 32px); }
