@@ -1,0 +1,30 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "paper",
+      "prompt": "Seamless flat texture of handmade Japanese washi paper, warm cream ivory color, visible long soft plant fibers and subtle uneven thickness, very gentle mottled tone, evenly lit, no folds, no shadows, no objects, no text, top-down scan, fills the entire frame.",
+      "size": "1024x1024", "background": "opaque", "quality": "medium", "max_width": 1024
+    },
+    {
+      "name": "stroke",
+      "prompt": "One single wide horizontal sumi ink brush stroke painted with a large calligraphy brush, solid black ink with dry-brush streaks and frayed bristle edges at both ends, slightly rising from left to right, filling most of the width, isolated on a fully transparent background, no text, no characters.",
+      "size": "1536x1024", "background": "transparent", "quality": "medium", "max_width": 1400
+    },
+    {
+      "name": "splash",
+      "prompt": "Black sumi ink splash and splatter blot, organic droplets and spray radiating from a dense center, Japanese ink painting style, isolated on a fully transparent background, no text.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 900
+    },
+    {
+      "name": "roller",
+      "prompt": "A single vertical wooden hanging scroll roller rod seen from the front, dark lacquered brown wood cylinder with ornate engraved gold brass end caps at the top and bottom, straight and centered, isolated on a fully transparent background, no paper, no text.",
+      "size": "1024x1536", "background": "transparent", "quality": "medium", "max_width": 260
+    },
+    {
+      "name": "wood",
+      "prompt": "Seamless texture of dark aged Japanese cedar wood planks with visible grain, deep brown almost black, subtle warm highlights, slightly weathered lacquer, evenly lit, flat front view, no objects, no text, fills the entire frame.",
+      "size": "1024x1024", "background": "opaque", "quality": "medium", "max_width": 1024
+    }
+  ]
+}

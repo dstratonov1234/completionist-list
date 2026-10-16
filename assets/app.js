@@ -962,7 +962,9 @@
     state.currentGame = g;
     els.listView.hidden = true;
     els.gameView.hidden = false;
-    els.gameView.classList.toggle("arriving", arriving);
+    // Проявление страницы нужно только без заставки темы: под заставкой оно невидимо, а конец этой
+    // анимации заново растрирует всю страницу — и открытие заставки на этот миг замирает.
+    els.gameView.classList.toggle("arriving", arriving && !(state.handoff?.id === g.id && state.handoff.layers.length));
     document.title = `${g.title} — ${SITE_TITLE}`;
     applyPageTheme(g);
     const cond = await loadConditions(g);

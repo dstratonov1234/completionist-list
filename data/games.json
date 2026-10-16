@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-15",
-  "build": "8a129faf32",
+  "build": "72f55042cf",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -119,6 +119,47 @@
         "headingWeight": 800,
         "radius": 0,
         "heroPosition": "center 24%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "monster-hunter-rise",
+      "title": "Monster Hunter Rise",
+      "status": "completed",
+      "finished": "2026-10-15",
+      "aliases": [
+        "MH Rise",
+        "MHR",
+        "Sunbreak",
+        "Monster Hunter Rise: Sunbreak"
+      ],
+      "steamAppId": 1446780,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1446780/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1446780/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1446780/logo.png",
+      "goals": {
+        "done": 15,
+        "total": 15
+      },
+      "theme": {
+        "bg": "#120d0a",
+        "surface": "#2a1d15",
+        "text": "#f3ead8",
+        "accent": "#d2452f",
+        "accent2": "#e0b252",
+        "fonts": [
+          "Cormorant SC:wght@600;700",
+          "Alegreya SC:wght@500;700",
+          "Alegreya:ital,wght@0,400;0,500;0,700;1,400"
+        ],
+        "displayFont": "Cormorant SC",
+        "headingFont": "Alegreya SC",
+        "bodyFont": "Alegreya",
+        "bodySize": 16,
+        "headingWeight": 500,
+        "radius": 0,
+        "heroPosition": "center 35%",
         "css": true,
         "js": true
       }

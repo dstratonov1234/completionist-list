@@ -1,0 +1,151 @@
+{
+  "title": "Monster Hunter Rise + Sunbreak — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели закрытия",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Деревня: «Возмездие» (Магнамало) и финальный «Новая ступень: Бал ветеранов»",
+          "done": true,
+          "date": "2022-06-09",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/7/72/MHRise-Magnamalo_Render_001.png/revision/latest/scale-to-width-down/800?cb=20200917143525",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Magnamalo"
+        },
+        {
+          "n": 2,
+          "title": "Зал собраний: «Змей-бог ветра» (Ибуси, бой в Буйстве) и «Змей-бог грома» (Нарва)",
+          "done": true,
+          "date": "2022-06-07",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/b/b0/MHRise-Wind_Serpent_Ibushi_Render_001.png/revision/latest/scale-to-width-down/800?cb=20211022001605",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Wind_Serpent_Ibushi",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/e/e9/MHRise-Thunder_Serpent_Narwa_Render_001.png/revision/latest/scale-to-width-down/624?cb=20211022001824"
+          ]
+        },
+        {
+          "n": 3,
+          "title": "Старшие драконы HR 20–40, «Всемать» (Нарва Всемать), «Опасная звезда» (Алый Валстракс)",
+          "done": true,
+          "date": "2022-06-20",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/7/78/MHRise-Crimson_Glow_Valstrax_Render_001.png/revision/latest/scale-to-width-down/800?cb=20210526142732",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Crimson_Glow_Valstrax",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/3/36/MH20th-Narwa_the_Allmother_Render_001.png/revision/latest?cb=20231121183257"
+          ]
+        },
+        {
+          "n": 4,
+          "title": "Буйство (tower defense), все 6 Высших, «Новая ступень: Корона высших»",
+          "done": true,
+          "date": "2023-05-24",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/9/96/MHRise-Rampage_Screenshot_004.jpg/revision/latest/scale-to-width-down/800?cb=20210308220517",
+          "link": "https://monsterhunter.fandom.com/wiki/The_Rampage",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/b/bf/MHRise-Apex_Zinogre_Render_001.png/revision/latest/scale-to-width-down/800?cb=20240731183127"
+          ]
+        },
+        {
+          "n": 5,
+          "title": "Квест арены с выданным снаряжением — один раз",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/3/32/MHRise-Arena_Screenshot_001.png/revision/latest/scale-to-width-down/800?cb=20251018033813",
+          "link": "https://monsterhunter.fandom.com/wiki/Arena"
+        },
+        {
+          "n": 6,
+          "title": "Сюжет Sunbreak до «Пример храбрости» (Гайсмагорм)",
+          "done": true,
+          "date": "2023-05-16",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/9/90/MHRS-Gaismagorm_Render_001.png/revision/latest/scale-to-width-down/800?cb=20230608072025",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Gaismagorm"
+        },
+        {
+          "n": 7,
+          "title": "Пост-гейм до «Время мести» (Презренный Магнамало)",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/7/75/MHRS-Scorned_Magnamalo_Render_001.png/revision/latest/scale-to-width-down/800?cb=20220628131742",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Scorned_Magnamalo"
+        },
+        {
+          "n": 8,
+          "title": "Все 33 задания последователей",
+          "done": true,
+          "date": "2023-05-18",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/8/85/MHRS-Follower_Screenshot_002.jpg/revision/latest/scale-to-width-down/800?cb=20220510182302",
+          "link": "https://mhrise.kiranico.com/data/quests?view=follower"
+        },
+        {
+          "n": 9,
+          "title": "Аномалия: изменённые монстры, тиры A1–A9 (включая Восставших), исследование ур. 100",
+          "done": true,
+          "date": "2025-03-09",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/c/c9/MHRS-Afflicted_Astalos_Render_001.png/revision/latest/scale-to-width-down/800?cb=20220810033602",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Afflicted_Monsters"
+        },
+        {
+          "n": 10,
+          "title": "«Солнце взойдет» (Амацу)",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/e/ec/MHRS-Amatsu_Render_001.png/revision/latest/scale-to-width-down/800?cb=20230419141937",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Amatsu"
+        },
+        {
+          "n": 11,
+          "title": "«Вестник разрушения» → «Воскрешенная легенда» (Древний Малзено)",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/7/76/MH20th-Primordial_Malzeno_Render_001.png/revision/latest/scale-to-width-down/800?cb=20240325035848",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Primordial_Malzeno"
+        },
+        {
+          "n": 12,
+          "title": "«Опасность: Древний вредитель» и «Опасность: Туманная тень»",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/b/ba/MHRS-Lucent_Nargacuga_Screenshot_001.jpg/revision/latest/scale-to-width-down/800?cb=20220613234947",
+          "link": "https://monsterhunter.fandom.com/wiki/Lucent_Nargacuga",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/e/ea/MHRS-Primordial_Malzeno_Screenshot_008.jpg/revision/latest/scale-to-width-down/800?cb=20230608125049"
+          ]
+        },
+        {
+          "n": 13,
+          "title": "Ручные ивенты MR: 9 «Опасность: …», 10 Dual Threat, Flagship Fight, «Ежедневная практика»",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/6/6c/MHRS-Furious_Rajang_and_Scorned_Magnamalo_Screenshot_001.jpg/revision/latest/scale-to-width-down/800?cb=20230316015427",
+          "link": "https://monsterhunter.fandom.com/wiki/MHRS:_Event_Quests"
+        },
+        {
+          "n": 14,
+          "title": "Коллаб-ивенты с необычной целью: «Восходящее солнце?!» (Okami), «Скорее запасаемся!» (Sonic), «Лучший друг Blue Bomber» (Mega Man)",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/sonic/images/4/43/MHRise_collab_art.jpg/revision/latest/scale-to-width-down/800?cb=20211228070240",
+          "imageFit": "contain",
+          "link": "https://mhrise.kiranico.com/data/quests?view=event"
+        },
+        {
+          "n": 15,
+          "title": "Каждый из 78 крупных монстров убит хотя бы раз",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/5/5c/MHRS-Key_Artwork_002.jpg/revision/latest/scale-to-width-down/800?cb=20220315152258",
+          "link": "https://monsterhunter.fandom.com/wiki/Monster_Hunter_Rise:_Sunbreak"
+        }
+      ]
+    }
+  ]
+}

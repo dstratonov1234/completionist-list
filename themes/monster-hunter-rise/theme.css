@@ -1,0 +1,833 @@
+/* Monster Hunter Rise (+ Sunbreak) — «Свиток охоты».
+   Всё своё: на главной — свиток с валиками (логотип и счёт 正 на бумаге, арт в мазке туши), при наведении —
+   представление монстра одним мазком кисти; страница — эмакимоно, горизонтальный свиток охот с печатями
+   и нитью Жука-проволочника; заставка — свиток разворачивается от баннера и сворачивается к центру. */
+
+.gbanner[data-game="monster-hunter-rise"],
+.stage-layer[data-game="monster-hunter-rise"],
+.mh-scroll,
+.mh,
+.mh-backdrop,
+.mh-petals {
+  --mh-paper: #efe4cc;
+  --mh-paper-dk: #dccdab;
+  --mh-ink: #1d140e;
+  --mh-ink-soft: #4a3a2c;
+  --mh-red: #c8352a;
+  --mh-red-dk: #8e2219;
+  --mh-gold: #d9a441;
+  --mh-indigo: #232c48;
+  --mh-wire: #8ff0c4;
+  --mh-wire-hi: #e3fff1;
+}
+
+.mh-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* счёт штрихами 正 */
+.mh-tally { display: block; overflow: visible; }
+.mh-tally path { fill: none; stroke: rgba(29, 20, 14, 0.16); stroke-width: 4.2; stroke-linecap: round; stroke-dasharray: 0.05 0.06; }
+.mh-tally path.on { stroke: var(--mh-red); stroke-width: 5; stroke-dasharray: 1; stroke-dashoffset: 0; filter: drop-shadow(0 0 0.4px var(--mh-red-dk)); }
+
+/* ====================================================================================
+   Главная: свиток с валиками
+   ==================================================================================== */
+
+/* силуэт — свиток: бумага между двумя деревянными валиками, которые выступают сверху и снизу */
+.gbanner[data-game="monster-hunter-rise"] {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.mh-ban-roll {
+  position: absolute;
+  z-index: 2;
+  top: -9px;
+  bottom: -9px;
+  width: 24px;
+  background: url(assets/roller.webp) center / 100% 100% no-repeat;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
+  transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.mh-ban-roll.l { left: 4px; }
+.mh-ban-roll.r { right: 4px; }
+
+.mh-ban {
+  position: relative;
+  z-index: 1;
+  display: block;
+  min-height: 206px;
+  margin: 0 22px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(120, 90, 50, 0.28)),
+    url(assets/paper.webp) 0 0 / 420px;
+  background-color: var(--mh-paper);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5);
+  transition: margin 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* арт — внутри мазка туши, в покое тоном туши по бумаге; мазок лежит в правой части плашки,
+   а сам слой — во всю ширину, чтобы при выделении мазок разрастался без обрезанных краёв */
+.mh-ban-ink {
+  position: absolute;
+  inset: 0;
+  -webkit-mask: url(assets/stroke.webp) -6% 58% / 70% 175% no-repeat;
+  mask: url(assets/stroke.webp) -6% 58% / 70% 175% no-repeat;
+  transition: -webkit-mask-size 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), mask-size 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), -webkit-mask-position 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), mask-position 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.mh-ban-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 42% 30%;
+  filter: grayscale(1) sepia(0.55) contrast(1.25) brightness(0.82);
+  mix-blend-mode: multiply;
+  transition: filter 0.5s ease;
+}
+
+.mh-ban-art { position: absolute; inset: 0; }
+
+/* справа на чистой бумаге — заглавие: логотип и счёт штрихами (эмакимоно читают справа налево) */
+.mh-ban-title {
+  position: absolute;
+  z-index: 2;
+  right: 3%;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 30%;
+}
+
+.mh-ban-logo img { display: block; width: auto; max-width: 100%; height: 118px; object-fit: contain; filter: drop-shadow(0 2px 2px rgba(60, 40, 20, 0.35)); }
+.mh-ban-name { color: var(--mh-ink); font: 700 30px/1.05 var(--t-display, serif); text-align: center; }
+
+.mh-ban-count { position: relative; display: flex; align-items: center; gap: 12px; }
+.mh-ban-count .mh-tally { height: 30px; width: auto; }
+.mh-ban-num { color: var(--mh-ink); font: 600 22px/1 var(--t-heading, serif); letter-spacing: 0.04em; }
+.mh-ban-num b { color: var(--mh-red-dk); font: 700 34px/1 var(--t-display, serif); }
+
+/* печать «квест принят» — с размаху ложится на свиток при выделении */
+/* печать — подписью у счёта */
+.mh-ban-seal {
+  position: absolute;
+  z-index: 3;
+  left: calc(100% + 10px);
+  top: 50%;
+  margin-top: -24px;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--mh-red);
+  border-radius: 6px;
+  color: var(--mh-red);
+  font: 700 30px/1 "Yu Mincho", "MS Mincho", "Noto Serif CJK JP", serif;
+  background: rgba(200, 53, 42, 0.08);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transform: rotate(-8deg) scale(1.9);
+}
+
+/* выделение — «квест принят»: валики разъезжаются, мазок разгорается в цвет, штрихи дописываются, печать */
+.gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) { transform: translateY(-2px); box-shadow: none; outline: none; }
+.gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) .mh-ban { margin: 0 8px; }
+.gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) .mh-ban-roll.l { transform: translateX(-14px); }
+.gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) .mh-ban-roll.r { transform: translateX(14px); }
+.gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) .mh-ban-ink { -webkit-mask-size: 78% 230%; mask-size: 78% 230%; -webkit-mask-position: -4% 50%; mask-position: -4% 50%; }
+.gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) .mh-ban-art img { filter: saturate(1.05) contrast(1.05); mix-blend-mode: normal; }
+.gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) .mh-ban-seal { animation: mh-stamp 0.42s cubic-bezier(0.5, 0, 0.6, 1.4) 0.18s both; }
+.gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) .mh-ban-count path.on { animation: mh-write 0.28s ease-out calc(var(--k) * 45ms) both; }
+
+@keyframes mh-stamp {
+  0% { opacity: 0; transform: rotate(-8deg) scale(1.9); }
+  70% { opacity: 0.95; transform: rotate(-8deg) scale(0.94); }
+  100% { opacity: 0.9; transform: rotate(-8deg) scale(1); }
+}
+
+@keyframes mh-write { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+@media (max-width: 600px) {
+  .mh-ban { min-height: 172px; margin: 0 16px; }
+  .mh-ban-roll { width: 18px; top: -7px; bottom: -7px; }
+  .mh-ban-roll.l { left: 2px; }
+  .mh-ban-roll.r { right: 2px; }
+  .mh-ban-title { right: 2%; width: 40%; gap: 4px; }
+  .mh-ban-logo img { height: 78px; }
+  .mh-ban-count { gap: 6px; flex-direction: column; }
+  .mh-ban-count .mh-tally { height: 20px; }
+  .mh-ban-num { font-size: 16px; }
+  .mh-ban-num b { font-size: 26px; }
+  .mh-ban-ink { -webkit-mask-size: 66% 150%; mask-size: 66% 150%; -webkit-mask-position: -10% 60%; mask-position: -10% 60%; }
+  .mh-ban-art img { filter: grayscale(0.6) sepia(0.6) contrast(1.15) brightness(0.92); }
+  .mh-ban-seal { left: auto; right: -6px; top: -40px; margin: 0; width: 36px; height: 36px; font-size: 22px; }
+  .gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) .mh-ban { margin: 0 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) { transform: none; }
+  .gbanner[data-game="monster-hunter-rise"]:is(:hover, :focus-visible, .picked) .mh-ban-seal { animation: none; opacity: 0.9; transform: rotate(-8deg); }
+  .gbanner[data-game="monster-hunter-rise"] .mh-ban-count path.on { animation: none !important; }
+  .mh-ban,
+  .mh-ban-roll,
+  .mh-ban-ink,
+  .mh-ban-art img { transition: none; }
+}
+
+/* ====================================================================================
+   Главная: при наведении — представление монстра одним мазком кисти
+   ==================================================================================== */
+
+.stage-layer[data-game="monster-hunter-rise"] { background: #120d0a; }
+
+.mh-hv {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse 70% 60% at 60% 45%, rgba(110, 70, 40, 0.28), transparent 70%);
+}
+
+/* мазок проходит через фон слева направо, в нём — арт в тонах туши */
+.mh-hv-sweep {
+  position: absolute;
+  left: -8vw;
+  right: -8vw;
+  top: 4vh;
+  height: 74vh;
+  transform: rotate(-7deg);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1.05s cubic-bezier(0.55, 0.1, 0.25, 1) 0.08s;
+}
+
+.mh-hv-ink {
+  position: absolute;
+  inset: 0;
+  -webkit-mask: url(assets/stroke.webp) center / 100% 100% no-repeat;
+  mask: url(assets/stroke.webp) center / 100% 100% no-repeat;
+}
+
+.mh-hv-ink img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% 30%;
+  filter: grayscale(0.35) sepia(0.5) contrast(1.1) brightness(1.02);
+  transform: rotate(7deg) scale(1.15);
+}
+
+/* брызги красной туши */
+.mh-hv-splash {
+  position: absolute;
+  width: 34vh;
+  aspect-ratio: 900 / 949;
+  background: var(--mh-red);
+  -webkit-mask: url(assets/splash.webp) center / contain no-repeat;
+  mask: url(assets/splash.webp) center / contain no-repeat;
+  opacity: 0;
+  transform: scale(0.3) rotate(var(--r, 0deg));
+  transition: opacity 0.3s ease, transform 0.55s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+/* брызги — правее колонки с названиями категорий, чтобы не ложиться под надписи */
+.mh-hv-splash.a { left: 40vw; top: 62vh; --r: 20deg; transition-delay: 0.55s; }
+.mh-hv-splash.b { right: 2vw; top: 14vh; --r: -40deg; width: 24vh; transition-delay: 0.85s; }
+.mh-hv-splash.c { right: 26vw; bottom: 2vh; --r: 110deg; width: 18vh; transition-delay: 1s; }
+
+/* лепестки сакуры */
+.mh-hv-petals i,
+.mh-petals i,
+.mh-scroll-petals i {
+  position: absolute;
+  top: -4vh;
+  left: var(--x);
+  width: var(--s, 10px);
+  height: calc(var(--s, 10px) * 0.7);
+  border-radius: 80% 10% 80% 10%;
+  background: linear-gradient(135deg, #ffd9e2, #f39bb3);
+  opacity: 0;
+  animation: mh-petal var(--t) linear var(--d) infinite;
+}
+
+.mh-hv-petals i { animation-play-state: paused; }
+
+@keyframes mh-petal {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0); }
+  10% { opacity: 0.9; }
+  90% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(-12vw, 112vh) rotate(540deg); }
+}
+
+.stage-layer.on .mh-hv-sweep { clip-path: inset(0 0 0 0); }
+.stage-layer.on .mh-hv-splash { opacity: 0.85; transform: scale(1) rotate(var(--r, 0deg)); }
+.stage-layer.on .mh-hv-petals i { animation-play-state: running; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mh-hv-petals { display: none; }
+  .mh-hv-sweep,
+  .mh-hv-splash { transition: opacity 0.3s; }
+  .mh-hv-sweep { clip-path: none; opacity: 0; }
+  .stage-layer.on .mh-hv-sweep { opacity: 1; }
+}
+
+/* ====================================================================================
+   Заставка: свиток разворачивается (слой живёт и на главной — без html[data-game])
+   ==================================================================================== */
+
+.mh-scroll { position: fixed; inset: 0; z-index: 75; pointer-events: none; }
+
+/* бумага обрезается clip-path, а сама текстура — отдельный композитный слой: при развороте и
+   сворачивании меняется только маска, бумага не перерисовывается каждый кадр */
+.mh-scroll-paper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: inset(0 50% 0 50%);
+}
+
+.mh-scroll-tex {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, var(--mh-indigo) 0 18px, var(--mh-gold) 18px 20px, transparent 20px calc(100% - 20px), var(--mh-gold) calc(100% - 20px) calc(100% - 18px), var(--mh-indigo) calc(100% - 18px)),
+    radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(110, 80, 40, 0.3)),
+    url(assets/paper.webp) 0 0 / 520px;
+  background-color: var(--mh-paper);
+  will-change: transform;
+}
+
+.mh-scroll-roll {
+  position: absolute;
+  will-change: transform;
+  top: -2vh;
+  bottom: -2vh;
+  width: 34px;
+  background: url(assets/roller.webp) center / 100% 100% no-repeat;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.55));
+}
+
+.mh-scroll-roll.l { left: 0; }
+.mh-scroll-roll.r { right: 0; }
+
+/* брызги туши за логотипом — медленно расползаются всё время, пока свиток открыт */
+.mh-scroll-splash {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: min(80vh, 90vw);
+  aspect-ratio: 900 / 949;
+  background: var(--mh-ink);
+  -webkit-mask: url(assets/splash.webp) center / contain no-repeat;
+  mask: url(assets/splash.webp) center / contain no-repeat;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.35);
+}
+
+.mh-scroll-title { position: absolute; left: 50%; top: 48%; opacity: 0; transform: translate(-50%, -50%) scale(0.92); will-change: transform, opacity; }
+.mh-scroll-title img { display: block; width: auto; height: clamp(150px, 34vh, 320px); filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45)); }
+.mh-scroll-title span { color: var(--mh-ink); font: 700 clamp(36px, 6vw, 80px)/1 var(--t-display, serif); }
+
+.mh-scroll-seal {
+  position: absolute;
+  left: calc(50% + min(26vh, 32vw));
+  top: calc(48% + min(13vh, 16vw));
+  display: grid;
+  place-items: center;
+  width: 74px;
+  height: 74px;
+  border: 4px solid var(--mh-red);
+  border-radius: 8px;
+  color: var(--mh-red);
+  font: 700 46px/1 "Yu Mincho", "MS Mincho", "Noto Serif CJK JP", serif;
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transform: rotate(-10deg) scale(2);
+}
+
+.mh-scroll.titled .mh-scroll-splash { animation: mh-splash-in 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards, mh-splash-drift 6s ease-in-out 0.9s infinite alternate; }
+.mh-scroll.titled .mh-scroll-title { animation: mh-title-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s forwards; }
+.mh-scroll.titled .mh-scroll-seal { animation: mh-seal-in 0.4s cubic-bezier(0.5, 0, 0.6, 1.4) 0.55s forwards; }
+
+@keyframes mh-splash-in { to { opacity: 0.16; transform: translate(-50%, -50%) scale(1); } }
+@keyframes mh-splash-drift { from { opacity: 0.16; transform: translate(-50%, -50%) scale(1) rotate(0); } to { opacity: 0.2; transform: translate(-50%, -50%) scale(1.06) rotate(4deg); } }
+@keyframes mh-title-in { to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes mh-seal-in { 70% { opacity: 0.95; transform: rotate(-10deg) scale(0.92); } 100% { opacity: 0.9; transform: rotate(-10deg) scale(1); } }
+
+/* прямой заход — свиток уже развёрнут */
+.mh-scroll.mh-direct .mh-scroll-paper { clip-path: inset(0 0 0 0); }
+.mh-scroll.mh-direct .mh-scroll-roll.l,
+.mh-scroll.mh-direct .mh-scroll-roll.r { transform: none; }
+
+/* ====================================================================================
+   Страница игры — эмакимоно
+   ==================================================================================== */
+
+.mh-backdrop { position: fixed; inset: 0; z-index: -2; background: center / 520px repeat; }
+.mh-backdrop::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 85% 75% at 50% 45%, rgba(18, 13, 10, 0.25), rgba(10, 7, 5, 0.85)); }
+
+.mh-petals { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+
+.mh-page {
+  --top: 34px;
+  --bottom: 96px;
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  color: var(--mh-ink);
+  font-family: var(--t-body, serif);
+}
+
+/* горизонтальный свиток: бумага во всю ширину, листается вбок */
+.mh-scroller {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--top);
+  bottom: var(--bottom);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  outline: none;
+}
+
+.mh-scroller::-webkit-scrollbar { display: none; }
+
+.mh-emaki {
+  display: flex;
+  align-items: stretch;
+  width: max-content;
+  min-width: 100%;
+  height: 100%;
+  /* справа — ровно столько, чтобы последнюю охоту можно было поставить в середину кадра */
+  padding: 0 max(48px, calc(50vw - 280px - 340px)) 0 48px;
+  background:
+    linear-gradient(180deg, var(--mh-indigo) 0 14px, var(--mh-gold) 14px 16px, transparent 16px calc(100% - 16px), var(--mh-gold) calc(100% - 16px) calc(100% - 14px), var(--mh-indigo) calc(100% - 14px)),
+    url(assets/paper.webp) 0 0 / 520px;
+  background-color: var(--mh-paper);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* валики по краям кадра */
+.mh-roll {
+  position: absolute;
+  z-index: 5;
+  top: calc(var(--top) - 12px);
+  bottom: calc(var(--bottom) - 12px);
+  width: 30px;
+  background: url(assets/roller.webp) center / 100% 100% no-repeat;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+}
+
+.mh-roll.l { left: 4px; }
+.mh-roll.r { right: 4px; }
+
+/* ---------- заглавие свитка ---------- */
+
+.mh-head {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: clamp(340px, 30vw, 480px);
+  padding: 30px 36px 26px 20px;
+  text-align: center;
+}
+
+.mh-head-logo { display: block; border-radius: 4px; }
+.mh-head-logo img { display: block; width: auto; max-width: 100%; height: clamp(150px, 26vh, 250px); object-fit: contain; filter: drop-shadow(0 3px 3px rgba(60, 40, 20, 0.35)); }
+.mh-head-logo:focus-visible { outline: 2px solid var(--mh-red); outline-offset: 6px; }
+.mh-head-name { font: 700 40px/1.05 var(--t-display, serif); }
+.mh-head-group { margin: 0; color: var(--mh-ink-soft); font: 500 15px/1.2 var(--t-heading, serif); letter-spacing: 0.18em; text-transform: lowercase; }
+.mh-head-count { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.mh-tally-big { height: 56px; width: auto; margin-bottom: 6px; }
+.mh-tally-big path { stroke-width: 4.6; }
+.mh-tally-big path.on { stroke-width: 5.4; }
+.mh-head-num { margin: 0; font: 700 26px/1 var(--t-display, serif); color: var(--mh-ink-soft); }
+.mh-head-num b { color: var(--mh-red-dk); font-size: 54px; }
+.mh-head-hint { margin: 10px 0 0; color: rgba(29, 20, 14, 0.55); font: italic 400 14px/1.3 var(--t-body, serif); }
+.mh-tall { display: none; }
+
+/* разделитель группы — вертикальная надпись кистью */
+.mh-divider { display: flex; flex: none; align-items: center; justify-content: center; width: 80px; }
+.mh-divider span { color: var(--mh-red-dk); font: 700 22px/1 var(--t-display, serif); letter-spacing: 0.1em; writing-mode: vertical-rl; }
+
+/* ---------- охоты на свитке ---------- */
+
+.mh-panel {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 10px;
+  width: clamp(320px, 29vw, 560px);
+  padding: 104px 28px 30px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* граница между сценами свитка — тонкая полоса туши */
+.mh-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 46px;
+  bottom: 40px;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(29, 20, 14, 0.28) 20%, rgba(29, 20, 14, 0.28) 80%, transparent);
+}
+
+.mh-panel.scene { width: clamp(440px, 40vw, 760px); }
+
+/* картина, подпись и прочее — одна группа по центру колонки */
+.mh-body { display: flex; flex: 1 1 auto; flex-direction: column; justify-content: center; gap: 12px; min-height: 0; }
+
+/* выбранная охота — сусальное золото за картиной и золотая полоса сверху колонки */
+.mh-panel::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 20px 6px;
+  background: radial-gradient(ellipse 60% 50% at 50% 42%, rgba(217, 164, 65, 0.32), transparent 72%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.mh-panel.cur::after { opacity: 1; }
+.mh-panel.cur .mh-num { transform: rotate(-4deg) scale(1.2); }
+.mh-panel > .mh-num { transition: transform 0.3s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.mh-panel.cur > .mh-body::before { content: ""; position: absolute; left: 30%; right: 30%; top: 26px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--mh-gold), transparent); }
+.mh-panel:focus-visible .mh-num { box-shadow: 0 0 0 2px rgba(239, 228, 204, 0.9), 0 0 0 3px var(--mh-red-dk), 0 0 0 6px var(--mh-gold); }
+
+/* номер — в красной печати */
+.mh-num {
+  position: absolute;
+  z-index: 2;
+  top: 40px;
+  left: 26px;
+  display: grid;
+  place-items: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 6px;
+  border-radius: 4px;
+  color: #fff3e6;
+  background: var(--mh-red);
+  font: 700 22px/1 var(--t-display, serif);
+  box-shadow: 0 0 0 2px rgba(239, 228, 204, 0.9), 0 0 0 3px var(--mh-red-dk);
+  transform: rotate(-4deg);
+}
+
+/* картина */
+.mh-pic { position: relative; flex: 0 1 auto; min-height: 0; display: grid; place-items: center; }
+.mh-panel.fig .mh-pic { height: min(52vh, 520px); }
+
+.mh-pic-ink {
+  position: absolute;
+  inset: 4% -4%;
+  background: var(--mh-ink);
+  -webkit-mask: url(assets/splash.webp) center / contain no-repeat;
+  mask: url(assets/splash.webp) center / contain no-repeat;
+  opacity: 0.1;
+}
+
+.mh-pic img { position: relative; display: block; max-width: 100%; max-height: 100%; cursor: zoom-in; }
+.mh-panel.fig .mh-pic-main { width: 100%; height: 100%; object-fit: contain; }
+
+/* второй монстр цели (из галереи) — рядом, поменьше и чуть позади */
+.mh-panel.duo .mh-pic-main { width: 72%; height: 72%; justify-self: start; align-self: start; }
+.mh-pic-mate { position: absolute !important; right: -2%; bottom: -4%; width: 48%; height: 48%; object-fit: contain; object-position: right bottom; filter: saturate(0.9); }
+
+/* сцена — картина в лакированной раме с золотой нитью */
+.mh-panel.scene .mh-pic-main {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  aspect-ratio: 16 / 9; /* сцены — кадром 16:9 (у роликов срезаются чёрные поля) */
+  object-fit: cover;
+  border: 6px solid #2a1a10;
+  box-shadow: inset 0 0 0 1px var(--mh-gold), 0 0 0 1px var(--mh-gold), 0 10px 18px rgba(40, 25, 10, 0.45);
+  transform: rotate(-1deg);
+}
+
+.mh-panel:not(.done) .mh-pic img { filter: grayscale(1) sepia(0.4) brightness(0.9) contrast(1.05); }
+
+.mh-pic-blank { color: rgba(29, 20, 14, 0.2); font: 700 120px/1 var(--t-display, serif); }
+
+/* печать «済» — у выполненных, на бумаге напротив номера; ставится, когда охота впервые попадает в кадр */
+.mh-done {
+  position: absolute;
+  z-index: 2;
+  right: 22px;
+  top: 24px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  width: 72px;
+  height: 72px;
+  border: 3px solid var(--mh-red);
+  border-radius: 50%;
+  color: var(--mh-red);
+  background: rgba(239, 228, 204, 0.55);
+  box-shadow: inset 0 0 0 3px rgba(239, 228, 204, 0.6), inset 0 0 0 5px var(--mh-red);
+  mix-blend-mode: multiply;
+  opacity: 0;
+  transform: rotate(-14deg) scale(1.8);
+}
+
+.mh-done b { font: 700 33px/1 "Yu Mincho", "MS Mincho", "Noto Serif CJK JP", serif; }
+.mh-done small { margin-top: 3px; font: 700 8px/1 var(--t-heading, serif); letter-spacing: 0.02em; text-transform: uppercase; }
+
+.mh-panel.stamped .mh-done { opacity: 0.88; transform: rotate(-14deg) scale(1); }
+.mh-panel.stamping .mh-done { animation: mh-done-in 0.45s cubic-bezier(0.5, 0, 0.6, 1.4) both; }
+
+@keyframes mh-done-in {
+  0% { opacity: 0; transform: rotate(-14deg) scale(1.8); }
+  70% { opacity: 0.95; transform: rotate(-14deg) scale(0.93); }
+  100% { opacity: 0.88; transform: rotate(-14deg) scale(1); }
+}
+
+.mh-title { margin: 0; color: var(--mh-ink); font: 500 18px/1.35 var(--t-body, serif); text-wrap: balance; }
+.mh-nw { white-space: nowrap; }
+.mh-details { margin: 0; color: var(--mh-ink-soft); font-size: 15px; line-height: 1.5; }
+.mh-note { margin: 0; padding-left: 12px; border-left: 2px solid var(--mh-red); color: var(--mh-ink); font-style: italic; }
+
+.mh-list h3 { margin: 4px 0 4px; color: var(--mh-red-dk); font: 500 14px/1.2 var(--t-heading, serif); letter-spacing: 0.08em; }
+.mh-list ul { display: flex; flex-direction: column; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.mh-list li { display: grid; grid-template-columns: 10px minmax(0, 1fr); align-items: center; gap: 8px; color: rgba(29, 20, 14, 0.6); font-size: 14px; }
+.mh-list li i { width: 8px; height: 8px; border: 1.5px solid var(--mh-red); border-radius: 50%; }
+.mh-list li.on { color: var(--mh-ink); }
+.mh-list li.on i { background: var(--mh-red); }
+
+.mh-gallery { display: flex; gap: 8px; }
+.mh-gallery img { width: 96px; height: 64px; object-fit: contain; border: 1px solid rgba(29, 20, 14, 0.25); background: rgba(29, 20, 14, 0.04); cursor: zoom-in; }
+
+.mh-lore {
+  align-self: flex-start;
+  color: var(--mh-red-dk);
+  font: 500 15px/1 var(--t-heading, serif);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  background: linear-gradient(var(--mh-red), var(--mh-red)) 0 100% / 0 2px no-repeat;
+  padding-bottom: 4px;
+  transition: background-size 0.3s;
+}
+
+.mh-lore:hover,
+.mh-lore:focus-visible { background-size: 100% 2px; outline: none; }
+
+/* ---------- конец свитка ---------- */
+
+.mh-tail { position: relative; display: flex; flex: none; align-items: center; justify-content: center; width: 340px; }
+.mh-tail-splash { position: absolute; inset: 18% 10%; background: var(--mh-ink); -webkit-mask: url(assets/splash.webp) center / contain no-repeat; mask: url(assets/splash.webp) center / contain no-repeat; opacity: 0.12; }
+.mh-tail-nav { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+
+.mh-tail-nav a {
+  color: var(--mh-ink);
+  font: 500 17px/1.2 var(--t-heading, serif);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+
+.mh-tail-nav a:hover,
+.mh-tail-nav a:focus-visible { color: var(--mh-red-dk); outline: none; text-decoration: underline; text-underline-offset: 4px; }
+.mh-tail-back {
+  position: relative;
+  margin-top: 46px;
+  padding: 12px 24px;
+  color: var(--mh-paper) !important;
+  background: #3a2414 url(assets/wood.webp) center / 260px;
+  box-shadow: inset 0 0 0 2px rgba(217, 164, 65, 0.6), 0 8px 14px rgba(40, 25, 10, 0.45);
+  transform: rotate(-2deg);
+  transition: transform 0.25s;
+}
+
+/* шнур, на котором висит табличка */
+.mh-tail-back::before { content: ""; position: absolute; left: 22%; right: 22%; bottom: 100%; height: 34px; border: 2px solid var(--mh-red); border-bottom: 0; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+.mh-tail-back:hover,
+.mh-tail-back:focus-visible { transform: rotate(2deg); text-decoration: none !important; color: #fff !important; }
+
+.mh-empty { margin: 20px 0 0; color: var(--mh-ink-soft); font-size: 16px; }
+
+/* ---------- нить Жука-проволочника ---------- */
+
+.mh-thread {
+  position: absolute;
+  z-index: 6;
+  left: 80px;
+  right: 80px;
+  bottom: 56px;
+  height: 26px;
+}
+
+.mh-thread-line { position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: linear-gradient(90deg, transparent, rgba(143, 240, 196, 0.55) 6%, rgba(143, 240, 196, 0.55) 94%, transparent); box-shadow: 0 0 8px rgba(143, 240, 196, 0.45); }
+
+/* натянутая проволока — вспыхивает по пути жука */
+.mh-thread-zip {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--a, 0) * 100%);
+  width: calc((var(--b, 0) - var(--a, 0)) * 100%);
+  height: 3px;
+  margin-top: -1.5px;
+  background: var(--mh-wire-hi);
+  box-shadow: 0 0 10px var(--mh-wire), 0 0 20px var(--mh-wire);
+  opacity: 0;
+}
+
+.mh-thread-zip.go { animation: mh-zip 0.6s ease-out; }
+@keyframes mh-zip { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+.mh-tick {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--p) * 100%);
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.mh-tick::before { content: ""; position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border: 1.5px solid rgba(143, 240, 196, 0.7); border-radius: 50%; background: #0d1410; transition: transform 0.2s; }
+.mh-tick.on::before { background: var(--mh-red); border-color: #ffb3a6; }
+.mh-tick:hover::before,
+.mh-tick:focus-visible::before { transform: scale(1.5); }
+.mh-tick:focus-visible { outline: none; }
+
+/* жук: светящееся тельце с крыльями, перелетает к выбранной охоте */
+.mh-bug {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--p, 0) * 100%);
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transition: left 0.5s cubic-bezier(0.4, 0, 0.1, 1);
+}
+
+.mh-bug i {
+  position: absolute;
+  left: -14px;
+  top: -34px;
+  width: 28px;
+  height: 22px;
+  border-radius: 50% 50% 45% 45%;
+  background: radial-gradient(circle at 50% 60%, #ffffff, var(--mh-wire) 45%, rgba(143, 240, 196, 0.15) 75%, transparent 76%);
+  box-shadow: 0 0 14px var(--mh-wire), 0 0 28px rgba(143, 240, 196, 0.6);
+  animation: mh-bug 1.6s ease-in-out infinite;
+}
+
+.mh-bug i::before,
+.mh-bug i::after { content: ""; position: absolute; top: -4px; width: 16px; height: 12px; border-radius: 50%; background: rgba(227, 255, 241, 0.55); }
+.mh-bug i::before { left: -10px; transform: rotate(-25deg); }
+.mh-bug i::after { right: -10px; transform: rotate(25deg); }
+
+@keyframes mh-bug { 50% { transform: translateY(-4px); } }
+
+/* ---------- подсказки кнопок ---------- */
+
+.mh-prompts {
+  position: absolute;
+  z-index: 7;
+  right: 28px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: var(--mh-paper);
+  font: 500 14px/1 var(--t-heading, serif);
+  letter-spacing: 0.08em;
+}
+
+.mh-prompt { display: inline-flex; align-items: center; gap: 6px; color: inherit; text-decoration: none; }
+a.mh-prompt:hover,
+a.mh-prompt:focus-visible { color: var(--mh-gold); outline: none; }
+
+.mh-key {
+  display: inline-grid;
+  place-items: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid rgba(217, 164, 65, 0.7);
+  border-radius: 50%;
+  background: #2a1a10;
+  color: var(--mh-paper);
+  font: 700 11px/1 var(--t-heading, serif);
+}
+
+.mh-key-esc { border-radius: 6px; }
+.mh-kb { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .mh-kb { display: inline; }
+  .mh-pad { display: none; }
+}
+button.mh-key { cursor: pointer; }
+button.mh-key:hover,
+button.mh-key:focus-visible { background: var(--mh-red); border-color: #ffb3a6; outline: none; }
+
+@media (pointer: coarse) {
+  .mh-prompts button.mh-key { min-width: 40px; height: 40px; }
+}
+
+/* ---------- узкий экран: висячий свиток сверху вниз ---------- */
+
+@media (max-width: 760px) {
+  .mh-page { --top: 0; --bottom: 0; height: auto; min-height: 100vh; overflow: visible; overflow-x: clip; padding: 14px 10px 110px; }
+  .mh-scroller { position: relative; inset: auto; overflow: visible; }
+  .mh-emaki { flex-direction: column; width: auto; min-width: 0; height: auto; padding: 18px 18px 26px; background:
+      linear-gradient(90deg, var(--mh-indigo) 0 8px, var(--mh-gold) 8px 9px, transparent 9px calc(100% - 9px), var(--mh-gold) calc(100% - 9px) calc(100% - 8px), var(--mh-indigo) calc(100% - 8px)),
+      url(assets/paper.webp) 0 0 / 420px;
+    background-color: var(--mh-paper); }
+  .mh-roll { display: none; }
+  .mh-head { width: auto; padding: 18px 8px 24px; }
+  .mh-head-logo img { height: 150px; }
+  .mh-wide { display: none; }
+  .mh-tall { display: inline; }
+  .mh-divider { width: auto; height: 60px; }
+  .mh-divider span { writing-mode: horizontal-tb; }
+  .mh-panel,
+  .mh-panel.scene { width: auto; padding: 70px 6px 30px; }
+  .mh-panel.fig .mh-pic { height: 62vw; max-height: 340px; }
+  .mh-panel::before { left: 10%; right: 10%; top: 0; bottom: auto; width: auto; height: 1px; background: linear-gradient(90deg, transparent, rgba(29, 20, 14, 0.28) 20%, rgba(29, 20, 14, 0.28) 80%, transparent); }
+  .mh-num { top: 16px; left: 2px; }
+  .mh-num { top: 26px; }
+  .mh-done { right: 4px; top: 16px; width: 58px; height: 58px; }
+  .mh-done b { font-size: 26px; }
+  .mh-done small { font-size: 7px; }
+  .mh-tail { width: auto; height: 220px; }
+  .mh-thread { display: none; }
+  .mh-prompts { position: fixed; left: 0; right: 0; bottom: 0; justify-content: center; padding: 10px; background: #120d0a; }
+  .mh-prompts::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 22px; background: linear-gradient(transparent, #120d0a); pointer-events: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mh-petals { display: none; }
+  .mh-bug,
+  .mh-lore,
+  .mh-panel::after { transition: none; }
+  .mh-bug i { animation: none; }
+}
