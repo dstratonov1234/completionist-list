@@ -1,0 +1,160 @@
+{
+  "title": "Lies of P — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Сюжет основной игры, главы I–XI, + сцена после титров",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/0/0c/HotelKrat_%285%29.jpg/revision/latest/scale-to-width-down/800?cb=20230722041630",
+          "link": "https://lies-of-p.fandom.com/wiki/Lies_of_P"
+        },
+        {
+          "n": 2,
+          "title": "Сюжетные боссы: Parade Master, Mad Donkey, Scrapped Watchman, King's Flame Fuoco, Fallen Archbishop Andreus, Eldest of the Black Rabbit Brotherhood, King of Puppets, Champion Victor, Green Monster of the Swamp, Walker of Illusions, Corrupted Parade Master, Black Rabbit Brotherhood, Door Guardian, Laxasia the Complete, Simon Manus",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/3/3d/Laxasia_The_Complete_P1.jpeg/revision/latest/scale-to-width-down/800?cb=20230923065401",
+          "link": "https://lies-of-p.fandom.com/wiki/Laxasia_The_Complete",
+          "gallery": [
+            "https://static.wikia.nocookie.net/lies-of-p/images/4/47/Simon_Manus.jpeg/revision/latest/scale-to-width-down/800?cb=20230923070146"
+          ]
+        },
+        {
+          "n": 3,
+          "title": "Nameless Puppet + концовка Free from the Puppet String",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/3/31/Nameless_Puppet_Phase_1.jpeg/revision/latest/scale-to-width-down/800?cb=20230924004340",
+          "link": "https://lies-of-p.fandom.com/wiki/Nameless_Puppet"
+        },
+        {
+          "n": 4,
+          "title": "Опциональные боссы: Survivor, The Atoned, White Lady, Mad Clown Puppet, Owl Doctor, Robber Weasel, Black Cat, Red Fox",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/2/21/Red_Fox.png/revision/latest/scale-to-width-down/800?cb=20230923071715",
+          "link": "https://lies-of-p.fandom.com/wiki/Red_Fox",
+          "gallery": [
+            "https://static.wikia.nocookie.net/lies-of-p/images/c/cf/Black_Cat.png/revision/latest?cb=20230923071725"
+          ]
+        },
+        {
+          "n": 5,
+          "title": "Puppet of the Future (Workshop Union Culvert, гл. III)",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/9/99/Puppet_of_the_Future.jpeg/revision/latest/scale-to-width-down/800?cb=20230925131200",
+          "link": "https://lies-of-p.fandom.com/wiki/Puppet_Of_The_Future"
+        },
+        {
+          "n": 6,
+          "title": "Арки NPC: Eugénie/Alidoro, Antonia/Polendina, Simon Manus, Black Cat и Red Fox, Julian, Belle, Adelina, Cecile",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/4/44/Eug%C3%A9nie.jpeg/revision/latest/scale-to-width-down/800?cb=20251002222540",
+          "link": "https://lies-of-p.fandom.com/wiki/Eug%C3%A9nie"
+        },
+        {
+          "n": 7,
+          "title": "Загадки King of Riddles, все Trinity Sanctums, все Cryptic Vessels",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/6/62/Trinity_Sanctum.jpeg/revision/latest/scale-to-width-down/800?cb=20231013172024",
+          "link": "https://lies-of-p.fandom.com/wiki/Trinity_Sanctum",
+          "gallery": [
+            "https://static.wikia.nocookie.net/lies-of-p/images/8/80/King_of_Riddles%27_Surprise_Box.jpeg/revision/latest?cb=20231008012420"
+          ]
+        },
+        {
+          "n": 8,
+          "title": "Финал истории Venigni",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/f/f3/Venigni.jpeg/revision/latest?cb=20231009004010",
+          "link": "https://lies-of-p.fandom.com/wiki/Lorenzini_Venigni",
+          "gallery": [
+            "https://static.wikia.nocookie.net/lies-of-p/images/9/96/Moon_World_Warrior_Toy.png/revision/latest?cb=20231013171752"
+          ]
+        },
+        {
+          "n": 9,
+          "title": "Overture: 5 глав + сцена после титров + Lea's Recollection",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/a/a5/Overture_Winter_Krat.jpg/revision/latest/scale-to-width-down/800?cb=20250213054945",
+          "link": "https://lies-of-p.fandom.com/wiki/Lies_of_P:_Overture",
+          "gallery": [
+            "https://static.wikia.nocookie.net/lies-of-p/images/c/c4/Overture_Lea_%283%29.jpg/revision/latest/scale-to-width-down/800?cb=20250614033910"
+          ]
+        },
+        {
+          "n": 10,
+          "title": "Боссы Overture: Tyrannical Predator, Markiona, Veronique, Two-Faced Overseer, Premetamorphic Green Hunter (скрытый), Anguished Guardian of the Ruins, Lumacchio, Arlecchino the Blood Artist",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/0/02/Markiona_Puppeteer_of_Death.jpeg/revision/latest/scale-to-width-down/800?cb=20250703021110",
+          "link": "https://lies-of-p.fandom.com/wiki/Markiona,_Puppeteer_of_Death",
+          "gallery": [
+            "https://static.wikia.nocookie.net/lies-of-p/images/2/29/Overture_Arlecchino_%284%29.jpg/revision/latest/scale-to-width-down/800?cb=20250614022158"
+          ]
+        },
+        {
+          "n": 11,
+          "title": "Побочки Overture: Goddard и картина, Trapped Body (Alexander), Salao, The Tracker, Klaus; карнавальные игры",
+          "done": true,
+          "date": "2026-10-16",
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/8/89/Overture_Carnival.jpg/revision/latest/scale-to-width-down/800?cb=20250530233800",
+          "link": "https://lies-of-p.fandom.com/wiki/Lies_of_P:_Overture"
+        },
+        {
+          "n": 12,
+          "title": "Эпилог Rosaura у Tree of Friendship (Krat City Hall Courtyard, настоящее время)",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/b/b9/Rosaura%27s_Drawing.png/revision/latest?cb=20260825214249",
+          "link": "https://lies-of-p.fandom.com/wiki/Rosaura",
+          "imageFit": "contain",
+          "gallery": [
+            "https://static.wikia.nocookie.net/lies-of-p/images/d/d1/Rosaura_first_meeting_outside_the_circus.png/revision/latest/scale-to-width-down/512?cb=20250917231133"
+          ]
+        },
+        {
+          "n": 13,
+          "title": "Battle Memories: один любой босс на Tier 4",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/b/b4/LOP-26.jpg/revision/latest/scale-to-width-down/800?cb=20220825141800",
+          "link": "https://lies-of-p.fandom.com/wiki/Stargazer"
+        },
+        {
+          "n": 14,
+          "title": "Death March: один забег из 3 боссов",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/1/15/Champion_Victor_1.jpeg/revision/latest/scale-to-width-down/800?cb=20230919024729",
+          "link": "https://lies-of-p.fandom.com/wiki/Champion_Victor"
+        },
+        {
+          "n": 15,
+          "title": "Rise of P (истинная концовка) + Blue Butterfly's Letter",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/c/c5/Sophia_9.jpeg/revision/latest/scale-to-width-down/800?cb=20231010044935",
+          "link": "https://lies-of-p.fandom.com/wiki/Endings",
+          "gallery": [
+            "https://static.wikia.nocookie.net/lies-of-p/images/a/a7/The_Blue_Butterfly%27s_Letter.png/revision/latest?cb=20230929110133"
+          ]
+        },
+        {
+          "n": 16,
+          "title": "Real Boy + отель после неё",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/lies-of-p/images/1/1c/Geppetto_Hugging_Pinocchio.jpg/revision/latest/scale-to-width-down/800?cb=20260825184651",
+          "link": "https://lies-of-p.fandom.com/wiki/Endings",
+          "gallery": [
+            "https://static.wikia.nocookie.net/lies-of-p/images/5/56/Carlo.jpeg/revision/latest/scale-to-width-down/800?cb=20231016032848",
+            "https://static.wikia.nocookie.net/lies-of-p/images/b/b7/Geppetto%27s_Letter.png/revision/latest?cb=20231002112707"
+          ]
+        }
+      ]
+    }
+  ]
+}

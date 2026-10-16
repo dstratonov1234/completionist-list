@@ -1,0 +1,69 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "gate",
+      "prompt": "One tall half-panel of an ornate Belle Epoque wrought iron city gate, art nouveau whiplash curves, vertical spear bars with gilded tips, scrollwork medallion in the middle, black iron with thin gold leaf accents, straight front view, the panel fills the whole frame from top to bottom, isolated on a fully transparent background, no text, no letters, no wall, no sky.",
+      "size": "1024x1536",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 900
+    },
+    {
+      "name": "stargazer",
+      "prompt": "A Stargazer lamp pedestal from a dark Belle Epoque fantasy city: a slim wrought iron tripod stand with three elegantly curved art nouveau legs on small feet, a thin round iron ring halfway up joining the legs, topped by a tall flared calla-lily shaped funnel lamp of dark pewter with antique brass rims and small clockwork details, unlit and dark, straight front view, centered, full height from feet to the top of the funnel, isolated on a fully transparent background, no light, no glow, no flame, no text.",
+      "size": "1024x1536",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 420
+    },
+    {
+      "name": "street",
+      "prompt": "A foggy cobblestone street of a dark Belle Epoque European city at night, tall ornate art nouveau buildings fading into thick blue-grey mist on both sides, wet cobbles reflecting faint light, gothic spires in the distance, cinematic, moody desaturated blue palette, no people, no puppets, no text, no signs, vertical composition looking down the street.",
+      "size": "1024x1536",
+      "background": "opaque",
+      "quality": "medium",
+      "max_width": 1100
+    },
+    {
+      "name": "frame",
+      "prompt": "An ornate thin art nouveau picture frame border, delicate gilded gold lines with whiplash curves and small floral flourishes at the four corners, elegant Belle Epoque style, portrait 3:4 rectangle, the inside is completely empty and fully transparent, isolated on a fully transparent background, no picture inside, no text.",
+      "size": "1024x1536",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 800
+    },
+    {
+      "name": "butterfly",
+      "prompt": "A single glowing ethereal blue butterfly seen from above with wings spread, luminous cyan and deep blue wings with delicate vein patterns and soft light particles, magical, isolated on a fully transparent background, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 240
+    },
+    {
+      "name": "curtain",
+      "prompt": "A heavy crimson red velvet theatre stage curtain drape hanging in deep vertical folds from the top, held back by a gold tasseled tieback rope a little below the middle so the lower part sweeps to the left, thick gold bullion fringe along the inner edge and the bottom, rich Belle Epoque puppet theatre style, soft dramatic light from the right side, front view, the drape occupies the left side of the frame, isolated on a fully transparent background, no stage floor, no wall, no text.",
+      "size": "1024x1536",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 720
+    },
+    {
+      "name": "cross",
+      "prompt": "An ornate marionette puppet control seen straight from the front: a long horizontal carved dark walnut wooden bar with polished brass end caps and small brass rings underneath where strings attach, a short vertical wooden handle rising from its center with a brass knob, delicate art nouveau gilded inlay on the wood, Belle Epoque craftsmanship, centered, isolated on a fully transparent background, no strings, no hands, no puppet, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 720
+    },
+    {
+      "name": "marquee",
+      "prompt": "An ornate Belle Epoque hotel marquee sign frame: a wide horizontal art nouveau cartouche of black wrought iron and gilded brass with whiplash curves, small floral flourishes and a crest at the top center, the inner panel is completely empty and fully transparent, thin gold inner border, front view, centered, isolated on a fully transparent background, no text, no letters, no light bulbs.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 1000
+    }
+  ]
+}

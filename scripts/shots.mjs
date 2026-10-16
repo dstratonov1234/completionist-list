@@ -12,14 +12,18 @@
 //   {"mouse": [["mouseMoved",x,y], ["mousePressed",x,y], ["mouseReleased",x,y]]}
 //   {"key": "Escape", "vk": 27}        нажать клавишу
 //   {"shot": "имя", "full": true}      скриншот (full — всю страницу)
-//   {"traceStart": true} … {"traceStop": "имя"}   трасса производительности (style, layout, шрифты, JS) —
+//   {"traceStart": true | ["категория", …]} … {"traceStop": "имя"}   трасса производительности (style, layout, шрифты, JS) —
 //                                      <outPrefix>-<имя>.json, открывается в DevTools → Performance
 //   {"cdp": ["Domain.method", {...}], "save": "имя"}   любой вызов CDP (например Profiler.start/stop);
 //                                      с save — ответ в <outPrefix>-<имя>.json, иначе печатается
 //   {"castStart": "имя"} … {"castStop": true}   запись кадров скринкаста (20–50 к/с) — для плавности переходов:
 //                                      файлы <outPrefix>-<имя><№>_<мс от начала>.jpg
 // В конце печатаются ошибки консоли страницы (должно быть «errors: 0»).
-// Chrome: переменная CHROME или стандартный путь установки.
+// Chrome: переменная CHROME или стандартный путь установки. Замеры плавности (кадры rAF) похожи на обычный браузер
+// только так: SHOTS_HEADFUL=1 (настоящее окно за краем экрана: видеокарта, честный vsync) + SHOTS_PROFILE=<папка>
+// (постоянный профиль: кэш шейдеров переживает запуски, как у пользователя; первый прогон — прогревочный, его не
+// считать). SHOTS_GPU=1 — headless на видеокарте: показ кадров там блокируется на 30–200 мс, для замеров не годится.
+// По умолчанию — headless с программной отрисовкой: годится для скриншотов, но 3D и фильтры стоят там в разы дороже.
 import { spawn } from "node:child_process";
 import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -47,9 +51,16 @@ if (!chromePath) {
 
 const port = 9300 + Math.floor(Math.random() * 500);
 // Профиль — всегда абсолютный путь во временной папке: с относительным Chrome уходит в обычное окно пользователя.
-const prof = mkdtempSync(path.join(tmpdir(), "shots-"));
+// SHOTS_PROFILE=<папка> — постоянный профиль: кэш шейдеров и картинок переживает запуски, как в обычном браузере
+const keepProf = process.env.SHOTS_PROFILE ? path.resolve(process.env.SHOTS_PROFILE) : null;
+const prof = keepProf ?? mkdtempSync(path.join(tmpdir(), "shots-"));
 const chrome = spawn(chromePath, [
-  "--headless=new", "--disable-gpu", "--hide-scrollbars", "--no-first-run", `--remote-debugging-port=${port}`,
+  // SHOTS_GPU=1 — с видеокартой, как в обычном браузере (замеры плавности); по умолчанию — программная отрисовка
+  // SHOTS_HEADFUL=1 — настоящее окно (за краем экрана) с видеокартой: честный vsync и показ кадров, без причуд headless
+  ...(process.env.SHOTS_HEADFUL === "1" ? ["--window-position=12000,12000", "--enable-gpu"] : ["--headless=new", ...(process.env.SHOTS_GPU === "1" ? ["--enable-gpu", "--ignore-gpu-blocklist"] : ["--disable-gpu"])]), "--hide-scrollbars", "--no-first-run",
+  // Без этого Windows через ~3 с считает окно headless перекрытым и режет кадры до ~30 к/с — замеры врут
+  "--disable-features=CalculateNativeWinOcclusion", "--disable-renderer-backgrounding", "--disable-background-timer-throttling", "--disable-backgrounding-occluded-windows",
+  `--remote-debugging-port=${port}`,
   `--user-data-dir=${prof}`, "--window-size=1400,1000", "about:blank",
 ], { stdio: "ignore" });
 
@@ -123,7 +134,7 @@ try {
       events.length = 0;
       await send("Tracing.start", {
         transferMode: "ReportEvents",
-        traceConfig: { includedCategories: ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "loading", "v8.execute", "fonts"] },
+        traceConfig: { includedCategories: Array.isArray(s.traceStart) ? s.traceStart : ["devtools.timeline", "disabled-by-default-devtools.timeline", "blink", "loading", "v8.execute", "fonts"] },
       });
     }
     if (s.traceStop) {
@@ -166,6 +177,6 @@ try {
   try { ws?.close(); } catch {}
   chrome.kill();
   await sleep(300);
-  try { rmSync(prof, { recursive: true, force: true }); } catch {}
+  if (!keepProf) try { rmSync(prof, { recursive: true, force: true }); } catch {}
   process.exit(0);
 }
