@@ -1,0 +1,221 @@
+{
+  "title": "Monster Hunter: World + Iceborne — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели закрытия",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Сюжет до финала: «Земля схождений» (Ксено'джиива), финальные сцены и титры",
+          "done": true,
+          "date": "2024-01-28",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/2/2f/MHW-Xeno%27jiiva_Render_001.png/revision/latest/scale-to-width-down/800?cb=20190412154741",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Xeno%27jiiva"
+        },
+        {
+          "n": 2,
+          "title": "Сюжет Iceborne: «Песнь покровительства» (Шара-ишвалда) и эпилог",
+          "done": true,
+          "date": "2024-02-05",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/0/0f/MHWI-Shara_Ishvalda_Render_002.png/revision/latest/scale-to-width-down/800?cb=20201002185439",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Shara_Ishvalda"
+        },
+        {
+          "n": 3,
+          "title": "«Вместе до самого конца» (Нергигант-губитель)",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/4/47/MHWI-Ruiner_Nergigante_Render_001.png/revision/latest/scale-to-width-down/800?cb=20191216105658",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Ruiner_Nergigante"
+        },
+        {
+          "n": 4,
+          "title": "Путеводные земли — все 6 регионов, включая вулканический и тундру",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/5/59/Guiding-lands-mhwi.jpg/revision/latest/scale-to-width-down/800?cb=20191010132431",
+          "link": "https://monsterhunter.fandom.com/wiki/Guiding_Lands",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/f/f7/Elders-recess-guiding-lands-mhwi.jpg/revision/latest/scale-to-width-down/800?cb=20191010133345",
+            "https://static.wikia.nocookie.net/monsterhunter/images/0/0b/Tundra-guiding-lands-mhwi.jpg/revision/latest/scale-to-width-down/800?cb=20191206085940"
+          ]
+        },
+        {
+          "n": 5,
+          "title": "Цепочка Лунастры: «Пылающее солнце» → «Арена Пандоры» → «Никакой пощады, ни шагу назад»",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/f/f8/MHW-Lunastra_Render_001.png/revision/latest/scale-to-width-down/800?cb=20180530122508",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Lunastra",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/8/83/MHW-Lunastra_and_Teostra_Screenshot_001.jpg/revision/latest/scale-to-width-down/800?cb=20180601072136"
+          ]
+        },
+        {
+          "n": 6,
+          "title": "Девильо: «Вершина пищевой цепочки»",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/c/cb/MHW-Deviljho_Render_001.png/revision/latest/scale-to-width-down/800?cb=20180105132807",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Deviljho"
+        },
+        {
+          "n": 7,
+          "title": "Бахамут (коллаб FFXIV): «Гость из другого мира» → «Легендарный зверь» → «Станешь ли заб. им, как птичкою»",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/c/cc/MHW-Behemoth_Render_001.png/revision/latest/scale-to-width-down/800?cb=20180712144027",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Behemoth"
+        },
+        {
+          "n": 8,
+          "title": "Ведьмак: «Заказ: Проблемы в Древнем лесу» (игра за Геральта) и «Заказ: Дух Леса»",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/9/9f/MHW-Ancient_Leshen_Render_001.png/revision/latest?cb=20191126211836",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Ancient_Leshen",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/0/07/MHW-Leshen_Render_001.png/revision/latest?cb=20191126211820"
+          ]
+        },
+        {
+          "n": 9,
+          "title": "Осада Кулве тарот: «Ярость Эльдорадо»",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/0/00/MHW-Kulve_Taroth_Render_002.png/revision/latest/scale-to-width-down/800?cb=20180419051425",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Kulve_Taroth"
+        },
+        {
+          "n": 10,
+          "title": "Цепочка обновлений Iceborne: «Несокрушимая гордость», «Яви себя, разрушитель», «По затерянной тропе», «Точка невозврата» + осада «Красный дракон», «...И ярость моя поглотит всех», «Ярость остается», «Полыхающие черные сумерки»",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/2/27/MHWI-Alatreon_Render_002.png/revision/latest/scale-to-width-down/800?cb=20201011202547",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Alatreon",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/1/18/MHWI-Rajang_Render_001.png/revision/latest/scale-to-width-down/800?cb=20190903160514",
+            "https://static.wikia.nocookie.net/monsterhunter/images/e/ee/MHWI-Stygian_Zinogre_Render_001.png/revision/latest/scale-to-width-down/800?cb=20191124095634"
+          ]
+        },
+        {
+          "n": 11,
+          "title": "Фаталис: «Черный дракон», Замок Шраде",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/1/1c/MHWI-Fatalis_Render_001.png/revision/latest/scale-to-width-down/800?cb=20200828181257",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Fatalis"
+        },
+        {
+          "n": 12,
+          "title": "Особые монстры вне сюжета: Ледозубый бариот, Золотая ратиана, Серебристый раталос, Свирепый тигрекс, Матерый йан-гаруга, Лютый девильо",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/5/5e/MHWI-Gold_Rathian_Render_001.png/revision/latest/scale-to-width-down/800?cb=20191009111100",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Frostfang_Barioth",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/e/e1/MHWI-Silver_Rathalos_Render_001.png/revision/latest/scale-to-width-down/800?cb=20191009110133",
+            "https://static.wikia.nocookie.net/monsterhunter/images/2/2f/MHWI-Brute_Tigrex_Render_001.png/revision/latest/scale-to-width-down/800?cb=20191011035452",
+            "https://static.wikia.nocookie.net/monsterhunter/images/f/f0/MHWI-Scarred_Yian_Garuga_Render_001.png/revision/latest/scale-to-width-down/800?cb=20191117113342",
+            "https://static.wikia.nocookie.net/monsterhunter/images/2/23/MHWI-Frostfang_Barioth_Render_001.png/revision/latest/scale-to-width-down/800?cb=20200703125112",
+            "https://static.wikia.nocookie.net/monsterhunter/images/f/ff/MHWI-Savage_Deviljho_Render_001.png/revision/latest/scale-to-width-down/800?cb=20190927174959"
+          ]
+        },
+        {
+          "n": 13,
+          "title": "Пять племён граймалкинов Нового Света (Древний лес, Дикогорье, Коралловое нагорье, Гниющая долина, Убежище Древнего)",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/2/20/MHW-Grimalkyne_Render_001.png/revision/latest?cb=20231231041415",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Grimalkyne"
+        },
+        {
+          "n": 14,
+          "title": "Племя боа-боа (Iceborne): «Совместными усилиями» → «Ты поможешь нам, а мы...»",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/e/ea/MHWI-Boaboa_Render_001.png/revision/latest/scale-to-width-down/800?cb=20190718083105",
+          "imageFit": "contain",
+          "link": "https://monsterhunter.fandom.com/wiki/Boaboa"
+        },
+        {
+          "n": 15,
+          "title": "Режимы по одному разу: исследования, арена с фиксированным снаряжением, кооп по SOS, паровой цех",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/b/bf/MHW-Special_Arena_Screenshot_001.jpg/revision/latest/scale-to-width-down/800?cb=20180724183506",
+          "link": "https://monsterhunter.fandom.com/wiki/Gathering_Hub",
+          "gallery": [
+            "https://static.wikia.nocookie.net/monsterhunter/images/7/75/MHW-Gathering_Hub_Screenshot_001.jpg/revision/latest/scale-to-width-down/800?cb=20171030225621",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1118010/ss_f55c9558bc410853b977d830865b95ece60132a0.jpg"
+          ]
+        },
+        {
+          "n": 16,
+          "title": "По одной охоте каждым из 10 неопробованных типов оружия: Бастард, Меч и щит, Молот, Охотничий рог, Выкидной топор, Силовой клинок, Глефа насекомых, Легкое лукорудие, Тяжелое лукорудие, Лук",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/monsterhunter/images/f/f0/MHWI-Hunters_Artwork_001.jpg/revision/latest/scale-to-width-down/800?cb=20181210160332",
+          "link": "https://monsterhunter.fandom.com/wiki/MHWI:_Weapons",
+          "checklist": [
+            {
+              "label": "Типы оружия",
+              "items": [
+                {
+                  "title": "Бастард",
+                  "done": false
+                },
+                {
+                  "title": "Меч и щит",
+                  "done": false
+                },
+                {
+                  "title": "Молот",
+                  "done": false
+                },
+                {
+                  "title": "Охотничий рог",
+                  "done": false
+                },
+                {
+                  "title": "Выкидной топор",
+                  "done": false
+                },
+                {
+                  "title": "Силовой клинок",
+                  "done": false
+                },
+                {
+                  "title": "Глефа насекомых",
+                  "done": false
+                },
+                {
+                  "title": "Легкое лукорудие",
+                  "done": false
+                },
+                {
+                  "title": "Тяжелое лукорудие",
+                  "done": false
+                },
+                {
+                  "title": "Лук",
+                  "done": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

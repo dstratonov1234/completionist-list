@@ -1,0 +1,85 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "board",
+      "prompt": "Seamless flat texture of a weathered dark brown wooden quest board made of thick vertical planks with visible grain, small old nail holes and faint marks where papers were pinned, warm lantern light falloff, evenly lit front view, no papers, no objects, no text, fills the entire frame.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "medium",
+      "max_width": 1024
+    },
+    {
+      "name": "parchment",
+      "prompt": "Seamless flat texture of aged parchment paper, warm tan and cream with subtle coffee stains, soft fibers and faint creases, evenly lit, no text, no drawings, no edges, fills the entire frame.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "medium",
+      "max_width": 1024
+    },
+    {
+      "name": "tear",
+      "prompt": "Solid pure white sheet shape with irregular rough torn paper edges on all four sides, slightly uneven corners, filling almost the whole frame, isolated on a fully transparent background, flat silhouette, no texture, no shadow, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 1200
+    },
+    {
+      "name": "seal",
+      "prompt": "A single deep red wax seal stamp seen from above, round with irregular melted edges and a raised embossed emblem of a compass star surrounded by a ring of leaves, glossy highlights, isolated on a fully transparent background, no letters, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 300
+    },
+    {
+      "name": "tack",
+      "prompt": "A single old brass push pin thumbtack seen from directly above, round domed head with worn patina and a soft shadow, isolated on a fully transparent background, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 120
+    },
+    {
+      "name": "cage",
+      "prompt": "A small empty cylindrical glass and brass insect cage lantern worn on a hunter's wrist, ornate brass frame with rivets, clear glass panes, dark interior, front view, centered, isolated on a fully transparent background, no insects, no light inside, no text.",
+      "size": "1024x1536",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 420
+    },
+    {
+      "name": "jungle",
+      "prompt": "Dark primeval forest at night, giant ancient tree roots and twisted trunks in silhouette, thick low mist between them, deep green and teal tones with very dark shadows, cinematic, no animals, no people, no text, wide panorama.",
+      "size": "1536x1024",
+      "background": "opaque",
+      "quality": "medium",
+      "max_width": 1600
+    },
+    {
+      "name": "track",
+      "prompt": "Three parallel deep claw scratch marks gouged diagonally into the ground, flat pure white silhouette on a fully transparent background, sharp jagged edges, no texture, no shadow, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 400
+    },
+    {
+      "name": "paw",
+      "prompt": "A single large monster footprint track seen from above: three thick clawed toes and a rounded heel pad, like a wyvern foot imprint in mud, flat pure white silhouette on a fully transparent background, crisp edges, no texture, no shadow, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 160
+    },
+    {
+      "name": "medal",
+      "prompt": "A small round antique brass medallion badge seen straight on, raised rim, engraved center with three parallel claw scratch marks inside a laurel wreath, worn patina with warm highlights, hanging loop at the top, isolated on a fully transparent background, no text, no letters, no numbers.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 220
+    }
+  ]
+}

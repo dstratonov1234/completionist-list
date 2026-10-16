@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-15",
-  "build": "72f55042cf",
+  "build": "b302ce08d7",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -160,6 +160,47 @@
         "headingWeight": 500,
         "radius": 0,
         "heroPosition": "center 35%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "monster-hunter-world",
+      "title": "Monster Hunter: World",
+      "status": "in_progress",
+      "started": "2024-01",
+      "aliases": [
+        "MHW",
+        "MH World",
+        "Iceborne",
+        "Monster Hunter World: Iceborne"
+      ],
+      "steamAppId": 582010,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/582010/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/582010/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/582010/logo.png",
+      "goals": {
+        "done": 14,
+        "total": 16
+      },
+      "theme": {
+        "bg": "#0e0a06",
+        "surface": "#2a1b10",
+        "text": "#f4e6c4",
+        "accent": "#9cff6e",
+        "accent2": "#c9a35a",
+        "fonts": [
+          "Forum",
+          "EB Garamond:ital,wght@0,400;0,500;0,600;1,400",
+          "Caveat:wght@600;700"
+        ],
+        "displayFont": "Forum",
+        "headingFont": "Forum",
+        "bodyFont": "EB Garamond",
+        "bodySize": 16,
+        "headingWeight": 400,
+        "radius": 0,
+        "heroPosition": "center 30%",
         "css": true,
         "js": true
       }
