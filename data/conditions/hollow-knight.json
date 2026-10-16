@@ -164,83 +164,21 @@
         },
         {
           "n": 16,
-          "title": "Nailsmith у Sheo",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/15/Screenshot_HK_Nailsmith_04.png/revision/latest/scale-to-width-down/800?cb=20191026134425",
-          "link": "https://hollowknight.wiki/w/Nailsmith",
-          "gallery": [
-            "https://static.wikia.nocookie.net/hollowknight/images/d/da/Screenshot_HK_Nailmaster_Sheo_01.png/revision/latest/scale-to-width-down/800?cb=20190313161122"
-          ]
-        },
-        {
-          "n": 17,
-          "title": "Mr. Mushroom",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/a/a1/Screenshot_HK_Mister_Mushroom_09.png/revision/latest/scale-to-width-down/800?cb=20200103122031",
-          "link": "https://hollowknight.wiki/w/Mister_Mushroom_(Hollow_Knight)",
-          "checklist": [
-            {
-              "label": "Маршрут",
-              "items": [
-                {
-                  "title": "Fungal Wastes",
-                  "done": false
-                },
-                {
-                  "title": "Kingdom's Edge, у Isma's Grove",
-                  "done": false
-                },
-                {
-                  "title": "Deepnest, рядом с Galien",
-                  "done": false
-                },
-                {
-                  "title": "Howling Cliffs, хижина Mato",
-                  "done": false
-                },
-                {
-                  "title": "Ancient Basin, рядом с Monarch Wings",
-                  "done": false
-                },
-                {
-                  "title": "Fog Canyon, рядом с Overgrown Mound",
-                  "done": false
-                },
-                {
-                  "title": "King's Pass",
-                  "done": false
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "n": 18,
           "title": "Pantheon of the Sage",
           "done": false,
           "image": "https://static.wikia.nocookie.net/hollowknight/images/3/39/Screenshot_HK_Great_Nailsage_Sly_02.png/revision/latest/scale-to-width-down/800?cb=20200116125000",
           "link": "https://hollowknight.wiki/w/Pantheon_of_the_Sage"
         },
         {
-          "n": 19,
+          "n": 17,
           "title": "Pantheon of the Knight",
           "done": false,
           "image": "https://static.wikia.nocookie.net/hollowknight/images/c/c4/Screenshot_HK_Pure_Vessel_01.png/revision/latest/scale-to-width-down/800?cb=20200116125445",
           "link": "https://hollowknight.wiki/w/Pantheon_of_the_Knight"
         },
         {
-          "n": 20,
-          "title": "Delicate Flower → Godseeker",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/hollowknight/images/1/1d/Screenshot_HK_Traitors%27_Child_01.png/revision/latest/scale-to-width-down/800?cb=20200621134536",
-          "link": "https://hollowknight.wiki/w/Delicate_Flower",
-          "gallery": [
-            "https://static.wikia.nocookie.net/hollowknight/images/6/66/Screenshot_HK_Godseeker_05.png/revision/latest/scale-to-width-down/800?cb=20200103103959"
-          ]
-        },
-        {
-          "n": 21,
-          "title": "Pantheon of Hallownest → концовка Delicate Flower",
+          "n": 18,
+          "title": "Pantheon of Hallownest → концовка Embrace the Void",
           "done": false,
           "image": "https://static.wikia.nocookie.net/hollowknight/images/7/7e/Screenshot_HK_Absolute_Radiance_01.png/revision/latest/scale-to-width-down/800?cb=20200116125819",
           "link": "https://hollowknight.wiki/w/Pantheon_of_Hallownest",
