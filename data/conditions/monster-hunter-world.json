@@ -144,10 +144,12 @@
         {
           "n": 14,
           "title": "Племя боа-боа (Iceborne): «Совместными усилиями» → «Ты поможешь нам, а мы...»",
-          "done": false,
+          "done": true,
           "image": "https://static.wikia.nocookie.net/monsterhunter/images/e/ea/MHWI-Boaboa_Render_001.png/revision/latest/scale-to-width-down/800?cb=20190718083105",
           "imageFit": "contain",
-          "link": "https://monsterhunter.fandom.com/wiki/Boaboa"
+          "link": "https://monsterhunter.fandom.com/wiki/Boaboa",
+          "date": "2026-10-16",
+          "details": "Засчитано по вашему подтверждению: «Совместными усилиями» из списка заданий уже исчезло — оно одноразовое, а «Ты поможешь нам, а мы...», которое открывается только после него, пройдено."
         },
         {
           "n": 15,
@@ -164,7 +166,7 @@
         {
           "n": 16,
           "title": "По одной охоте каждым из 10 неопробованных типов оружия: Бастард, Меч и щит, Молот, Охотничий рог, Выкидной топор, Силовой клинок, Глефа насекомых, Легкое лукорудие, Тяжелое лукорудие, Лук",
-          "done": false,
+          "done": true,
           "image": "https://static.wikia.nocookie.net/monsterhunter/images/f/f0/MHWI-Hunters_Artwork_001.jpg/revision/latest/scale-to-width-down/800?cb=20181210160332",
           "link": "https://monsterhunter.fandom.com/wiki/MHWI:_Weapons",
           "checklist": [
@@ -173,47 +175,49 @@
               "items": [
                 {
                   "title": "Бастард",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Меч и щит",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Молот",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Охотничий рог",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Выкидной топор",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Силовой клинок",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Глефа насекомых",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Легкое лукорудие",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Тяжелое лукорудие",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Лук",
-                  "done": false
+                  "done": true
                 }
               ]
             }
-          ]
+          ],
+          "date": "2026-10-16",
+          "details": "10 из 10: каждым типом оружия — по одной охоте на крупного монстра, сверено со счётчиками гильд-карты в сейве."
         }
       ]
     }

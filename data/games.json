@@ -167,8 +167,10 @@
     {
       "id": "monster-hunter-world",
       "title": "Monster Hunter: World",
-      "status": "in_progress",
+      "status": "completed",
       "started": "2024-01",
+      "finished": "2026-10-16",
+      "playtime": 382,
       "aliases": [
         "MHW",
         "MH World",
@@ -180,7 +182,7 @@
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/582010/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/582010/logo.png",
       "goals": {
-        "done": 14,
+        "done": 16,
         "total": 16
       },
       "theme": {
