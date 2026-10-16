@@ -172,7 +172,10 @@ function checkConditions(where, g) {
       if (goal?.done) done++;
       if (goal?.done && !goal.date) warnings.push(`${gw}: выполнена, но нет даты date`);
       if (goal?.date != null && !DATE_RE.test(goal.date)) errors.push(`${gw}: date — YYYY-MM-DD`);
-      for (const k of ["gives", "needs", "unlock", "counts", "note", "details"]) if (goal?.[k] != null && typeof goal[k] !== "string") errors.push(`${gw}: ${k} — строка`);
+      for (const k of ["note", "details"]) if (goal?.[k] != null && typeof goal[k] !== "string") errors.push(`${gw}: ${k} — строка`);
+      // колонки файла условий на сайт не переносим (пользователь просил): «Что даёт», «Как засчитываем» и т.п.
+      const cols = ["gives", "needs", "unlock", "counts", "extra"].filter((k) => goal?.[k] != null);
+      if (cols.length) warnings.push(`${gw}: поля ${cols.join(", ")} на сайте не показываются — убрать`);
       checkUrl(gw, "image", goal?.image, true);
       checkUrl(gw, "link", goal?.link, false);
       for (const [j, u] of (goal?.gallery ?? []).entries()) checkUrl(gw, `gallery[${j}]`, u, true);

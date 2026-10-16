@@ -7,8 +7,6 @@
         {
           "n": 1,
           "title": "Основной сюжет с эпилогом",
-          "gives": "история, финальный бой",
-          "counts": "обе фазы сюжетного Caliban, Quest 445 завершён",
           "done": true,
           "date": "2026-09-20",
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1289810/ss_64af95db8b98466d79a50232157cdeb03d4f06da.1920x1080.jpg",
@@ -18,9 +16,6 @@
         {
           "n": 2,
           "title": "Победить в Gate of the Gods каждого из 30 богов по одному разу, Difficulty любая",
-          "gives": "30 боссов, у каждого своё правило боя",
-          "needs": "ключ на попытку, отряд под правило бога",
-          "counts": "победа над богом в бою (журнал боя / счётчик убийств бога)",
           "done": true,
           "date": "2026-10-13",
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1289810/ss_56afa3534a899957cd12f25ea59fcfba1446b226.1920x1080.jpg",
@@ -30,41 +25,131 @@
             {
               "label": "Difficulty 10",
               "items": [
-                { "title": "Meraxis", "done": true },
-                { "title": "Lister", "done": true },
-                { "title": "Aurum", "done": true },
-                { "title": "Vertraag", "done": true },
-                { "title": "Erebyss", "done": true },
-                { "title": "Aeolian", "done": true },
-                { "title": "Azural", "done": true },
-                { "title": "Regalis", "done": true },
-                { "title": "Vulcanar", "done": true },
-                { "title": "Mortem", "done": true },
-                { "title": "Alexandria", "done": true },
-                { "title": "Tenebris", "done": true },
-                { "title": "Perdition", "done": true },
-                { "title": "Genaros", "done": true }
+                {
+                  "title": "Meraxis",
+                  "done": true
+                },
+                {
+                  "title": "Lister",
+                  "done": true
+                },
+                {
+                  "title": "Aurum",
+                  "done": true
+                },
+                {
+                  "title": "Vertraag",
+                  "done": true
+                },
+                {
+                  "title": "Erebyss",
+                  "done": true
+                },
+                {
+                  "title": "Aeolian",
+                  "done": true
+                },
+                {
+                  "title": "Azural",
+                  "done": true
+                },
+                {
+                  "title": "Regalis",
+                  "done": true
+                },
+                {
+                  "title": "Vulcanar",
+                  "done": true
+                },
+                {
+                  "title": "Mortem",
+                  "done": true
+                },
+                {
+                  "title": "Alexandria",
+                  "done": true
+                },
+                {
+                  "title": "Tenebris",
+                  "done": true
+                },
+                {
+                  "title": "Perdition",
+                  "done": true
+                },
+                {
+                  "title": "Genaros",
+                  "done": true
+                }
               ]
             },
             {
               "label": "Difficulty 1",
               "items": [
-                { "title": "4080", "done": true },
-                { "title": "Shallan", "done": true },
-                { "title": "T'mere M'rgo", "done": true },
-                { "title": "Apocranox", "done": true },
-                { "title": "Surathli", "done": true },
-                { "title": "Anneltha", "done": true },
-                { "title": "Yseros", "done": true },
-                { "title": "Friden", "done": true },
-                { "title": "Tartarith", "done": true },
-                { "title": "Venedon", "done": true },
-                { "title": "Torun", "done": true },
-                { "title": "Ariamaki", "done": true },
-                { "title": "Zonte", "done": true },
-                { "title": "Gonfurian", "done": true },
-                { "title": "Reclusa", "done": true },
-                { "title": "Muse", "done": true }
+                {
+                  "title": "4080",
+                  "done": true
+                },
+                {
+                  "title": "Shallan",
+                  "done": true
+                },
+                {
+                  "title": "T'mere M'rgo",
+                  "done": true
+                },
+                {
+                  "title": "Apocranox",
+                  "done": true
+                },
+                {
+                  "title": "Surathli",
+                  "done": true
+                },
+                {
+                  "title": "Anneltha",
+                  "done": true
+                },
+                {
+                  "title": "Yseros",
+                  "done": true
+                },
+                {
+                  "title": "Friden",
+                  "done": true
+                },
+                {
+                  "title": "Tartarith",
+                  "done": true
+                },
+                {
+                  "title": "Venedon",
+                  "done": true
+                },
+                {
+                  "title": "Torun",
+                  "done": true
+                },
+                {
+                  "title": "Ariamaki",
+                  "done": true
+                },
+                {
+                  "title": "Zonte",
+                  "done": true
+                },
+                {
+                  "title": "Gonfurian",
+                  "done": true
+                },
+                {
+                  "title": "Reclusa",
+                  "done": true
+                },
+                {
+                  "title": "Muse",
+                  "done": true
+                }
               ]
             }
           ]
@@ -72,9 +157,6 @@
         {
           "n": 3,
           "title": "По одному Bounty на каждого из 10 False Gods; хотя бы один Realm Quest с экипированным Anointment",
-          "gives": "10 отдельных боссов со своими правилами; перки других специализаций",
-          "needs": "гильдия (Death Guild построена), Bounty → указанная глубина → 5 групп → портал",
-          "counts": "10 разных побед; один завершённый Realm Quest с Anointment",
           "done": true,
           "date": "2026-10-15",
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1289810/ss_eafa34ebd0af96ddba1517631740df22723d270d.1920x1080.jpg",
@@ -84,22 +166,55 @@
             {
               "label": "False Gods",
               "items": [
-                { "title": "Jotun", "done": true },
-                { "title": "Saint Althea", "done": true },
-                { "title": "Loid Prime", "done": true },
-                { "title": "Hydranox", "done": true },
-                { "title": "Imp Impington Reborn", "done": true },
-                { "title": "Nebodar", "done": true },
-                { "title": "Mindwurm", "done": true },
-                { "title": "Lost Construct", "done": true },
-                { "title": "The Ancestor", "done": true },
-                { "title": "Caliban the Unredeemed", "done": true }
+                {
+                  "title": "Jotun",
+                  "done": true
+                },
+                {
+                  "title": "Saint Althea",
+                  "done": true
+                },
+                {
+                  "title": "Loid Prime",
+                  "done": true
+                },
+                {
+                  "title": "Hydranox",
+                  "done": true
+                },
+                {
+                  "title": "Imp Impington Reborn",
+                  "done": true
+                },
+                {
+                  "title": "Nebodar",
+                  "done": true
+                },
+                {
+                  "title": "Mindwurm",
+                  "done": true
+                },
+                {
+                  "title": "Lost Construct",
+                  "done": true
+                },
+                {
+                  "title": "The Ancestor",
+                  "done": true
+                },
+                {
+                  "title": "Caliban the Unredeemed",
+                  "done": true
+                }
               ]
             },
             {
               "label": "Anointment",
               "items": [
-                { "title": "Realm Quest с Anointment (Earthen Frenzy)", "done": true }
+                {
+                  "title": "Realm Quest с Anointment (Earthen Frenzy)",
+                  "done": true
+                }
               ]
             }
           ]
@@ -107,8 +222,6 @@
         {
           "n": 4,
           "title": "Arena: по одной серии из 5 побед в Standard, Wild и Masters",
-          "gives": "три формата боя: драфт, правило серии, готовая команда",
-          "counts": "победа в 5-м бою каждого формата",
           "done": true,
           "date": "2026-10-10",
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1289810/ss_f30d4154b9054012270bf781ecdf87eb747ad0b1.1920x1080.jpg",
@@ -117,9 +230,18 @@
           "checklist": [
             {
               "items": [
-                { "title": "Standard — 5 из 5", "done": true },
-                { "title": "Wild — 5 из 5, правило серии FATIGUE", "done": true },
-                { "title": "Masters — 5 из 5, правило серии Raven", "done": true }
+                {
+                  "title": "Standard — 5 из 5",
+                  "done": true
+                },
+                {
+                  "title": "Wild — 5 из 5, правило серии FATIGUE",
+                  "done": true
+                },
+                {
+                  "title": "Masters — 5 из 5, правило серии Raven",
+                  "done": true
+                }
               ]
             }
           ]
@@ -127,8 +249,6 @@
         {
           "n": 5,
           "title": "Победить Rodian Creature Master",
-          "gives": "бой с командой Мастера",
-          "counts": "победа",
           "done": true,
           "date": "2026-10-11",
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1289810/ss_3b8c6ef85806c331fdbd26386cae0ae17ac5ab00.1920x1080.jpg",
@@ -138,9 +258,6 @@
         {
           "n": 6,
           "title": "Сыграть по одному разу у каждого из четырёх Gambling Dwarves: Slot Machine, Keno, Board Game, Scratch Card",
-          "gives": "четыре мини-игры замка",
-          "needs": "проект Gambling Dwarves, гномы поставлены в замке, билеты от проекта",
-          "counts": "по одной игре у каждого",
           "done": true,
           "date": "2026-10-12",
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1289810/ss_4c8206ecf25d0284a0c452e33097b2b6c10ec378.1920x1080.jpg",
@@ -149,10 +266,22 @@
           "checklist": [
             {
               "items": [
-                { "title": "Slot Machine", "done": true },
-                { "title": "Keno", "done": true },
-                { "title": "Siralopoly (Board Game)", "done": true },
-                { "title": "Scratch Card", "done": true }
+                {
+                  "title": "Slot Machine",
+                  "done": true
+                },
+                {
+                  "title": "Keno",
+                  "done": true
+                },
+                {
+                  "title": "Siralopoly (Board Game)",
+                  "done": true
+                },
+                {
+                  "title": "Scratch Card",
+                  "done": true
+                }
               ]
             }
           ]

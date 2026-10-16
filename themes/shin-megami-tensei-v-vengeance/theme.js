@@ -568,16 +568,18 @@
           </div>
           ${stateTag(g)}
           ${facts ? `<h3 class="smt-sec">Сведения</h3><dl class="smt-rows">${facts}</dl>` : ""}`;
+        const lore = link ? `<a class="smt-lore" href="${esc(link)}" target="_blank" rel="noopener"><span class="smt-btn">Y</span>Подробнее ↗</a>` : "";
         const more = [
           checklist,
           g.note ? `<blockquote class="smt-note">${esc(g.note)}</blockquote>` : "",
           g.details ? `<p class="smt-details">${esc(g.details)}</p>` : "",
           gallery.length ? `<div class="smt-gallery" data-gallery>${gallery.map((u) => `<img src="${esc(u)}" alt="" loading="lazy" data-zoom data-caption="${esc(g.title)}">`).join("")}</div>` : "",
-          link ? `<a class="smt-lore" href="${esc(link)}" target="_blank" rel="noopener"><span class="smt-btn">Y</span>Подробнее ↗</a>` : "",
         ].join("");
+        // правая табличка — только когда есть что показать кроме ссылки; иначе ссылка уходит в левую
         const r = $(".smt-plate-r");
-        r.innerHTML = more;
+        r.innerHTML = more ? more + lore : "";
         r.hidden = !more;
+        if (!more && lore) $(".smt-plate-l").insertAdjacentHTML("beforeend", lore);
       }
 
       // ---------- список компендиума ----------

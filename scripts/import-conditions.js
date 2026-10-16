@@ -81,7 +81,8 @@ function parseTable(block, i) {
         if (key === "title" && firstUrl(raw)) goal.link = firstUrl(raw);
       } else if (plain(raw)) goal.extra.push({ label: plain(key), value: plain(raw) });
     });
-    if (!goal.extra.length) delete goal.extra;
+    // на сайт идут только название, номер и отметка: колонки («Что даёт», «Как засчитываем»…) не переносим
+    for (const k of ["gives", "needs", "unlock", "counts", "extra"]) delete goal[k];
     if (goal.title) out.push(goal);
   }
   return out;
@@ -149,7 +150,6 @@ for (let i = 0; i < listBlock.length; i++) {
     while (i + 1 < listBlock.length && /^\s+\S/.test(listBlock[i + 1]) && !/^\s*(\||#|\d+\.\s)/.test(listBlock[i + 1])) {
       more.push(listBlock[++i].trim());
     }
-    if (more.length) goal.extra = [{ label: "Уточнение", value: plain(more.join(" ")) }];
     group.goals.push(goal);
     byN.set(goal.n, goal);
     continue;
@@ -161,9 +161,7 @@ for (let i = 0; i < listBlock.length; i++) {
     if (target && cl.length) target.checklist = cl;
     continue;
   }
-  if (l.trim() && !group.goals.length && !/^статус:/i.test(l.trim())) {
-    group.note = [group.note, plain(l)].filter(Boolean).join(" ");
-  }
+  // пояснения к группам на сайт не переносим
 }
 
 // На сайт идут только группы и цели: «Цель», раздел «Игра» и редакция — служебные, их не показываем.

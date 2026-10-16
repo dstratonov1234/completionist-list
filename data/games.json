@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-15",
-  "build": "f8f5643a86",
+  "build": "2c80a33917",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -20,7 +20,7 @@
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1875830/logo.png",
       "goals": {
         "done": 0,
-        "total": 26
+        "total": 25
       },
       "theme": {
         "bg": "#0a0507",
