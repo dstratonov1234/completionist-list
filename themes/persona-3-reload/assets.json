@@ -1,0 +1,25 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "card-back",
+      "prompt": "Back side of an ornate tarot card, portrait 2:3, deep navy blue field with electric cyan and silver-white linework, symmetrical art-deco filigree border, a stylized clock face with hands at midnight in the center surrounded by a thin crescent ring, subtle glossy sheen, flat graphic illustration in the style of a stylish modern Japanese RPG menu, fills the whole frame edge to edge, no text, no letters, no numerals.",
+      "size": "1024x1536", "background": "opaque", "quality": "medium", "max_width": 600
+    },
+    {
+      "name": "deep",
+      "prompt": "Abstract deep underwater background for a stylish anime game menu: vivid electric cyan light from the top fading into dark navy at the bottom, soft rippling light caustics, a few drifting bubbles and faint diagonal light rays, clean and graphic, no characters, no objects, no text, no letters.",
+      "size": "1536x1024", "background": "opaque", "quality": "medium", "max_width": 1600
+    },
+    {
+      "name": "tower",
+      "prompt": "Silhouette of a colossal twisted gothic tower rising into the sky, built from distorted stacked school buildings and spires spiraling upward, solid black with a thin sickly green rim light along its edges, eerie, centered, isolated on a fully transparent background, no ground, no moon, no text.",
+      "size": "1024x1536", "background": "transparent", "quality": "medium", "max_width": 900
+    },
+    {
+      "name": "dial",
+      "prompt": "Ornate circular clock dial ring ornament seen straight on, thin silver and electric cyan metallic filigree, twelve sharp hour tick marks and fine minute ticks, no numerals, completely empty transparent center, isolated on a fully transparent background, flat graphic game UI element, no text, no numbers, no hands.",
+      "size": "1024x1024", "background": "transparent", "quality": "medium", "max_width": 1024
+    }
+  ]
+}

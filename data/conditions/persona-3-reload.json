@@ -1,0 +1,93 @@
+{
+  "title": "Persona 3 Reload — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели закрытия",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Основной сюжет до истинной концовки и эпилога",
+          "done": true,
+          "date": "2025-05-20",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/5/59/Nyx_Moon_Body.jpg/revision/latest/scale-to-width-down/800?cb=20241208144541",
+          "link": "https://megamitensei.fandom.com/wiki/Great_Seal"
+        },
+        {
+          "n": 2,
+          "title": "Все 22 Social Links на максимуме, включая роман",
+          "done": true,
+          "date": "2025-05-18",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/3/3a/P3R_Trophy_16.png/revision/latest?cb=20240202095018",
+          "link": "https://megamitensei.fandom.com/wiki/Social_Link"
+        },
+        {
+          "n": 3,
+          "title": "Linked Episodes: Junpei, Akihiko, Koromaru, Ken, Shinjiro, Ryoji (по 5)",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/5/5c/Middle_School_Gekkoukan_Shinjiro_Aragaki_Linked_Episode.jpg/revision/latest/scale-to-width-down/800?cb=20240227074255",
+          "link": "https://megamitensei.fandom.com/wiki/Linked_Episode"
+        },
+        {
+          "n": 4,
+          "title": "Прогулки с Элизабет: просьбы #77–#81",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/7/72/P3RE_Elizabeth.png/revision/latest/scale-to-width-down/800?cb=20240128235526",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Elizabeth"
+        },
+        {
+          "n": 5,
+          "title": "The Reaper",
+          "done": true,
+          "date": "2025-05-18",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/c/ce/P3R_The_Reaper_Model.png/revision/latest/scale-to-width-down/800?cb=20240823175433",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Reaper_(Persona)"
+        },
+        {
+          "n": 6,
+          "title": "7 Monad Passages (91F, 117F, 143F, 171F, 197F, 225F, 255F), включая Shadow of the Void",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/4/42/P3R_Adamah_Monad_Passage_Rear.png/revision/latest/scale-to-width-down/800?cb=20260830062144",
+          "link": "https://megamitensei.fandom.com/wiki/Monad_Depths"
+        },
+        {
+          "n": 7,
+          "title": "Элизабет (просьба #101, 255F, соло)",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/1/18/Elizabeth_%28Cut-In%29.png/revision/latest/scale-to-width-down/800?cb=20240206180209",
+          "link": "https://megamitensei.fandom.com/wiki/Elizabeth"
+        },
+        {
+          "n": 9,
+          "title": "Episode Aigis: 7 дверей, Colosseo Purgatorio, Erebus, финал",
+          "done": true,
+          "date": "2025-08-27",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/d/db/P3R_EA_Illustration_by_Shigenori_Soejima.JPG/revision/latest/scale-to-width-down/800?cb=20240819152828",
+          "link": "https://megamitensei.fandom.com/wiki/Aigis"
+        },
+        {
+          "n": 10,
+          "title": "Monad Chambers (Episode Aigis): 4 боя",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2689210/ss_f61a2fd350471e4a86504e67eb8268c661c6317a.1920x1080.jpg",
+          "link": "https://megamitensei.fandom.com/wiki/Monad_Depths"
+        },
+        {
+          "n": 11,
+          "title": "Joker («Masked Boy»)",
+          "done": true,
+          "date": "2026-10-15",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/b/b3/Joker_render.png/revision/latest/scale-to-width-down/800?cb=20210101151609",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Ren_Amamiya"
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-15",
-  "build": "32cdcf2ea1",
+  "build": "a60393d000",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -80,6 +80,45 @@
         "headingWeight": 400,
         "radius": 0,
         "heroPosition": "center 35%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "persona-3-reload",
+      "title": "Persona 3 Reload",
+      "status": "completed",
+      "finished": "2026-10-15",
+      "playtime": 113,
+      "aliases": [
+        "P3R",
+        "Persona 3"
+      ],
+      "steamAppId": 2161700,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2161700/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2161700/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2161700/logo.png",
+      "goals": {
+        "done": 10,
+        "total": 10
+      },
+      "theme": {
+        "bg": "#050a1c",
+        "surface": "#0b1e5f",
+        "text": "#f4f9fc",
+        "accent": "#11b0f2",
+        "accent2": "#ff3e4d",
+        "fonts": [
+          "Exo 2:ital,wght@0,600;0,700;0,800;1,700;1,800;1,900",
+          "Onest:wght@400;500;600;700"
+        ],
+        "displayFont": "Exo 2",
+        "headingFont": "Exo 2",
+        "bodyFont": "Onest",
+        "bodySize": 15,
+        "headingWeight": 800,
+        "radius": 0,
+        "heroPosition": "center 24%",
         "css": true,
         "js": true
       }
