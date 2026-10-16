@@ -126,143 +126,165 @@
 .smt-moon-dark { opacity: 0.14; }
 
 /* ====================================================================================
-   Главная: слот сохранения
+   Главная: плашка — луна по центру
    ==================================================================================== */
 
 .gbanner[data-game="shin-megami-tensei-v-vengeance"] {
   border: 1px solid var(--smt-line);
   border-radius: 0;
-  background: var(--smt-ink);
+  background: #060203;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
-
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]::before,
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]::after {
-  content: "";
-  position: absolute;
-  z-index: 3;
-  width: 60px;
-  height: 68px;
-  pointer-events: none;
-  background: url(assets/frame.webp) left top / contain no-repeat;
-  opacity: 0.8;
-}
-
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]::before { top: 5px; left: 5px; }
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]::after { right: 5px; bottom: 5px; background-image: url(assets/frame-br.webp); background-position: right bottom; }
 
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover,
 .gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible {
   transform: none;
-  border-color: var(--smt-cyan);
-  box-shadow: 0 0 10px rgba(70, 200, 255, 0.4), 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255, 74, 95, 0.7);
+  box-shadow: 0 0 10px rgba(255, 74, 95, 0.45), 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.smt-slot {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
-  align-items: center;
-  gap: 20px;
-  min-height: 210px;
-  padding: 0 30px 0 34px;
-}
+.smt-ban { position: relative; display: block; min-height: 210px; overflow: hidden; }
 
-.smt-slot-art { position: absolute; inset: 0; z-index: -3; }
+/* демоны с обложки по обе стороны (справа — как на обложке, слева — зеркально), в середине — тьма под луну */
+.smt-ban-art { position: absolute; inset: 0; }
+.smt-ban-side { position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; }
+.smt-ban-l { left: 0; transform: scaleX(-1); }
+.smt-ban-r { right: 0; }
 
-.smt-slot-art img {
+.smt-ban-side img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: right 28%;
-  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+  filter: grayscale(1) sepia(1) hue-rotate(-38deg) saturate(3.2) brightness(0.62) contrast(1.15);
+  transition: filter 0.6s;
 }
 
-.smt-slot-art::after {
+.smt-ban-art::after {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, var(--smt-ink) 0%, rgba(10, 5, 7, 0.88) 30%, rgba(10, 5, 7, 0.1) 62%, rgba(10, 5, 7, 0.55) 100%),
-    linear-gradient(0deg, rgba(10, 5, 7, 0.65), transparent 50%);
+    radial-gradient(ellipse 28% 85% at 50% 50%, #060203 0%, rgba(6, 2, 3, 0.92) 55%, transparent 100%),
+    linear-gradient(0deg, rgba(6, 2, 3, 0.85), transparent 40%),
+    repeating-linear-gradient(0deg, rgba(255, 74, 95, 0.06) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(255, 74, 95, 0.06) 0 1px, transparent 1px 26px);
 }
 
-.smt-slot-grid {
+.smt-ban-glow {
   position: absolute;
-  inset: 0;
-  z-index: -2;
-  background:
-    repeating-linear-gradient(0deg, rgba(255, 74, 95, 0.07) 0 1px, transparent 1px 26px),
-    repeating-linear-gradient(90deg, rgba(255, 74, 95, 0.07) 0 1px, transparent 1px 26px);
-  pointer-events: none;
+  left: 50%;
+  top: 44%;
+  width: 260px;
+  height: 260px;
+  margin: -130px 0 0 -130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 74, 95, 0.35), transparent 65%);
+  transition: opacity 0.5s, transform 0.6s;
 }
 
-/* полоса выбора, как курсор в меню SMT V */
-.smt-slot-cursor {
-  position: absolute;
-  z-index: -1;
-  left: 0;
-  right: 0;
-  top: 50%;
-  height: 74px;
-  margin-top: -37px;
-  background: linear-gradient(90deg, rgba(70, 200, 255, 0.5), rgba(70, 200, 255, 0.16) 55%, transparent 85%);
-  border-top: 1px solid rgba(160, 230, 255, 0.7);
-  border-bottom: 1px solid rgba(160, 230, 255, 0.35);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-
-.smt-slot-cursor::before {
-  content: "";
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  border: 9px solid transparent;
-  border-left: 12px solid #fff;
-  border-right: 0;
-  margin-top: -9px;
-  filter: drop-shadow(0 0 6px var(--smt-cyan));
-}
-
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-slot-cursor,
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible .smt-slot-cursor { transform: scaleX(1); }
-.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-slot-art img { transform: scale(1.03); }
-
-.smt-slot-main { position: relative; min-width: 0; }
-
-.smt-slot-logo {
-  display: block;
-  width: min(430px, 100%);
-  max-height: 110px;
-  object-fit: contain;
-  object-position: left center;
-  object-view-box: inset(27% 3% 33% 3%);
-  filter: drop-shadow(0 0 14px rgba(255, 74, 95, 0.3)) drop-shadow(0 4px 14px rgba(0, 0, 0, 0.85));
-}
-
-.smt-slot-name { font: italic 900 34px/1 var(--t-display, sans-serif); text-transform: uppercase; color: #fff; }
-
-.smt-slot-data {
+.smt-ban-center {
   position: relative;
-  display: grid;
-  grid-template-columns: 70px minmax(0, 1fr);
-  grid-template-rows: auto auto auto;
-  column-gap: 12px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 12px 14px;
-  border: 1px solid var(--smt-line);
-  background: linear-gradient(180deg, rgba(14, 7, 11, 0.9), rgba(8, 4, 6, 0.86));
+  justify-content: center;
+  gap: 6px;
+  min-height: 210px;
+  padding: 10px 0 30px;
 }
 
-.smt-slot-moon { grid-row: 1 / 4; width: 70px; height: 70px; filter: drop-shadow(0 0 8px rgba(206, 212, 255, 0.3)); }
-.smt-slot-count { line-height: 1; }
-.smt-slot-count b { font: italic 900 38px/1 var(--t-display, sans-serif); color: #fff; text-shadow: 0 0 12px rgba(255, 74, 95, 0.45); }
-.smt-slot-count span { margin-left: 3px; font: italic 800 20px/1 var(--t-display, sans-serif); color: var(--smt-cyan); }
-.smt-slot-label { font: 700 11.5px/1.3 var(--t-heading, sans-serif); letter-spacing: 0.12em; text-transform: uppercase; color: rgba(236, 228, 232, 0.72); }
-.smt-slot-data .smt-gauge { margin-top: 8px; height: 8px; }
+.smt-ban-moon { position: relative; display: grid; place-items: center; width: 118px; height: 118px; transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.smt-ban-moonsvg { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 0 14px rgba(255, 74, 95, 0.45)); transition: filter 0.5s; }
+.smt-ban-moon .smt-moon-dark { opacity: 0.24; filter: sepia(1) hue-rotate(-30deg) saturate(2.4) brightness(0.55); }
+
+.smt-ban-count { position: relative; line-height: 1; text-shadow: 0 2px 10px #000, 0 0 2px #000; }
+.smt-ban-count b { font: italic 900 40px/1 var(--t-display, sans-serif); color: #fff; }
+.smt-ban-count span { margin-left: 2px; font: italic 800 20px/1 var(--t-display, sans-serif); color: var(--smt-cyan); }
+
+.smt-ban-logo {
+  display: block;
+  width: min(360px, 70vw);
+  height: 44px;
+  object-fit: contain;
+  object-view-box: inset(27% 3% 33% 3%);
+  filter: drop-shadow(0 0 12px rgba(255, 74, 95, 0.4)) drop-shadow(0 3px 10px #000);
+}
+
+.smt-ban-name { font: italic 900 30px/1 var(--t-display, sans-serif); text-transform: uppercase; color: #fff; }
+
+/* значки ходов — по одному на условие, вдоль нижнего края */
+.smt-ban-turns {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+  max-width: 70%;
+  transform: translateX(-50%);
+}
+
+.smt-ban-turns i { width: 13px; height: 13px; background: url(assets/turn.webp) center / contain no-repeat; opacity: 0.3; filter: grayscale(1) brightness(1.3); }
+.smt-ban-turns i.on { opacity: 1; filter: drop-shadow(0 0 4px rgba(70, 200, 255, 0.9)); }
+
+/* скобки захвата цели — смыкаются по углам при наведении */
+.smt-ban-lock { position: absolute; z-index: 3; inset: 12px; pointer-events: none; }
+
+.smt-ban-lock i {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--smt-cyan);
+  opacity: 0;
+  filter: drop-shadow(0 0 6px var(--smt-cyan));
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.3s;
+}
+
+.smt-ban-lock i:nth-child(1) { left: 0; top: 0; border-width: 2px 0 0 2px; transform: translate(-14px, -14px); }
+.smt-ban-lock i:nth-child(2) { right: 0; top: 0; border-width: 2px 2px 0 0; transform: translate(14px, -14px); }
+.smt-ban-lock i:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 2px 2px; transform: translate(-14px, 14px); }
+.smt-ban-lock i:nth-child(4) { right: 0; bottom: 0; border-width: 0 2px 2px 0; transform: translate(14px, 14px); }
+
+/* капли Магацухи поднимаются при наведении */
+.smt-ban-orbs i {
+  position: absolute;
+  z-index: 1;
+  left: var(--x);
+  bottom: -20px;
+  width: var(--s);
+  height: var(--s);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffb3bd, #ff4a5f 40%, transparent 72%);
+  box-shadow: 0 0 10px rgba(255, 74, 95, 0.8);
+  opacity: 0;
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-orbs i,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible .smt-ban-orbs i { animation: smt-ban-rise 2.6s linear var(--d) infinite; }
+
+@keyframes smt-ban-rise {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 0.9; }
+  100% { transform: translateY(-240px); opacity: 0; }
+}
+
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-lock i,
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:focus-visible .smt-ban-lock i { opacity: 1; transform: none; }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-moon { transform: translateY(-4px) scale(1.05); }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-moonsvg { filter: drop-shadow(0 0 22px rgba(255, 106, 124, 0.8)); }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-glow { transform: scale(1.25); }
+.gbanner[data-game="shin-megami-tensei-v-vengeance"]:hover .smt-ban-side img { filter: grayscale(0.4) sepia(0.5) hue-rotate(-30deg) saturate(2) brightness(0.9) contrast(1.1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .gbanner[data-game="shin-megami-tensei-v-vengeance"] .smt-ban-orbs { display: none; }
+  .smt-ban-lock i,
+  .smt-ban-moon { transition: opacity 0.2s; }
+}
 
 /* ====================================================================================
    Главная: при наведении над главной собирается Магацухи
@@ -923,14 +945,12 @@ a.smt-prompt:focus-visible { color: #fff; text-shadow: 0 0 8px var(--smt-red); o
   .smt-prompt { font-size: 12px; }
   .smt-prompts .smt-prompt:not(.smt-prompt-back) span + span { display: none; }
   .smt-prompt-nb { display: none; }
-  .smt-slot { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 18px 18px 18px 22px; }
-  .smt-slot-data { justify-self: start; min-width: 230px; }
+  .smt-ban-turns { max-width: 92%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .smt-demon,
   .smt-demon img,
-  .smt-slot-cursor,
-  .smt-slot-art img { transition: none; }
+  .smt-ban-side img { transition: none; }
   .smt-caustics { animation: none; }
 }

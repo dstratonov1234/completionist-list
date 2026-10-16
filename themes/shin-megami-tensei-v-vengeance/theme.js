@@ -231,25 +231,30 @@
 
   GameThemes.register("shin-megami-tensei-v-vengeance", {
     // ---------- главная: слот сохранения ----------
+    // Композиция — по центру: большая луна в фазе прогресса с числом выполненных, под ней логотип, по бокам
+    // из красной тьмы проступают демоны с обложки, внизу — значки ходов (по одному на условие).
+    // При наведении луна разгорается, поднимаются капли Магацухи, смыкаются скобки захвата цели.
     banner(b) {
       const { done, total } = b.progress;
       const k = total ? done / total : 0;
-      const logo = b.art.logo('class="smt-slot-logo" alt=""');
+      const logo = b.art.logo('class="smt-ban-logo" alt=""');
+      const turns = total ? Array.from({ length: Math.min(total, 40) }, (_, i) => `<i class="${i < done ? "on" : ""}"></i>`).join("") : "";
+      const orbs = Array.from({ length: 7 }, (_, i) => `<i style="--x:${12 + i * 13}%;--d:${(i * 0.23).toFixed(2)}s;--s:${6 + (i % 3) * 4}px"></i>`).join("");
       b.el.innerHTML = `
-        <span class="smt-slot">
-          <span class="smt-slot-art">${b.art.hero('alt="" loading="lazy"')}</span>
-          <span class="smt-slot-grid"></span>
-          <span class="smt-slot-cursor"></span>
-          <span class="smt-slot-main">
-            ${logo || `<span class="smt-slot-name" aria-hidden="true">${b.esc(b.game.title)}</span>`}
-            <span class="smt-sr">${b.esc(b.game.title)}</span>
+        <span class="smt-ban">
+          <span class="smt-ban-art"><span class="smt-ban-side smt-ban-l">${b.art.hero('alt="" loading="lazy"')}</span><span class="smt-ban-side smt-ban-r">${b.art.hero('alt="" loading="lazy"')}</span></span>
+          <span class="smt-ban-glow"></span>
+          <span class="smt-ban-orbs" aria-hidden="true">${orbs}</span>
+          <span class="smt-ban-lock" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="smt-ban-center">
+            <span class="smt-ban-moon">
+              ${moonSvg(b.assets, k, "smt-ban-moonsvg")}
+              <span class="smt-ban-count">${total ? `<b>${done}</b><span>/${total}</span>` : `<span>—</span>`}</span>
+            </span>
+            ${logo || `<span class="smt-ban-name" aria-hidden="true">${b.esc(b.game.title)}</span>`}
+            <span class="smt-sr">${b.esc(b.game.title)}. ${total ? `Выполнено ${done} из ${total} условий закрытия` : "Условия ещё не заданы"}</span>
           </span>
-          <span class="smt-slot-data">
-            ${moonSvg(b.assets, k, "smt-slot-moon")}
-            <span class="smt-slot-count">${total ? `<b>${done}</b><span>/${total}</span>` : `<span>—</span>`}</span>
-            <span class="smt-slot-label">${total ? b.plural(total, "условие закрытия", "условия закрытия", "условий закрытия") : "Условия ещё не заданы"}</span>
-            ${total ? gauge(k) : ""}
-          </span>
+          ${turns ? `<span class="smt-ban-turns" aria-hidden="true">${turns}</span>` : ""}
         </span>`;
     },
 

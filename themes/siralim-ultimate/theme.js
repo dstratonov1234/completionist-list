@@ -151,22 +151,30 @@
 
   GameThemes.register("siralim-ultimate", {
     // ---------- главная: мини-экран боя ----------
+    // Композиция — «отряд в бою»: сверху пиксельная строка сообщения с логотипом и кристаллами, внизу во всю
+    // ширину крупные карточки отряда (по одной на условие, полоса здоровья полная — выполнено), между ними
+    // арт как поле боя. При наведении курсор ▶ скачет по карточкам, как при выборе цели.
     banner(b) {
       const { done, total } = b.progress;
       const logo = b.art.logo('class="sir-ban-logo" alt=""');
-      const cards = Array.from({ length: Math.min(total, 12) }, (_, i) => ({ n: i + 1, done: i < done }));
+      const n = Math.min(total, 12);
+      const cards = Array.from({ length: n }, (_, i) => ({ n: i + 1, done: i < done }));
       b.el.innerHTML = `
         <span class="sir-ban">
           <span class="sir-ban-art">${b.art.hero('alt="" loading="lazy"')}</span>
-          <span class="sir-ban-main">
-            <span class="sir-cursor" aria-hidden="true">▶</span>
+          <span class="sir-ban-msg">
             ${logo || `<span class="sir-ban-name" aria-hidden="true">${b.esc(b.game.title)}</span>`}
-            <span class="sir-sr">${b.esc(b.game.title)}</span>
+            <span class="sir-sr">${b.esc(b.game.title)}. ${total ? `Выполнено ${done} из ${total} условий закрытия` : "Условия ещё не заданы"}</span>
+            <span class="sir-ban-count" aria-hidden="true"><img src="${b.assets}gem.webp" alt=""><b>${done}</b>/${total || "—"}</span>
           </span>
-          <span class="sir-ban-party">
-            <span class="sir-ban-count"><img src="${b.assets}gem.webp" alt=""><b>${done}</b>/${total || "—"}</span>
-            <span class="sir-ban-cards">${total ? partyHtml(cards, b.esc, "sir-card-sm") : `<span class="sir-ban-empty">Условия ещё не заданы</span>`}</span>
-          </span>
+          ${
+            n
+              ? `<span class="sir-ban-party" style="--n:${n}" aria-hidden="true">
+                  <span class="sir-ban-hop">▼</span>
+                  ${partyHtml(cards, b.esc, "sir-card-ban")}
+                </span>`
+              : `<span class="sir-ban-empty">Условия ещё не заданы</span>`
+          }
         </span>`;
     },
 
