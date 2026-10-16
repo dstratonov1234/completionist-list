@@ -2,12 +2,13 @@
 // Всё своё, по мотивам интерфейса SMT V:
 //  · баннер на главной — слот сохранения: арт, логотип, фаза луны по прогрессу и шкала Магацухи,
 //    при наведении въезжает голубая полоса выбора, как курсор в меню;
-//  · страница — экран игры: сверху HUD (луна с числом выполненных, шкала Магацухи), титульный экран
-//    компендиума, вкладки «рас» (группы условий) с подсказками L/R и значками ходов, арена — цели стоят
-//    на светящейся воде, выбранная крупно в центре, остальные по бокам; невыполненные — силуэты, как
-//    незарегистрированные демоны; при выборе под ногами вспыхивает круг призыва; по бокам — таблички
-//    экрана статуса (номер-«уровень», раса, сведения, «навыки» — чек-лист); ниже — список компендиума;
-//    в углу — подсказки кнопок (B — назад, L/R — группа, ◀▶ — условие);
+//  · при наведении на баннер над главной собирается Магацухи: багровая сетка, поднимающиеся капли,
+//    луна в фазе прогресса всходит в углу, сквозь дымку проступают демоны с обложки;
+//  · страница — экран компендиума во всю высоту: сверху HUD (луна с числом выполненных, логотип, шкала
+//    Магацухи), слева вертикальные вкладки «рас» (группы условий) со значками ходов и записи компендиума,
+//    в центре арена — цели стоят на светящейся воде, выбранная крупно, остальные по бокам; невыполненные —
+//    силуэты, как незарегистрированные демоны; при выборе под ногами вспыхивает круг призыва; справа —
+//    табличка экрана статуса; внизу арены — подсказки кнопок (B — назад, L/R — группа, ◀▶ — условие);
 //  · капли Магацухи поднимаются по экрану, тянутся за курсором и за выполненными целями;
 //  · заставка — плоские багровые круги, как на обложке Vengeance, расцветают из баннера ещё на главной,
 //    поверх проступает огромная «V» и название; на странице круги лопаются и открывают экран.
@@ -228,11 +229,6 @@
     }
   }
 
-  // ---------- первый кадр страницы: арт титульного экрана (страница и фон главной при наведении) ----------
-  function titleArt(art) {
-    return `<div class="smt-title-art">${art.hero('alt=""')}</div><div class="smt-title-grid"></div>`;
-  }
-
   GameThemes.register("shin-megami-tensei-v-vengeance", {
     // ---------- главная: слот сохранения ----------
     banner(b) {
@@ -257,12 +253,23 @@
         </span>`;
     },
 
-    // ---------- главная: фон при наведении — первый кадр страницы (HUD и титульный экран) ----------
+    // ---------- главная: при наведении над главной собирается Магацухи ----------
+    // Багровая сетка проступает, снизу поднимаются капли, в углу всходит луна в фазе прогресса,
+    // сквозь красную дымку видны демоны с обложки. Только CSS: анимации идут, пока у слоя класс .on.
     stage(s) {
+      const { done, total } = s.progress;
+      const k = total ? done / total : 0;
+      const orbs = Array.from({ length: 24 }, (_, i) => {
+        const x = (i * 61) % 100;
+        return `<i style="--x:${x}%;--d:${((i * 0.29) % 2.4).toFixed(2)}s;--t:${(4.2 + (i % 5) * 0.8).toFixed(1)}s;--s:${8 + (i % 4) * 7}px"></i>`;
+      }).join("");
       s.el.innerHTML = `
-        <div class="smt-stage-frame">
-          <div class="smt-hud smt-hud-ghost"></div>
-          <div class="smt-title smt-title-ghost">${titleArt(s.art)}</div>
+        <div class="smt-hv">
+          <div class="smt-hv-art">${s.art.hero('alt=""')}</div>
+          <div class="smt-hv-haze"></div>
+          <div class="smt-hv-grid"></div>
+          <div class="smt-hv-orbs">${orbs}</div>
+          <div class="smt-hv-moon">${moonSvg(s.assets, k, "smt-hv-moonsvg")}</div>
         </div>`;
     },
 
@@ -295,7 +302,7 @@
       });
     },
 
-    // ---------- страница игры — целиком своя ----------
+    // ---------- страница игры — экран компендиума во всю высоту ----------
     page(ctx) {
       const { root, esc, assets, game } = ctx;
       const cond = ctx.conditions;
@@ -316,7 +323,6 @@
 
       backdrop();
       if (groups.length) {
-        index(false);
         races();
         keys();
         selectRace(firstRace(), firstGoal(firstRace()), false);
@@ -327,16 +333,21 @@
 
       return () => root.classList.remove("smt");
 
-      // ---------- разметка ----------
+      // ---------- разметка: HUD сверху, слева расы и записи компендиума, в центре арена, справа статус ----------
       function pageHtml() {
-        const logo = ctx.art.logo('class="smt-title-logo" alt=""');
+        const logo = ctx.art.logo('class="smt-hud-logo" alt=""');
         const nb = ctx.neighbors ?? {};
         return `
-          <div class="smt-page">
+          <div class="smt-page ${groups.length ? "" : "smt-page-empty"}">
             <header class="smt-hud">
               <div class="smt-hud-moon" role="img" aria-label="Выполнено ${done} из ${total}">
                 ${moonSvg(assets, k, "smt-hud-moonsvg")}
                 <span class="smt-hud-moonval"><b>${done}</b>/${total}</span>
+              </div>
+              <div class="smt-hud-title">
+                ${logo}
+                <h1 class="${logo ? "smt-sr" : "smt-hud-name"}">${esc(game.title)}</h1>
+                <span class="smt-hud-kicker">Компендиум условий закрытия</span>
               </div>
               <div class="smt-hud-mag" aria-hidden="true">
                 <span class="smt-hud-maglabel">Магацухи</span>
@@ -344,22 +355,11 @@
               </div>
             </header>
 
-            <section class="smt-title">
-              ${titleArt(ctx.art)}
-              <div class="smt-title-text">
-                ${logo}
-                <h1 class="${logo ? "smt-sr" : "smt-title-name"}">${esc(game.title)}</h1>
-                <p class="smt-title-kicker">Компендиум условий закрытия</p>
-                ${total ? `<p class="smt-title-count"><b>${done}</b><span>/${total}</span><small>выполнено</small></p>` : ""}
-              </div>
-            </section>
-
             ${
               groups.length
                 ? `
-            <nav class="smt-races" aria-label="Группы условий">
-              <button type="button" class="smt-btn smt-btn-sh" data-race-step="-1" aria-label="Предыдущая группа">L</button>
-              <div class="smt-race-tabs" role="tablist">
+            <aside class="smt-side">
+              <div class="smt-races" role="tablist" aria-orientation="vertical" aria-label="Группы условий">
                 ${groups
                   .map((gr, ri) => {
                     const d = gr.goals.filter((g) => g.done).length;
@@ -372,34 +372,34 @@
                   })
                   .join("")}
               </div>
-              <button type="button" class="smt-btn smt-btn-sh" data-race-step="1" aria-label="Следующая группа">R</button>
-            </nav>
-            <p class="smt-race-note" hidden></p>
+              <h2 class="smt-sec smt-index-head">Записи</h2>
+              <ol class="smt-index-list"></ol>
+            </aside>
 
             <section class="smt-arena" id="smt-arena" role="tabpanel">
               <div class="smt-floor" aria-hidden="true"><i class="smt-caustics"></i><i class="smt-summon"></i></div>
-              <div class="smt-plate smt-plate-l" aria-live="polite"></div>
               <div class="smt-stagebox" data-gallery>
                 <div class="smt-lineup" role="listbox" aria-label="Условия группы" tabindex="0"></div>
                 <button type="button" class="smt-arrow smt-arrow-l" data-step="-1" aria-label="Предыдущее условие">◀</button>
                 <button type="button" class="smt-arrow smt-arrow-r" data-step="1" aria-label="Следующее условие">▶</button>
               </div>
-              <div class="smt-plate smt-plate-r"></div>
+              <footer class="smt-prompts">
+                <span class="smt-prompt"><span class="smt-btn">◀▶</span>Условие</span>
+                <span class="smt-prompt"><span class="smt-btn smt-btn-sh">L</span><span class="smt-btn smt-btn-sh">R</span>Группа</span>
+                ${nb.prev ? `<a class="smt-prompt" href="${esc(nb.prev.href)}"><span class="smt-btn smt-btn-sh">ZL</span>${esc(nb.prev.title)}</a>` : ""}
+                ${nb.next ? `<a class="smt-prompt" href="${esc(nb.next.href)}"><span class="smt-btn smt-btn-sh">ZR</span>${esc(nb.next.title)}</a>` : ""}
+                <a class="smt-prompt smt-prompt-back" href="#/"><span class="smt-btn smt-btn-b">B</span>Назад</a>
+              </footer>
             </section>
 
-            <section class="smt-index" aria-labelledby="smt-index-head">
-              <h2 class="smt-sec" id="smt-index-head">Список компендиума</h2>
-              <ol class="smt-index-list"></ol>
+            <aside class="smt-plate" aria-live="polite"></aside>`
+                : `
+            <section class="smt-arena smt-arena-empty">
+              <div class="smt-floor" aria-hidden="true"><i class="smt-caustics"></i></div>
+              <p class="smt-empty">Условия закрытия для этой игры ещё не заданы.</p>
+              <footer class="smt-prompts"><a class="smt-prompt smt-prompt-back" href="#/"><span class="smt-btn smt-btn-b">B</span>Назад</a></footer>
             </section>`
-                : `<p class="smt-empty">Условия закрытия для этой игры ещё не заданы.</p>`
             }
-
-            <footer class="smt-prompts">
-              ${groups.length ? `<span class="smt-prompt"><span class="smt-btn">◀▶</span>Условие</span><span class="smt-prompt"><span class="smt-btn">L</span><span class="smt-btn">R</span>Группа</span>` : ""}
-              ${nb.prev ? `<a class="smt-prompt" href="${esc(nb.prev.href)}"><span class="smt-btn">ZL</span>${esc(nb.prev.title)}</a>` : ""}
-              ${nb.next ? `<a class="smt-prompt" href="${esc(nb.next.href)}"><span class="smt-btn">ZR</span>${esc(nb.next.title)}</a>` : ""}
-              <a class="smt-prompt smt-prompt-back" href="#/"><span class="smt-btn smt-btn-b">B</span>Назад</a>
-            </footer>
           </div>`;
       }
 
@@ -420,7 +420,7 @@
         });
       }
 
-      // ---------- вкладки рас ----------
+      // ---------- расы ----------
       function firstRace() {
         const ri = groups.findIndex((gr) => gr.goals.some((g) => !g.done));
         return ri < 0 ? 0 : ri;
@@ -432,14 +432,13 @@
       }
 
       function races() {
-        ctx.listen($(".smt-races"), "click", (e) => {
+        const tabs = $(".smt-races");
+        ctx.listen(tabs, "click", (e) => {
           const tab = e.target.closest(".smt-race");
-          if (tab) return selectRace(+tab.dataset.race, 0, true);
-          const st = e.target.closest("[data-race-step]");
-          if (st) stepRace(+st.dataset.raceStep, true);
+          if (tab) selectRace(+tab.dataset.race, 0, true);
         });
-        ctx.listen($(".smt-race-tabs"), "keydown", (e) => {
-          const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+        ctx.listen(tabs, "keydown", (e) => {
+          const d = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
           if (d) {
             e.preventDefault();
             stepRace(d, true);
@@ -448,6 +447,10 @@
             selectRace(e.key === "Home" ? 0 : groups.length - 1, 0, true);
           } else return;
           root.querySelector(`#smt-race-${sel.race}`)?.focus();
+        });
+        ctx.listen($(".smt-index-list"), "click", (e) => {
+          const b = e.target.closest(".smt-entry");
+          if (b) selectGoal(+b.dataset.i, motion);
         });
       }
 
@@ -462,15 +465,19 @@
           t.tabIndex = j === ri ? 0 : -1;
         });
         arena.setAttribute("aria-labelledby", `smt-race-${ri}`);
-        if (user) {
-          const tab = root.querySelector(`#smt-race-${ri}`);
-          const box = $(".smt-race-tabs");
-          if (tab && box) box.scrollTo({ left: tab.offsetLeft - (box.clientWidth - tab.clientWidth) / 2, behavior: motion ? "smooth" : "auto" });
-        }
-        const note = $(".smt-race-note");
-        note.textContent = groups[ri].note ?? "";
-        note.hidden = !groups[ri].note;
-        lineup.innerHTML = groups[ri].goals
+        const gr = groups[ri];
+        // записи компендиума этой расы
+        $(".smt-index-list").innerHTML = gr.goals
+          .map(
+            (g, j) => `
+            <li><button type="button" class="smt-entry ${g.done ? "done" : ""}" data-i="${j}">
+              <span class="smt-entry-n">${esc(g.n)}</span>
+              <span class="smt-entry-name">${esc(g.title)}</span>
+              <span class="smt-entry-state" aria-hidden="true">${g.done ? "✓" : ""}</span>
+            </button></li>`,
+          )
+          .join("");
+        lineup.innerHTML = gr.goals
           .map(
             (g, j) => `
             <button type="button" role="option" class="smt-demon ${g.done ? "done" : ""} ${g.imageFit === "contain" ? "fig" : "scene"}" data-i="${j}" aria-selected="false" tabindex="-1" aria-label="№${esc(g.n)}. ${esc(g.title)}">
@@ -484,7 +491,6 @@
       }
 
       // ---------- арена: ряд целей на воде ----------
-      // Соседи выстраиваются вплотную по реальной ширине картинок: выбранная — крупно, по бокам — меньше.
       function layoutLineup() {
         const items = [...lineup.children];
         const width = (el, a) => (el.offsetWidth || 200) * (SCALE[a] ?? 0.4);
@@ -500,11 +506,8 @@
           }
         }
         items.forEach((el, j) => {
-          const o = j - sel.i;
-          const a = Math.abs(o);
-          const s = SCALE[Math.min(a, 2)];
-          const x = xs[j];
-          el.style.transform = `translateX(-50%) translateX(${x.toFixed(1)}px) scale(${s})`;
+          const a = Math.abs(j - sel.i);
+          el.style.transform = `translateX(-50%) translateX(${xs[j].toFixed(1)}px) scale(${SCALE[Math.min(a, 2)]})`;
           el.style.zIndex = String(10 - a);
           el.style.opacity = a > 2 ? "0" : a === 0 ? "1" : a === 1 ? "0.7" : "0.35";
           el.style.visibility = a > 2 ? "hidden" : "visible";
@@ -520,6 +523,8 @@
           el.setAttribute("aria-selected", String(j === sel.i));
           el.querySelector("img")?.removeAttribute("data-zoom");
         });
+        root.querySelectorAll(".smt-entry").forEach((b, j) => b.classList.toggle("cur", j === sel.i));
+        root.querySelector(`.smt-entry[data-i="${sel.i}"]`)?.scrollIntoView({ block: "nearest" });
         layoutLineup();
         // увеличение — только у выбранной цели; ставим после клика, чтобы выбор соседа не открыл лайтбокс
         requestAnimationFrame(() => {
@@ -529,24 +534,21 @@
             img.setAttribute("data-caption", g.title);
           }
         });
-        plates(g);
-        index(true);
+        plate(g);
         arena.classList.toggle("done", !!g.done);
         if (pulse) {
           for (const c of ["smt-summon-on", "smt-scan"]) {
-            arena.classList.remove(c);
-            void arena.offsetWidth;
-            arena.classList.add(c);
+            for (const el of [arena, $(".smt-plate")]) {
+              el.classList.remove(c);
+              void el.offsetWidth;
+              el.classList.add(c);
+            }
           }
         }
       }
 
-      function plates(g) {
-        const facts = FIELDS.filter(([key]) => g[key])
-          .map(([key, label]) => [label, g[key]])
-          .concat((g.extra ?? []).filter((x) => x?.label).map((x) => [x.label, x.value]))
-          .map(([dt, dd]) => `<div class="smt-row"><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`)
-          .join("");
+      // ---------- табличка экрана статуса ----------
+      function plate(g) {
         const checklist = (g.checklist ?? [])
           .map(
             (c) => `
@@ -558,7 +560,7 @@
           .join("");
         const gallery = (g.gallery ?? []).map(ctx.safeUrl).filter(Boolean);
         const link = ctx.safeUrl(g.link);
-        $(".smt-plate-l").innerHTML = `
+        $(".smt-plate").innerHTML = `
           <div class="smt-id">
             <span class="smt-lv" aria-hidden="true"><small>№</small><b>${esc(g.n)}</b></span>
             <div class="smt-id-text">
@@ -567,48 +569,11 @@
             </div>
           </div>
           ${stateTag(g)}
-          ${facts ? `<h3 class="smt-sec">Сведения</h3><dl class="smt-rows">${facts}</dl>` : ""}`;
-        const lore = link ? `<a class="smt-lore" href="${esc(link)}" target="_blank" rel="noopener"><span class="smt-btn">Y</span>Подробнее ↗</a>` : "";
-        const more = [
-          checklist,
-          g.note ? `<blockquote class="smt-note">${esc(g.note)}</blockquote>` : "",
-          g.details ? `<p class="smt-details">${esc(g.details)}</p>` : "",
-          gallery.length ? `<div class="smt-gallery" data-gallery>${gallery.map((u) => `<img src="${esc(u)}" alt="" loading="lazy" data-zoom data-caption="${esc(g.title)}">`).join("")}</div>` : "",
-        ].join("");
-        // правая табличка — только когда есть что показать кроме ссылки; иначе ссылка уходит в левую
-        const r = $(".smt-plate-r");
-        r.innerHTML = more ? more + lore : "";
-        r.hidden = !more;
-        if (!more && lore) $(".smt-plate-l").insertAdjacentHTML("beforeend", lore);
-      }
-
-      // ---------- список компендиума ----------
-      function index(update) {
-        const list = $(".smt-index-list");
-        if (!list) return;
-        if (!update) {
-          list.innerHTML = groups
-            .flatMap((gr, ri) =>
-              gr.goals.map(
-                (g, j) => `
-                <li><button type="button" class="smt-entry ${g.done ? "done" : ""}" data-race="${ri}" data-i="${j}">
-                  <span class="smt-entry-n">${esc(g.n)}</span>
-                  <span class="smt-entry-race">${esc(gr.title)}</span>
-                  <span class="smt-entry-name">${esc(g.title)}</span>
-                  ${stateTag(g)}
-                </button></li>`,
-              ),
-            )
-            .join("");
-          ctx.listen(list, "click", (e) => {
-            const b = e.target.closest(".smt-entry");
-            if (!b) return;
-            selectRace(+b.dataset.race, +b.dataset.i, true);
-            arena.scrollIntoView({ block: "center", behavior: motion ? "smooth" : "auto" });
-          });
-          return;
-        }
-        list.querySelectorAll(".smt-entry").forEach((b) => b.classList.toggle("cur", +b.dataset.race === sel.race && +b.dataset.i === sel.i));
+          ${checklist}
+          ${g.note ? `<blockquote class="smt-note">${esc(g.note)}</blockquote>` : ""}
+          ${g.details ? `<p class="smt-details">${esc(g.details)}</p>` : ""}
+          ${gallery.length ? `<div class="smt-gallery" data-gallery>${gallery.map((u) => `<img src="${esc(u)}" alt="" loading="lazy" data-zoom data-caption="${esc(g.title)}">`).join("")}</div>` : ""}
+          ${link ? `<a class="smt-lore" href="${esc(link)}" target="_blank" rel="noopener"><span class="smt-btn">Y</span>Подробнее ↗</a>` : ""}`;
       }
 
       // ---------- управление: стрелки, клики, свайпы, L/R ----------

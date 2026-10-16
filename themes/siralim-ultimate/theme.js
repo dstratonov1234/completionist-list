@@ -2,8 +2,10 @@
 // Всё своё, по мотивам интерфейса Siralim:
 //  · баннер на главной — мини-экран боя: арт, логотип и ряд карточек отряда (по карточке на условие,
 //    полоса здоровья полная — выполнено), при наведении у логотипа прыгает курсор меню ▶;
-//  · страница — титульный экран с артом и счётчиком кристаллов, строка сообщения («Выберите условие.»
-//    печатается по буквам), меню команд слева — список условий с курсором ▶, поле боя в центре на
+//  · при наведении на баннер за главной открывается портал в реалм: пиксельный реалм проступает, в небе
+//    раскручивается покадровый пиксельный водоворот, вверх плывут кристаллы;
+//  · страница — окно игры посередине на фоне реалма: строка заголовка с логотипом и кристаллами, строка
+//    сообщения («Выберите условие.» печатается по буквам), меню команд слева — список условий с курсором ▶, поле боя в центре на
 //    пиксельном реалме (картинка цели, вспышка удара и всплывающая надпись, как цифры урона), справа —
 //    список «врагов» (чек-лист цели: красным — не побеждён, ✓ — побеждён), снизу — карточки отряда,
 //    под ними — окно диалога с именем цели и подробностями, текст печатается по буквам;
@@ -110,8 +112,40 @@
       .join("");
   }
 
-  function titleArt(art) {
-    return `<div class="sir-title-art">${art.hero('alt=""')}</div><div class="sir-title-scan"></div>`;
+  // Покадровый спрайт портала для главной: кадры водоворота в одну полосу, CSS листает их шагами.
+  function portalSprite(frames, size) {
+    const c = document.createElement("canvas");
+    c.width = size * frames;
+    c.height = size;
+    const g = c.getContext("2d");
+    const img = g.createImageData(size * frames, size);
+    const d = img.data;
+    const r = size / 2 - 1;
+    for (let f = 0; f < frames; f++) {
+      const spin = (f / frames) * Math.PI * 2;
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const dx = x - size / 2 + 0.5;
+          const dy = y - size / 2 + 0.5;
+          const dist = Math.hypot(dx, dy);
+          if (dist > r) continue;
+          let col;
+          if (dist > r - 1.6) col = EDGE[(x + y) & 1 ? 0 : 1];
+          else if (dist > r - 3) col = EDGE[2];
+          else {
+            const band = Math.sin(Math.atan2(dy, dx) * 3 + dist * 0.42 - spin) * 0.5 + 0.5;
+            col = SWIRL[Math.min(4, Math.floor((band * 0.65 + (dist / r) * 0.35) * 5))];
+          }
+          const i = (y * size * frames + f * size + x) * 4;
+          d[i] = col[0];
+          d[i + 1] = col[1];
+          d[i + 2] = col[2];
+          d[i + 3] = 255;
+        }
+      }
+    }
+    g.putImageData(img, 0, 0);
+    return c.toDataURL();
   }
 
   GameThemes.register("siralim-ultimate", {
@@ -135,9 +169,25 @@
         </span>`;
     },
 
-    // ---------- главная: фон при наведении — титульный экран страницы ----------
+    // ---------- главная: при наведении открывается портал в реалм ----------
+    // Пиксельный реалм проступает за списком, в небе раскручивается водоворот (покадровый спрайт),
+    // вверх плывут кристаллы. Только CSS: анимации идут, пока у слоя класс .on.
     stage(s) {
-      s.el.innerHTML = `<div class="sir-stage-frame"><div class="sir-title sir-title-ghost">${titleArt(s.art)}</div></div>`;
+      let sprite = "";
+      try {
+        sprite = portalSprite(6, 48);
+      } catch {}
+      const motes = Array.from({ length: 14 }, (_, i) => {
+        const x = (i * 53 + 7) % 100;
+        return `<img src="${s.assets}gem.webp" alt="" style="--x:${x}%;--d:${((i * 0.41) % 3).toFixed(2)}s;--t:${(5 + (i % 4) * 1.2).toFixed(1)}s;--s:${10 + (i % 3) * 6}px">`;
+      }).join("");
+      s.el.innerHTML = `
+        <div class="sir-hv">
+          <div class="sir-hv-realm" style="background-image:url('${s.assets}realm.webp')"></div>
+          ${sprite ? `<div class="sir-hv-portal"><i style="background-image:url(${sprite})"></i></div>` : ""}
+          <div class="sir-hv-motes">${motes}</div>
+          <div class="sir-hv-scan"></div>
+        </div>`;
     },
 
     // ---------- главная: портал открывается из баннера ----------
@@ -210,24 +260,19 @@
 
       // ---------- разметка ----------
       function pageHtml() {
-        const logo = ctx.art.logo('class="sir-title-logo" alt=""');
+        const logo = ctx.art.logo('class="sir-titlebar-logo" alt=""');
         const nb = ctx.neighbors ?? {};
         return `
           <div class="sir-page">
-            <section class="sir-title">
-              ${titleArt(ctx.art)}
-              <div class="sir-title-text">
-                ${logo}
-                <h1 class="${logo ? "sir-sr" : "sir-title-name"}">${esc(game.title)}</h1>
-                <div class="sir-title-menu">
-                  <a class="sir-menu-item" href="#sir-battle"><span class="sir-cursor" aria-hidden="true">▶</span>Условия закрытия</a>
-                  ${total ? `<span class="sir-gems" aria-label="Выполнено ${done} из ${total}"><img src="${assets}gem.webp" alt=""><b>${done}</b>/${total}</span>` : ""}
-                </div>
-              </div>
-            </section>
+          <div class="sir-window">
+            <header class="sir-titlebar">
+              ${logo}
+              <h1 class="${logo ? "sir-sr" : "sir-titlebar-name"}">${esc(game.title)}</h1>
+              ${total ? `<span class="sir-gems" aria-label="Выполнено ${done} из ${total}"><img src="${assets}gem.webp" alt=""><b>${done}</b>/${total}</span>` : ""}
+              <a class="sir-back" href="#/"><span class="sir-key">Esc</span>К списку</a>
+            </header>
 
             <div class="sir-msg">
-              <a class="sir-back" href="#/"><span class="sir-key">Esc</span>К списку</a>
               <p class="sir-msg-text" aria-live="polite"></p>
             </div>
 
@@ -277,6 +322,7 @@
             </section>`
                 : `<section class="sir-win sir-dialog"><div class="sir-dialog-body"><p>Условия закрытия для этой игры ещё не заданы.</p></div></section>`
             }
+          </div>
 
             ${
               nb.prev || nb.next
