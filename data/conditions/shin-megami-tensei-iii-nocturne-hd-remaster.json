@@ -1,0 +1,145 @@
+{
+  "title": "Shin Megami Tensei III: Nocturne HD Remaster — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Сюжет до финала и True Demon Ending с эпилогом",
+          "done": true,
+          "date": "2025-04-25",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/6/6a/Nocturne-Lucifer%27sCall.jpg/revision/latest/scale-to-width-down/1100?cb=20110902171842",
+          "link": "https://megamitensei.fandom.com/wiki/Shin_Megami_Tensei_III:_Nocturne",
+          "gallery": [
+            "https://static.wikia.nocookie.net/megamitensei/images/f/f7/SMT3_Vortex.jpg/revision/latest/scale-to-width-down/1100?cb=20240325065249"
+          ]
+        },
+        {
+          "n": 2,
+          "title": "Labyrinth of Amala: Kalpa 1–5, все сцены Lady in Black в «глазке», предложение Lucifer",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/1/13/Tumblr_m1q72iwMCC1qjskumo1_1280.jpg/revision/latest?cb=20120331115554",
+          "link": "https://megamitensei.fandom.com/wiki/Labyrinth_of_Amala",
+          "gallery": [
+            "https://static.wikia.nocookie.net/megamitensei/images/e/e9/The_Old_Man_in_the_Wheelchair_%26_Lady_in_Black_%28SMTIII_HD_Art%29.png/revision/latest/scale-to-width-down/1100?cb=20210912233059",
+            "https://static.wikia.nocookie.net/megamitensei/images/9/9a/Old_Woman_in_Black_HD.jpg/revision/latest/scale-to-width-down/1100?cb=20200803110459"
+          ]
+        },
+        {
+          "n": 3,
+          "title": "Fiends: Matador, Daisoujou, Hell Biker, White Rider, Red Rider, Black Rider, Pale Rider, Mother Harlot, Trumpeter",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/0/04/Matador_%28SMT_Art%29.png/revision/latest/scale-to-width-down/1100?cb=20210912215030",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Fiend",
+          "gallery": [
+            "https://static.wikia.nocookie.net/megamitensei/images/0/06/Pale_Rider_%28SMTIII_Art%29.png/revision/latest/scale-to-width-down/1100?cb=20210912214806",
+            "https://static.wikia.nocookie.net/megamitensei/images/d/df/Mother_Harlot_%28SMTIII_Art%29.png/revision/latest/scale-to-width-down/1100?cb=20210912205643",
+            "https://static.wikia.nocookie.net/megamitensei/images/5/54/Trumpeter_%28SMTIII_Art%29.png/revision/latest/scale-to-width-down/1100?cb=20210912211218"
+          ]
+        },
+        {
+          "n": 4,
+          "title": "Dante: бой в Ikebukuro, бой в Kalpa 3, вербовка в Kalpa 5",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/6/66/Shin_Megami_Tensei_Nocturne_-_Dante_01.jpg/revision/latest/scale-to-width-down/1100?cb=20141209081901",
+          "link": "https://megamitensei.fandom.com/wiki/Dante",
+          "gallery": [
+            "https://static.wikia.nocookie.net/megamitensei/images/e/ed/Dante_Nocturne.png/revision/latest?cb=20121223035900"
+          ]
+        },
+        {
+          "n": 5,
+          "title": "Beelzebub и Metatron",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/3/35/Beelzebub_%28DSSH_Art%29.png/revision/latest/scale-to-width-down/1100?cb=20210912223801",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Beelzebub",
+          "gallery": [
+            "https://static.wikia.nocookie.net/megamitensei/images/a/a5/00614_Metatron.png/revision/latest/scale-to-width-down/1100?cb=20220913160211"
+          ]
+        },
+        {
+          "n": 6,
+          "title": "Финал TDE: Ahriman, Noah, реванш с Thor, Baal Avatar, Kagutsuchi, Lucifer",
+          "done": true,
+          "date": "2025-04-25",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/7/79/00374_Lucifer_%28Enemy%29.png/revision/latest/scale-to-width-down/1100?cb=20230312093550",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Kagutsuchi",
+          "gallery": [
+            "https://static.wikia.nocookie.net/megamitensei/images/7/7a/Kagutsuchi_second_form.jpg/revision/latest/scale-to-width-down/1100?cb=20161215014328",
+            "https://static.wikia.nocookie.net/megamitensei/images/f/f0/AhrimanA2.jpg/revision/latest/scale-to-width-down/1100?cb=20220116105852",
+            "https://static.wikia.nocookie.net/megamitensei/images/0/09/Noah.jpg/revision/latest/scale-to-width-down/1100?cb=20080610044716"
+          ]
+        },
+        {
+          "n": 7,
+          "title": "Необязательные боссы: Kin-Ki, Sui-Ki, Fuu-Ki, Ongyo-Ki, Mara, Black Frost (бой), Bishamon (Northern Temple), четыре Небесных Короля (Bandou Shrine) → Masakados",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/6/6f/00438_Masakadosama.png/revision/latest/scale-to-width-down/1100?cb=20221028012711",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Masakado",
+          "gallery": [
+            "https://static.wikia.nocookie.net/megamitensei/images/b/bc/SMT_III_Ongyoki.png/revision/latest/scale-to-width-down/1100?cb=20240511204415",
+            "https://static.wikia.nocookie.net/megamitensei/images/3/37/00146_Mara.png/revision/latest/scale-to-width-down/1100?cb=20220929114111"
+          ]
+        },
+        {
+          "n": 8,
+          "title": "Стартовая Pixie переродилась в Pixie Lv80",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/5/59/PixieSMT3.jpg/revision/latest/scale-to-width-down/1100?cb=20080613013128",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Pixie"
+        },
+        {
+          "n": 9,
+          "title": "Puzzle Boy, все этапы",
+          "done": true,
+          "date": "2025",
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/7/7e/SMT3_Pro_Gamer.png/revision/latest?cb=20201028181418",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Asakusa"
+        },
+        {
+          "n": 10,
+          "title": "Бой с Futomimi в Mifunashiro: на вопрос Chiaki ответить «I see your point»",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/c/c3/Futomimi_%28SMTIII_Art%29.png/revision/latest/scale-to-width-down/1100?cb=20240606021119",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Futomimi",
+          "gallery": [
+            "https://static.wikia.nocookie.net/megamitensei/images/4/44/Chiaki_Hayasaka_HD.jpg/revision/latest/scale-to-width-down/1100?cb=20200803105938"
+          ]
+        },
+        {
+          "n": 11,
+          "title": "Hell's Maze (Kalpa 4): найти Afterlife Bell и проводить души Futomimi и Sakahagi",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/1/19/Sakahagi_%28SMTIII_Art%29.png/revision/latest/scale-to-width-down/1100?cb=20240606021113",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Labyrinth_of_Amala",
+          "gallery": [
+            "https://static.wikia.nocookie.net/megamitensei/images/1/16/SMT3Futomimi.png/revision/latest/scale-to-width-down/1100?cb=20201118132550"
+          ]
+        },
+        {
+          "n": 12,
+          "title": "Возвращение Black Frost в Kalpa 3, он вступает в отряд",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/megamitensei/images/d/da/00499_Black_Frost.png/revision/latest/scale-to-width-down/1100?cb=20220822115856",
+          "imageFit": "contain",
+          "link": "https://megamitensei.fandom.com/wiki/Black_Frost"
+        }
+      ]
+    }
+  ]
+}

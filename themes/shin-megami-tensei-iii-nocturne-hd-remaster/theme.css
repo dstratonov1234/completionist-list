@@ -1,0 +1,360 @@
+/* Shin Megami Tensei III: Nocturne HD Remaster — «Метки Полудемона».
+   Татуировки Полудемона — тёмные полосы с бирюзовым светящимся контуром, сужаются к острому концу — и Магатама.
+   Баннер: логотип, Полудемон, Магатама со счётом, из-под неё к его рукам — полосы по числу условий. Наведение —
+   пробуждение Магатамы: её огромный контур, волны сот, полосы в поля. Заставка — полосы расползаются по экрану.
+   Страница — соты: сота-Магатама с прогрессом и условия в шестигранных ячейках; подробности — окно «Анализ». */
+
+.gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"],
+.stage-layer[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"],
+.sn-veil,
+.sn-title,
+.sn,
+.sn-backdrop,
+.sn-lens {
+  --sn-cyan: #2fe6e0;
+  --sn-cyan-hi: #b8fffb;
+  --sn-red: #d8242a;
+  --sn-ink: #07090b;
+  --sn-bone: #e4ecee;
+  /* плитка сот 52×90 */
+  --sn-hexgrid: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='90' viewBox='0 0 52 90'%3E%3Cpath d='M26 0L52 15V45L26 60L0 45V15Z M26 60V90' fill='none' stroke='%232fe6e0' stroke-width='1.2'/%3E%3C/svg%3E");
+}
+
+.sn-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- полоса татуировки (баннер, поля, заставка): лента, свечение контура, контур, ток ---------- */
+.sn-b path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.sn-b .f { fill: #061012; }
+.sn-b .g { stroke: transparent; stroke-width: 4.5; }
+.sn-b .e { stroke: rgba(130, 150, 158, 0.55); stroke-width: 1.15; }
+.sn-b .c { stroke: transparent; stroke-width: 2.2; stroke-dasharray: 0.12 1.3; stroke-dashoffset: 0.12; }
+.sn-b.on .g { stroke: rgba(47, 230, 224, 0.26); }
+.sn-b.on .e { stroke: var(--sn-cyan); }
+
+/* ---------- Магатама ---------- */
+.mg-glow { fill: none; stroke: rgba(47, 230, 224, 0.3); stroke-width: 4.5; }
+.mg-edge { fill: none; stroke: var(--sn-cyan); stroke-width: 1.5; }
+.mg-surf { fill: var(--sn-cyan-hi); opacity: 0.85; }
+.mg-n { fill: var(--sn-bone); font: 700 34px/1 var(--t-display, sans-serif); paint-order: stroke; stroke: #031012; stroke-width: 4px; stroke-linejoin: round; }
+.mg-t { fill: rgba(228, 236, 238, 0.78); font: 500 15px/1 var(--t-display, sans-serif); letter-spacing: 0.04em; }
+
+/* ====================================================================================
+   Главная: метки Полудемона
+   ==================================================================================== */
+
+.gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"] {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+/* вытянутая шестигранная плашка (скосы — в пикселях, чтобы на телефоне не стала прямоугольником) */
+.sn-ban { --cut: 36px; position: relative; display: block; height: 210px; background: linear-gradient(90deg, rgba(216, 36, 42, 0.5), rgba(47, 230, 224, 0.22) 45%, rgba(47, 230, 224, 0.6)); clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% 50%, calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 50%); transition: background 0.4s ease; }
+.sn-ban-in { position: absolute; inset: 1.5px; overflow: hidden; background: var(--sn-ink); clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% 50%, calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 50%); }
+
+.sn-ban-art { position: absolute; inset: 0; }
+.sn-ban-art img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.6s ease; }
+/* пересвеченную бирюзу слева — в сумрак под логотип; справа — темнота для Магатамы */
+.sn-ban-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(3, 9, 11, 0.86) 0, rgba(3, 9, 11, 0.62) 22%, rgba(3, 9, 11, 0.12) 37%, rgba(3, 9, 11, 0) 46%, rgba(3, 9, 11, 0) 60%, rgba(3, 9, 11, 0.72) 76%, rgba(3, 9, 11, 0.9) 100%); pointer-events: none; }
+
+/* соты по краям плашки, не по лицу */
+.sn-ban-hex { position: absolute; inset: 0; background: var(--sn-hexgrid) 0 0 / 39px 67.5px; opacity: 0.12; -webkit-mask: linear-gradient(90deg, #000 0, #000 26%, transparent 42%, transparent 64%, #000 82%); mask: linear-gradient(90deg, #000 0, #000 26%, transparent 42%, transparent 64%, #000 82%); transition: opacity 0.4s ease; }
+
+.sn-ban-logo { position: absolute; left: 5.5%; top: 50%; display: block; height: 76px; transform: translateY(-50%); }
+.sn-ban-logo img { display: block; width: auto; height: 100%; filter: drop-shadow(0 2px 5px #000); }
+.sn-ban-name { color: var(--sn-red); font: 700 30px/1 var(--t-display, sans-serif); letter-spacing: 0.04em; text-transform: uppercase; }
+
+.sn-ban-ink { position: absolute; right: 3%; top: 0; width: auto; height: 100%; aspect-ratio: 560 / 210; overflow: visible; }
+
+/* выделение — Магатама пульсирует, от неё по светящимся полосам бежит ток, соты вспыхивают */
+.gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"]:is(:hover, :focus-visible, .picked) { outline: none; box-shadow: none; }
+.gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"]:is(:hover, :focus-visible, .picked) .sn-ban { background: linear-gradient(90deg, var(--sn-red), rgba(47, 230, 224, 0.6) 45%, var(--sn-cyan-hi)); }
+.gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"]:is(:hover, :focus-visible, .picked) .sn-ban-hex { opacity: 0.4; animation: sn-flicker 1.2s steps(6) 1; }
+.gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"]:is(:hover, :focus-visible, .picked) .sn-ban-art img { transform: scale(1.035); }
+.gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"]:is(:hover, :focus-visible, .picked) .sn-b.on .c { stroke: #effffe; animation: sn-flow 1.3s linear calc(var(--i) * 60ms) infinite; }
+.gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"]:is(:hover, :focus-visible, .picked) .sn-b.on .g { stroke: rgba(47, 230, 224, 0.45); }
+.gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"]:is(:hover, :focus-visible, .picked) .sn-mg .mg-glow { animation: sn-pulse 1.3s ease-in-out infinite; }
+
+@keyframes sn-flow { from { stroke-dashoffset: 0.12; } to { stroke-dashoffset: -1.3; } }
+@keyframes sn-flicker { 0% { opacity: 0.12; } 20% { opacity: 0.6; } 35% { opacity: 0.22; } 55% { opacity: 0.6; } 100% { opacity: 0.4; } }
+@keyframes sn-pulse { 0%, 100% { stroke: rgba(47, 230, 224, 0.3); stroke-width: 4.5; } 50% { stroke: rgba(184, 255, 251, 0.6); stroke-width: 8; } }
+
+@media (max-width: 600px) {
+  .sn-ban { --cut: 22px; height: 178px; }
+  .sn-ban-art img { object-position: 86% 20%; }
+  .sn-ban-shade { background: linear-gradient(90deg, rgba(3, 9, 11, 0.3), rgba(3, 9, 11, 0) 30%, rgba(3, 9, 11, 0) 44%, rgba(3, 9, 11, 0.86) 72%); }
+  .sn-ban-logo { left: 8%; top: 9px; height: 34px; transform: none; }
+  .sn-ban-ink { width: 62%; aspect-ratio: auto; -webkit-mask: linear-gradient(90deg, transparent, #000 34%); mask: linear-gradient(90deg, transparent, #000 34%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gbanner[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"]:is(:hover, :focus-visible, .picked) :is(.sn-b.on .c, .sn-ban-hex, .sn-mg .mg-glow) { animation: none; }
+  .sn-ban-art img { transition: none; }
+}
+
+/* ====================================================================================
+   Главная: при наведении — пробуждение Магатамы
+   ==================================================================================== */
+
+.stage-layer[data-game="shin-megami-tensei-iii-nocturne-hd-remaster"] { background: #050607; }
+
+/* --mx/--my — центр Магатамы на баннере */
+.sn-st { position: absolute; inset: 0; overflow: hidden; --mx: calc(var(--bcx, 50vw) + var(--bw, 0px) * 0.47 - var(--bh, 0px) * 0.381); --my: var(--bcy, 50vh); }
+
+/* тусклые соты по всему фону */
+.sn-st-hex { position: absolute; inset: 0; background: var(--sn-hexgrid) 0 0 / 52px 90px; opacity: 0; -webkit-mask: radial-gradient(ellipse 90% 80% at var(--mx) var(--my), #000 15%, transparent 72%); mask: radial-gradient(ellipse 90% 80% at var(--mx) var(--my), #000 15%, transparent 72%); transition: opacity 1s ease 0.2s; }
+
+/* кольца сот вспыхивают волной от Магатамы наружу */
+.sn-st-ring { position: absolute; inset: 0; background: var(--sn-hexgrid) 0 0 / 52px 90px; opacity: 0; -webkit-mask: radial-gradient(circle at var(--mx) var(--my), transparent calc(110px + var(--k) * 190px), #000 calc(170px + var(--k) * 190px), transparent calc(260px + var(--k) * 190px)); mask: radial-gradient(circle at var(--mx) var(--my), transparent calc(110px + var(--k) * 190px), #000 calc(170px + var(--k) * 190px), transparent calc(260px + var(--k) * 190px)); filter: drop-shadow(0 0 3px rgba(47, 230, 224, 0.8)); animation: sn-wave 2.4s ease-out calc(var(--k) * 0.32s) infinite; animation-play-state: paused; }
+
+@keyframes sn-wave { 0% { opacity: 0; } 22% { opacity: 0.95; } 70% { opacity: 0.25; } 100% { opacity: 0; } }
+
+/* огромный контур Магатамы вокруг Магатамы баннера — прорисовывается */
+.sn-st-mg { position: absolute; left: calc(var(--mx) - var(--bh, 200px) * 2.7); top: calc(var(--my) - var(--bh, 200px) * 2.7); width: calc(var(--bh, 200px) * 5.4); height: calc(var(--bh, 200px) * 5.4); overflow: visible; filter: drop-shadow(0 0 6px rgba(47, 230, 224, 0.7)); }
+.sn-st-mg :is(path, circle) { fill: none; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.6s cubic-bezier(0.3, 0.6, 0.2, 1) 0.15s; }
+.sn-st-mg .core { stroke: var(--sn-cyan); stroke-width: 0.32; }
+.sn-st-mg .glow { stroke: rgba(47, 230, 224, 0.16); stroke-width: 2.4; }
+
+/* полосы татуировки прорастают из краёв баннера в поля (поле 520×560 px, x = 0 — край баннера) */
+.sn-st-vines { position: absolute; top: calc(var(--bcy, 50vh) - 280px); width: 520px; height: 560px; overflow: visible; }
+.sn-st-vines.r { left: calc(var(--bcx, 50vw) + var(--bw, 0px) / 2); }
+.sn-st-vines.l { left: calc(var(--bcx, 50vw) - var(--bw, 0px) / 2 - 520px); transform: scaleX(-1); }
+.sn-st-vines :is(.e, .g) { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.1s cubic-bezier(0.3, 0.6, 0.2, 1) var(--d); }
+.sn-st-vines .f { opacity: 0; transition: opacity 0.5s ease calc(var(--d) + 0.5s); }
+
+.stage-layer.on .sn-st-hex { opacity: 0.12; }
+.stage-layer.on .sn-st-ring { animation-play-state: running; }
+.stage-layer.on .sn-st-mg :is(path, circle) { stroke-dashoffset: 0; }
+.stage-layer.on .sn-st-vines :is(.e, .g) { stroke-dashoffset: 0; }
+.stage-layer.on .sn-st-vines .f { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sn-st-ring { animation: none; }
+  .stage-layer.on .sn-st-ring { opacity: 0.2; }
+  .sn-st-mg :is(path, circle),
+  .sn-st-vines :is(.e, .g, .f) { transition: none; }
+}
+
+/* ====================================================================================
+   Заставка: метки расползаются (слои живут и на главной — без html[data-game])
+   ==================================================================================== */
+
+.sn-veil { position: fixed; inset: 0; z-index: 75; overflow: hidden; pointer-events: none; }
+.sn-veil-black { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 80% at 50% 50%, #0b1416, #030405 70%); opacity: 0; transition: opacity 0.42s ease 0.26s; }
+/* полосы — canvas: прорисовка и убегание за края идут кадрами в theme.js */
+.sn-veil-lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.sn-veil.in .sn-veil-black { opacity: 1; }
+
+/* по ту сторону: полосы убегают за края экрана, чернота уходит */
+.sn-veil.out .sn-veil-lines { opacity: 0; transition: opacity 0.4s ease 0.35s; }
+.sn-veil.out .sn-veil-black { opacity: 0; transition: opacity 0.9s ease 0.1s; }
+.sn-veil.direct:not(.out) .sn-veil-black { transition: none; }
+
+.sn-title { position: fixed; inset: 0; z-index: 76; display: grid; place-items: center; pointer-events: none; opacity: 0; transform: scale(1.04); transition: opacity 0.5s ease, transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.sn-title img { display: block; width: min(760px, 80vw); height: auto; filter: drop-shadow(0 0 22px rgba(216, 36, 42, 0.45)) drop-shadow(0 2px 3px #000); }
+.sn-title span { color: var(--sn-red); font: 700 clamp(34px, 6vw, 80px)/1 var(--t-display, sans-serif); letter-spacing: 0.04em; text-align: center; text-transform: uppercase; }
+.sn-title.in { opacity: 1; transform: none; }
+.sn-title.direct { transition: none; }
+.sn-title.out { opacity: 0; transition: opacity 0.32s ease; }
+
+/* ====================================================================================
+   Страница: соты
+   ==================================================================================== */
+
+.sn-backdrop { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+.sn-backdrop i { position: absolute; inset: 0; background: center / cover no-repeat; }
+.sn-backdrop b { position: absolute; width: 52vmin; aspect-ratio: 900 / 594; background: center / contain no-repeat; opacity: 0.4; }
+.sn-backdrop b.a { left: -10vmin; top: -8vmin; }
+.sn-backdrop b.b { right: -12vmin; bottom: -10vmin; transform: rotate(180deg); }
+
+/* линза: под курсором проступает сетка сот */
+.sn-lens { position: fixed; z-index: -1; left: 0; top: 0; width: 340px; height: 340px; overflow: hidden; pointer-events: none; opacity: 0; -webkit-mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.5) 35%, transparent 70%); mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.5) 35%, transparent 70%); transition: opacity 0.4s ease; will-change: transform; }
+.sn-lens.on { opacity: 0.55; }
+.sn-lens i { position: absolute; left: 0; top: 0; width: calc(340px + 104px); height: calc(340px + 180px); background: var(--sn-hexgrid) 0 0 / 52px 90px; }
+
+.sn-page { position: relative; min-height: 100vh; padding: 0 clamp(14px, 3vw, 48px) 80px; color: var(--sn-bone); font-family: var(--t-body, serif); }
+
+.sn-head { display: flex; justify-content: center; padding: 40px 0 0; transition: opacity 0.8s ease; }
+.sn-intro .sn-head { opacity: 0; transition: none; }
+.sn-head-logo { display: block; border-radius: 4px; }
+.sn-head-logo img { display: block; width: min(500px, 80vw); height: auto; filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.9)); }
+.sn-head-logo:focus-visible { outline: 2px solid var(--sn-cyan); outline-offset: 8px; }
+.sn-head-name { color: var(--sn-red); font: 700 54px/1 var(--t-display, sans-serif); text-transform: uppercase; }
+
+/* ---------- соты ---------- */
+.sn-comb { position: relative; max-width: 1240px; margin: 34px auto 0; }
+/* клики — только по шестиугольнику: прямоугольник ячейки заходит на низ ряда выше */
+.sn-cell { position: absolute; container-type: inline-size; pointer-events: none; }
+.sn-hex { pointer-events: auto; }
+
+/* ячейка: шестиугольник; сверху картинка, ниже условие — текст обтекает скосы шестиугольника */
+.sn-hex { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg, #0d1316, #080b0d); clip-path: polygon(50% 1.4%, 98.6% 25.7%, 98.6% 74.3%, 50% 98.6%, 1.4% 74.3%, 1.4% 25.7%); }
+.sn-pic { position: absolute; left: 0; right: 0; top: 0; height: 63%; overflow: hidden; isolation: isolate; background: #0b1012; cursor: zoom-in; }
+.sn-face { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 22%; pointer-events: none; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.6s ease; }
+.sn-pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, #080b0d 0, rgba(8, 11, 13, 0.82) 12%, rgba(8, 11, 13, 0) 44%); pointer-events: none; }
+/* арт Канеко — в приглушённом ореоле из темноты; белый фон картинки растворяется в нём (multiply) */
+.sn-pic.fig { background: radial-gradient(ellipse 48% 54% at 50% 52%, #c3d2d4 0, #a9bcbf 36%, #4f6266 66%, #0e1619 92%); }
+.sn-pic.fig .sn-face { box-sizing: border-box; padding: 9% 10% 7%; object-fit: contain; object-position: center bottom; mix-blend-mode: multiply; filter: brightness(1.14); }
+
+.sn-n { position: absolute; z-index: 2; left: 50%; top: 63%; padding: 3px 13px 2px; color: var(--sn-ink); font: 700 17px/1 var(--t-display, sans-serif); letter-spacing: 0.06em; background: var(--sn-cyan); clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); transform: translate(-50%, -50%); }
+.sn-cell.todo .sn-n { color: var(--sn-bone); background: #3a454a; }
+.sn-plus { position: absolute; z-index: 2; right: 20%; top: 55%; display: flex; align-items: center; gap: 4px; padding: 3px 7px; color: var(--sn-bone); font: 600 12px/1 var(--t-display, sans-serif); background: rgba(7, 9, 11, 0.82); box-shadow: inset 0 0 0 1px rgba(47, 230, 224, 0.5); pointer-events: none; }
+.sn-plus svg { width: 12px; height: 12px; fill: none; stroke: var(--sn-cyan); stroke-width: 1.5; }
+
+.sn-txt { position: absolute; left: 5%; right: 5%; top: 67%; bottom: 10.5%; text-align: center; }
+.sn-sl { width: 32%; height: 100%; }
+.sn-sl.l { float: left; shape-outside: polygon(0 0, 14% 0, 14% 37%, 100% 100%, 0 100%); }
+.sn-sl.r { float: right; shape-outside: polygon(100% 0, 86% 0, 86% 37%, 0 100%, 100% 100%); }
+/* длинное условие — картинка уступает место тексту */
+.sn-cell.t-xl .sn-pic { height: 55%; }
+.sn-cell.t-xl .sn-n { top: 55%; }
+.sn-cell.t-xl :is(.sn-plus, .sn-scan) { top: 47%; }
+.sn-cell.t-xl .sn-txt { top: 59%; }
+.sn-cell.t-xl .sn-sl.l { shape-outside: polygon(0 0, 14% 0, 14% 52%, 100% 100%, 0 100%); }
+.sn-cell.t-xl .sn-sl.r { shape-outside: polygon(100% 0, 86% 0, 86% 52%, 0 100%, 100% 100%); }
+.sn-cell.t-xxl .sn-pic { height: 49%; }
+.sn-cell.t-xxl .sn-n { top: 49%; }
+.sn-cell.t-xxl :is(.sn-plus, .sn-scan) { top: 41%; }
+.sn-cell.t-xxl .sn-txt { top: 53%; }
+.sn-cell.t-xxl .sn-sl.l { shape-outside: polygon(0 0, 14% 0, 14% 60%, 100% 100%, 0 100%); }
+.sn-cell.t-xxl .sn-sl.r { shape-outside: polygon(100% 0, 86% 0, 86% 60%, 0 100%, 100% 100%); }
+.sn-txt h3 { margin: 0; color: var(--sn-bone); font: 400 clamp(14px, 4.9cqw, 18px)/1.26 var(--t-body, serif); }
+.sn-txt.m h3 { font-size: clamp(13px, 4.5cqw, 16.5px); }
+.sn-txt.l h3 { font-size: clamp(12.5px, 4.1cqw, 15px); line-height: 1.24; }
+.sn-txt.xl h3 { font-size: clamp(12px, 3.75cqw, 14px); line-height: 1.22; }
+.sn-txt.xxl h3 { font-size: clamp(11.5px, 3.45cqw, 13px); line-height: 1.2; }
+.sn-lore { display: inline-block; margin: 7px 5px 0; padding-bottom: 2px; color: var(--sn-cyan); font: 500 12px/1 var(--t-display, sans-serif); letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid rgba(47, 230, 224, 0.4); }
+.sn-lore:hover,
+.sn-lore:focus-visible { color: #fff; border-bottom-color: currentColor; outline: none; }
+.sn-lore:focus-visible { outline: 1.5px solid var(--sn-cyan); outline-offset: 4px; }
+/* «Анализ» — как навык Полудемона: открывает подробности условия */
+.sn-scan { position: absolute; z-index: 2; left: 18%; top: 55%; display: block; padding: 4px 13px 3px; color: var(--sn-ink); font: 600 12px/1 var(--t-display, sans-serif); letter-spacing: 0.16em; text-transform: uppercase; background: var(--sn-cyan); border: 0; clip-path: polygon(7px 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 7px 100%, 0 50%); cursor: pointer; }
+.sn-scan:hover,
+.sn-scan:focus-visible { background: var(--sn-cyan-hi); outline: none; }
+.sn-scan:focus-visible { background: #fff; box-shadow: inset 0 0 0 2px var(--sn-ink); }
+
+/* край ячейки — полоса татуировки: два светящихся контура и тёмная лента между ними. У невыполненных — тусклый
+   пунктир. Толщины — в единицах viewBox (100 = ширина ячейки), без non-scaling-stroke: с ним pathLength путает штрихи */
+.sn-rim { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.sn-rim path { fill: none; stroke-linejoin: miter; }
+.sn-rim .band { fill: transparent; }
+.sn-rim .glow { stroke: transparent; stroke-width: 1.8; }
+.sn-rim .out { stroke: rgba(120, 140, 150, 0.45); stroke-width: 0.42; stroke-dasharray: 0.012 0.008; }
+.sn-rim .in { stroke: transparent; stroke-width: 0.4; }
+.sn-cell.done .sn-rim .band { fill: #061113; opacity: 0; transition: opacity 0.5s ease 0.7s; }
+.sn-cell.done .sn-rim :is(.out, .in) { stroke: var(--sn-cyan); stroke-width: 0.45; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s cubic-bezier(0.3, 0.6, 0.2, 1); }
+.sn-cell.done .sn-rim .in { transition-delay: 0.12s; }
+.sn-cell.done .sn-rim .glow { stroke: rgba(47, 230, 224, 0.22); stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s cubic-bezier(0.3, 0.6, 0.2, 1); }
+.sn-cell.done.lit .sn-rim :is(.out, .in, .glow) { stroke-dashoffset: 0; }
+.sn-cell.done.lit .sn-rim .band { opacity: 0.9; }
+
+/* невыполненное — приглушено */
+.sn-cell.todo .sn-face { filter: grayscale(0.85) brightness(0.65); }
+.sn-cell.todo .sn-pic.fig { background: radial-gradient(ellipse 48% 54% at 50% 52%, #7d8a8c 0, #667375 36%, #2a3437 66%, #0d1316 92%); }
+.sn-cell.todo .sn-pic.fig .sn-face { filter: grayscale(1) brightness(1.05); }
+.sn-cell.todo .sn-txt h3 { color: rgba(228, 236, 238, 0.82); }
+
+.sn-cell:is(:hover, :focus-within) .sn-face { transform: scale(1.04); }
+.sn-cell.todo:is(:hover, :focus-within) .sn-face { filter: grayscale(0.4) brightness(0.85); }
+.sn-cell.todo:is(:hover, :focus-within) .sn-pic.fig .sn-face { filter: grayscale(0.4) brightness(1.1); }
+
+/* ---------- сота-Магатама: налита по доле выполненного ---------- */
+.sn-core .sn-hex { background: radial-gradient(ellipse 62% 52% at 50% 42%, rgba(47, 230, 224, 0.16), rgba(47, 230, 224, 0) 72%), linear-gradient(180deg, #0b1517, #05090a); }
+.sn-core-mg { position: absolute; left: 19%; top: 11%; width: 62%; height: auto; overflow: visible; }
+.sn-core .mg-n { font-size: 36px; }
+.sn-core-l { position: absolute; left: 10%; right: 10%; top: 72%; margin: 0; color: rgba(228, 236, 238, 0.8); font: 500 clamp(11px, 3.6cqw, 14px)/1.2 var(--t-display, sans-serif); letter-spacing: 0.18em; text-align: center; text-transform: uppercase; }
+
+/* ---------- узкий экран: столбец — шестигранный медальон и текст рядом ---------- */
+.sn-comb.list { display: flex; flex-direction: column; gap: 18px; }
+.sn-comb.list .sn-cell { position: relative; pointer-events: auto; display: grid; grid-template-columns: 132px minmax(0, 1fr); min-height: 152px; }
+.sn-comb.list .sn-hex { display: contents; }
+.sn-comb.list .sn-pic { position: relative; grid-row: 1 / span 2; width: 132px; height: 152px; clip-path: polygon(50% 1.4%, 98.6% 25.7%, 98.6% 74.3%, 50% 98.6%, 1.4% 74.3%, 1.4% 25.7%); }
+.sn-comb.list .sn-pic::after { display: none; }
+.sn-comb.list .sn-pic.fig .sn-face { padding: 12% 10% 10%; object-position: center; }
+.sn-comb.list .sn-n { left: 66px; top: 152px; }
+.sn-comb.list .sn-plus { right: auto; left: 78px; top: 32px; }
+.sn-comb.list .sn-sl { display: none; }
+.sn-comb.list .sn-txt { position: static; grid-column: 2; grid-row: 1; padding: 12px 4px 8px 16px; text-align: left; }
+.sn-comb.list .sn-txt h3 { font-size: 15px; line-height: 1.3; }
+.sn-comb.list .sn-scan { position: static; grid-column: 2; grid-row: 2; justify-self: start; align-self: start; margin: 0 0 10px 16px; }
+.sn-comb.list .sn-rim { left: 0; width: 132px; height: 152px; }
+.sn-comb.list .sn-rim .glow { stroke-width: 3.2; }
+.sn-comb.list .sn-rim .out { stroke-width: 1; }
+.sn-comb.list .sn-cell.done .sn-rim :is(.out, .in) { stroke-width: 1.1; }
+.sn-comb.list .sn-core { align-items: center; }
+.sn-comb.list .sn-core .sn-hex { position: relative; display: block; grid-row: 1 / span 2; width: 132px; height: 152px; clip-path: polygon(50% 1.4%, 98.6% 25.7%, 98.6% 74.3%, 50% 98.6%, 1.4% 74.3%, 1.4% 25.7%); }
+.sn-comb.list .sn-core-mg { left: 17%; top: 15%; width: 66%; }
+.sn-comb.list .sn-core-l { position: absolute; left: 148px; right: 0; top: 50%; text-align: left; font-size: 14px; transform: translateY(-50%); }
+
+/* ---------- «Анализ»: окно с подробностями условия ---------- */
+.sn-analyze { width: min(860px, calc(100vw - 24px)); max-width: none; max-height: calc(100vh - 32px); padding: 0; overflow: visible; color: var(--sn-bone); background: transparent; border: 0; }
+.sn-analyze::backdrop { background: rgba(2, 5, 6, 0.8); }
+.sn-an { position: relative; max-height: calc(100vh - 32px); overflow: auto; background: linear-gradient(180deg, rgba(9, 19, 21, 0.98), rgba(4, 8, 9, 0.98)); clip-path: polygon(26px 0, 100% 0, 100% calc(100% - 26px), calc(100% - 26px) 100%, 0 100%, 0 26px); }
+.sn-an::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(135deg, var(--sn-cyan) 0, var(--sn-cyan) 19px, transparent 19.5px) top left / 30px 30px no-repeat, linear-gradient(315deg, var(--sn-cyan) 0, var(--sn-cyan) 19px, transparent 19.5px) bottom right / 30px 30px no-repeat; box-shadow: inset 0 0 0 1.5px rgba(47, 230, 224, 0.6); }
+.sn-an-head { display: flex; align-items: center; gap: 14px; padding: 16px 20px 14px 34px; border-bottom: 1px solid rgba(47, 230, 224, 0.3); }
+.sn-an-n { padding: 4px 14px 3px; color: var(--sn-ink); font: 700 18px/1 var(--t-display, sans-serif); background: var(--sn-cyan); clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%); }
+.sn-an.todo .sn-an-n { color: var(--sn-bone); background: #3a454a; }
+.sn-an-cap { color: var(--sn-cyan); font: 500 15px/1 var(--t-display, sans-serif); letter-spacing: 0.3em; text-transform: uppercase; }
+.sn-an-close { margin-left: auto; width: 36px; height: 36px; color: var(--sn-bone); font: 400 18px/1 sans-serif; background: transparent; border: 1px solid rgba(47, 230, 224, 0.4); cursor: pointer; }
+.sn-an-close:hover,
+.sn-an-close:focus-visible { color: var(--sn-ink); background: var(--sn-cyan); outline: none; }
+.sn-an-body { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 26px; padding: 22px 30px 26px; }
+.sn-an-pic { aspect-ratio: 1 / 1.1547; overflow: hidden; isolation: isolate; background: #0b1012; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%); }
+.sn-an-pic img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 22%; }
+.sn-an-pic.fig { background: radial-gradient(ellipse 48% 54% at 50% 50%, #c3d2d4 0, #a9bcbf 36%, #4f6266 66%, #0e1619 92%); }
+.sn-an-pic.fig img { box-sizing: border-box; padding: 12% 12% 10%; object-fit: contain; mix-blend-mode: multiply; filter: brightness(1.14); }
+.sn-an.todo .sn-an-pic img { filter: grayscale(0.85) brightness(0.8); }
+.sn-an-txt h2 { margin: 4px 0 10px; font: 400 22px/1.3 var(--t-body, serif); }
+.sn-an-state { margin: 0 0 16px; color: var(--sn-cyan); font: 500 13px/1 var(--t-display, sans-serif); letter-spacing: 0.2em; text-transform: uppercase; }
+.sn-an.todo .sn-an-state { color: rgba(228, 236, 238, 0.6); }
+.sn-an-note { margin: 0 0 14px; padding: 2px 0 2px 16px; color: var(--sn-cyan-hi); font: italic 17px/1.45 var(--t-body, serif); border-left: 2px solid var(--sn-cyan); }
+.sn-an-details { margin: 0 0 14px; font-size: 16px; line-height: 1.55; color: rgba(228, 236, 238, 0.88); }
+.sn-an-list h4 { margin: 14px 0 6px; color: var(--sn-cyan); font: 500 13px/1.2 var(--t-display, sans-serif); letter-spacing: 0.16em; text-transform: uppercase; }
+.sn-an-list ul { margin: 0; padding: 0; list-style: none; }
+.sn-an-list li { position: relative; padding: 3px 0 3px 22px; color: rgba(228, 236, 238, 0.7); }
+.sn-an-list li::before { content: ""; position: absolute; left: 2px; top: 0.6em; width: 9px; height: 9px; border: 1.5px solid rgba(130, 150, 158, 0.8); transform: rotate(45deg); }
+.sn-an-list li.on { color: var(--sn-bone); }
+.sn-an-list li.on::before { background: var(--sn-cyan); border-color: var(--sn-cyan); box-shadow: 0 0 6px var(--sn-cyan); }
+.sn-an .sn-lore { margin: 12px 0 0; font-size: 13px; }
+.sn-an-gal { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 30px 26px; }
+.sn-an-gal img { width: 96px; height: 96px; object-fit: cover; object-position: center 20%; background: #a9bcbf; cursor: zoom-in; box-shadow: 0 0 0 1px rgba(47, 230, 224, 0.4); }
+.sn-an-gal img:hover { box-shadow: 0 0 0 2px var(--sn-cyan); }
+
+@media (max-width: 640px) {
+  .sn-an-body { grid-template-columns: 1fr; padding: 18px 18px 22px; }
+  .sn-an-pic { width: min(220px, 70%); margin: 0 auto; }
+  .sn-an-gal { padding: 0 18px 22px; }
+}
+
+/* ---------- внизу: шестигранные кнопки ---------- */
+.sn-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 70px auto 0; }
+.sn-nav a { position: relative; display: inline-flex; align-items: center; min-height: 46px; padding: 0 30px; color: var(--sn-bone); font: 500 16px/1.1 var(--t-display, sans-serif); letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; background: rgba(47, 230, 224, 0.55); clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 14px 100%, 0 50%); transition: background 0.25s ease; }
+.sn-nav a::before { content: ""; position: absolute; inset: 1.5px; background: #0b1013; clip-path: polygon(13.5px 0, calc(100% - 13.5px) 0, 100% 50%, calc(100% - 13.5px) 100%, 13.5px 100%, 0 50%); }
+.sn-nav a span { position: relative; }
+.sn-nav a.home { color: var(--sn-cyan); }
+.sn-nav a:hover,
+.sn-nav a:focus-visible { background: var(--sn-cyan-hi); outline: none; }
+.sn-nav a:hover span,
+.sn-nav a:focus-visible span { color: #fff; }
+
+.sn-empty { margin: 30px auto 0; padding: 20px 28px; text-align: center; background: rgba(7, 9, 11, 0.86); box-shadow: inset 0 0 0 1px rgba(47, 230, 224, 0.5); }
+
+@media (max-width: 600px) {
+  .sn-nav a { padding: 0 22px; font-size: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sn-cell.done .sn-rim :is(.out, .in, .glow, .band) { transition: none; }
+  .sn-lens { display: none; }
+  .sn-face { transition: none; }
+}

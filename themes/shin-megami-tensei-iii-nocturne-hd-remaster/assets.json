@@ -1,0 +1,21 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "splatter",
+      "prompt": "Wild red ink and blood paint splatters and drips, several large splashes with fine spray dots, deep crimson with some darker almost black areas, dynamic like a demonic manga illustration, isolated on a fully transparent background, no text, no figures.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 900
+    },
+    {
+      "name": "void",
+      "prompt": "Very dark abstract background for a website: near-black charcoal with subtle deep teal haze, faint large hexagon cell grid barely visible, a few thin glowing cyan circuit-like tattoo lines fading in the far corners, soft grain, low contrast so text on top stays readable, no text, no figures.",
+      "size": "1536x1024",
+      "background": "opaque",
+      "quality": "medium",
+      "max_width": 1400
+    }
+  ]
+}
