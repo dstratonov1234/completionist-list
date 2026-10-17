@@ -2,7 +2,7 @@
 
     python -P scripts/check-entrances.py <out-dir> [--size 1280x800] [id ...]
 
-Для каждой игры (локальный сервер http://localhost:8765 должен быть запущен):
+Для каждой игры (локальный сервер http://localhost:8765 должен быть запущен; другой порт — --port):
 главная → наведение на баннер → клик → 7 кадров (заставка и страница) → назад к списку →
 проверка, что от заставки и страницы ничего не осталось (слои, классы на <html>), и ошибок консоли.
 Итог — по строке кадров на игру в <out-dir>/entrances-<ширина>.jpg (смотреть через Read).
@@ -33,6 +33,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("out")
     p.add_argument("--size", default="1280x800")
+    p.add_argument("--port", type=int, default=8765, help="порт локального сервера (8765 занят — другой)")
     p.add_argument("ids", nargs="*")
     args = p.parse_intermixed_args()
     w, h = map(int, args.size.split("x"))
@@ -64,7 +65,7 @@ def main():
             {"eval": LEAK},
         ]
         prefix = os.path.join(out, f"{gid}-{w}").replace("\\", "/")
-        url = f"http://localhost:8765/?v={random.randint(0, 10**9)}"
+        url = f"http://localhost:{args.port}/?v={random.randint(0, 10**9)}"
         r = subprocess.run(["node", os.path.join(ROOT, "scripts", "shots.mjs"), url, str(w), str(h), prefix, "no", json.dumps(steps)],
                            capture_output=True, text=True, encoding="utf-8", timeout=240)
         log = [l for l in r.stdout.splitlines() if l.startswith(("eval", "errors", "FAIL"))]

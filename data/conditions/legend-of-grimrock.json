@@ -1,0 +1,69 @@
+{
+  "title": "Legend of Grimrock — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Основной сюжет: финальный бой с Undying One и концовка",
+          "done": true,
+          "date": "2024-12-27",
+          "image": "https://static.wikia.nocookie.net/grimrock/images/6/64/Undying_one_ig.jpg/revision/latest?cb=20120810094406",
+          "link": "https://grimrock.fandom.com/wiki/Undying_One",
+          "details": "Пройдено на сложности Hard."
+        },
+        {
+          "n": 2,
+          "title": "Toorum's Final Resting Place (L10): найти комнату, прочитать две последние записки, применить Remains of Toorum на Crystal of Life",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/grimrock/images/e/e6/Crystal_of_life_ig.jpg/revision/latest?cb=20120414000520",
+          "link": "https://grimrock.fandom.com/wiki/Toorum"
+        },
+        {
+          "n": 3,
+          "title": "Zhandul's Orb (L9, железная дверь на юго-западе)",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/grimrock/images/e/e4/Zhandul%27s_orb_ig.jpg/revision/latest?cb=20120516055351",
+          "link": "https://grimrock.fandom.com/wiki/Zhandul%27s_Orb"
+        },
+        {
+          "n": 4,
+          "title": "Blueberry Pie (L8)",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/grimrock/images/2/2c/Blueberry_pie_ig.jpg/revision/latest?cb=20120509194154",
+          "link": "https://grimrock.fandom.com/wiki/Blueberry_Pie",
+          "gallery": [
+            "https://static.wikia.nocookie.net/grimrock/images/d/dd/Giant_Spider_ig.jpg/revision/latest?cb=20120414080858"
+          ]
+        },
+        {
+          "n": 5,
+          "title": "Vault of the Dismantler: взять меч The Dismantler",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/grimrock/images/b/be/The_Dismantler_ig.png/revision/latest?cb=20130611105350",
+          "link": "https://grimrock.fandom.com/wiki/The_Dismantler"
+        },
+        {
+          "n": 6,
+          "title": "Fighter's Challenge",
+          "done": false,
+          "image": "https://static.wikia.nocookie.net/grimrock/images/5/51/Giant_beetle_ig.jpg/revision/latest?cb=20120422173400",
+          "link": "https://grimrock.fandom.com/wiki/Secrets#Level_6",
+          "gallery": [
+            "https://static.wikia.nocookie.net/grimrock/images/d/d9/Sword_of_nex_ig.jpg/revision/latest?cb=20120427051232",
+            "https://static.wikia.nocookie.net/grimrock/images/5/50/Shield_of_valor_ig.jpg/revision/latest?cb=20120427054221"
+          ]
+        },
+        {
+          "n": 7,
+          "title": "Toorum's Quest II (Steam Workshop, id 114343272)",
+          "done": false,
+          "image": "https://images.steamusercontent.com/ugc/1101393627273647159/F0536EE9791D8E3BF7BD452583B5A0FE26CA4927/",
+          "imageFit": "contain",
+          "link": "https://steamcommunity.com/sharedfiles/filedetails/?id=114343272"
+        }
+      ]
+    }
+  ]
+}

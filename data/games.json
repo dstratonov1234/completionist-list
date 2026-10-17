@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-17",
-  "build": "25409699ea",
+  "build": "a9faf1f23a",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -369,6 +369,47 @@
         "headingSpacing": "0.06em",
         "radius": 0,
         "heroPosition": "center 30%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "legend-of-grimrock",
+      "title": "Legend of Grimrock",
+      "status": "in_progress",
+      "started": "2026-10-17",
+      "aliases": [
+        "LoG",
+        "Grimrock",
+        "Гримрок",
+        "Легенда Гримрока"
+      ],
+      "steamAppId": 207170,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/207170/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/207170/ss_dd4805279a5a6749b52b8c1ca3cf4e1e220f1b65.jpg",
+      "goals": {
+        "done": 1,
+        "total": 7
+      },
+      "theme": {
+        "bg": "#0b0b0c",
+        "surface": "#16171a",
+        "text": "#ece4d0",
+        "accent": "#f2b04a",
+        "accent2": "#4aa3d8",
+        "fonts": [
+          "Cinzel:wght@500;700;900",
+          "Bona Nova SC:wght@400;700",
+          "Bona Nova:ital,wght@0,400;0,700;1,400"
+        ],
+        "displayFont": "Cinzel",
+        "headingFont": "Bona Nova SC",
+        "bodyFont": "Bona Nova",
+        "bodySize": 17,
+        "headingWeight": 700,
+        "headingSpacing": "0.04em",
+        "radius": 0,
+        "heroPosition": "center 40%",
         "css": true,
         "js": true
       }

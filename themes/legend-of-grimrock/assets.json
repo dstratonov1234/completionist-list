@@ -1,0 +1,77 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "wall",
+      "prompt": "Seamless tileable square texture of an ancient dungeon wall built from large rough-hewn grey-blue stone blocks laid in courses, thin dark mortar joints, worn chipped edges, a little green moss in a few joints, flat even frontal lighting with no light falloff and no vignette, realistic hand-painted texture of a classic first-person grid dungeon crawler, no text, no objects, no doors.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "high",
+      "max_width": 1024,
+      "format": "webp"
+    },
+    {
+      "name": "floor",
+      "prompt": "Seamless tileable square texture of a dungeon floor made of large worn square stone flagstones, dark grey-brown with dirt, small cracks and grit in the joints, viewed straight from above, flat even lighting with no vignette, realistic hand-painted game texture of a classic first-person grid dungeon crawler, no text, no objects.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "high",
+      "max_width": 1024,
+      "format": "webp"
+    },
+    {
+      "name": "ceiling",
+      "prompt": "Seamless tileable square texture of a dark dungeon ceiling seen from directly below: heavy rectangular stone slabs framed by thick square stone beams forming a grid, dusty, flat even lighting with no vignette, realistic hand-painted game texture of a classic first-person grid dungeon crawler, no text, no objects.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "high",
+      "max_width": 1024,
+      "format": "webp"
+    },
+    {
+      "name": "sconce",
+      "prompt": "A medieval wrought iron wall torch holder bracket holding a short unlit wooden torch wrapped in charred cloth at the top, straight front view, centered, realistic dark fantasy game art, isolated on a fully transparent background, no flame, no fire, no wall, no text.",
+      "size": "1024x1536",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 420,
+      "format": "webp"
+    },
+    {
+      "name": "flame",
+      "prompt": "A single tall realistic torch fire flame, licking upward, bright orange and yellow with a hot white-yellow core at the base and soft red tips, a few tiny sparks, straight front view, centered, isolated on a fully transparent background, no torch, no smoke, no text.",
+      "size": "1024x1536",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 360,
+      "format": "webp"
+    },
+    {
+      "name": "grate",
+      "prompt": "A heavy old iron portcullis grate made of thick square iron bars in a regular grid with round rivets at every crossing, rusty dark metal, straight front view, the grate fills the whole frame edge to edge, realistic dark fantasy game art, isolated on a fully transparent background between the bars, no wall, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 800,
+      "format": "webp"
+    },
+    {
+      "name": "panel",
+      "prompt": "An empty game user interface panel from a classic dark fantasy dungeon crawler: a dark weathered steel frame with a beveled edge, round iron bolts in the four corners and small rivets along the borders, the inner area is a plain dark slate-grey stone surface, straight front view, the panel fills the whole square image edge to edge, no text, no icons.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "high",
+      "max_width": 768,
+      "format": "webp"
+    },
+    {
+      "name": "parchment",
+      "prompt": "A blank sheet of old yellowed parchment with torn ragged edges, a few stains and faint creases, slightly curled, straight front view, isolated on a fully transparent background, no writing, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 900,
+      "format": "webp"
+    }
+  ]
+}
