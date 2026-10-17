@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-17",
-  "build": "360057f57e",
+  "build": "aff3b63731",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -410,6 +410,49 @@
         "headingSpacing": "0.04em",
         "radius": 0,
         "heroPosition": "center 40%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "tales-of-arise",
+      "title": "Tales of ARISE",
+      "status": "in_progress",
+      "started": "2024-09-05",
+      "aliases": [
+        "Tales of Arise",
+        "ToA",
+        "Арайз",
+        "Тейлз оф Арайз",
+        "Beyond the Dawn"
+      ],
+      "steamAppId": 740130,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/740130/9031a1f4e34e8031118594726762d7979e43f320/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/740130/5232af1e5ace55ba8ff4c3a893b7f1e85c9f9469/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/740130/logo.png",
+      "goals": {
+        "done": 11,
+        "total": 16
+      },
+      "theme": {
+        "bg": "#f3eee4",
+        "surface": "#fbf8f2",
+        "text": "#1d1a17",
+        "accent": "#c8401f",
+        "accent2": "#2c5aa0",
+        "fonts": [
+          "Spectral SC:wght@500;700",
+          "Spectral:ital,wght@0,400;0,600;1,400",
+          "Balsamiq Sans:ital,wght@0,400;0,700;1,400"
+        ],
+        "displayFont": "Spectral SC",
+        "headingFont": "Spectral SC",
+        "bodyFont": "Spectral",
+        "bodySize": 17,
+        "headingWeight": 700,
+        "headingSpacing": "0.03em",
+        "radius": 0,
+        "heroPosition": "right 30%",
         "css": true,
         "js": true
       }

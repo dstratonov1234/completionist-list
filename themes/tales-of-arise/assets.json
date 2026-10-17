@@ -1,0 +1,41 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "paper",
+      "prompt": "Seamless tileable texture of thick warm off-white cold-press watercolor paper, subtle natural fibers and gentle tooth, very faint warm cream tint, perfectly even flat lighting with no shadows, no vignette, no stains, no marks, no text.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "high",
+      "max_width": 1024,
+      "format": "webp"
+    },
+    {
+      "name": "wash",
+      "prompt": "A single soft loose watercolor wash blot painted on paper, irregular organic edges with darker pigment pooling at the rim, granulating texture, warm vermilion fading into golden orange and a little soft magenta, roughly round shape filling most of the frame, isolated on a fully transparent background, no paper, no text, no objects.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 900,
+      "format": "webp"
+    },
+    {
+      "name": "wash-blue",
+      "prompt": "A single soft loose watercolor wash blot, irregular organic edges with darker pigment pooling at the rim, granulating texture, deep ultramarine blue fading into cerulean and a touch of soft teal, roughly round shape filling most of the frame, isolated on a fully transparent background, no paper, no text, no objects.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 900,
+      "format": "webp"
+    },
+    {
+      "name": "hatch",
+      "prompt": "Seamless tileable texture of light graphite pencil hatching on a fully transparent background: loose parallel diagonal strokes going from bottom-left to top-right, varied pressure and length, a few cross-hatch strokes, mid gray graphite, sketchbook feel, evenly distributed over the whole square, no paper, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 700,
+      "format": "webp"
+    }
+  ]
+}

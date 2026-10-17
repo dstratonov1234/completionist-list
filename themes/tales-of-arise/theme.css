@@ -1,0 +1,330 @@
+/* Tales of ARISE — «Сценки».
+   Манга-страница: баннер — полоса из двух панелей, герои выходят за рамку; наведение — тёмная страница с линиями
+   концентрации; заставка — лист прогорает огнём Пылающего меча; страница — сценки-панели: выполненные прорисованы
+   тушью и раскрашены акварелью, невыполненные — карандашные наброски; прогресс — шкала AG из ромбов. */
+
+.gbanner[data-game="tales-of-arise"],
+.stage-layer[data-game="tales-of-arise"],
+.ta-fire,
+.ta-title,
+.ta,
+.ta-sparks {
+  --ta-ink: #1a1714;
+  --ta-paper: #f6f1e7;
+  --ta-pencil: #8e8981;
+  --ta-flame: #e2531f;
+  --ta-ember: #ffb347;
+  --ta-blue: #2c5aa0;
+  --ta-ag: #6fd6ff;
+}
+
+.ta-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- шкала AG: ромбы-кристаллы, как в боевом интерфейсе ---------- */
+.ta-ag { display: inline-flex; align-items: center; gap: 5px; }
+.ta-ag i { position: relative; display: block; width: 11px; height: 11px; transform: rotate(45deg); border: 1.5px solid rgba(170, 225, 255, 0.55); background: rgba(14, 30, 52, 0.75); }
+.ta-ag i.on { border-color: #dff6ff; background: linear-gradient(135deg, #f2fcff 0, #8fe2ff 38%, #2f8fe0 100%); box-shadow: 0 0 6px rgba(111, 214, 255, 0.85), 0 0 1px #fff inset; }
+
+/* ====================================================================================
+   Главная: полоса манга-страницы
+   ==================================================================================== */
+
+.gbanner[data-game="tales-of-arise"] {
+  overflow: visible;
+  margin-top: 26px; /* место над листом: герои выходят за рамку */
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.ta-ban { --O: 34px; --B: 3px; --P: 60%; position: relative; display: block; height: 210px; }
+.ta-ban-sheet { position: absolute; inset: 0; background: url(assets/paper.webp) 0 0 / 420px; box-shadow: 0 12px 26px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.25); }
+
+/* панели: тушь — фон, внутри — бумага той же формы, отступив на толщину линии; между ними — косой просвет */
+.ta-ban-p1,
+.ta-ban-p2 { position: absolute; top: 12px; bottom: 12px; overflow: hidden; background: var(--ta-ink); }
+.ta-ban-p1 { left: 12px; width: var(--P); clip-path: polygon(0 0, 100% 0, calc(100% - var(--O)) 100%, 0 100%); }
+.ta-ban-p2 { left: calc(12px + var(--P) + 12px - var(--O)); right: 12px; clip-path: polygon(var(--O) 0, 100% 0, 100% 100%, 0 100%); }
+.ta-ban-p1::before,
+.ta-ban-p2::before { content: ""; position: absolute; inset: 0; background: url(assets/paper.webp) 0 0 / 420px; }
+.ta-ban-p1::before { clip-path: polygon(var(--B) var(--B), calc(100% - var(--B)) var(--B), calc(100% - var(--O) - var(--B)) calc(100% - var(--B)), var(--B) calc(100% - var(--B))); }
+.ta-ban-p2::before { clip-path: polygon(calc(var(--O) + var(--B)) var(--B), calc(100% - var(--B)) var(--B), calc(100% - var(--B)) calc(100% - var(--B)), calc(var(--B) * 1.4) calc(100% - var(--B))); }
+.ta-ban-p1 > *,
+.ta-ban-p2 > * { position: absolute; }
+
+/* за героями — акварельное пятно и тонкие линии концентрации к лицу Альфена; при выделении сгущаются */
+.ta-ban-wash { left: 14%; top: -30%; width: 62%; aspect-ratio: 1; background: url(assets/wash.webp) center / contain no-repeat; opacity: 0.34; mix-blend-mode: multiply; transform: rotate(-12deg); transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.ta-ban-p1-lines { left: -30%; top: -60%; width: 160%; height: 220%; fill: var(--ta-ink); opacity: 0.1; transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+/* справа — боевой HUD: шкала AG в линиях концентрации */
+.ta-ban-lines { left: -10%; top: -20%; width: 120%; height: 140%; fill: var(--ta-ink); opacity: 0; transform: scale(1.5); transition: opacity 0.25s ease, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.ta-ban-hud { right: 7%; bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 22px 9px; background: linear-gradient(90deg, rgba(10, 18, 32, 0.94), rgba(16, 28, 48, 0.9)); clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%); }
+.ta-ban-hud-label { color: #9fdcff; font: 700 11px/1 var(--t-display, serif); letter-spacing: 0.3em; }
+.ta-ban-hud .ta-ag { flex-wrap: wrap; justify-content: center; max-width: 290px; row-gap: 6px; }
+.ta-ban-count { color: #9fb8d6; font: 600 15px/1 var(--t-display, serif); letter-spacing: 0.06em; white-space: nowrap; }
+.ta-ban-count b { color: #fff; font-size: 24px; }
+.ta-ban-count i { margin: 0 3px; font-style: normal; }
+
+/* герои выходят из левой панели за верх листа; край арта растворяется, а не срезан линией */
+.ta-ban-art { position: absolute; left: 12px; width: var(--P); top: 12px; bottom: 12px; clip-path: polygon(-12px -12px, calc(100% + 12px) -12px, calc(100% - var(--B)) var(--B), calc(100% - var(--O) - var(--B)) calc(100% - var(--B)), var(--B) calc(100% - var(--B))); pointer-events: none; }
+.ta-ban-fig { position: absolute; left: 2%; bottom: -72%; height: 175%; aspect-ratio: 1066 / 620; transform-origin: 40% 100%; transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.25, 1.15); }
+.ta-ban-heroes { display: block; width: 100%; height: 100%; -webkit-mask: linear-gradient(180deg, transparent 0, #000 13%), linear-gradient(270deg, transparent 0, #000 9%); -webkit-mask-composite: source-in; mask: linear-gradient(180deg, transparent 0, #000 13%), linear-gradient(270deg, transparent 0, #000 9%); mask-composite: intersect; }
+/* искры с Пылающего меча */
+.ta-ban-sparks i { position: absolute; left: var(--x); top: var(--y); width: 3px; height: 3px; border-radius: 50%; background: #fff2c4; box-shadow: 0 0 5px 2px rgba(255, 150, 50, 0.85); opacity: 0; }
+
+/* логотип — плашка рассказчика поверх косого просвета */
+.ta-ban-cap { position: absolute; z-index: 2; top: 20px; left: calc(12px + var(--P) - var(--O) / 2); display: block; width: min(300px, 32%); padding: 10px 16px 8px; background: #fffdf8; border: 2.5px solid var(--ta-ink); box-shadow: 5px 5px 0 var(--ta-ink); transform: translateX(-50%) rotate(-2deg); transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.25, 1.3); }
+.ta-ban-cap img { display: block; width: 100%; height: auto; }
+
+/* выделение: в HUD взрываются линии концентрации, герои подаются вперёд, летят искры, AG вспыхивает */
+.gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) { outline: none; box-shadow: none; }
+.gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) .ta-ban-lines { opacity: 1; transform: scale(1); }
+.gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) .ta-ban-fig { transform: translateY(-8px) scale(1.05); }
+.gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) .ta-ban-p1-lines { opacity: 0.5; transform: scale(1.05); }
+.gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) .ta-ban-wash { opacity: 0.52; transform: rotate(-4deg) scale(1.08); }
+.gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) .ta-ban-cap { transform: translateX(-50%) rotate(-4deg) scale(1.04); }
+.gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) .ta-ban-sparks i { animation: ta-spark var(--t) ease-out var(--d) infinite; }
+.gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) .ta-ban-hud .ta-ag i.on { animation: ta-flash 0.5s ease calc(0.15s + var(--i) * 45ms) 1; }
+.gbanner[data-game="tales-of-arise"]:focus-visible .ta-ban-sheet { box-shadow: 0 12px 26px rgba(0, 0, 0, 0.55), 0 0 0 3px var(--ta-ember); }
+
+@keyframes ta-spark {
+  0% { opacity: 0; transform: translate(0, 0) scale(1); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), -70px) scale(0.4); }
+}
+@keyframes ta-flash { 40% { filter: brightness(1.8); transform: rotate(45deg) scale(1.35); } }
+
+@media (max-width: 600px) {
+  .ta-ban { --O: 20px; --P: 58%; height: 178px; }
+  .ta-ban-fig { left: -20%; height: 168%; bottom: -70%; }
+  .ta-ban-cap { top: 12px; left: auto; right: 6px; width: 46%; padding: 6px 9px 5px; box-shadow: 3px 3px 0 var(--ta-ink); transform: rotate(-2deg); }
+  .gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) .ta-ban-cap { transform: rotate(-4deg) scale(1.04); }
+  .ta-ban-cap { width: 44%; top: 10px; }
+  .ta-ban-hud { right: 5%; bottom: 10px; gap: 5px; padding: 7px 12px 6px; }
+  .ta-ban-hud-label { display: none; }
+  .ta-ban-hud .ta-ag { gap: 3px; row-gap: 4px; max-width: 92px; }
+  .ta-ban-hud .ta-ag i { width: 7px; height: 7px; border-width: 1px; }
+  .ta-ban-count { font-size: 12px; }
+  .ta-ban-count b { font-size: 17px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ta-ban-lines,
+  .ta-ban-p1-lines,
+  .ta-ban-fig,
+  .ta-ban-wash,
+  .ta-ban-cap { transition: none; }
+  .gbanner[data-game="tales-of-arise"]:is(:hover, :focus-visible, .picked) :is(.ta-ban-sparks i, .ta-ban-hud .ta-ag i.on) { animation: none; }
+}
+
+/* ====================================================================================
+   Главная: при наведении — тёмная страница манги, линии концентрации к баннеру
+   ==================================================================================== */
+
+.stage-layer[data-game="tales-of-arise"] { background: #0c0a09; }
+.ta-st { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse 70% 60% at var(--bcx, 50%) var(--bcy, 50%), #1c1612, #0c0a09 70%); }
+.ta-st-lines { position: absolute; left: calc(var(--bcx, 50vw) - 2000px); top: calc(var(--bcy, 50vh) - 2000px); width: 4000px; height: 4000px; fill: #f3e9da; opacity: 0; transform: scale(1.35); transition: opacity 0.35s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.ta-st-lines .b { opacity: 0.45; }
+.ta-st-vig { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 55% at var(--bcx, 50%) var(--bcy, 50%), rgba(12, 10, 9, 0) 30%, rgba(12, 10, 9, 0.55) 100%); }
+.ta-st-embers i { position: absolute; left: var(--x); bottom: -10px; width: var(--s); height: var(--s); border-radius: 50%; background: #ffe2a8; box-shadow: 0 0 6px 2px rgba(255, 130, 40, 0.8); opacity: 0; animation: ta-rise var(--t) linear var(--d) infinite; animation-play-state: paused; }
+@keyframes ta-rise {
+  0% { opacity: 0; transform: translate(0, 0); }
+  10% { opacity: 0.9; }
+  70% { opacity: 0.6; }
+  100% { opacity: 0; transform: translate(var(--dx), -105vh); }
+}
+/* линии подрагивают: два набора меняются местами, как в кадре манги */
+@keyframes ta-shimmer { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.55; } }
+@keyframes ta-shimmer-b { 0%, 49% { opacity: 0.45; } 50%, 100% { opacity: 0.9; } }
+
+.stage-layer.on .ta-st-lines { opacity: 0.8; transform: scale(1); }
+.stage-layer.on .ta-st-lines .a { animation: ta-shimmer 0.36s steps(1) 0.6s infinite; }
+.stage-layer.on .ta-st-lines .b { animation: ta-shimmer-b 0.36s steps(1) 0.6s infinite; }
+.stage-layer.on .ta-st-embers i { animation-play-state: running; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ta-st-lines { transition: none; }
+  .stage-layer.on .ta-st-lines :is(.a, .b),
+  .ta-st-embers i { animation: none; }
+}
+
+/* ====================================================================================
+   Заставка: лист прогорает (слои живут и на главной — без html[data-game])
+   ==================================================================================== */
+
+.ta-fire { position: fixed; inset: 0; z-index: 75; pointer-events: none; }
+.ta-fire-cv { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* логотип тлеет в углях */
+.ta-title { position: fixed; inset: 0; z-index: 76; display: grid; place-items: center; pointer-events: none; opacity: 0; transform: scale(1.03); transition: opacity 0.6s ease, transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.ta-title img { display: block; width: min(720px, 76vw); height: auto; filter: drop-shadow(0 0 2px rgba(255, 200, 120, 0.9)) drop-shadow(0 0 14px rgba(255, 110, 30, 0.75)) drop-shadow(0 0 38px rgba(226, 83, 31, 0.55)); }
+.ta-title span { color: #fff1d8; font: 700 clamp(36px, 6vw, 84px)/1 var(--t-display, serif); text-shadow: 0 0 18px rgba(255, 110, 30, 0.8); }
+.ta-title.in { opacity: 1; transform: none; animation: ta-smoulder 2.4s ease-in-out 0.6s infinite alternate; }
+.ta-title.out { opacity: 0; transform: scale(0.99); transition: opacity 0.45s ease, transform 0.6s ease; animation: none; }
+@keyframes ta-smoulder { from { filter: brightness(1); } to { filter: brightness(1.18); } }
+
+/* ====================================================================================
+   Страница: лист манги со сценками
+   ==================================================================================== */
+
+/* курсор — искры Пылающего меча */
+.ta-sparks { position: fixed; inset: 0; z-index: 6; pointer-events: none; }
+.ta-sparks canvas { width: 100%; height: 100%; }
+
+.ta-page { position: relative; min-height: 100vh; overflow-x: clip; padding: 0 clamp(14px, 3.4vw, 54px) 90px; color: var(--ta-ink); font-family: var(--t-body, serif); background: radial-gradient(ellipse 90% 50% at 50% 0, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 70%), url(assets/paper.webp) 0 0 / 520px, var(--ta-paper); }
+
+/* шапка: логотип тушью и шкала AG в интерфейсной плашке игры */
+.ta-head { position: relative; display: flex; flex-direction: column; align-items: center; padding: 54px 0 6px; transition: opacity 0.7s ease; }
+.ta-intro .ta-head { opacity: 0; transition: none; }
+.ta-back { position: absolute; left: 0; top: 18px; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px 8px 14px; color: var(--ta-paper); font: 600 13px/1 var(--t-display, serif); letter-spacing: 0.1em; text-decoration: none; background: var(--ta-ink); clip-path: polygon(0 0, 100% 0, calc(100% - 9px) 100%, 0 100%); transition: background 0.2s ease; }
+.ta-back::before { content: "◂"; font-size: 13px; color: var(--ta-ember); }
+.ta-back:hover,
+.ta-back:focus-visible { background: var(--ta-flame); outline: none; }
+.ta-head-title { margin: 0; }
+.ta-head-title img { display: block; width: min(600px, 84vw); height: auto; }
+.ta-hud { display: flex; align-items: center; gap: 16px; margin-top: 18px; padding: 10px 26px 10px 22px; background: linear-gradient(90deg, rgba(9, 16, 30, 0.95), rgba(18, 32, 56, 0.9)); clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%); box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25); }
+.ta-hud-label { color: #9fdcff; font: 700 13px/1 var(--t-display, serif); letter-spacing: 0.18em; }
+.ta-ag.big { gap: 9px; }
+.ta-ag.big i { width: 15px; height: 15px; }
+/* ромбы заряжаются один за другим, когда открылась страница */
+.ta-hud:not(.charged) .ta-ag i.on { border-color: rgba(170, 225, 255, 0.55); background: rgba(14, 30, 52, 0.75); box-shadow: none; }
+.ta-hud .ta-ag i.on { transition: background 0.35s ease calc(var(--i) * 70ms), box-shadow 0.35s ease calc(var(--i) * 70ms), border-color 0.35s ease calc(var(--i) * 70ms); }
+.ta-hud-count { color: #e9f4ff; font: 600 24px/1 var(--t-display, serif); letter-spacing: 0.04em; white-space: nowrap; }
+.ta-hud-count b { color: #fff; font-size: 30px; }
+.ta-hud-count i { margin: 0 4px; font-style: normal; color: #7fa9d6; }
+.ta-hud-cap { margin: 10px 0 0; color: #5b554e; font: 600 13px/1 var(--t-display, serif); letter-spacing: 0.24em; text-transform: uppercase; }
+
+/* ---------- страница манги: ряды панелей, соседние делит косой просвет ---------- */
+.ta-book { max-width: 1280px; margin: 44px auto 0; }
+.ta-row { display: flex; align-items: stretch; margin-top: 14px; }
+.ta-panel {
+  --O: 46px; /* насколько соседние панели заходят друг на друга — в этой полосе идёт косой просвет */
+  --g: 13px; /* просвет */
+  --B: 3.5px; /* линия туши */
+  --lt: calc(var(--O) * (0.5 + var(--tl)) + var(--g) / 2);
+  --lb: calc(var(--O) * (0.5 - var(--tl)) + var(--g) / 2);
+  --rt: calc(100% - var(--O) * (0.5 - var(--tr)) - var(--g) / 2);
+  --rb: calc(100% - var(--O) * (0.5 + var(--tr)) - var(--g) / 2);
+  position: relative;
+  container-type: inline-size;
+  flex: var(--w) 1 0;
+  min-width: 0;
+  min-height: var(--rh, 380px);
+  margin-left: calc(-1 * var(--O));
+  display: flex;
+}
+.ta-panel.first { --lt: 0px; --lb: 0px; margin-left: 0; }
+.ta-panel.last { --rt: 100%; --rb: 100%; }
+
+.ta-frame { position: absolute; inset: 0; background: var(--ta-pencil); clip-path: polygon(var(--lt) 0, var(--rt) 0, var(--rb) 100%, var(--lb) 100%); transition: background 0.9s ease; }
+.ta-fill { position: absolute; inset: 0; overflow: hidden; isolation: isolate; background: url(assets/paper.webp) 0 0 / 520px, var(--ta-paper); clip-path: polygon(calc(var(--lt) + var(--B)) var(--B), calc(var(--rt) - var(--B)) var(--B), calc(var(--rb) - var(--B)) calc(100% - var(--B)), calc(var(--lb) + var(--B)) calc(100% - var(--B))); }
+.ta-art { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 32%; cursor: zoom-in; mix-blend-mode: multiply; filter: grayscale(1) contrast(1.35) brightness(1.1); transition: filter 1.3s ease, transform 1.3s cubic-bezier(0.2, 0.7, 0.2, 1); }
+/* фигура стоит над подписью, а не за ней; в широкой панели — крупный план по пояс */
+.ta-panel.fig .ta-art { mix-blend-mode: normal; top: 16px; left: 24%; width: calc(76% - 12px); height: calc(100% - 94px); object-fit: contain; object-position: 72% 100%; }
+@container (min-width: 430px) {
+  .ta-panel.fig .ta-art { top: 0; left: 30%; width: 70%; height: 100%; object-fit: cover; object-position: 50% 6%; }
+}
+.ta-wash { position: absolute; right: 2%; top: 4%; width: 78%; aspect-ratio: 1; background: url(assets/wash.webp) center / contain no-repeat; mix-blend-mode: multiply; opacity: 0; transform: rotate(var(--hue)) scale(0.85); transition: opacity 1.3s ease 0.2s, transform 1.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.2s; }
+.ta-wash.blue { background-image: url(assets/wash-blue.webp); }
+/* карандашная штриховка поверх наброска */
+.ta-sketch { position: absolute; inset: 0; background: url(assets/hatch.webp) 0 0 / 360px; mix-blend-mode: multiply; opacity: 0.5; pointer-events: none; transition: opacity 1.1s ease; }
+.ta-panel.scene .ta-art { filter: grayscale(1) contrast(0.78) brightness(1.32); opacity: 0.85; }
+.ta-panel.scene .ta-sketch { opacity: 0.66; }
+
+/* выполненная — прорисована тушью и раскрашена (проявляется, когда попала в кадр) */
+.ta-panel.done.inked .ta-frame { background: var(--ta-ink); }
+.ta-panel.done.inked .ta-art { filter: none; opacity: 1; }
+.ta-panel.done.inked .ta-wash { opacity: 0.42; transform: rotate(var(--hue)) scale(1); }
+.ta-panel.done.inked .ta-sketch { opacity: 0; }
+.ta-panel.todo { --B: 2px; }
+.ta-panel.done.inked:is(:hover, :focus-within) .ta-art { transform: scale(1.03); }
+.ta-panel.todo:is(:hover, :focus-within) .ta-art { filter: grayscale(0.7) contrast(1.25) brightness(1.06); }
+
+/* номер — чёрная плашка в углу панели */
+.ta-num { position: absolute; z-index: 3; left: calc(var(--lt) + var(--B) + 10px); top: calc(var(--B) + 10px); min-width: 34px; padding: 5px 8px 4px; color: var(--ta-paper); font: 700 18px/1 var(--t-display, serif); text-align: center; background: var(--ta-pencil); transition: background 0.9s ease; }
+.ta-panel.done.inked .ta-num { background: var(--ta-ink); box-shadow: 3px 3px 0 var(--ta-flame); }
+
+/* врезки — картинки галереи маленькими панелями поверх угла */
+.ta-insets { position: absolute; z-index: 3; top: calc(var(--B) + 12px); right: calc(100% - var(--rt) + var(--B) + 12px); display: flex; flex-direction: row-reverse; gap: 8px; }
+.ta-inset { display: block; width: clamp(64px, calc((100cqw - 120px) / var(--n, 1) - 8px), 116px); height: auto; aspect-ratio: 5 / 4; padding: 3px; background: var(--ta-ink); transform: rotate(calc((var(--k) - 0.5) * 3deg)); box-shadow: 0 6px 10px rgba(0, 0, 0, 0.25); }
+.ta-inset img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 12%; background: var(--ta-paper); cursor: zoom-in; filter: grayscale(1) contrast(1.2); transition: filter 1.1s ease, transform 0.2s ease; }
+.ta-panel.done.inked .ta-inset img { filter: none; }
+.ta-inset img:hover { transform: scale(1.06); }
+.ta-panel.fig .ta-insets { left: calc(var(--lt) + var(--B) + 10px); right: auto; top: calc(var(--B) + 52px); flex-direction: column; gap: 8px; }
+.ta-panel.fig .ta-inset { width: 76px; }
+
+/* текст: облачко речи (слова игрока) и плашка рассказчика внизу панели */
+.ta-text { position: relative; z-index: 2; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; gap: 10px; width: 100%; padding: 64px calc(var(--O) + var(--B) + 14px) 18px calc(var(--O) + var(--B) + 14px); }
+.ta-panel.first .ta-text { padding-left: calc(var(--B) + 16px); }
+.ta-panel.last .ta-text { padding-right: calc(var(--B) + 16px); }
+.ta-cap { max-width: min(100%, 420px); padding: 11px 15px 12px; background: #fffdf8; border: 2px solid var(--ta-pencil); transition: border-color 0.9s ease, box-shadow 0.9s ease; }
+.ta-panel.done.inked .ta-cap { border: 2.5px solid var(--ta-ink); box-shadow: 4px 4px 0 rgba(26, 23, 20, 0.85); }
+.ta-cap h3 { margin: 0; color: var(--ta-ink); font: 600 17px/1.35 var(--t-body, serif); text-wrap: pretty; }
+.ta-cap.m h3 { font-size: 16px; }
+.ta-cap.l h3 { font-size: 15px; line-height: 1.38; }
+.ta-cap.xl h3 { font-size: 14px; line-height: 1.4; }
+.ta-panel.todo .ta-cap h3 { color: #4b4640; }
+.ta-details { margin: 7px 0 0; color: #3a352f; font-size: 15px; line-height: 1.45; }
+.ta-list b { display: block; margin-top: 8px; font: 700 12px/1 var(--t-display, serif); letter-spacing: 0.12em; }
+.ta-list ul { margin: 5px 0 0; padding: 0; list-style: none; }
+.ta-list li { position: relative; padding: 2px 0 2px 18px; color: #6c665e; font-size: 14px; }
+.ta-list li::before { content: ""; position: absolute; left: 2px; top: 0.62em; width: 7px; height: 7px; transform: rotate(45deg); border: 1.5px solid currentColor; }
+.ta-list li.on { color: var(--ta-ink); }
+.ta-list li.on::before { background: var(--ta-flame); border-color: var(--ta-flame); }
+.ta-lore { display: inline-block; margin-top: 8px; padding-bottom: 1px; color: var(--ta-flame); font: 700 12px/1 var(--t-display, serif); letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; border-bottom: 1.5px solid rgba(226, 83, 31, 0.45); }
+.ta-lore:hover,
+.ta-lore:focus-visible { color: var(--ta-ink); border-bottom-color: currentColor; outline: none; }
+.ta-lore:focus-visible { outline: 2px solid var(--ta-flame); outline-offset: 4px; }
+.ta-bubble { position: relative; max-width: min(100%, 360px); margin: 0 0 6px 16px; padding: 14px 20px; color: var(--ta-ink); font: 400 16px/1.35 "Balsamiq Sans", var(--t-body, sans-serif); background: #fff; border: 2.5px solid var(--ta-ink); border-radius: 50% / 46%; }
+.ta-bubble::after { content: ""; position: absolute; left: 26px; bottom: -17px; width: 22px; height: 18px; background: #fff; border-right: 2.5px solid var(--ta-ink); border-bottom: 2.5px solid var(--ta-ink); clip-path: polygon(0 0, 100% 0, 100% 100%); transform: skewX(-20deg); }
+.ta-narr { margin: 0; padding: 14px 18px; background: #fffdf8; border: 2.5px solid var(--ta-ink); }
+.ta-empty { max-width: 520px; margin: 30px auto 0; text-align: center; }
+
+/* ---------- внизу: таблички-панели ---------- */
+.ta-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 70px auto 0; }
+.ta-nav a { display: inline-flex; align-items: center; min-height: 48px; padding: 0 26px; color: var(--ta-ink); font: 700 14px/1.1 var(--t-display, serif); letter-spacing: 0.08em; text-decoration: none; background: #fffdf8; border: 2.5px solid var(--ta-ink); box-shadow: 4px 4px 0 var(--ta-ink); transform: skewX(-8deg); transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease; }
+.ta-nav a span { transform: skewX(8deg); }
+.ta-nav a.home { color: var(--ta-paper); background: var(--ta-ink); box-shadow: 4px 4px 0 var(--ta-flame); }
+.ta-nav a:hover,
+.ta-nav a:focus-visible { color: var(--ta-paper); background: var(--ta-flame); transform: skewX(-8deg) translate(-2px, -2px); outline: none; }
+
+/* ---------- узкий экран: панели одна под другой, со скошенным верхом и низом ---------- */
+@media (max-width: 760px) {
+  .ta-row { flex-direction: column; margin-top: 0; }
+  .ta-panel,
+  .ta-panel.first,
+  .ta-panel.last { --lt: 0px; --lb: 0px; --rt: 100%; --rb: 100%; flex: none; min-height: 330px; margin: 0 0 12px; }
+  .ta-frame { clip-path: polygon(0 0, 100% 14px, 100% 100%, 0 calc(100% - 14px)); }
+  .ta-fill { clip-path: polygon(var(--B) var(--B), calc(100% - var(--B)) calc(14px + var(--B)), calc(100% - var(--B)) calc(100% - var(--B)), var(--B) calc(100% - 14px - var(--B))); }
+  .ta-text,
+  .ta-panel.first .ta-text,
+  .ta-panel.last .ta-text { padding: 58px 16px 30px; }
+  .ta-insets { top: 28px; }
+  .ta-inset { width: 76px; height: 54px; }
+  .ta-panel.fig .ta-art { top: 30px; left: 26%; width: calc(74% - 12px); height: calc(100% - 126px); }
+  .ta-back { position: static; align-self: flex-start; margin-bottom: 14px; }
+  .ta-head { padding-top: 18px; }
+  .ta-hud { gap: 10px; padding: 8px 18px 8px 16px; }
+  .ta-ag.big { gap: 5px; }
+  .ta-ag.big i { width: 9px; height: 9px; }
+  .ta-hud-count { font-size: 18px; }
+  .ta-hud-count b { font-size: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ta-art,
+  .ta-wash,
+  .ta-sketch,
+  .ta-frame,
+  .ta-cap,
+  .ta-hud .ta-ag i.on { transition: none; }
+  .ta-title.in { animation: none; }
+}
