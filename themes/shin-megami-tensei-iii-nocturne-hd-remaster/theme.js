@@ -65,8 +65,9 @@
     const a = 3 * u * u, b = 6 * u * t, d = 3 * t * t;
     return [a * (c[1][0] - c[0][0]) + b * (c[2][0] - c[1][0]) + d * (c[3][0] - c[2][0]), a * (c[1][1] - c[0][1]) + b * (c[2][1] - c[1][1]) + d * (c[3][1] - c[2][1])];
   };
-  // c — четыре точки кривой от основания к острию, w — ширина у основания
-  function band(c, w, steps = 18) {
+  // c — четыре точки кривой от основания к острию, w — ширина у основания; tin — доля длины, на которой лента
+  // нарастает из острия (0 — тупое основание, его прячут под баннером или Магатамой)
+  function band(c, w, steps = 18, tin = 0) {
     const L = [];
     const R = [];
     for (let s = 0; s <= steps; s++) {
@@ -74,7 +75,8 @@
       const p = bez(c, t);
       const d = bezD(c, t);
       const len = Math.hypot(d[0], d[1]) || 1;
-      const hw = (w / 2) * Math.pow(1 - t, 0.62);
+      const k = tin ? Math.min(1, t / tin) : 1;
+      const hw = (w / 2) * Math.pow(1 - t, 0.62) * k * k * (3 - 2 * k);
       L.push([p[0] - (d[1] / len) * hw, p[1] + (d[0] / len) * hw]);
       R.push([p[0] + (d[1] / len) * hw, p[1] - (d[0] / len) * hw]);
     }
@@ -103,21 +105,24 @@
     return out;
   }
 
-  // полосы заставки: от краёв баннера к краям экрана
-  function coverBands(box, vw, vh) {
+  // полосы заставки — к краям экрана. inside: начинаются острием внутри баннера, вразброс (баннер растворяется,
+  // и тупые начала по его краю сложились бы в тёмную рамку); иначе — острием чуть снаружи рамки (вокруг логотипа)
+  function coverBands(box, vw, vh, inside = true) {
     const out = [];
     const N = 20;
     const reach = Math.max(vw, vh);
     for (let i = 0; i < N; i++) {
       const side = i % 4 === 1 ? 1 : i % 4 === 3 ? 3 : i % 8 < 4 ? 0 : 2; // 0 — вверх, 1 — вправо, 2 — вниз, 3 — влево
       const t = 0.08 + rnd(i, 3) * 0.84;
-      const x = side === 1 ? box.right - 12 : side === 3 ? box.left + 12 : box.left + box.width * t;
-      const y = side === 0 ? box.top + 12 : side === 2 ? box.bottom - 12 : box.top + box.height * t;
+      const u = rnd(i, 7);
+      const depth = inside ? (side % 2 ? box.width * (0.04 + u * 0.24) : box.height * (0.3 + u * 0.45)) : -(6 + u * 36);
+      const x = side === 1 ? box.right - depth : side === 3 ? box.left + depth : box.left + box.width * t;
+      const y = side === 0 ? box.top + depth : side === 2 ? box.bottom - depth : box.top + box.height * t;
       const dir = side === 0 ? [0, -1] : side === 1 ? [1, 0] : side === 2 ? [0, 1] : [-1, 0];
-      const len = 240 + rnd(i, 4) * reach * 0.6;
+      const len = Math.max(0, depth) + 240 + rnd(i, 4) * reach * 0.6;
       const bend = (rnd(i, 5) - 0.5) * len * 0.9;
       const at = (k, b) => [x + dir[0] * len * k - dir[1] * bend * b, y + dir[1] * len * k + dir[0] * bend * b];
-      out.push(band([[x, y], at(0.35, 0.1), at(0.7, 0.85), at(1, 0.6)], 18 + rnd(i, 6) * 20, 22));
+      out.push(band([[x, y], at(0.35, 0.1), at(0.7, 0.85), at(1, 0.6)], 18 + rnd(i, 6) * 20, 26, 0.16));
     }
     return out;
   }
@@ -284,8 +289,8 @@
         const y0 = 170 + rnd(i, 4) * 220;
         const len = 220 + rnd(i, 5) * 300;
         const bend = (rnd(i, 6) - 0.5) * 260;
-        const c = [[-60, y0], [len * 0.35, y0 + bend * 0.12], [len * 0.7, y0 + bend], [len, y0 + bend * 0.7]];
-        return bandSvg(band(c, 12 + rnd(i, 7) * 10), "on", `style="--d:${(0.1 + (i % 7) * 0.08).toFixed(2)}s"`);
+        const c = [[-140, y0], [len * 0.3, y0 + bend * 0.12], [len * 0.7, y0 + bend], [len, y0 + bend * 0.7]];
+        return bandSvg(band(c, 12 + rnd(i, 7) * 10, 22, 0.14), "on", `style="--d:${(0.1 + (i % 7) * 0.08).toFixed(2)}s"`);
       };
       const vines = (side) => Array.from({ length: 7 }, (_, i) => vine(i + (side === "r" ? 7 : 0))).join("");
       s.el.innerHTML = `
@@ -629,10 +634,16 @@
           const box = { left: (vw - lw) / 2, right: (vw + lw) / 2, top: (vh - lh) / 2, bottom: (vh + lh) / 2, width: lw, height: lh };
           veil = ctx.layer("sn-veil in direct");
           veil.innerHTML = `<i class="sn-veil-black"></i>`;
-          veilLines(veil, coverBands(box, vw, vh), vw, vh);
+          veilLines(veil, coverBands(box, vw, vh, false), vw, vh);
           veil.snLines.shown();
-          title = ctx.layer("sn-title in direct");
+          title = ctx.layer("sn-title direct");
           title.innerHTML = titleHtml(game, esc);
+          // логотип — только декодированным целиком, а не недогруженной полосой сверху
+          const ttlIn = title;
+          const logoImg = title.querySelector("img");
+          Promise.race([logoImg?.decode?.() ?? Promise.resolve(), new Promise((res) => setTimeout(res, 700))])
+            .catch(() => {})
+            .then(() => ttlIn.classList.add("in"));
           hold = seenBefore() ? HOLD.repeat : HOLD.direct;
         }
         const v = veil;

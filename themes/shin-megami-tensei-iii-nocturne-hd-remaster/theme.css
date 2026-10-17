@@ -164,7 +164,7 @@
 .sn-title img { display: block; width: min(760px, 80vw); height: auto; filter: drop-shadow(0 0 22px rgba(216, 36, 42, 0.45)) drop-shadow(0 2px 3px #000); }
 .sn-title span { color: var(--sn-red); font: 700 clamp(34px, 6vw, 80px)/1 var(--t-display, sans-serif); letter-spacing: 0.04em; text-align: center; text-transform: uppercase; }
 .sn-title.in { opacity: 1; transform: none; }
-.sn-title.direct { transition: none; }
+.sn-title.direct { transform: none; transition: opacity 0.3s ease; }
 .sn-title.out { opacity: 0; transition: opacity 0.32s ease; }
 
 /* ====================================================================================
