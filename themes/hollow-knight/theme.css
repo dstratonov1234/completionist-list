@@ -80,7 +80,34 @@
   mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent), linear-gradient(0deg, transparent, #000 14px);
   mask-composite: intersect;
 }
-.hk-ban-roots { top: -34px; height: 172px; background: url(assets/roots.webp) 50% 0 / 100% 330px no-repeat; }
+.hk-ban-roots { top: -34px; height: 172px; background: url(assets/roots.webp) 50% 0 / 100% 330px no-repeat; transform-origin: 50% 0; }
+
+/* споры с корней: при наведении медленно сыплются вниз, мерцая, как пыльца в Зеленой тропе */
+.hk-ban-spores { position: absolute; z-index: 2; inset: 0; pointer-events: none; }
+.hk-ban-spores i { position: absolute; left: var(--x); top: var(--y); width: 3px; height: 3px; border-radius: 50%; background: #eef4ff; box-shadow: 0 0 6px 2px rgba(190, 215, 255, 0.55); opacity: 0; animation: hk-spore 3.4s cubic-bezier(0.35, 0, 0.6, 1) var(--d) infinite; animation-play-state: paused; }
+.hk-ban-spores i:nth-child(3n) { width: 4px; height: 4px; }
+
+@keyframes hk-spore {
+  0% { opacity: 0; transform: translate(0, 0); }
+  14% { opacity: 0.95; }
+  55% { opacity: 0.6; transform: translate(var(--s), calc(var(--f) * 0.55)); }
+  70% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate(calc(var(--s) * -0.4), var(--f)); }
+}
+
+/* корни качаются от точки крепления: задело — затухающий мах, потом тихо дышат, пока плашка выделена */
+@keyframes hk-roots-sway {
+  0% { transform: skewX(0) scaleY(1); }
+  16% { transform: skewX(1.7deg) scaleY(1.016); }
+  38% { transform: skewX(-1.15deg) scaleY(1.008); }
+  60% { transform: skewX(0.65deg) scaleY(1.004); }
+  80% { transform: skewX(-0.3deg) scaleY(1.001); }
+  100% { transform: skewX(0) scaleY(1); }
+}
+@keyframes hk-roots-breathe {
+  from { transform: skewX(-0.35deg) scaleY(1); }
+  to { transform: skewX(0.35deg) scaleY(1.006); }
+}
 .hk-ban-ledge { bottom: -8px; height: 74px; background: url(assets/ledge.webp) 50% 100% / 100% 74px no-repeat; }
 
 /* светомухи над сценой */
@@ -113,8 +140,8 @@
 .hk-ban-hud::before { content: ""; position: absolute; z-index: -1; left: -40px; top: -10px; width: 640px; height: 150px; background: radial-gradient(ellipse 50% 50% at 40% 50%, rgba(2, 4, 9, 0.72), transparent 72%); pointer-events: none; }
 
 .gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) { outline: none; box-shadow: none; }
-.gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) .hk-ban-roots { transform: translateY(-46px); transition-duration: 0.9s; }
-.gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) .hk-ban-ledge { transform: translateY(34px); }
+.gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) .hk-ban-roots { animation: hk-roots-sway 2.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) 1, hk-roots-breathe 3.2s ease-in-out 2.6s infinite alternate; }
+.gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) .hk-ban-spores i { animation-play-state: running; }
 .gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) .hk-ban-art img { transform: scale(1.03); }
 .gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) .hk-ban-haze { opacity: 0.55; }
 .gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) .hk-ban-hud .hk-vessel::after { opacity: 1; }
@@ -175,7 +202,7 @@
 @media (prefers-reduced-motion: reduce) {
   .hk-ban-flies i,
   .hk-soul b::before { animation: none; }
-  .gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) :is(.hk-ban-focus i, .hk-ban-focus b, .hk-mask.on, .hk-soul b, .hk-ban-dim) { animation: none; }
+  .gbanner[data-game="hollow-knight"]:is(:hover, :focus-visible, .picked) :is(.hk-ban-focus i, .hk-ban-focus b, .hk-mask.on, .hk-soul b, .hk-ban-dim, .hk-ban-roots, .hk-ban-spores i) { animation: none; }
   .hk-ban-roots,
   .hk-ban-ledge,
   .hk-ban-art img { transition: none; }

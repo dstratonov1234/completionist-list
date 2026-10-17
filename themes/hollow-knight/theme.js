@@ -87,6 +87,8 @@
       const { done, total } = b.progress;
       const logo = b.art.logo('alt=""');
       const flies = Array.from({ length: 6 }, (_, i) => `<i style="--x:${[38, 52, 66, 30, 80, 90][i]}%;--y:${[28, 64, 22, 70, 40, 18][i]}%;--d:${(i * 0.7).toFixed(1)}s"></i>`).join("");
+      // споры, которые сыплются с корней, когда их задевает проходящий Рыцарь
+      const spores = Array.from({ length: 11 }, (_, i) => `<i style="--x:${[12, 21, 33, 44, 57, 63, 71, 78, 86, 27, 92][i]}%;--y:${[14, 22, 10, 26, 18, 30, 12, 24, 16, 34, 20][i]}%;--f:${[96, 120, 84, 132, 104, 90, 140, 110, 98, 124, 88][i]}px;--s:${[-10, 8, -6, 12, -12, 6, -8, 10, -4, 9, -7][i]}px;--d:${(i * 0.29 + (i % 3) * 0.17).toFixed(2)}s"></i>`).join("");
       // «Фокус», как в игре: душа уходит из сосуда и спиралью стягивается к Рыцарю — частицы по кругу вокруг него
       const wisps = Array.from({ length: 18 }, (_, i) => `<i style="--j:${(((i * 37) % 70) - 35).toFixed(0)}px;--k:${(((i * 53) % 60) - 30).toFixed(0)}px;--d:${(i * 0.045).toFixed(3)}s"></i>`).join("");
       b.el.innerHTML = `
@@ -96,6 +98,7 @@
           <span class="hk-ban-dim"></span>
           <span class="hk-ban-flies" aria-hidden="true">${flies}</span>
           <i class="hk-ban-roots" aria-hidden="true"></i>
+          <span class="hk-ban-spores" aria-hidden="true">${spores}</span>
           <i class="hk-ban-ledge" aria-hidden="true"></i>
           <span class="hk-ban-focus" aria-hidden="true">${wisps}<b></b></span>
           <span class="hk-ban-hud" aria-hidden="true">
