@@ -62,10 +62,8 @@
   transition: transform 0.55s cubic-bezier(0.3, 1.35, 0.5, 1);
 }
 
-.lp-ban-rig { position: relative; display: block; transform-origin: 50% -90px; }
-
-/* мягкая тень под плашкой — градиент, без фильтра */
-.lp-ban-rig::before { content: ""; position: absolute; z-index: -1; left: 4%; right: 4%; bottom: -16px; height: 44px; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0, 0, 0, 0.65), transparent 72%); }
+.lp-ban-rig { position: relative; display: block; transform-origin: 50% -90px; filter: drop-shadow(0 14px 14px rgba(0, 0, 0, 0.72)) drop-shadow(0 3px 3px rgba(0, 0, 0, 0.5)); }
+/* тень повторяет силуэт вывески — арку с волютами, лампы, подвесы; вывеска качается — тень с ней */
 
 /* силуэт — арка с волютами и низкими крыльями (маска из того же контура, что и золотой обод) */
 .lp-ban {
@@ -313,9 +311,9 @@
 .lp-gate-logo b { position: absolute; top: 49vh; display: block; opacity: 0; transform: translate(-50%, -50%) scale(0.94); will-change: transform, opacity; }
 .lp-gate-half.l .lp-gate-logo b { left: 50vw; }
 .lp-gate-half.r .lp-gate-logo b { left: 0; }
-/* тёмный ореол за логотипом — градиентом, без фильтра тени */
-.lp-gate-logo b::before { content: ""; position: absolute; z-index: -1; inset: -24% -18%; background: radial-gradient(closest-side, rgba(6, 8, 13, 0.88), rgba(6, 8, 13, 0.6) 55%, rgba(6, 8, 13, 0)); }
-.lp-gate-logo img { display: block; width: auto; height: clamp(170px, 36vh, 330px); }
+/* тёмный ореол за логотипом: плотный — по самим буквам, мягкий — пятном, чтобы отделить от решётки */
+.lp-gate-logo b::before { content: ""; position: absolute; z-index: -1; inset: -24% -18%; background: radial-gradient(closest-side, rgba(6, 8, 13, 0.62), rgba(6, 8, 13, 0.36) 55%, rgba(6, 8, 13, 0)); }
+.lp-gate-logo img { display: block; width: auto; height: clamp(170px, 36vh, 330px); filter: drop-shadow(0 0 22px rgba(6, 8, 13, 0.95)) drop-shadow(0 0 6px rgba(6, 8, 13, 0.9)); }
 .lp-gate-logo span { display: block; color: var(--lp-cream); font: 400 clamp(40px, 7vw, 96px)/1 var(--t-display, serif); white-space: nowrap; }
 
 .lp-gate-fog { position: absolute; left: -10%; right: -10%; bottom: -5%; height: 60%; background: radial-gradient(ellipse 50% 45% at 50% 80%, rgba(160, 185, 215, 0.22), transparent 70%); opacity: 0; will-change: transform, opacity; transition: opacity 0.8s ease 0.2s; animation: lp-fog 9s ease-in-out infinite alternate; }
