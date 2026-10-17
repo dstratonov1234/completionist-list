@@ -334,7 +334,7 @@
     {
       "id": "shin-megami-tensei-iii-nocturne-hd-remaster",
       "title": "Shin Megami Tensei III: Nocturne HD Remaster",
-      "status": "in_progress",
+      "status": "completed",
       "started": "2025-03-22",
       "aliases": [
         "SMT III",
@@ -348,7 +348,7 @@
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1413480/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1413480/logo.png",
       "goals": {
-        "done": 9,
+        "done": 11,
         "total": 11
       },
       "theme": {
@@ -371,7 +371,8 @@
         "heroPosition": "center 30%",
         "css": true,
         "js": true
-      }
+      },
+      "finished": "2026-10-17"
     },
     {
       "id": "legend-of-grimrock",

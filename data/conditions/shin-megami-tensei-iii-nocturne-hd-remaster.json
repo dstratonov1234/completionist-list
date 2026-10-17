@@ -112,10 +112,12 @@
         {
           "n": 11,
           "title": "Hell's Maze (Kalpa 4): найти Afterlife Bell и проводить души Futomimi и Sakahagi",
-          "done": false,
+          "done": true,
+          "date": "2026-10-17",
           "image": "https://static.wikia.nocookie.net/megamitensei/images/1/19/Sakahagi_%28SMTIII_Art%29.png/revision/latest/scale-to-width-down/1100?cb=20240606021113",
           "imageFit": "contain",
           "link": "https://megamitensei.fandom.com/wiki/Labyrinth_of_Amala",
+          "details": "Kalpa 4: Afterlife Bell забран на Zoshigaya Cemetery, обе души проведены в Hell's Maze. Подтверждено по сейву.",
           "gallery": [
             "https://static.wikia.nocookie.net/megamitensei/images/1/16/SMT3Futomimi.png/revision/latest/scale-to-width-down/1100?cb=20201118132550"
           ]
@@ -123,10 +125,12 @@
         {
           "n": 12,
           "title": "Возвращение Black Frost в Kalpa 3, он вступает в отряд",
-          "done": false,
+          "done": true,
+          "date": "2026-10-17",
           "image": "https://static.wikia.nocookie.net/megamitensei/images/d/da/00499_Black_Frost.png/revision/latest/scale-to-width-down/1100?cb=20220822115856",
           "imageFit": "contain",
-          "link": "https://megamitensei.fandom.com/wiki/Black_Frost"
+          "link": "https://megamitensei.fandom.com/wiki/Black_Frost",
+          "details": "Black Frost вернулся в Kalpa 3 и вступил в отряд. Подтверждено по сейву."
         }
       ]
     }
