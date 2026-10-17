@@ -148,18 +148,16 @@
 .lg-world { position: absolute; left: var(--bcx, 50%); top: var(--bcy, 50%); width: 0; height: 0; transform-style: preserve-3d; }
 
 .lg-pl { position: absolute; left: 0; top: 0; display: block; transform-origin: 0 0; backface-visibility: visible; filter: brightness(var(--b, 0.5)); }
-.lg-pl.floor,
-.lg-pl.ceil { width: 1400px; height: 900px; }
-.lg-pl.floor { background: url(assets/floor.webp) center / 700px; }
-.lg-pl.ceil { background: url(assets/ceiling.webp) center / 700px; }
-.lg-pl.wall { width: 900px; height: 1000px; background: url(assets/wall.webp) center / 640px; }
+/* поверхности — сплошные на всю длину коридора (размер и привязка узора задаются в theme.js) */
+.lg-pl.floor { background-image: url(assets/floor.webp); background-size: 700px; }
+.lg-pl.ceil { background-image: url(assets/ceiling.webp); background-size: 700px; }
+.lg-pl.wall { background-image: url(assets/wall.webp); background-size: 640px; }
 .lg-pl.endwall { width: 1400px; height: 1000px; background: url(assets/wall.webp) center / 900px; }
 
-/* свет факелов на камне клетки */
-.lg-pl.lit::after { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity 0.7s ease var(--d, 0s); }
-.lg-pl.wall.lit::after { background: radial-gradient(ellipse 62% 46% at 50% 36%, rgba(255, 170, 80, 0.55), rgba(255, 140, 60, 0.18) 52%, rgba(255, 130, 50, 0) 78%); }
-.lg-pl.floor.lit::after { background: radial-gradient(ellipse 18% 46% at 4% 50%, rgba(255, 160, 70, 0.4), rgba(255, 140, 60, 0) 80%), radial-gradient(ellipse 18% 46% at 96% 50%, rgba(255, 160, 70, 0.4), rgba(255, 140, 60, 0) 80%); }
-.lg-pl.ceil.lit::after { background: radial-gradient(ellipse 18% 46% at 4% 50%, rgba(255, 160, 70, 0.28), rgba(255, 140, 60, 0) 80%), radial-gradient(ellipse 18% 46% at 96% 50%, rgba(255, 160, 70, 0.28), rgba(255, 140, 60, 0) 80%); }
+/* свет факела — мягкое пятно чуть впереди стены и на полу: целиком внутри своей коробки, без обрезанных краёв */
+.lg-glow { position: absolute; left: 0; top: 0; display: block; transform-origin: 0 0; opacity: 0; transition: opacity 0.7s ease var(--d, 0s); pointer-events: none; }
+.lg-glow.wall { width: 640px; height: 560px; background: radial-gradient(closest-side, rgba(255, 172, 84, 0.42), rgba(255, 146, 62, 0.15) 55%, rgba(255, 130, 50, 0)); }
+.lg-glow.floor { width: 420px; height: 760px; background: radial-gradient(closest-side, rgba(255, 162, 72, 0.34), rgba(255, 140, 60, 0.1) 55%, rgba(255, 130, 50, 0)); }
 
 /* факел в коридоре — «плакат», всегда лицом к камере */
 /* коробка факела вмещает и пламя: в 3D-сцене всё, что вылезает за коробку, срезается, а наложение даёт рамку */
@@ -169,6 +167,9 @@
 .lg-hall-torch .lg-torch-glow { display: none; }
 
 .lg-hall-fog { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 70% 70% at var(--bcx, 50%) var(--bcy, 50%), rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.5)); }
+/* темнота вдаль — по экрану вокруг точки схода: чем ближе к ней, тем дальше камень (радиус ∝ 1 / расстояние);
+   глухая стена в конце коридора — на расстоянии, где тьма ещё не сплошная */
+.lg-hall-depth { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(840px 600px at var(--bcx, 50%) var(--bcy, 50%), rgba(3, 3, 4, 0.55) 0, rgba(3, 3, 4, 0.55) 19%, rgba(3, 3, 4, 0.4) 25%, rgba(3, 3, 4, 0.25) 33%, rgba(3, 3, 4, 0.11) 50%, rgba(3, 3, 4, 0) 83%); }
 
 /* пылинки в свете факелов */
 .lg-motes { position: absolute; inset: 0; pointer-events: none; }
@@ -178,7 +179,7 @@
 /* фон при наведении: коридор проступает, факелы загораются от ближних к дальним */
 .stage-layer[data-game="legend-of-grimrock"] .lg-hall-torch .lg-torch-flame,
 .stage-layer[data-game="legend-of-grimrock"] .lg-hall-torch .lg-torch-glow { transition-delay: var(--d); }
-.stage-layer.on .lg-pl.lit::after { opacity: 1; }
+.stage-layer.on .lg-glow { opacity: 1; }
 .stage-layer.on .lg-hall-torch .lg-torch-flame { opacity: 1; transform: translateX(-50%) scale(1); animation: lg-flicker 0.46s ease-in-out var(--d) infinite alternate; }
 .stage-layer.on .lg-hall-torch .lg-torch-glow { opacity: 1; }
 .stage-layer.on .lg-motes i { animation-play-state: running; }
@@ -188,17 +189,18 @@
    ==================================================================================== */
 
 .lg-gate { position: fixed; inset: 0; z-index: 75; overflow: hidden; pointer-events: none; }
+/* свой коридор (вход без наведения) проявляется поверх; обычно идём по коридору с фона главной */
 .lg-gate .lg-hall,
 .lg-gate .lg-hall-fog { opacity: 0; transition: opacity 0.2s ease; }
 .lg-gate.in .lg-hall,
 .lg-gate.in .lg-hall-fog { opacity: 1; }
-.lg-gate .lg-pl.lit::after { opacity: 1; transition: none; }
+.lg-gate .lg-glow { opacity: 1; transition: none; }
 .lg-gate .lg-hall-torch .lg-torch-flame { opacity: 1; transform: translateX(-50%) scale(1); animation: lg-flicker 0.46s ease-in-out infinite alternate; transition: none; }
 .lg-gate .lg-hall-torch .lg-torch-glow { opacity: 1; transition: none; }
 .lg-gate.walled .lg-hall,
 .lg-gate.walled .lg-hall-fog { visibility: hidden; }
 /* название, высеченное на дальней стене коридора: растёт с каждым шагом */
-.lg-endtitle { position: absolute; left: 0; top: 0; display: block; transform-origin: 0 0; }
+.lg-endtitle { position: absolute; left: 0; top: 0; display: block; font-style: normal; transform-origin: 0 0; }
 .lg-endtitle .lg-logo { font-size: var(--fs); }
 .lg-endtitle::before { content: ""; position: absolute; z-index: -1; inset: -30% -12%; background: radial-gradient(closest-side, rgba(6, 6, 7, 0.78), rgba(6, 6, 7, 0.4) 60%, rgba(6, 6, 7, 0)); }
 

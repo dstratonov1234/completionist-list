@@ -23,9 +23,11 @@
   const CH = 1000;
   const T = 900;
   const Z0 = 600;
-  const N = 9;
   const TORCHES = [0, 2, 4, 6]; // клетки с парой факелов; ближняя пара стоит у самого экрана — её видно в полях по бокам списка
   const END_K = 4; // в заставке за этой клеткой — глухая стена
+  // яркость камня: у каждой поверхности одна на всю длину (по клеткам была бы ступенька на каждом стыке);
+  // вдаль коридор темнеет общим туманом поверх кадра
+  const LIT = { floor: 0.85, ceil: 0.7, wall: 0.92, end: 0.56 };
 
   const warmed = new Set();
   function warm(urls) {
@@ -70,43 +72,61 @@
   const torchHtml = (assets, cls = "", style = "") =>
     `<i class="lg-torch ${cls}" style="${style}"><img class="lg-torch-sconce" src="${assets}sconce.webp" alt=""><img class="lg-torch-flame" src="${assets}flame.webp" alt=""><b class="lg-torch-glow"></b></i>`;
 
-  // освещённость плоскости по расстоянию до камеры: ближние светлее, дальние тонут во тьме
-  const lightAt = (zc, cz) => clamp(1.18 - (P - (zc + cz)) / 5200, 0.05, 1);
+  // ---------- коридор: пол, потолок и стены — по одной сплошной плоскости (без швов между клетками);
+  // факелы — «плакаты» лицом к камере, свет факела — мягкое пятно чуть впереди стены и на полу ----------
+  // name — имя, el — элемент с мировой глубиной data-z: заставка гасит то, что подходит вплотную к камере
+  // финал заставки: глухая стена ближе экрана ровно настолько, чтобы закрыть его целиком; название на ней —
+  // того же размера, что на плоской стене, которая сменит её у самого экрана
+  function finale(vw, vh) {
+    const s = Math.max(vw / CW, vh / CH) * 1.08;
+    const delta = clamp(P * (1 - 1 / s), 60, P * 0.82);
+    const sEnd = P / (P - delta);
+    const fs2d = clamp(vw * 0.09, 54, 150);
+    return { delta, sEnd, fs: fs2d / sEnd, y: ((0.47 - 0.5) * vh) / sEnd };
+  }
 
-  // ---------- коридор: клетки из пола, потолка и двух стен; факелы — «плакаты», повёрнутые к камере ----------
-  // глухая стена чуть темнее коридора — тот же камень, что у стены тайной комнаты
-  const END_DIM = 0.7;
-
-  function hallHtml(assets, { end = false, title = null } = {}) {
-    const last = end ? END_K : N;
+  function hallHtml(assets, title) {
+    const cells = END_K;
+    const end = true;
+    const zEnd = Z0 - cells * T;
+    const L = Z0 - zEnd;
+    const zc = (Z0 + zEnd) / 2;
+    const surf = (cls, b, w, h, tf, pos) =>
+      `<i class="lg-pl ${cls}" style="--b:${b};width:${w}px;height:${h}px;background-position:${pos};transform:${tf}"></i>`;
     let html = "";
-    for (let k = 0; k < last; k++) {
-      const zc = Z0 - (k + 0.5) * T;
-      const b = lightAt(zc, 0).toFixed(3);
-      const torch = TORCHES.includes(k);
-      const d = (0.12 + TORCHES.indexOf(k) * 0.22).toFixed(2);
-      const plane = (cls, tf) => `<i class="lg-pl ${cls}${torch ? " lit" : ""}" data-z="${zc}" style="--b:${b};--d:${d}s;transform:${tf}"></i>`;
-      html += plane("floor", `translate3d(0px, ${CH / 2}px, ${zc}px) rotateX(90deg) translate(-50%, -50%)`);
-      html += plane("ceil", `translate3d(0px, ${-CH / 2}px, ${zc}px) rotateX(-90deg) translate(-50%, -50%)`);
-      html += plane("wall l", `translate3d(${-CW / 2}px, 0px, ${zc}px) rotateY(90deg) translate(-50%, -50%)`);
-      html += plane("wall r", `translate3d(${CW / 2}px, 0px, ${zc}px) rotateY(-90deg) translate(-50%, -50%)`);
-      if (torch) {
-        const tz = k === 0 ? 20 : zc;
-        const tb = lightAt(tz, 0).toFixed(3);
-        for (const side of [-1, 1]) {
-          // центр коробки выше держателя на полпламени: держатель — на уровне груди, пламя над ним
-          const tf = `translate3d(${side * (CW / 2 - 60)}px, ${CH * 0.04 + 151}px, ${tz}px) translate(-50%, -50%)`;
-          html += torchHtml(assets, "lg-hall-torch", `--d:${d}s;--b:${tb};transform:${tf}`).replace('class="lg-torch', `data-z="${tz}" class="lg-torch`);
-        }
+    // пол и потолок: ширина — сечение, высота — длина коридора; узор стен и пола привязан к ближнему краю
+    html += surf("floor", LIT.floor, CW, L, `translate3d(0px, ${CH / 2}px, ${zc}px) rotateX(90deg) translate(-50%, -50%)`, "50% 100%");
+    html += surf("ceil", LIT.ceil, CW, L, `translate3d(0px, ${-CH / 2}px, ${zc}px) rotateX(-90deg) translate(-50%, -50%)`, "50% 0");
+    html += surf("wall l", LIT.wall, L, CH, `translate3d(${-CW / 2}px, 0px, ${zc}px) rotateY(90deg) translate(-50%, -50%)`, "0 50%");
+    html += surf("wall r", LIT.wall, L, CH, `translate3d(${CW / 2}px, 0px, ${zc}px) rotateY(-90deg) translate(-50%, -50%)`, "100% 50%");
+    TORCHES.forEach((k, n) => {
+      if (k >= cells) return;
+      const tz = k === 0 ? 20 : Z0 - (k + 0.5) * T;
+      const d = (0.12 + n * 0.22).toFixed(2);
+      for (const side of [-1, 1]) {
+        // свет на стене — над пламенем; на полу — у подножия стены
+        html += `<i class="lg-glow wall" data-z="${tz}" style="--d:${d}s;transform:translate3d(${side * (CW / 2 - 3)}px, ${-CH * 0.12}px, ${tz}px) rotateY(${side * -90}deg) translate(-50%, -50%)"></i>`;
+        html += `<i class="lg-glow floor" data-z="${tz}" style="--d:${d}s;transform:translate3d(${side * (CW / 2 - 150)}px, ${CH / 2 - 3}px, ${tz}px) rotateX(90deg) translate(-50%, -50%)"></i>`;
+        // центр коробки выше держателя на полпламени: держатель — на уровне груди, пламя над ним
+        const tf = `translate3d(${side * (CW / 2 - 60)}px, ${CH * 0.04 + 151}px, ${tz}px) translate(-50%, -50%)`;
+        html += torchHtml(assets, "lg-hall-torch", `--d:${d}s;transform:${tf}`).replace('class="lg-torch', `data-z="${tz}" class="lg-torch`);
       }
-    }
+    });
     if (end) {
-      const ze = Z0 - END_K * T;
-      html += `<i class="lg-pl endwall" data-z="${ze}" data-f="${END_DIM}" style="--b:${(lightAt(ze, 0) * END_DIM).toFixed(3)};transform:translate3d(0px, 0px, ${ze}px) translate(-50%, -50%)"></i>`;
+      html += `<i class="lg-pl endwall" style="--b:${LIT.end};transform:translate3d(0px, 0px, ${zEnd}px) translate(-50%, -50%)"></i>`;
       // название высечено на дальней стене и растёт с каждым шагом; у экрана его сменяет такое же на плоской стене
-      if (title) html += `<i class="lg-endtitle" style="--fs:${title.fs.toFixed(2)}px;transform:translate3d(0px, ${title.y.toFixed(1)}px, ${ze + 3}px) translate(-50%, -50%)">${titleHtml()}</i>`;
+      html += `<i class="lg-endtitle" style="--fs:${title.fs.toFixed(2)}px;transform:translate3d(0px, ${title.y.toFixed(1)}px, ${zEnd + 3}px) translate(-50%, -50%)">${titleHtml()}</i>`;
     }
-    return `<div class="lg-hall"><div class="lg-world">${html}</div></div><i class="lg-hall-fog"></i>`;
+    // туман — внутри коридора, чтобы проявляться и гаснуть вместе с ним
+    return `<div class="lg-hall"><div class="lg-world">${html}</div><i class="lg-hall-depth"></i></div><i class="lg-hall-fog"></i>`;
+  }
+
+  const stageHall = () => document.querySelector(`.stage-layer[data-game="${ID}"] .lg-st`);
+  function resetHall(host) {
+    if (!host) return;
+    host.querySelector(".lg-world")?.style.removeProperty("transform");
+    host.querySelector(".lg-hall-depth")?.style.removeProperty("opacity");
+    for (const el of host.querySelectorAll("[data-z]")) el.style.removeProperty("opacity");
   }
 
   // ---------- стена во весь экран (стык с глухой стеной коридора) и уход стены в пол ----------
@@ -154,10 +174,12 @@
     // ---------- главная: при наведении — коридор к баннеру, факелы загораются ----------
     stage(s) {
       const motes = Array.from({ length: 22 }, (_, i) => `<i style="--x:${(rnd(i, 7) * 100).toFixed(1)}%;--y:${(rnd(i, 8) * 100).toFixed(1)}%;--t:${(7 + rnd(i, 9) * 8).toFixed(1)}s;--d:${(-rnd(i, 10) * 10).toFixed(1)}s"></i>`).join("");
-      s.el.innerHTML = `<div class="lg-st">${hallHtml(s.assets)}<div class="lg-motes" aria-hidden="true">${motes}</div></div>`;
+      s.el.innerHTML = `<div class="lg-st">${hallHtml(s.assets, finale(window.innerWidth, window.innerHeight))}<div class="lg-motes" aria-hidden="true">${motes}</div></div>`;
     },
 
     // ---------- главная: три шага по клеткам к глухой стене ----------
+    // Идём по тому же коридору, что уже стоит за списком при наведении: он уже нарисован, поэтому шаг
+    // начинается сразу (второй такой же коридор браузер растрировал бы ~0,5 с — и экран бы замер).
     cover(t) {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
@@ -165,21 +187,31 @@
       const x0 = r && r.width ? r.left + r.width / 2 : vw / 2;
       const y0 = r && r.width ? r.top + r.height / 2 : vh / 2;
       const layer = t.layer("lg-gate");
-      layer.style.setProperty("--bcx", `${x0}px`);
-      layer.style.setProperty("--bcy", `${y0}px`);
-      // финал: глухая стена ближе экрана ровно настолько, чтобы закрыть его целиком
-      const s = Math.max(vw / CW, vh / CH) * 1.08;
-      const delta = clamp(P * (1 - 1 / s), 60, P * 0.82);
+      const fin = finale(vw, vh);
       const ze = Z0 - END_K * T;
-      const czEnd = delta - ze;
-      const sEnd = P / (P - delta);
-      const fs2d = clamp(vw * 0.09, 54, 150);
-      const title = { fs: fs2d / sEnd, y: ((0.47 - 0.5) * vh) / sEnd };
-      layer.innerHTML = hallHtml(t.assets, { end: true, title }) + wallHtml(T * sEnd);
-      const world = layer.querySelector(".lg-world");
-      const planes = [...layer.querySelectorAll("[data-z]")].map((el) => ({ el, z: Number(el.dataset.z), f: Number(el.dataset.f || 1) }));
-      const wall = layer.querySelector(".lg-wall");
-      wall.style.setProperty("--b", (lightAt(ze, czEnd) * END_DIM).toFixed(3));
+      const czEnd = fin.delta - ze;
+      // коридор с фона главной; если его нет (вход с клавиатуры без наведения) — свой, проявляется поверх
+      // коридор с фона берём, только если он уже на экране (навели мышью); с клавиатуры он ещё только проявляется
+      let host = stageHall();
+      if (!host?.closest(".stage-layer.on")) host = null;
+      if (host) {
+        layer.innerHTML = wallHtml(T * fin.sEnd);
+        const et = host.querySelector(".lg-endtitle");
+        et.style.setProperty("--fs", `${fin.fs.toFixed(2)}px`);
+        et.style.transform = `translate3d(0px, ${fin.y.toFixed(1)}px, ${ze + 3}px) translate(-50%, -50%)`;
+      } else {
+        layer.innerHTML = hallHtml(t.assets, fin) + wallHtml(T * fin.sEnd);
+        layer.classList.add("own");
+        host = layer;
+      }
+      const pivot = host === layer ? layer : host.closest(".stage-layer");
+      pivot.style.setProperty("--bcx", `${x0}px`);
+      pivot.style.setProperty("--bcy", `${y0}px`);
+      const world = host.querySelector(".lg-world");
+      const depth = host.querySelector(".lg-hall-depth");
+      // факелы и пятна света, подходя к камере, растворяются, а не раздуваются на весь экран
+      const near = [...host.querySelectorAll("[data-z]")].map((el) => ({ el, z: Number(el.dataset.z) }));
+      layer.querySelector(".lg-wall").style.setProperty("--b", String(LIT.end));
       t.data.started = performance.now();
       t.data.seen = seenBefore();
       fetch(`data/conditions/${ID}.json`)
@@ -201,10 +233,12 @@
         cz = (czEnd / STEPS) * (i + ease(local));
         bob = Math.sin(Math.PI * local) * 9;
         const v = ease(k);
-        layer.style.setProperty("--bcx", `${(x0 + (vw / 2 - x0) * v).toFixed(1)}px`);
-        layer.style.setProperty("--bcy", `${(y0 + (vh / 2 - y0) * v).toFixed(1)}px`);
+        pivot.style.setProperty("--bcx", `${(x0 + (vw / 2 - x0) * v).toFixed(1)}px`);
+        pivot.style.setProperty("--bcy", `${(y0 + (vh / 2 - y0) * v).toFixed(1)}px`);
         world.style.transform = `translateZ(${cz.toFixed(1)}px) translateY(${bob.toFixed(1)}px)`;
-        for (const p of planes) p.el.style.setProperty("--b", (lightAt(p.z, cz) * p.f).toFixed(3));
+        // туман вдали рассеивается по мере того, как стена приближается
+        depth.style.opacity = (1 - ease(k)).toFixed(3);
+        for (const p of near) p.el.style.opacity = clamp((P - 120 - (p.z + cz)) / 320, 0, 1).toFixed(3);
       };
       return new Promise((resolve) => {
         const finish = () => {
@@ -410,7 +444,7 @@
           const s = Math.max(vw / CW, vh / CH) * 1.08;
           gate = ctx.layer("lg-gate in walled direct");
           gate.innerHTML = wallHtml(T * s);
-          gate.querySelector(".lg-wall").style.setProperty("--b", String(END_DIM));
+          gate.querySelector(".lg-wall").style.setProperty("--b", String(LIT.end));
           hold = seenBefore() ? HOLD.repeat : HOLD.direct;
         }
         const g = gate;
@@ -423,11 +457,13 @@
           g.classList.add("sink");
           later(() => root.classList.remove("lg-intro"), 1050);
           later(() => g.remove(), 1700);
+          later(() => resetHall(stageHall()), 1700);
         };
         later(open, hold);
         ctx.onCleanup(() => {
           g.remove();
           root.classList.remove("lg-intro");
+          resetHall(stageHall());
         });
         for (const type of ["pointerdown", "keydown", "wheel"]) ctx.listen(window, type, open, { passive: true, once: true });
       }
