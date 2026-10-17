@@ -23,6 +23,8 @@
 // только так: SHOTS_HEADFUL=1 (настоящее окно за краем экрана: видеокарта, честный vsync) + SHOTS_PROFILE=<папка>
 // (постоянный профиль: кэш шейдеров переживает запуски, как у пользователя; первый прогон — прогревочный, его не
 // считать). SHOTS_GPU=1 — headless на видеокарте: показ кадров там блокируется на 30–200 мс, для замеров не годится.
+// SHOTS_SCROLLBARS=1 — с настоящими полосами прокрутки (по умолчанию они скрыты, и скачки ширины окна
+// от появления полосы не видны — их проверять только так).
 // По умолчанию — headless с программной отрисовкой: годится для скриншотов, но 3D и фильтры стоят там в разы дороже.
 import { spawn } from "node:child_process";
 import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
@@ -57,7 +59,7 @@ const prof = keepProf ?? mkdtempSync(path.join(tmpdir(), "shots-"));
 const chrome = spawn(chromePath, [
   // SHOTS_GPU=1 — с видеокартой, как в обычном браузере (замеры плавности); по умолчанию — программная отрисовка
   // SHOTS_HEADFUL=1 — настоящее окно (за краем экрана) с видеокартой: честный vsync и показ кадров, без причуд headless
-  ...(process.env.SHOTS_HEADFUL === "1" ? ["--window-position=12000,12000", "--enable-gpu"] : ["--headless=new", ...(process.env.SHOTS_GPU === "1" ? ["--enable-gpu", "--ignore-gpu-blocklist"] : ["--disable-gpu"])]), "--hide-scrollbars", "--no-first-run",
+  ...(process.env.SHOTS_HEADFUL === "1" ? ["--window-position=12000,12000", "--enable-gpu"] : ["--headless=new", ...(process.env.SHOTS_GPU === "1" ? ["--enable-gpu", "--ignore-gpu-blocklist"] : ["--disable-gpu"])]), ...(process.env.SHOTS_SCROLLBARS === "1" ? [] : ["--hide-scrollbars"]), "--no-first-run",
   // Без этого Windows через ~3 с считает окно headless перекрытым и режет кадры до ~30 к/с — замеры врут
   "--disable-features=CalculateNativeWinOcclusion", "--disable-renderer-backgrounding", "--disable-background-timer-throttling", "--disable-backgrounding-occluded-windows",
   `--remote-debugging-port=${port}`,
