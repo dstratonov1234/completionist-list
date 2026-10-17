@@ -6,8 +6,9 @@
 //    невыполненные — тёмные. Выделение — от Магатамы по светящимся полосам бежит ток, Магатама пульсирует;
 //  · при наведении на главную — пробуждение Магатамы: вокруг неё проступает огромный контур Магатамы, от неё
 //    волнами расходятся соты, из краёв баннера в поля прорастают полосы татуировки;
-//  · заставка — метки расползаются: полосы татуировки разбегаются от баннера по экрану, всё тонет в черноте,
-//    проступает логотип; на странице полосы убегают за края экрана, чернота уходит;
+//  · заставка — пробуждение Полудемона: шестигранник баннера раскрывается на весь экран, камера наезжает на его
+//    лицо, арт гаснет — в темноте горят только татуировки и золотые глаза, сверху проступает логотип; на странице
+//    всё растворяется;
 //  · страница — соты: в одной соте Магатама, налитая по числу выполненных условий, в остальных — условия
 //    (картинка, номер, название; текст обтекает скосы). Выполненные обведены полосой татуировки, невыполненные —
 //    серые с пунктиром. Подробности (что сказал, как закрыто, чек-листы) — в окне «Анализ», как навык Analyze;
@@ -17,19 +18,19 @@
 
   const ID = "shin-megami-tensei-iii-nocturne-hd-remaster";
   const CLOSE_MS = 700;
-  const HOLD = { direct: 700, repeat: 260, handoff: 260, first: 880 };
+  const HOLD = { direct: 2300, repeat: 1100, handoff: 1100, first: 2900 };
   // Магатама в квадрате 100×100: круглая голова справа сверху, хвост загибается вниз-влево к острому концу
   const MG = "M28,97 C10,86 4,62 18,38 A34,34 0 1 1 52,72 C42,73 33,82 28,97 Z";
 
-  const warmed = new Set();
+  const warmed = new Map();
   function warm(urls) {
     for (const u of urls) {
       if (!u || warmed.has(u)) continue;
-      warmed.add(u);
       const im = new Image();
       im.decoding = "async";
       im.src = u;
       im.decode?.().catch(() => {});
+      warmed.set(u, im);
     }
   }
 
@@ -105,28 +106,6 @@
     return out;
   }
 
-  // полосы заставки — к краям экрана. inside: начинаются острием внутри баннера, вразброс (баннер растворяется,
-  // и тупые начала по его краю сложились бы в тёмную рамку); иначе — острием чуть снаружи рамки (вокруг логотипа)
-  function coverBands(box, vw, vh, inside = true) {
-    const out = [];
-    const N = 20;
-    const reach = Math.max(vw, vh);
-    for (let i = 0; i < N; i++) {
-      const side = i % 4 === 1 ? 1 : i % 4 === 3 ? 3 : i % 8 < 4 ? 0 : 2; // 0 — вверх, 1 — вправо, 2 — вниз, 3 — влево
-      const t = 0.08 + rnd(i, 3) * 0.84;
-      const u = rnd(i, 7);
-      const depth = inside ? (side % 2 ? box.width * (0.04 + u * 0.24) : box.height * (0.3 + u * 0.45)) : -(6 + u * 36);
-      const x = side === 1 ? box.right - depth : side === 3 ? box.left + depth : box.left + box.width * t;
-      const y = side === 0 ? box.top + depth : side === 2 ? box.bottom - depth : box.top + box.height * t;
-      const dir = side === 0 ? [0, -1] : side === 1 ? [1, 0] : side === 2 ? [0, 1] : [-1, 0];
-      const len = Math.max(0, depth) + 240 + rnd(i, 4) * reach * 0.6;
-      const bend = (rnd(i, 5) - 0.5) * len * 0.9;
-      const at = (k, b) => [x + dir[0] * len * k - dir[1] * bend * b, y + dir[1] * len * k + dir[0] * bend * b];
-      out.push(band([[x, y], at(0.35, 0.1), at(0.7, 0.85), at(1, 0.6)], 18 + rnd(i, 6) * 20, 26, 0.16));
-    }
-    return out;
-  }
-
   // Магатама: тело, налитое бирюзой по доле выполненного, контур со свечением, счёт в голове
   function magatama(done, total) {
     const id = `sn-mg-${++uid}`;
@@ -144,7 +123,36 @@
       ${total ? `<text class="mg-n" x="52" y="50" text-anchor="middle">${done}</text><text class="mg-t" x="58" y="95">/${total}</text>` : ""}`;
   }
 
-  // кривая CSS cubic-bezier — для анимации на canvas в том же темпе, что и CSS
+  // ---------- заставка «Пробуждение»: арт Полудемона и запечённые из него татуировки с глазами ----------
+  // assets/tattoos.webp — только светящиеся линии и глаза из library_hero_2x на прозрачном (bake-tattoos.py рядом).
+  // Всё рисуется на одном canvas из заранее декодированных картинок: два слоя по 3840×1240 в DOM с режимом screen
+  // и анимированной обрезкой ложились на видеокарту тяжело; на canvas за кадр — обрезка и две отрисовки.
+  const ART_W = 3840;
+  const ART_H = 1240;
+  const hero2x = (u) => (u ?? "").replace(/library_hero\.jpg(\?.*)?$/, "library_hero_2x.jpg");
+  // картинки заставки: декодировать заранее (при наведении), в кадре — готовый ImageBitmap
+  const bitmaps = new Map();
+  function prep(url) {
+    if (!url) return Promise.resolve(null);
+    let e = bitmaps.get(url);
+    if (!e) {
+      const im = new Image();
+      im.decoding = "async";
+      im.src = url;
+      e = { bmp: null };
+      e.ready = im
+        .decode()
+        .then(() => (window.createImageBitmap ? createImageBitmap(im) : im))
+        .then((b) => (e.bmp = b))
+        .catch(() => null);
+      bitmaps.set(url, e);
+    }
+    return e.ready;
+  }
+  const bmp = (url) => bitmaps.get(url)?.bmp ?? null;
+  const within = (promises, ms) => Promise.race([Promise.all(promises), new Promise((res) => setTimeout(res, ms))]);
+
+  // кривая CSS cubic-bezier — анимация на canvas в привычном темпе
   function easing(x1, y1, x2, y2) {
     const bx = (t) => 3 * x1 * t * (1 - t) ** 2 + 3 * x2 * t * t * (1 - t) + t ** 3;
     const by = (t) => 3 * y1 * t * (1 - t) ** 2 + 3 * y2 * t * t * (1 - t) + t ** 3;
@@ -162,84 +170,279 @@
       return by(t);
     };
   }
-  const EASE_DRAW = easing(0.4, 0, 0.3, 1);
-  const EASE_RUN = easing(0.5, 0, 0.75, 0.6);
   const EASE = easing(0.25, 0.1, 0.25, 1);
+  const EASE_OPEN = easing(0.7, 0, 0.2, 1);
+  const EASE_PUSH = easing(0.55, 0, 0.15, 1);
+  const EASE_LIT = easing(0.3, 0.1, 0.3, 1);
+  const EASE_RETREAT = easing(0.42, 0, 0.62, 0.7); // гаснет всё быстрее — свет уходит в глаза
+  const EASE_LAST = easing(0.85, 0, 0.9, 0.5); // глаза держатся до последнего
+  const EASE_REVEAL = easing(0.6, 0, 0.25, 1);
+  const EASE_OUT = easing(0.2, 0.7, 0.3, 1);
+  const LINEAR = (k) => k;
 
-  // Полосы заставки — на canvas. Те же ленты с контуром и свечением, но за кадр — одна заливка и два штриха:
-  // сотня путей SVG на весь экран, перерисованных каждый кадр, роняла частоту кадров на треть.
-  // Видимая часть контура — от a до b (доли длины): прорисовка 0→1, убегание за края — a 0→1.
-  function veilLines(veil, bands, vw, vh) {
+  // кадр арта как на баннере: object-fit: cover с его object-position и увеличением при выделении → [масштаб, x, y]
+  function bannerMap(ban) {
+    const box = (ban.querySelector(".sn-ban-in") ?? ban).getBoundingClientRect();
+    const img = ban.querySelector(".sn-ban-art img");
+    const [px, py] = (img ? getComputedStyle(img).objectPosition : "50% 22%").split(" ").map((v) => parseFloat(v) / 100);
+    const zoom = 1.035;
+    const sc = Math.max(box.width / ART_W, box.height / ART_H);
+    const x = box.left + (box.width - ART_W * sc) * (Number.isFinite(px) ? px : 0.5);
+    const y = box.top + (box.height - ART_H * sc) * (Number.isFinite(py) ? py : 0.22);
+    const cx = box.left + box.width / 2;
+    const cy = box.top + box.height / 2;
+    return [sc * zoom, cx + (x - cx) * zoom, cy + (y - cy) * zoom];
+  }
+  // наезд на лицо: глаза чуть ниже середины экрана. На широком экране арт закрывает экран целиком; на узком камера
+  // отъезжает, чтобы вошла фигура с метками на руках (сверху и снизу — тьма, как кадр в кино)
+  function faceMap(vw, vh, k = 1) {
+    if (vw < vh) {
+      const sc = Math.max(vw / (ART_W * 0.42), (vh / ART_H) * 0.6) * k;
+      return [sc, vw * 0.5 - ART_W * sc * 0.487, vh * 0.47 - ART_H * sc * 0.37];
+    }
+    const sc = Math.max(vw / ART_W, vh / ART_H) * 1.32 * k;
+    return [sc, Math.min(0, Math.max(vw - ART_W * sc, vw * 0.5 - ART_W * sc * 0.487)), Math.min(0, Math.max(vh - ART_H * sc, vh * 0.47 - ART_H * sc * 0.37))];
+  }
+  // шестигранник [лево, верх, право, низ, скос]: «весь экран» — с запасом за краями
+  const screenHex = (vw, vh) => [-0.35 * vw, -0.35 * vh, 1.35 * vw, 1.35 * vh, 0.3 * vw];
+
+  // глаза Полудемона на арте (доли ширины и высоты)
+  const EYES = [
+    [0.453, 0.39],
+    [0.521, 0.345],
+  ];
+  // тень по арту — те же доли, что у .sn-ban-shade на баннере: стык с плашкой незаметен, засветы приглушены
+  const ART_SHADE = [[0, 0.86], [0.22, 0.62], [0.37, 0.12], [0.46, 0], [0.58, 0], [0.7, 0.6], [0.78, 0.8], [1, 0.92]];
+  const ART_SHADE_DEEP = [[0, 0.94], [0.22, 0.86], [0.37, 0.42], [0.45, 0.06], [0.57, 0.04], [0.65, 0.5], [0.72, 0.84], [1, 0.96]];
+
+  // Сцена на canvas внутри слоя. Свойства (layer.snWake.go(свойство, к чему, мс, кривая, задержка), set — сразу):
+  // clip — шестигранник плашки, map — кадр арта, dark — темнота, ink — свет татуировок, lit — докуда от лица
+  // разгорелись татуировки (0…1, волна со вспышкой на фронте), flare — вспышка глаз, hole — [x, y, радиус]
+  // шестигранного окна во тьме, через которое открывается страница. Цикл rAF живёт, пока жив слой.
+  function wakeScene(layer, vw, vh, init, sources) {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const cv = document.createElement("canvas");
-    cv.className = "sn-veil-lines";
+    cv.className = "sn-wake-cv";
     cv.setAttribute("aria-hidden", "true");
     cv.width = Math.round(vw * dpr);
     cv.height = Math.round(vh * dpr);
-    veil.append(cv);
+    layer.append(cv);
     const g = cv.getContext("2d");
-    const fill = new Path2D(bands.map((b) => b.fill).join(""));
-    const edges = bands.flatMap((b) => [b.L, b.R]).map((pts) => {
-      const len = [0];
-      for (let i = 1; i < pts.length; i++) len.push(len[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
-      return { pts, len, total: len[len.length - 1] || 1 };
-    });
-    const part = (path, { pts, len, total }, a, b) => {
-      const from = a * total;
-      const to = b * total;
-      let started = false;
-      for (let i = 1; i < pts.length; i++) {
-        if (len[i] < from) continue;
-        if (len[i - 1] > to) break;
-        const seg = len[i] - len[i - 1] || 1;
-        const u0 = Math.max(0, (from - len[i - 1]) / seg);
-        const u1 = Math.min(1, (to - len[i - 1]) / seg);
-        const [x0, y0] = pts[i - 1];
-        const dx = pts[i][0] - x0;
-        const dy = pts[i][1] - y0;
-        if (!started) path.moveTo(x0 + dx * u0, y0 + dy * u0);
-        started = true;
-        path.lineTo(x0 + dx * u1, y0 + dy * u1);
-      }
+    g.imageSmoothingQuality = "high";
+    // буфер для татуировок, проявленных волной, и для глаз
+    const buf = document.createElement("canvas");
+    buf.width = cv.width;
+    buf.height = cv.height;
+    const bg = buf.getContext("2d");
+    bg.imageSmoothingQuality = "high";
+    // виньетка: углы кадра темнее, взгляд — на лицо
+    const vign = g.createRadialGradient(vw / 2, vh * 0.46, Math.min(vw, vh) * 0.28, vw / 2, vh * 0.46, Math.hypot(vw, vh) * 0.62);
+    vign.addColorStop(0, "rgba(2, 6, 7, 0)");
+    vign.addColorStop(1, "rgba(2, 6, 7, 0.72)");
+    const fixed = (v) => ({ from: v, to: v, t0: 0, dur: 0, ease: LINEAR });
+    const tw = {
+      clip: fixed(init.clip),
+      map: fixed(init.map),
+      dark: fixed(init.dark),
+      ink: fixed(init.ink),
+      lit: fixed(init.lit ?? 0),
+      flare: fixed(init.flare ?? 0),
+      deep: fixed(init.deep ?? 0),
+      hole: fixed([0, 0, 0]),
     };
-    const draw = (a, b, body) => {
+    const at = (t, n) => {
+      const k = t.dur ? t.ease(Math.min(1, Math.max(0, (n - t.t0) / t.dur))) : 1;
+      return Array.isArray(t.from) ? t.from.map((v, i) => v + (t.to[i] - v) * k) : t.from + (t.to - t.from) * k;
+    };
+    const hexAt = (cx, cy, r) => {
+      g.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = -Math.PI / 2 + (i * Math.PI) / 3;
+        if (i) g.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+        else g.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+      }
+      g.closePath();
+    };
+    let holeCell = 1; // радиус окна, равного соте-Магатаме
+    let litDir = 1; // 1 — разгорается, −1 — гаснет
+    let holeTo = 1;
+    const paint = (n) => {
+      const [l, t, r, b, c] = at(tw.clip, n);
+      const [sc, x, y] = at(tw.map, n);
+      const dark = at(tw.dark, n);
+      const glow = at(tw.ink, n);
+      const lit = at(tw.lit, n);
+      const flare = at(tw.flare, n);
+      const deep = at(tw.deep, n);
+      const [hx, hy, hr] = at(tw.hole, n);
+      const w = ART_W * sc;
+      const h = ART_H * sc;
+      const { art, ink } = sources();
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
       g.clearRect(0, 0, vw, vh);
-      if (body > 0.002) {
-        g.globalAlpha = body;
-        g.fillStyle = "rgba(8, 34, 36, 0.92)";
-        g.fill(fill);
+      g.save();
+      g.beginPath();
+      g.moveTo(l + c, t);
+      g.lineTo(r - c, t);
+      g.lineTo(r, (t + b) / 2);
+      g.lineTo(r - c, b);
+      g.lineTo(l + c, b);
+      g.lineTo(l, (t + b) / 2);
+      g.closePath();
+      g.clip();
+      g.fillStyle = "#020506";
+      g.fillRect(0, 0, vw, vh);
+      if (art) {
+        // уходя в темноту, арт тускнеет и обесцвечивается: во тьме не светятся брызги, только татуировки
+        if (dark > 0.002) g.filter = `brightness(${(1 - 0.25 * dark).toFixed(3)}) saturate(${(1 - 0.82 * dark).toFixed(3)})`;
+        g.drawImage(art, x, y, w, h);
+        g.filter = "none";
+      }
+      const artShade = g.createLinearGradient(x, 0, x + w, 0);
+      ART_SHADE.forEach(([o, a], i) => {
+        const [o2, a2] = ART_SHADE_DEEP[i];
+        artShade.addColorStop(o + (o2 - o) * deep, `rgba(3, 9, 11, ${(a + (a2 - a) * deep).toFixed(3)})`);
+      });
+      g.fillStyle = artShade;
+      g.fillRect(0, 0, vw, vh);
+      g.fillStyle = vign;
+      g.fillRect(0, 0, vw, vh);
+      if (dark > 0.002) {
+        // овал у лица пропускает ~20%: проступают лицо и волосы; дальше — сплошная чернота
+        const fx = x + w * 0.487;
+        const fy = y + h * 0.42;
+        const face = g.createRadialGradient(fx, fy, 0, fx, fy, w * 0.2);
+        face.addColorStop(0, "rgba(2, 5, 6, 0.8)");
+        face.addColorStop(0.3, "rgba(2, 5, 6, 0.86)");
+        face.addColorStop(0.6, "rgba(2, 5, 6, 0.97)");
+        face.addColorStop(1, "#020405");
+        g.globalAlpha = dark;
+        g.fillStyle = face;
+        g.fillRect(0, 0, vw, vh);
         g.globalAlpha = 1;
       }
-      if (b - a < 0.001) return;
-      const path = new Path2D();
-      for (const e of edges) part(path, e, a, b);
-      g.lineCap = "round";
-      g.lineJoin = "round";
-      g.strokeStyle = "rgba(47, 230, 224, 0.26)";
-      g.lineWidth = 8;
-      g.stroke(path);
-      g.strokeStyle = "#2fe6e0";
-      g.lineWidth = 2;
-      g.stroke(path);
+      if (ink && glow > 0.002 && lit > 0.002) {
+        const cx = x + w * 0.487;
+        const cy = y + h * 0.4;
+        // радиус волны — по самим меткам (тело на арте), а не до углов экрана: волна идёт по линиям ровно, без пустых долей;
+        // при lit = 1 сплошная часть маски (0…0.7 радиуса) как раз накрывает дальние метки
+        const ex = Math.max(Math.abs(x + w * 0.33 - cx), Math.abs(x + w * 0.67 - cx));
+        const ey = Math.max(Math.abs(y + h * 0.1 - cy), Math.abs(y + h * 0.98 - cy));
+        const reach = Math.max(1, (lit * Math.hypot(ex, ey)) / 0.68);
+        const full = lit >= 0.999;
+        // татуировки в буфере, проявленные радиальной волной от лица (stops — [доля радиуса, непрозрачность])
+        const waved = (stops) => {
+          bg.setTransform(dpr, 0, 0, dpr, 0, 0);
+          bg.globalCompositeOperation = "source-over";
+          bg.clearRect(0, 0, vw, vh);
+          bg.drawImage(ink, x, y, w, h);
+          bg.globalCompositeOperation = "destination-in";
+          const gr = bg.createRadialGradient(cx, cy, 0, cx, cy, reach);
+          for (const [o, a] of stops) gr.addColorStop(o, `rgba(0, 0, 0, ${a})`);
+          bg.fillStyle = gr;
+          bg.fillRect(0, 0, vw, vh);
+          return buf;
+        };
+        const lines = full ? null : waved(litDir < 0 ? [[0, 1], [0.42, 1], [1, 0]] : [[0, 1], [0.7, 1], [1, 0]]);
+        const put = () => (full ? g.drawImage(ink, x, y, w, h) : g.drawImage(lines, 0, 0, vw, vh));
+        g.globalCompositeOperation = "screen";
+        // широкий ореол — светящийся воздух вокруг меток
+        g.globalAlpha = glow * 0.8;
+        g.filter = `blur(${Math.max(22, Math.round(w / 60))}px)`;
+        put();
+        // ближнее свечение и сами линии
+        g.globalAlpha = glow * 0.75;
+        g.filter = `blur(${Math.max(4, Math.round(w / 420))}px)`;
+        put();
+        g.filter = "none";
+        g.globalAlpha = glow;
+        put();
+        // фронт волны — линии вспыхивают почти добела, пока по ним проходит свет
+        if (!full) {
+          g.globalCompositeOperation = "lighter";
+          g.globalAlpha = glow * 0.9;
+          g.globalAlpha = glow * (litDir < 0 ? 0.5 : 0.9);
+          g.drawImage(waved(litDir < 0 ? [[0, 0], [0.38, 0], [0.7, 1], [1, 0]] : [[0, 0], [0.62, 0], [0.84, 1], [1, 0]]), 0, 0, vw, vh);
+        }
+        g.globalCompositeOperation = "source-over";
+        g.globalAlpha = 1;
+      }
+      // глаза — самая горячая точка: тот же слой в мягких пятнах вокруг глаз, режим lighter
+      if (ink && flare > 0.002) {
+        const rr = w * 0.024;
+        bg.setTransform(dpr, 0, 0, dpr, 0, 0);
+        bg.globalCompositeOperation = "source-over";
+        bg.clearRect(0, 0, vw, vh);
+        for (const [ex, ey] of EYES) {
+          const px = x + w * ex;
+          const py = y + h * ey;
+          const sp = bg.createRadialGradient(px, py, 0, px, py, rr);
+          sp.addColorStop(0, "rgba(0, 0, 0, 1)");
+          sp.addColorStop(0.55, "rgba(0, 0, 0, 0.85)");
+          sp.addColorStop(1, "rgba(0, 0, 0, 0)");
+          bg.fillStyle = sp;
+          bg.fillRect(px - rr, py - rr, rr * 2, rr * 2);
+        }
+        bg.globalCompositeOperation = "source-in";
+        bg.drawImage(ink, x, y, w, h);
+        g.globalCompositeOperation = "lighter";
+        g.globalAlpha = Math.min(1, flare);
+        g.filter = `blur(${Math.max(6, Math.round(w / 300))}px)`;
+        g.drawImage(buf, 0, 0, vw, vh);
+        g.filter = "none";
+        g.globalAlpha = Math.min(1, flare) * 0.85;
+        g.drawImage(buf, 0, 0, vw, vh);
+        g.globalCompositeOperation = "source-over";
+        g.globalAlpha = 1;
+      }
+      // окно во тьме — шестигранник, растущий из соты-Магатамы; по его краю бежит свет
+      if (hr > 0.5) {
+        g.globalCompositeOperation = "destination-out";
+        hexAt(hx, hy, hr);
+        g.fill();
+        g.globalCompositeOperation = "source-over";
+        // край разгорается, пока окно растёт до соты, и гаснет, пока окно раскрывает страницу
+        const fade = hr <= holeCell + 0.5 ? hr / Math.max(1, holeCell) : Math.max(0, 1 - (hr - holeCell) / Math.max(1, holeTo - holeCell));
+        if (fade > 0.01) {
+          hexAt(hx, hy, hr);
+          g.lineJoin = "round";
+          g.strokeStyle = `rgba(184, 255, 251, ${(0.95 * fade).toFixed(3)})`;
+          g.lineWidth = 2.5;
+          g.shadowColor = "rgba(47, 230, 224, 0.95)";
+          g.shadowBlur = 26;
+          g.stroke();
+          g.shadowBlur = 0;
+        }
+      }
+      g.restore();
     };
-    const st = { mode: "", t0: 0, raf: 0 };
-    const frame = (now) => {
-      st.raf = 0;
-      if (!veil.isConnected) return;
-      const t = now - st.t0;
-      if (st.mode === "in") draw(0, EASE_DRAW(t / 660), EASE(Math.max(0, t - 250) / 400));
-      else draw(EASE_RUN(t / 750), 1, 1 - EASE(t / 300));
-      if (t < 800) st.raf = requestAnimationFrame(frame);
+    let raf = 0;
+    const frame = () => {
+      raf = 0;
+      if (!layer.isConnected) return;
+      const n = performance.now();
+      paint(n);
+      if (Object.values(tw).some((t) => n < t.t0 + t.dur)) raf = requestAnimationFrame(frame);
     };
-    const run = (mode) => {
-      st.mode = mode;
-      st.t0 = performance.now();
-      if (!st.raf) st.raf = requestAnimationFrame(frame);
+    layer.snWake = {
+      go(prop, to, dur, ease = EASE, delay = 0) {
+        const n = performance.now();
+        tw[prop] = { from: at(tw[prop], n), to, t0: n + delay, dur, ease };
+        if (prop === "lit") litDir = to < tw.lit.from ? -1 : 1;
+        if (prop === "hole") {
+          if (tw.hole.from[2] < 1) holeCell = to[2];
+          holeTo = to[2];
+        }
+        if (!raf) raf = requestAnimationFrame(frame);
+      },
+      set(prop, v) {
+        tw[prop] = fixed(v);
+      },
+      repaint: () => paint(performance.now()),
     };
-    // drawIn — прорисовать, shown — сразу целиком (прямой заход), runOff — убежать за края
-    veil.snLines = { drawIn: () => run("in"), shown: () => draw(0, 1, 1), runOff: () => run("out") };
+    paint(performance.now());
   }
+
   const titleHtml = (game, esc) => (game.logo ? `<img src="${esc(game.logo)}" alt="">` : `<span>${esc(game.title)}</span>`);
 
   // шестиугольник ячейки (viewBox 100×115.47), сжатый к центру: s = 1 — по краю
@@ -293,6 +496,8 @@
         return bandSvg(band(c, 12 + rnd(i, 7) * 10, 22, 0.14), "on", `style="--d:${(0.1 + (i % 7) * 0.08).toFixed(2)}s"`);
       };
       const vines = (side) => Array.from({ length: 7 }, (_, i) => vine(i + (side === "r" ? 7 : 0))).join("");
+      prep(hero2x(s.game.hero));
+      prep(`${s.assets}tattoos.webp`);
       s.el.innerHTML = `
         <div class="sn-st">
           <i class="sn-st-hex"></i>
@@ -303,32 +508,51 @@
         </div>`;
     },
 
-    // ---------- главная: метки расползаются по экрану ----------
+    // ---------- главная: пробуждение — шестигранник баннера раскрывается, камера наезжает на лицо ----------
     cover(t) {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const r = document.querySelector(`.gbanner.picked[data-game="${ID}"]`)?.getBoundingClientRect();
-      const box = r && r.width ? r : { left: vw * 0.2, right: vw * 0.8, top: vh * 0.42, bottom: vh * 0.58, width: vw * 0.6, height: vh * 0.16 };
-      const veil = t.layer("sn-veil");
-      veil.innerHTML = `<i class="sn-veil-black"></i>`;
-      veilLines(veil, coverBands(box, vw, vh), vw, vh);
+      const ban = document.querySelector(`.gbanner.picked[data-game="${ID}"] .sn-ban`);
+      const r = ban?.getBoundingClientRect();
+      const fallback = ban?.querySelector(".sn-ban-art img"); // обычный арт — уже показан на баннере
+      const big = hero2x(t.game.hero);
+      const inkUrl = `${t.assets}tattoos.webp`;
+      const wake = t.layer("sn-wake");
+      const cut = (ban && parseFloat(getComputedStyle(ban).getPropertyValue("--cut"))) || 36;
+      // начало — точно поверх баннера: та же форма и тот же кадр арта
+      wakeScene(
+        wake,
+        vw,
+        vh,
+        {
+          clip: r && r.width ? [r.left, r.top, r.right, r.bottom, cut] : [vw * 0.15, vh * 0.4, vw * 0.85, vh * 0.6, cut],
+          map: r && r.width ? bannerMap(ban) : faceMap(vw, vh, 0.85),
+          dark: 0,
+          ink: 0,
+        },
+        () => ({ art: bmp(big) ?? (fallback?.complete ? fallback : null), ink: bmp(inkUrl) }),
+      );
+      void wake.offsetWidth;
+      wake.classList.add("in");
       const title = t.layer("sn-title");
       title.innerHTML = titleHtml(t.game, t.esc);
-      warm([t.assets + "void.webp"]);
       fetch(`data/conditions/${ID}.json`)
         .then((res) => (res.ok ? res.json() : null))
         .then((c) => warm((c?.groups ?? []).flatMap((gr) => gr.goals ?? []).slice(0, 6).map((g) => thumb(g.image))))
         .catch(() => {});
       t.data.started = performance.now();
       t.data.seen = seenBefore();
-      const imgs = [...title.querySelectorAll("img")];
-      const ready = Promise.race([Promise.all(imgs.map((im) => im.decode?.().catch(() => {}))), new Promise((res) => setTimeout(res, 120))]);
+      const imgs = [...title.querySelectorAll("img")].map((im) => im.decode?.().catch(() => {}));
       return new Promise((resolve) => {
-        ready.then(() => {
-          void veil.offsetWidth; // чернота начинает с нуля — до смены класса
-          veil.classList.add("in");
-          veil.snLines.drawIn();
-          setTimeout(() => title.classList.add("in"), 360);
+        within([prep(big), prep(inkUrl), ...imgs], 160).then(() => {
+          const s = wake.snWake;
+          s.repaint();
+          s.go("clip", screenHex(vw, vh), 720, EASE_OPEN);
+          s.go("map", faceMap(vw, vh), 1000, EASE_PUSH);
+          s.go("deep", 1, 900, EASE);
+          s.go("flare", 1, 320, EASE, 140);
+          s.go("ink", 0.7, 500, EASE, 250);
+          s.go("lit", 0.42, 950, EASE_LIT, 260);
           setTimeout(resolve, CLOSE_MS + 40);
         });
         setTimeout(resolve, CLOSE_MS + 600);
@@ -608,63 +832,109 @@
         ctx.onCleanup(() => dlg.open && dlg.close());
       }
 
-      // ---------- вход: логотип гаснет, полосы убегают за края, чернота уходит ----------
+      // ---------- вход: арт гаснет, в темноте горят татуировки и глаза, логотип; потом всё растворяется ----------
       function intro() {
-        const handedVeil = ctx.handoff?.layers.find((l) => l.classList.contains("sn-veil"));
+        const handed = ctx.handoff?.layers.find((l) => l.classList.contains("sn-wake"));
         const handedTitle = ctx.handoff?.layers.find((l) => l.classList.contains("sn-title"));
         if (!motion) {
-          handedVeil?.remove();
+          handed?.remove();
           handedTitle?.remove();
           return;
         }
-        let veil = handedVeil;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        let wake = handed;
         let title = handedTitle;
         let hold;
-        if (veil && title) {
+        let ready;
+        if (wake?.snWake && title) {
           const since = performance.now() - (ctx.handoff.data.started ?? 0);
           hold = Math.max(HOLD.handoff, (ctx.handoff.data.seen ? 0 : HOLD.first) - since);
+          ready = Promise.resolve();
         } else {
-          veil?.remove();
+          // прямой заход: экран уже тёмный, татуировки разгораются из темноты
+          wake?.remove();
           title?.remove();
-          const vw = window.innerWidth;
-          const vh = window.innerHeight;
-          // полосы расходятся от логотипа, а не из-под него
-          const lw = Math.min(760, vw * 0.8) * 1.04;
-          const lh = lw * (155 / 600);
-          const box = { left: (vw - lw) / 2, right: (vw + lw) / 2, top: (vh - lh) / 2, bottom: (vh + lh) / 2, width: lw, height: lh };
-          veil = ctx.layer("sn-veil in direct");
-          veil.innerHTML = `<i class="sn-veil-black"></i>`;
-          veilLines(veil, coverBands(box, vw, vh, false), vw, vh);
-          veil.snLines.shown();
-          title = ctx.layer("sn-title direct");
+          const big = hero2x(game.hero);
+          const inkUrl = `${assets}tattoos.webp`;
+          wake = ctx.layer("sn-wake in direct");
+          wakeScene(wake, vw, vh, { clip: screenHex(vw, vh), map: faceMap(vw, vh), dark: 1, ink: 0, deep: 1 }, () => ({ art: bmp(big), ink: bmp(inkUrl) }));
+          title = ctx.layer("sn-title");
           title.innerHTML = titleHtml(game, esc);
-          // логотип — только декодированным целиком, а не недогруженной полосой сверху
-          const ttlIn = title;
-          const logoImg = title.querySelector("img");
-          Promise.race([logoImg?.decode?.() ?? Promise.resolve(), new Promise((res) => setTimeout(res, 700))])
-            .catch(() => {})
-            .then(() => ttlIn.classList.add("in"));
           hold = seenBefore() ? HOLD.repeat : HOLD.direct;
+          ready = within([prep(big), prep(inkUrl), ...[...title.querySelectorAll("img")].map((im) => im.decode?.().catch(() => {}))], 700);
         }
-        const v = veil;
+        const w = wake;
         const ttl = title;
         root.classList.add("sn-intro");
+        ready.then(() => {
+          if (!w.isConnected) return;
+          const s = w.snWake;
+          s.go("dark", 1, 700);
+          s.go("ink", 1, 600);
+          s.go("lit", 1, w.classList.contains("direct") ? 1500 : 1250, EASE_LIT);
+          if (w.classList.contains("direct")) {
+            s.go("flare", 1, 380, EASE);
+            later(() => s.go("flare", 0.6, 1300), 420);
+          } else {
+            s.go("flare", 0.6, 1400);
+          }
+          // медленный наезд дальше, пока горят татуировки
+          s.go("map", faceMap(vw, vh, 1.05), 2600, LINEAR);
+          later(() => ttl.classList.add("in"), 260);
+        });
         let opened = false;
         const open = () => {
           if (opened) return;
           opened = true;
-          ttl.classList.add("out");
+          const s = w.snWake;
+          // 1. метки гаснут от краёв к лицу, глаза — последними
+          s.go("lit", 0, 820, EASE_RETREAT);
+          s.go("flare", 0, 1050, EASE_LAST);
+          // 2. логотип перелетает на место логотипа страницы
+          flyTitle(ttl);
+          // 3. тьма открывается шестигранником из соты-Магатамы
+          const core = root.querySelector(".sn-core .sn-hex") ?? root.querySelector(".sn-head-logo");
+          const cr = core?.getBoundingClientRect();
+          const hx = cr ? cr.left + cr.width / 2 : vw / 2;
+          const hy = cr ? cr.top + cr.height / 2 : vh / 2;
+          const r0 = cr ? cr.height / 2 : 60;
+          const rMax = Math.hypot(Math.max(hx, vw - hx), Math.max(hy, vh - hy)) / Math.cos(Math.PI / 6) + 20;
+          // окно растёт из точки: на миг становится ровно сотой-Магатамой (светящийся край), потом открывает всё
+          s.set("hole", [hx, hy, 0]);
+          s.go("hole", [hx, hy, r0 * 0.985], 420, EASE_OUT, 880);
+          later(() => s.go("hole", [hx, hy, rMax], 1050, EASE_REVEAL), 880 + 420 + 160);
+          // логотип страницы — сразу под прилетевшим, без своего проявления
           later(() => {
-            v.classList.add("out");
-            v.snLines?.runOff();
+            const head = root.querySelector(".sn-head");
+            if (head) head.style.transition = "none";
             root.classList.remove("sn-intro");
-          }, 200);
-          later(() => ttl.remove(), 800);
-          later(() => v.remove(), 1500);
+            if (head) {
+              void head.offsetWidth;
+              head.style.transition = "";
+            }
+          }, 900);
+          later(() => ttl.remove(), 1750);
+          later(() => w.remove(), 2600);
         };
+        // логотип заставки плавно садится на место логотипа в шапке страницы
+        function flyTitle(el) {
+          const from = el.querySelector("img, span");
+          const to = root.querySelector(".sn-head-logo img, .sn-head-logo .sn-head-name");
+          if (!from || !to) {
+            el.classList.add("out");
+            return;
+          }
+          const a = from.getBoundingClientRect();
+          const b = to.getBoundingClientRect();
+          from.style.transformOrigin = "0 0";
+          from.style.transition = "transform 0.82s cubic-bezier(0.65, 0, 0.25, 1), filter 0.82s ease";
+          from.style.transform = `translate(${(b.left - a.left).toFixed(1)}px, ${(b.top - a.top).toFixed(1)}px) scale(${(b.width / a.width).toFixed(4)})`;
+          from.style.filter = "drop-shadow(0 4px 12px rgba(0, 0, 0, 0.9))";
+        }
         later(open, hold);
         ctx.onCleanup(() => {
-          v.remove();
+          w.remove();
           ttl.remove();
           root.classList.remove("sn-intro");
         });
