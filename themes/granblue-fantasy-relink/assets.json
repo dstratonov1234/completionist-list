@@ -1,0 +1,104 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "sky",
+      "prompt": "Painted fantasy sky background in the style of a hand-painted anime adventure game: luminous deep azure at the very top fading smoothly into soft cerulean and then pale warm cream near the bottom, a few delicate high cirrus streaks, faint distant cumulus towers along the lower edge, gentle sunlight haze, painterly gouache brushwork, calm and airy, no islands, no ships, no birds, no sun disc, no text.",
+      "size": "1536x1024",
+      "background": "opaque",
+      "quality": "high",
+      "max_width": 1536,
+      "format": "webp"
+    },
+    {
+      "name": "cloud-a",
+      "prompt": "A single big billowing cumulus cloud painted in a soft hand-painted anime fantasy style (gouache and watercolor), bright white sunlit tops with warm cream highlights, soft lavender-blue and periwinkle shadows underneath, crisp painterly edges with a few small wisps, isolated on a fully transparent background, no sky, no ground, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 1024,
+      "format": "webp"
+    },
+    {
+      "name": "cloud-c",
+      "prompt": "A small soft wispy cloud puff, a little elongated horizontally, painted in a soft hand-painted anime fantasy style, white with a pale periwinkle shadow on the underside and slightly translucent feathered edges, isolated on a fully transparent background, no sky, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 600,
+      "format": "webp"
+    },
+    {
+      "name": "island",
+      "prompt": "A floating sky island in a hand-painted fantasy anime style: a lush green grassy top with two small round trees, a few white flowers and a thin waterfall spilling off one edge, the underside an inverted cone of layered warm sandstone rock with hanging roots, moss and a couple of small glowing blue crystals at the tip, side view from slightly above, soft daylight from the upper left, isolated on a fully transparent background, no sky, no clouds, no buildings, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 720,
+      "format": "webp"
+    },
+    {
+      "name": "island-b",
+      "prompt": "A small floating sky island in a hand-painted fantasy anime style: a narrow grassy plateau with an old weathered white stone arch ruin and a slim tree, the underside a jagged inverted spire of pale grey and ochre rock with hanging vines, side view, soft daylight from the upper left, isolated on a fully transparent background, no sky, no clouds, no people, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 640,
+      "format": "webp"
+    },
+    {
+      "name": "airship",
+      "prompt": "An original fantasy flying sailing airship in strict side profile facing right, hand-painted anime adventure style: an elegant wooden galleon hull with gilded trim and royal blue paneling, a tall main mast with large cream canvas sails, two swept-back fin-like wing sails on the sides, a small propeller at the stern, rigging lines, small pennants on the masts, warm daylight, isolated on a fully transparent background, no sky, no clouds, no people, no text, no emblems.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 900,
+      "format": "webp"
+    },
+    {
+      "name": "filigree",
+      "prompt": "An elegant ornamental corner piece for a fantasy RPG menu frame: thin polished gold filigree scrollwork curling along two edges meeting at the top-left corner, delicate leaf flourishes, a small faceted sapphire-blue gem at the corner, fine metallic shading, isolated on a fully transparent background, flat front view, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 420,
+      "format": "webp"
+    },
+    {
+      "name": "cloud-band",
+      "prompt": "A long horizontal ribbon of puffy cumulus clouds floating in the air, wide panoramic strip about four times wider than tall, rounded billowing lumps along BOTH the top edge and the bottom edge (no flat base anywhere), soft hand-painted anime fantasy style (gouache and watercolor), bright white with warm cream sunlit highlights on top and soft lavender-blue shadows underneath, isolated on a fully transparent background, no sky, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 1400,
+      "format": "webp"
+    },
+    {
+      "name": "island-wide",
+      "prompt": "A wide floating sky island seen from the side, slightly from above: a broad, flat, even grassy plateau about twice as wide as the whole island is tall, a few small bushes and one small round tree only at the far left and far right edges, the middle of the plateau flat, open and empty, the underside a shallow inverted dome of layered warm sandstone rock with hanging roots, moss and a few small glowing blue crystals at the bottom, a thin waterfall spilling from the right edge, hand-painted anime fantasy style, soft daylight from the upper left, isolated on a fully transparent background, no buildings, no people, no clouds, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 1000,
+      "format": "webp"
+    },
+    {
+      "name": "island-wide-b",
+      "prompt": "A wide floating sky island seen from the side, slightly from above: a broad, flat grassy plateau about twice as wide as the island is tall, a weathered white stone pillar ruin and a slim tree only at the far left edge, small flowers at the right edge, the middle of the plateau flat, open and empty, the underside a shallow jagged inverted spire of pale grey and ochre rock with hanging vines, hand-painted anime fantasy style, soft daylight from the upper left, isolated on a fully transparent background, no people, no clouds, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 1000,
+      "format": "webp"
+    },
+    {
+      "name": "rail",
+      "prompt": "A long straight horizontal section of an ornate wooden airship deck railing seen from the front at eye level: a polished dark-honey wooden top rail with gilded brass trim, a row of turned wooden balusters, sturdy posts every few balusters capped with small gold finials, a coiled rope hanging on one post, hand-painted anime fantasy style, warm daylight, wide panoramic strip, isolated on a fully transparent background, nothing behind it, no sky, no people, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 1600,
+      "format": "webp"
+    }
+  ]
+}

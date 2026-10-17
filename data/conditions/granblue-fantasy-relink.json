@@ -1,0 +1,244 @@
+{
+  "title": "Granblue Fantasy: Relink — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Основной сюжет: Prologue → Final Chapter: Id → Chapter Ø: Skybound Heart",
+          "done": true,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_26d3bbdddbf5f1b2c21c59bd0a1fe1fdd109cce4.1920x1080.jpg",
+          "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
+          "gallery": [
+            "https://gbf.wiki/images/b/b7/Relink_main_visual.jpg",
+            "https://gbf.wiki/images/a/aa/Relink_Id_character_visual.jpg"
+          ]
+        },
+        {
+          "n": 2,
+          "title": "Квестовые боссы базы: The Final Vision и Zero (Lucilius), Lock Horns (Behemoth), The Automagod Strikes Back (Pyet-A), Thunderbolts and Lightning, Into the Abyss, 4 × «Wings of…», три Nihilla-варианта, The Final Report, Dark Swordsman's Nightmare, гаунтлеты Pageant of Might and Magic и Zathba's 'Volunteers'",
+          "done": true,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_5232722b91d02a541091656b9664c6e007381fe9.1920x1080.jpg",
+          "link": "https://gbf.wiki/Lucilius_(NPC)",
+          "gallery": [
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_7ed9b8bfc0aaafe19a9d5cbede4e11216cf6cec3.1920x1080.jpg",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_9a1ab78753cd137d5a0708ff8a4732aaed92ddf9.1920x1080.jpg"
+          ]
+        },
+        {
+          "n": 3,
+          "title": "Фейт-эпизоды 19 базовых персонажей + Tweyen, Eustace",
+          "done": true,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_7a9a55c2ed9fbe79afc824f57c345a7324bfd4dd.1920x1080.jpg",
+          "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
+          "gallery": [
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_6317bd5cd7153005ee1f089cb2c1dbeec80a06ca.1920x1080.jpg",
+            "https://gbf.wiki/images/thumb/2/24/Tweyen_%28Relink%29.png/1280px-Tweyen_%28Relink%29.png.webp",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/b17b6ce4c6b96b5e3de11730b8b138ba6773850a/ss_b17b6ce4c6b96b5e3de11730b8b138ba6773850a.1920x1080.jpg"
+          ]
+        },
+        {
+          "n": 4,
+          "title": "Сюжет Endless Ragnarok до финала «The Not Forgotten Sky», включая сюжетные квесты Fraux и Fediel и побочки DLC",
+          "done": true,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/bc04b725e6c5c48327bcea684d70bfae1d725e1f/ss_bc04b725e6c5c48327bcea684d70bfae1d725e1f.1920x1080.jpg",
+          "link": "https://store.steampowered.com/app/3839790/",
+          "gallery": [
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/535e83714c9d614041b546fca1b036d26f527809/capsule_616x353.jpg"
+          ]
+        },
+        {
+          "n": 5,
+          "title": "Новые боссы Endless Ragnarok: A Trial of Two Eternities, 12 Ragnalia, The World, Beelzebub, Omnis Zegalith, Jumbo Crab's Title Fight и др.",
+          "done": true,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/2f1e0b481d4d5ed18baf8f13129b863eeb931c51/ss_2f1e0b481d4d5ed18baf8f13129b863eeb931c51.1920x1080.jpg",
+          "link": "https://store.steampowered.com/app/3839790/",
+          "gallery": [
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/1586ae06cda423d067ee6f4890de292cd74101de/ss_1586ae06cda423d067ee6f4890de292cd74101de.1920x1080.jpg"
+          ]
+        },
+        {
+          "n": 6,
+          "title": "Conflux: циклы 1–5, Beelzebub (финал Cycle 5), Albacore, 4 типа Dexterity's Way",
+          "done": true,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/b6fbb83198952473a316ead5a8603ff11156c22b/ss_b6fbb83198952473a316ead5a8603ff11156c22b.1920x1080.jpg",
+          "link": "https://gbf.wiki/Beelzebub"
+        },
+        {
+          "n": 7,
+          "title": "Сцены из 2.0.2: «A Grand Voyage Begins», «A Boundless Question» (Lyria's Journal → Main Story → Prologue); «The Skybound Guardian / Helmsman / Mage / Sniper / Rose» (там же → Chapter 1)",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_cdda0cdcd1f5aec78bb9edea1fa7d80feaf46d77.1920x1080.jpg",
+          "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
+          "gallery": [
+            "https://gbf.wiki/images/e/e8/Relink_Lyria%27s_Journal_square.png",
+            "https://gbf.wiki/images/thumb/a/af/Lyria_%28Relink%29.png/1280px-Lyria_%28Relink%29.png.webp"
+          ]
+        },
+        {
+          "n": 8,
+          "title": "Фейт-эпизоды Seofon и Sandalphon (по 11, включая Epilogue и бои)",
+          "done": false,
+          "image": "https://gbf.wiki/images/thumb/d/d3/Seofon_%28Relink%29_Chain.png/1280px-Seofon_%28Relink%29_Chain.png.webp",
+          "link": "https://gbf.wiki/Seofon",
+          "gallery": [
+            "https://gbf.wiki/images/thumb/0/09/Sandalphon_%28Relink%29_Chain.png/1280px-Sandalphon_%28Relink%29_Chain.png.webp",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_49a5d76c8a9da694926477445dac1f30b35281e6.1920x1080.jpg"
+          ],
+          "checklist": [
+            {
+              "label": "Фейт-эпизоды",
+              "items": [
+                {
+                  "title": "Seofon",
+                  "done": false
+                },
+                {
+                  "title": "Sandalphon",
+                  "done": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "n": 9,
+          "title": "Фейт-эпизоды Beatrix, Fraux (+ Addendum «At the End of the World»), Gallanza, Maglielle (по 11); у Fediel — Epilogue с финальным боем",
+          "done": false,
+          "image": "https://gbf.wiki/images/thumb/7/76/Maglielle_%28Relink%29.png/1280px-Maglielle_%28Relink%29.png.webp",
+          "imageFit": "contain",
+          "link": "https://gbf.wiki/Fraux",
+          "gallery": [
+            "https://gbf.wiki/images/thumb/1/18/Gallanza_%28Relink%29.png/1280px-Gallanza_%28Relink%29.png.webp",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4579010/50cbe61e976df52ae87b48b15ac8ec4d9b42c199/capsule_616x353.jpg",
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4579020/6c1e935e5583e6867aa3d2c97a00b237df52210b/capsule_616x353.jpg"
+          ],
+          "checklist": [
+            {
+              "label": "Фейт-эпизоды",
+              "items": [
+                {
+                  "title": "Beatrix",
+                  "done": false
+                },
+                {
+                  "title": "Fraux (+ Addendum)",
+                  "done": false
+                },
+                {
+                  "title": "Gallanza",
+                  "done": false
+                },
+                {
+                  "title": "Maglielle",
+                  "done": false
+                },
+                {
+                  "title": "Fediel — Epilogue",
+                  "done": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "n": 10,
+          "title": "Хотя бы один боевой квест, управляя персонажем: Katalina, Io, Eugen, Rosetta, Ghandagoza, Ferry, Lancelot, Vane, Percival, Charlotta, Yodarha, Narmaya, Vaseraga, Seofon, Sandalphon, Gallanza, Maglielle, Beatrix, Fraux",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/d4b7f00524290f4f3347da10f0ec58e6ac968349/ss_d4b7f00524290f4f3347da10f0ec58e6ac968349.1920x1080.jpg",
+          "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
+          "gallery": [
+            "https://gbf.wiki/images/thumb/8/86/Katalina_%28Relink%29_Chain.png/1280px-Katalina_%28Relink%29_Chain.png.webp",
+            "https://gbf.wiki/images/thumb/5/51/Narmaya_%28Relink%29_Chain.png/1280px-Narmaya_%28Relink%29_Chain.png.webp",
+            "https://gbf.wiki/images/thumb/4/4b/Percival_%28Relink%29_Chain.png/1280px-Percival_%28Relink%29_Chain.png.webp",
+            "https://gbf.wiki/images/thumb/9/9e/Io_%28Relink%29_Chain.png/1280px-Io_%28Relink%29_Chain.png.webp"
+          ],
+          "checklist": [
+            {
+              "label": "Квест за персонажа",
+              "items": [
+                {
+                  "title": "Katalina",
+                  "done": false
+                },
+                {
+                  "title": "Io",
+                  "done": false
+                },
+                {
+                  "title": "Eugen",
+                  "done": false
+                },
+                {
+                  "title": "Rosetta",
+                  "done": false
+                },
+                {
+                  "title": "Ghandagoza",
+                  "done": false
+                },
+                {
+                  "title": "Ferry",
+                  "done": false
+                },
+                {
+                  "title": "Lancelot",
+                  "done": false
+                },
+                {
+                  "title": "Vane",
+                  "done": false
+                },
+                {
+                  "title": "Percival",
+                  "done": false
+                },
+                {
+                  "title": "Charlotta",
+                  "done": false
+                },
+                {
+                  "title": "Yodarha",
+                  "done": false
+                },
+                {
+                  "title": "Narmaya",
+                  "done": false
+                },
+                {
+                  "title": "Vaseraga",
+                  "done": false
+                },
+                {
+                  "title": "Seofon",
+                  "done": false
+                },
+                {
+                  "title": "Sandalphon",
+                  "done": false
+                },
+                {
+                  "title": "Gallanza",
+                  "done": false
+                },
+                {
+                  "title": "Maglielle",
+                  "done": false
+                },
+                {
+                  "title": "Beatrix",
+                  "done": false
+                },
+                {
+                  "title": "Fraux",
+                  "done": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

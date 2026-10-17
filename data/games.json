@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-17",
-  "build": "77c6fac02d",
+  "build": "ca020cd689",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -453,6 +453,48 @@
         "headingWeight": 700,
         "headingSpacing": "0.03em",
         "radius": 0,
+        "heroPosition": "right 30%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "granblue-fantasy-relink",
+      "title": "Granblue Fantasy: Relink",
+      "status": "in_progress",
+      "started": "2026-10-17",
+      "aliases": [
+        "GBF Relink",
+        "Relink",
+        "Гранблю",
+        "Гранблю Фэнтези",
+        "Endless Ragnarok"
+      ],
+      "steamAppId": 881020,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/logo.png",
+      "goals": {
+        "done": 6,
+        "total": 10
+      },
+      "theme": {
+        "bg": "#e4edf8",
+        "surface": "#f7faff",
+        "text": "#14223d",
+        "accent": "#2a5fb8",
+        "accent2": "#c08a26",
+        "fonts": [
+          "Playfair Display SC:wght@400;700",
+          "Playfair Display:ital,wght@0,400;0,600;0,700;1,400",
+          "Nunito:wght@400;600;700;800"
+        ],
+        "displayFont": "Playfair Display SC",
+        "headingFont": "Playfair Display",
+        "bodyFont": "Nunito",
+        "bodySize": 17,
+        "headingWeight": 700,
+        "radius": 14,
         "heroPosition": "right 30%",
         "css": true,
         "js": true
