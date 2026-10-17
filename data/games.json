@@ -210,8 +210,9 @@
     {
       "id": "lies-of-p",
       "title": "Lies of P",
-      "status": "in_progress",
+      "status": "completed",
       "started": "2026-10-16",
+      "finished": "2026-10-16",
       "playtime": 48,
       "aliases": [
         "Lies of P: Overture",
@@ -222,8 +223,8 @@
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1627720/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1627720/logo.png",
       "goals": {
-        "done": 9,
-        "total": 12
+        "done": 10,
+        "total": 10
       },
       "theme": {
         "bg": "#0b0f16",

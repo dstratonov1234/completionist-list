@@ -45,9 +45,11 @@
         {
           "n": 5,
           "title": "Puppet of the Future (Workshop Union Culvert, гл. III)",
-          "done": false,
+          "done": true,
           "image": "https://static.wikia.nocookie.net/lies-of-p/images/9/99/Puppet_of_the_Future.jpeg/revision/latest/scale-to-width-down/800?cb=20230925131200",
-          "link": "https://lies-of-p.fandom.com/wiki/Puppet_Of_The_Future"
+          "link": "https://lies-of-p.fandom.com/wiki/Puppet_Of_The_Future",
+          "date": "2026-10-16",
+          "details": "Засчитано по проверке на месте: в Workshop Union Culvert босса уже нет — он был убит раньше."
         },
         {
           "n": 6,
@@ -66,16 +68,6 @@
           "link": "https://lies-of-p.fandom.com/wiki/Trinity_Sanctum",
           "gallery": [
             "https://static.wikia.nocookie.net/lies-of-p/images/8/80/King_of_Riddles%27_Surprise_Box.jpeg/revision/latest?cb=20231008012420"
-          ]
-        },
-        {
-          "n": 8,
-          "title": "Финал истории Venigni",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/lies-of-p/images/f/f3/Venigni.jpeg/revision/latest?cb=20231009004010",
-          "link": "https://lies-of-p.fandom.com/wiki/Lorenzini_Venigni",
-          "gallery": [
-            "https://static.wikia.nocookie.net/lies-of-p/images/9/96/Moon_World_Warrior_Toy.png/revision/latest?cb=20231013171752"
           ]
         },
         {
@@ -107,17 +99,6 @@
           "date": "2026-10-16",
           "image": "https://static.wikia.nocookie.net/lies-of-p/images/8/89/Overture_Carnival.jpg/revision/latest/scale-to-width-down/800?cb=20250530233800",
           "link": "https://lies-of-p.fandom.com/wiki/Lies_of_P:_Overture"
-        },
-        {
-          "n": 12,
-          "title": "Эпилог Rosaura у Tree of Friendship (Krat City Hall Courtyard, настоящее время)",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/lies-of-p/images/b/b9/Rosaura%27s_Drawing.png/revision/latest?cb=20260825214249",
-          "link": "https://lies-of-p.fandom.com/wiki/Rosaura",
-          "imageFit": "contain",
-          "gallery": [
-            "https://static.wikia.nocookie.net/lies-of-p/images/d/d1/Rosaura_first_meeting_outside_the_circus.png/revision/latest/scale-to-width-down/512?cb=20250917231133"
-          ]
         }
       ]
     }
