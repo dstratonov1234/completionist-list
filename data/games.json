@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-16",
+  "updated": "2026-10-17",
   "build": "4c175ff257",
   "games": [
     {
@@ -292,7 +292,7 @@
     {
       "id": "dark-souls-remastered",
       "title": "Dark Souls: Remastered",
-      "status": "in_progress",
+      "status": "completed",
       "started": "2025-02-16",
       "aliases": [
         "DS",
@@ -305,8 +305,8 @@
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570940/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/570940/logo.png",
       "goals": {
-        "done": 11,
-        "total": 14
+        "done": 12,
+        "total": 12
       },
       "theme": {
         "bg": "#0a0908",
@@ -328,7 +328,8 @@
         "heroPosition": "center 30%",
         "css": true,
         "js": true
-      }
+      },
+      "finished": "2026-10-16"
     },
     {
       "id": "shin-megami-tensei-iii-nocturne-hd-remaster",
