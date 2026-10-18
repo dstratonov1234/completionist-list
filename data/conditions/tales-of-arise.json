@@ -88,28 +88,13 @@
           ]
         },
         {
-          "n": 8,
-          "title": "Бонд-арка Лоу: разговоры у костра до конца и второй мистик-арт",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/aselia/images/1/12/Law_%28ToA%29.png/revision/latest?cb=20250814200518",
-          "imageFit": "contain",
-          "link": "https://aselia.fandom.com/wiki/Law"
-        },
-        {
-          "n": 9,
-          "title": "Бонд-арка Кисары: разговоры у костра до конца и второй мистик-арт",
-          "done": false,
-          "image": "https://static.wikia.nocookie.net/aselia/images/c/cf/Kisara_%28ToA%29.png/revision/latest?cb=20210611221554",
-          "imageFit": "contain",
-          "link": "https://aselia.fandom.com/wiki/Kisara"
-        },
-        {
           "n": 10,
           "title": "Бонд-арка Дохалима: разговоры у костра до конца и второй мистик-арт",
-          "done": false,
+          "done": true,
           "image": "https://static.wikia.nocookie.net/aselia/images/6/6e/Dohalim_%28ToA%29.png/revision/latest?cb=20210611221506",
           "imageFit": "contain",
-          "link": "https://aselia.fandom.com/wiki/Dohalim_il_Qaras"
+          "link": "https://aselia.fandom.com/wiki/Dohalim_il_Qaras",
+          "date": "2026-10-17"
         },
         {
           "n": 11,
@@ -125,14 +110,16 @@
         },
         {
           "n": 12,
-          "title": "DLC SAO, Centoria Trainee Fight: тир Primary (мистик-арт Кирито и Асуны у Альфена), затем тир Elite (бой примерно с 98-м уровнем)",
-          "done": false,
+          "title": "DLC SAO, Тренировочный бой Центории с Кирито и Асуной",
+          "done": true,
           "image": "https://static.wikia.nocookie.net/aselia/images/b/b7/Kirito_Battle_Portrait_%28ToA%29_1.png/revision/latest?cb=20250625014923",
           "imageFit": "contain",
           "link": "https://aselia.fandom.com/wiki/ToA_-_Training_Grounds",
           "gallery": [
             "https://static.wikia.nocookie.net/aselia/images/4/4d/Asuna_Battle_Portrait_%28ToA%29_1.png/revision/latest?cb=20250625015005"
-          ]
+          ],
+          "date": "2026-10-17",
+          "details": "Закрыта как увиденная: «Базовый кадет-мечник» пройден, «Элитный кадет-мечник» сыгран до второй фазы."
         },
         {
           "n": 13,
@@ -170,9 +157,10 @@
         {
           "n": 16,
           "title": "BtD: EX-квесты Flower of Happiness, A Feast of Blessings, Relaxing Residence, Words for the Future",
-          "done": false,
+          "done": true,
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2391960/ss_60b2e28dd3c6f2d7e7ed0f163d688712a459bfc5.1920x1080.jpg",
-          "link": "https://aselia.fandom.com/wiki/ToA_-_Downloadable_Content"
+          "link": "https://aselia.fandom.com/wiki/ToA_-_Downloadable_Content",
+          "date": "2026-10-17"
         }
       ]
     }

@@ -1,6 +1,6 @@
 {
   "updated": "2026-10-17",
-  "build": "ca020cd689",
+  "build": "4be979e1c2",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -418,8 +418,9 @@
     {
       "id": "tales-of-arise",
       "title": "Tales of ARISE",
-      "status": "in_progress",
+      "status": "completed",
       "started": "2024-09-05",
+      "finished": "2026-10-17",
       "aliases": [
         "Tales of Arise",
         "ToA",
@@ -432,8 +433,8 @@
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/740130/5232af1e5ace55ba8ff4c3a893b7f1e85c9f9469/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/740130/logo.png",
       "goals": {
-        "done": 11,
-        "total": 16
+        "done": 14,
+        "total": 14
       },
       "theme": {
         "bg": "#f3eee4",
