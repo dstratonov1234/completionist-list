@@ -16,26 +16,29 @@
         {
           "n": 2,
           "title": "Toorum's Final Resting Place (L10): найти комнату, прочитать две последние записки, применить Remains of Toorum на Crystal of Life",
-          "done": false,
+          "done": true,
           "image": "https://static.wikia.nocookie.net/grimrock/images/e/e6/Crystal_of_life_ig.jpg/revision/latest?cb=20120414000520",
-          "link": "https://grimrock.fandom.com/wiki/Toorum"
+          "link": "https://grimrock.fandom.com/wiki/Toorum",
+          "date": "2026-10-18"
         },
         {
           "n": 3,
           "title": "Zhandul's Orb (L9, железная дверь на юго-западе)",
-          "done": false,
+          "done": true,
           "image": "https://static.wikia.nocookie.net/grimrock/images/e/e4/Zhandul%27s_orb_ig.jpg/revision/latest?cb=20120516055351",
-          "link": "https://grimrock.fandom.com/wiki/Zhandul%27s_Orb"
+          "link": "https://grimrock.fandom.com/wiki/Zhandul%27s_Orb",
+          "date": "2026-10-18"
         },
         {
           "n": 4,
           "title": "Blueberry Pie (L8)",
-          "done": false,
+          "done": true,
           "image": "https://static.wikia.nocookie.net/grimrock/images/2/2c/Blueberry_pie_ig.jpg/revision/latest?cb=20120509194154",
           "link": "https://grimrock.fandom.com/wiki/Blueberry_Pie",
           "gallery": [
             "https://static.wikia.nocookie.net/grimrock/images/d/dd/Giant_Spider_ig.jpg/revision/latest?cb=20120414080858"
-          ]
+          ],
+          "date": "2026-10-18"
         },
         {
           "n": 5,
