@@ -43,20 +43,23 @@
         {
           "n": 5,
           "title": "Vault of the Dismantler: взять меч The Dismantler",
-          "done": false,
+          "done": true,
           "image": "https://static.wikia.nocookie.net/grimrock/images/b/be/The_Dismantler_ig.png/revision/latest?cb=20130611105350",
-          "link": "https://grimrock.fandom.com/wiki/The_Dismantler"
+          "link": "https://grimrock.fandom.com/wiki/The_Dismantler",
+          "date": "2026-10-18"
         },
         {
           "n": 6,
           "title": "Fighter's Challenge",
-          "done": false,
+          "done": true,
           "image": "https://static.wikia.nocookie.net/grimrock/images/5/51/Giant_beetle_ig.jpg/revision/latest?cb=20120422173400",
           "link": "https://grimrock.fandom.com/wiki/Secrets#Level_6",
           "gallery": [
             "https://static.wikia.nocookie.net/grimrock/images/d/d9/Sword_of_nex_ig.jpg/revision/latest?cb=20120427051232",
             "https://static.wikia.nocookie.net/grimrock/images/5/50/Shield_of_valor_ig.jpg/revision/latest?cb=20120427054221"
-          ]
+          ],
+          "date": "2026-10-18",
+          "details": "Орда Scavengers на арене перебита, получен Shield of Valor."
         },
         {
           "n": 7,
