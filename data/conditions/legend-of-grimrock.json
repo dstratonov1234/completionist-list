@@ -64,10 +64,12 @@
         {
           "n": 7,
           "title": "Toorum's Quest II (Steam Workshop, id 114343272)",
-          "done": false,
+          "done": true,
           "image": "https://images.steamusercontent.com/ugc/1101393627273647159/F0536EE9791D8E3BF7BD452583B5A0FE26CA4927/",
           "imageFit": "contain",
-          "link": "https://steamcommunity.com/sharedfiles/filedetails/?id=114343272"
+          "link": "https://steamcommunity.com/sharedfiles/filedetails/?id=114343272",
+          "date": "2026-10-18",
+          "details": "Пройдено до финального экрана «CONGRATZ! YOU WIN!»."
         }
       ]
     }
