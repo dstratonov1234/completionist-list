@@ -11,8 +11,8 @@
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_26d3bbdddbf5f1b2c21c59bd0a1fe1fdd109cce4.1920x1080.jpg",
           "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
           "gallery": [
-            "https://gbf.wiki/images/b/b7/Relink_main_visual.jpg",
-            "https://gbf.wiki/images/a/aa/Relink_Id_character_visual.jpg"
+            "https://relink.granbluefantasy.jp/assets/images/common/common/artwork/artwork_1.jpg",
+            "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/id.png"
           ]
         },
         {
@@ -34,7 +34,7 @@
           "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
           "gallery": [
             "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_6317bd5cd7153005ee1f089cb2c1dbeec80a06ca.1920x1080.jpg",
-            "https://gbf.wiki/images/thumb/2/24/Tweyen_%28Relink%29.png/1280px-Tweyen_%28Relink%29.png.webp",
+            "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/tweyen.png",
             "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/b17b6ce4c6b96b5e3de11730b8b138ba6773850a/ss_b17b6ce4c6b96b5e3de11730b8b138ba6773850a.1920x1080.jpg"
           ]
         },
@@ -72,8 +72,7 @@
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_cdda0cdcd1f5aec78bb9edea1fa7d80feaf46d77.1920x1080.jpg",
           "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
           "gallery": [
-            "https://gbf.wiki/images/e/e8/Relink_Lyria%27s_Journal_square.png",
-            "https://gbf.wiki/images/thumb/a/af/Lyria_%28Relink%29.png/1280px-Lyria_%28Relink%29.png.webp"
+            "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/lyria.png"
           ],
           "date": "2026-10-19"
         },
@@ -81,10 +80,10 @@
           "n": 8,
           "title": "Фейт-эпизоды Seofon и Sandalphon (по 11, включая Epilogue и бои)",
           "done": true,
-          "image": "https://gbf.wiki/images/thumb/d/d3/Seofon_%28Relink%29_Chain.png/1280px-Seofon_%28Relink%29_Chain.png.webp",
+          "image": "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/seofon.png",
           "link": "https://gbf.wiki/Seofon",
           "gallery": [
-            "https://gbf.wiki/images/thumb/0/09/Sandalphon_%28Relink%29_Chain.png/1280px-Sandalphon_%28Relink%29_Chain.png.webp",
+            "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/sandalphon.png",
             "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_49a5d76c8a9da694926477445dac1f30b35281e6.1920x1080.jpg"
           ],
           "checklist": [
@@ -102,17 +101,18 @@
               ]
             }
           ],
-          "date": "2026-10-19"
+          "date": "2026-10-19",
+          "imageFit": "contain"
         },
         {
           "n": 9,
           "title": "Фейт-эпизоды Beatrix, Fraux (+ Addendum «At the End of the World»), Gallanza, Maglielle (по 11); у Fediel — Epilogue с финальным боем",
           "done": false,
-          "image": "https://gbf.wiki/images/thumb/7/76/Maglielle_%28Relink%29.png/1280px-Maglielle_%28Relink%29.png.webp",
+          "image": "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/maglielle.png",
           "imageFit": "contain",
           "link": "https://gbf.wiki/Fraux",
           "gallery": [
-            "https://gbf.wiki/images/thumb/1/18/Gallanza_%28Relink%29.png/1280px-Gallanza_%28Relink%29.png.webp",
+            "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/gallanza.png",
             "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4579010/50cbe61e976df52ae87b48b15ac8ec4d9b42c199/capsule_616x353.jpg",
             "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4579020/6c1e935e5583e6867aa3d2c97a00b237df52210b/capsule_616x353.jpg"
           ],
@@ -151,10 +151,10 @@
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/d4b7f00524290f4f3347da10f0ec58e6ac968349/ss_d4b7f00524290f4f3347da10f0ec58e6ac968349.1920x1080.jpg",
           "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
           "gallery": [
-            "https://gbf.wiki/images/thumb/8/86/Katalina_%28Relink%29_Chain.png/1280px-Katalina_%28Relink%29_Chain.png.webp",
-            "https://gbf.wiki/images/thumb/5/51/Narmaya_%28Relink%29_Chain.png/1280px-Narmaya_%28Relink%29_Chain.png.webp",
-            "https://gbf.wiki/images/thumb/4/4b/Percival_%28Relink%29_Chain.png/1280px-Percival_%28Relink%29_Chain.png.webp",
-            "https://gbf.wiki/images/thumb/9/9e/Io_%28Relink%29_Chain.png/1280px-Io_%28Relink%29_Chain.png.webp"
+            "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/katalina.png",
+            "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/narmaya.png",
+            "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/percival.png",
+            "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/io.png"
           ],
           "checklist": [
             {
