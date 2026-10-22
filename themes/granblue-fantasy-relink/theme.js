@@ -141,9 +141,11 @@
       const rp = [[0, pts.length ? pts[0].y + 6 : 70], ...pts.map((p) => [p.x * 10, p.y])];
       const segs = curveSegs(rp);
       const k = Math.min(done, pts.length);
-      const at = k > 0 ? pts[k - 1] : { x: 3, y: pts.length ? pts[0].y + 4 : 64 };
-      // при выделении корабль проходит часть курса к следующему острову
-      const to = pts[k] ?? { x: at.x + 5, y: at.y - 3 };
+      const isle = k > 0 ? pts[k - 1] : { x: 3, y: pts.length ? pts[0].y + 4 : 64 };
+      // у последнего острова корабль не уходит в затухание у правого края
+      const at = { x: Math.min(isle.x, 86), y: isle.y };
+      // при выделении корабль проходит часть курса к следующему острову, а пройдя весь путь — поднимается в небо
+      const to = pts[k] ?? { x: at.x + 1, y: at.y - 14 };
       const go = { x: (to.x - at.x) * 0.5, y: (to.y - at.y) * 0.5 };
       // логотип — там, где небо свободно от корабля
       const logoX = !total ? 50 : at.x < 46 ? 70 : 30;

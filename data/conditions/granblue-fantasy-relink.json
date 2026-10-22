@@ -107,7 +107,7 @@
         {
           "n": 9,
           "title": "Фейт-эпизоды Beatrix, Fraux (+ Addendum «At the End of the World»), Gallanza, Maglielle (по 11); у Fediel — Epilogue с финальным боем",
-          "done": false,
+          "done": true,
           "image": "https://relink.granbluefantasy.jp/assets/images/common/pc/characters/maglielle.png",
           "imageFit": "contain",
           "link": "https://gbf.wiki/Fraux",
@@ -130,11 +130,11 @@
                 },
                 {
                   "title": "Gallanza",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Maglielle",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Fediel — Epilogue",
@@ -142,12 +142,13 @@
                 }
               ]
             }
-          ]
+          ],
+          "date": "2026-10-22"
         },
         {
           "n": 10,
-          "title": "Хотя бы один боевой квест, управляя персонажем: Katalina, Io, Eugen, Rosetta, Ghandagoza, Ferry, Lancelot, Vane, Percival, Charlotta, Yodarha, Narmaya, Vaseraga, Seofon, Sandalphon, Gallanza, Maglielle, Beatrix, Fraux",
-          "done": false,
+          "title": "Сыграть за каждого из 19 персонажей в настоящем бою: бои его фейт-эпизодов, где этого персонажа ведёшь ты (соло или во главе отряда). Katalina, Io, Eugen, Rosetta, Ghandagoza, Ferry, Lancelot, Vane, Percival, Charlotta, Yodarha, Narmaya, Vaseraga, Seofon, Sandalphon, Gallanza, Maglielle, Beatrix, Fraux",
+          "done": true,
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3839790/d4b7f00524290f4f3347da10f0ec58e6ac968349/ss_d4b7f00524290f4f3347da10f0ec58e6ac968349.1920x1080.jpg",
           "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
           "gallery": [
@@ -158,59 +159,59 @@
           ],
           "checklist": [
             {
-              "label": "Квест за персонажа",
+              "label": "Бои фейт-эпизодов",
               "items": [
                 {
                   "title": "Katalina",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Io",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Eugen",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Rosetta",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Ghandagoza",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Ferry",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Lancelot",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Vane",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Percival",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Charlotta",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Yodarha",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Narmaya",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Vaseraga",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Seofon",
@@ -222,11 +223,11 @@
                 },
                 {
                   "title": "Gallanza",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Maglielle",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Beatrix",
@@ -238,7 +239,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "date": "2026-10-22"
         }
       ]
     }
