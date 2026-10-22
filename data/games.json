@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-18",
+  "updated": "2026-10-21",
   "build": "4be979e1c2",
   "games": [
     {
@@ -477,7 +477,7 @@
       "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/library_hero.jpg",
       "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/logo.png",
       "goals": {
-        "done": 6,
+        "done": 8,
         "total": 10
       },
       "theme": {

@@ -68,18 +68,19 @@
         {
           "n": 7,
           "title": "Сцены из 2.0.2: «A Grand Voyage Begins», «A Boundless Question» (Lyria's Journal → Main Story → Prologue); «The Skybound Guardian / Helmsman / Mage / Sniper / Rose» (там же → Chapter 1)",
-          "done": false,
+          "done": true,
           "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/881020/ss_cdda0cdcd1f5aec78bb9edea1fa7d80feaf46d77.1920x1080.jpg",
           "link": "https://gbf.wiki/Granblue_Fantasy:_Relink",
           "gallery": [
             "https://gbf.wiki/images/e/e8/Relink_Lyria%27s_Journal_square.png",
             "https://gbf.wiki/images/thumb/a/af/Lyria_%28Relink%29.png/1280px-Lyria_%28Relink%29.png.webp"
-          ]
+          ],
+          "date": "2026-10-19"
         },
         {
           "n": 8,
           "title": "Фейт-эпизоды Seofon и Sandalphon (по 11, включая Epilogue и бои)",
-          "done": false,
+          "done": true,
           "image": "https://gbf.wiki/images/thumb/d/d3/Seofon_%28Relink%29_Chain.png/1280px-Seofon_%28Relink%29_Chain.png.webp",
           "link": "https://gbf.wiki/Seofon",
           "gallery": [
@@ -92,15 +93,16 @@
               "items": [
                 {
                   "title": "Seofon",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Sandalphon",
-                  "done": false
+                  "done": true
                 }
               ]
             }
-          ]
+          ],
+          "date": "2026-10-19"
         },
         {
           "n": 9,
@@ -120,11 +122,11 @@
               "items": [
                 {
                   "title": "Beatrix",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Fraux (+ Addendum)",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Gallanza",
@@ -136,7 +138,7 @@
                 },
                 {
                   "title": "Fediel — Epilogue",
-                  "done": false
+                  "done": true
                 }
               ]
             }
@@ -212,11 +214,11 @@
                 },
                 {
                   "title": "Seofon",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Sandalphon",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Gallanza",
@@ -228,11 +230,11 @@
                 },
                 {
                   "title": "Beatrix",
-                  "done": false
+                  "done": true
                 },
                 {
                   "title": "Fraux",
-                  "done": false
+                  "done": true
                 }
               ]
             }
