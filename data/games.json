@@ -1,6 +1,6 @@
 {
-  "updated": "2026-10-22",
-  "build": "0cbca2bb2e",
+  "updated": "2026-10-23",
+  "build": "cf8cb5512e",
   "games": [
     {
       "id": "shin-megami-tensei-v-vengeance",
@@ -498,6 +498,45 @@
         "bodySize": 17,
         "headingWeight": 700,
         "radius": 14,
+        "heroPosition": "right 30%",
+        "css": true,
+        "js": true
+      }
+    },
+    {
+      "id": "chained-beasts",
+      "title": "Chained Beasts",
+      "status": "in_progress",
+      "started": "2026-10-23",
+      "aliases": [
+        "Чейнд Бистс",
+        "Скованные звери",
+        "Цепные звери"
+      ],
+      "steamAppId": 3569420,
+      "cover": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3569420/be237edbd1bdbcf361d7b315d70e89fea3b5262a/header.jpg",
+      "hero": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3569420/0a0f50b630cbfa4dcd4196b050743a59daf1ec16/library_hero.jpg",
+      "logo": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3569420/f02179e76fc9a2ac7b0b52cd405c127bb775474c/logo_2x.png",
+      "goals": {
+        "done": 1,
+        "total": 10
+      },
+      "theme": {
+        "bg": "#14091a",
+        "surface": "#231a3d",
+        "text": "#f1ead8",
+        "accent": "#e2174f",
+        "accent2": "#4fe0cf",
+        "fonts": [
+          "Rubik Dirt",
+          "Pangolin"
+        ],
+        "displayFont": "Rubik Dirt",
+        "headingFont": "Rubik Dirt",
+        "bodyFont": "Pangolin",
+        "bodySize": 17,
+        "headingWeight": 400,
+        "radius": 0,
         "heroPosition": "right 30%",
         "css": true,
         "js": true

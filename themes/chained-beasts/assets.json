@@ -1,0 +1,68 @@
+{
+  "model": "gpt-image-2.5-flare",
+  "assets": [
+    {
+      "name": "brush-crimson",
+      "prompt": "One single huge horizontal dry-brush paint stroke, made with a wide coarse bristle brush in one confident sweep from left to right: saturated deep crimson red paint (#c50d44) with a few darker maroon streaks, rough ragged torn-looking edges on the top and bottom, frayed bristle trails and paint flecks at both ends, the middle completely solid and opaque, filling the whole width, comic book ink illustration style, isolated on a fully transparent background, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 1536,
+      "format": "webp"
+    },
+    {
+      "name": "brush-ink",
+      "prompt": "One single huge horizontal dry-brush ink stroke, made with a wide coarse bristle brush in one confident sweep from left to right: very dark indigo-black ink (#16102b) with subtle deep purple streaks, rough ragged torn-looking edges on the top and bottom, frayed bristle trails and ink flecks at both ends, the middle completely solid and opaque, filling the whole width, comic book ink illustration style, isolated on a fully transparent background, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 1536,
+      "format": "webp"
+    },
+    {
+      "name": "crowd",
+      "prompt": "A long wide horizontal strip of a roaring ancient Roman arena crowd seen from behind and below as pure solid flat black silhouettes: dense rows of heads and shoulders, many raised fists, waving arms, a few thumbs up, a few cloth banners on sticks, uneven bumpy top edge, flat straight bottom edge, comic book ink style, solid black only, isolated on a fully transparent background, no text, no color.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 1536,
+      "format": "webp"
+    },
+    {
+      "name": "cloth",
+      "prompt": "Seamless tileable texture of a rough woven dark indigo-purple canvas fabric (#231a3d to #2c2150), subtle coarse weave, faint darker grime stains and a few thin scratchy black ink hatching marks like a comic book illustration, even flat lighting, no folds, no seams, no text.",
+      "size": "1024x1024",
+      "background": "opaque",
+      "quality": "high",
+      "max_width": 700,
+      "format": "webp"
+    },
+    {
+      "name": "beam",
+      "prompt": "A long straight horizontal wooden beam seen from the front, dark weathered oak with deep wood grain, wrapped every so often by black iron bands with big round rivets, thick black comic book ink outlines and hatching shading, warm dim torchlight, the beam fills the full width edge to edge so it can tile horizontally, isolated on a fully transparent background, no text.",
+      "size": "1536x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 1400,
+      "format": "webp"
+    },
+    {
+      "name": "laurel",
+      "prompt": "A golden victory laurel wreath, two curved branches of leaves meeting at the bottom and open at the top, shiny gold with warm highlights and dark ochre shading, thick black comic book ink outlines, flat front view, centered, isolated on a fully transparent background, no ribbon, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "high",
+      "max_width": 520,
+      "format": "webp"
+    },
+    {
+      "name": "rose",
+      "prompt": "A single red rose with a short green stem and two leaves, lying diagonally, thrown flower for a gladiator, saturated crimson petals, thick black comic book ink outlines and simple hatching, isolated on a fully transparent background, no text.",
+      "size": "1024x1024",
+      "background": "transparent",
+      "quality": "medium",
+      "max_width": 256,
+      "format": "webp"
+    }
+  ]
+}

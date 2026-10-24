@@ -1,0 +1,88 @@
+{
+  "title": "Chained Beasts — условия закрытия",
+  "groups": [
+    {
+      "title": "Цели",
+      "goals": [
+        {
+          "n": 1,
+          "title": "Победа на Pleb: The Senate (Praefectus + Machinatrix → The Emperor), титры",
+          "done": true,
+          "date": "2026-10-23",
+          "image": "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/20705feb4ea546380dc7484d34b256dff0e4f431.jpg",
+          "link": "https://chained-beasts.com/combat/the-senate/",
+          "gallery": [
+            "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/d072e548b4dbd73e2b9eec5cac0bcd595b76cf1d.jpg",
+            "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/1d8ab4fa7b21c2d9a9bfe9d4bb30304b6dcacf53.jpg"
+          ]
+        },
+        {
+          "n": 2,
+          "title": "Победа на Legionnaire",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3569420/2804ef2bb797821cedf5d2bc2391336ec6180b0d/ss_2804ef2bb797821cedf5d2bc2391336ec6180b0d.1920x1080.jpg",
+          "link": "https://chained-beasts.com/guides/difficulty-levels/#what-are-all-the-difficulty-names-and-modifiers"
+        },
+        {
+          "n": 3,
+          "title": "Победы на Centurion и Primus",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3569420/efd976dda1b2db1f00fc18a63c7fa75d1b5ede2e/ss_efd976dda1b2db1f00fc18a63c7fa75d1b5ede2e.1920x1080.jpg",
+          "link": "https://chained-beasts.com/guides/difficulty-levels/#what-are-all-the-difficulty-names-and-modifiers",
+          "gallery": [
+            "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3569420/11b9af2ff2fa963edb66065a8861cf7d5e1a8d69/ss_11b9af2ff2fa963edb66065a8861cf7d5e1a8d69.1920x1080.jpg"
+          ]
+        },
+        {
+          "n": 4,
+          "title": "Rhino",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/8bf6b9f3bc6e142972bd18cb1e4f635211d8445c.jpg",
+          "link": "https://chained-beasts.com/beasts/all-beasts/#what-does-each-beast-do"
+        },
+        {
+          "n": 5,
+          "title": "Bear",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/dbd74b10b7fd3e877f3a9663063a088832b4882b.jpg",
+          "link": "https://chained-beasts.com/beasts/all-beasts/#what-does-each-beast-do"
+        },
+        {
+          "n": 6,
+          "title": "Eagle",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/9d0d5c8dd1a8596c3b510141ae9b63f1391a19d7.jpg",
+          "link": "https://chained-beasts.com/beasts/all-beasts/#what-does-each-beast-do"
+        },
+        {
+          "n": 7,
+          "title": "Lion",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/5fa8c795497e0dd481edebd3308fcb84a6318448.jpg",
+          "link": "https://chained-beasts.com/beasts/all-beasts/#what-does-each-beast-do"
+        },
+        {
+          "n": 8,
+          "title": "Monkey",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/242a1ec75133ebdcb9fb835d76dfe36d8e52a927.jpg",
+          "link": "https://chained-beasts.com/beasts/all-beasts/#what-does-each-beast-do"
+        },
+        {
+          "n": 9,
+          "title": "Pouncing Panther (вариант II)",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/a1ebe7332db61187c580d4aca5fd8c3cabb0a40e.jpg",
+          "link": "https://chained-beasts.com/beasts/unlocks-and-variants/#how-do-variants-work"
+        },
+        {
+          "n": 10,
+          "title": "Reckless Rhino (вариант III)",
+          "done": false,
+          "image": "https://shared.akamai.steamstatic.com/community_assets/images/apps/3569420/d9f6d8a17d2cf29f3628ec1e8d718f1ff024dbac.jpg",
+          "link": "https://chained-beasts.com/beasts/unlocks-and-variants/#how-do-variants-work"
+        }
+      ]
+    }
+  ]
+}

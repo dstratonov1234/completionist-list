@@ -1,0 +1,457 @@
+/* Chained Beasts — «Вердикт толпы».
+   Комикс-тушь на малиновом: баннер — один мазок краски с ареной, логотипом и цепью к лавровому венку; наведение —
+   трибуны поднимаются, толпа бросает розы; заставка — экран закрашивают мазки кистью, логотип падает с ударом;
+   страница — рваные знамёна на цепях под балками арены, первое — знамя игры с лавровым венком прогресса. */
+
+.gbanner[data-game="chained-beasts"],
+.stage-layer[data-game="chained-beasts"],
+.cb-wipe,
+.cb-wipe-title,
+.cb {
+  --cb-red: #c50d44;
+  --cb-red-deep: #8d0e38;
+  --cb-blood: #5f0b26;
+  --cb-ink: #0b0710;
+  --cb-navy: #231a3d;
+  --cb-navy-2: #2f2456;
+  --cb-paint: #f4ecd8;
+  --cb-teal: #4fe0cf;
+  --cb-gold: #f2c14e;
+  --cb-gold-lo: #9a6716;
+  --cb-chain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='28'%3E%3Cellipse cx='7' cy='8' rx='5' ry='7.2' fill='none' stroke='%230b0710' stroke-width='4.2'/%3E%3Cellipse cx='7' cy='8' rx='5' ry='7.2' fill='none' stroke='%23857b91' stroke-width='2'/%3E%3Crect x='5.2' y='13' width='3.6' height='15.5' rx='1.8' fill='%23564e63' stroke='%230b0710' stroke-width='1.3'/%3E%3C/svg%3E");
+}
+
+.cb-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.cb-title-txt { color: var(--cb-paint); font: 400 clamp(28px, 4vw, 56px)/1 var(--t-display, sans-serif); letter-spacing: 0.02em; text-shadow: 3px 3px 0 var(--cb-ink); }
+
+/* ====================================================================================
+   Главная: мазок краски с ареной, цепью и венком
+   ==================================================================================== */
+
+.gbanner[data-game="chained-beasts"] {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+.gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) { transform: none; box-shadow: none; outline: none; }
+
+.cb-ban { --lw: 330px; position: relative; display: block; height: 210px; }
+
+/* толпа сидит за мазком; при выделении вскакивает над его краем */
+.cb-ban-crowd {
+  position: absolute;
+  z-index: 0;
+  left: 5%;
+  right: 5%;
+  top: -66px;
+  height: 116px;
+  filter: drop-shadow(0 -2px 0 #ff8aa6) drop-shadow(0 -1px 6px rgba(255, 150, 170, 0.6));
+  transform: translateY(74px);
+  transition: transform 0.45s cubic-bezier(0.3, 1.5, 0.5, 1);
+}
+.cb-ban-crowd i {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #2a0510, #12020a 70%);
+  -webkit-mask: url(assets/crowd.webp) 0 100% / auto 100% repeat-x;
+  mask: url(assets/crowd.webp) 0 100% / auto 100% repeat-x;
+}
+
+/* сам мазок: края — край мазка кистью, внутри — арена и гладиаторы */
+.cb-ban-stroke {
+  position: absolute;
+  z-index: 1;
+  inset: -6px -1%;
+  overflow: hidden;
+  background: var(--cb-red-deep);
+  -webkit-mask: url(assets/brush-crimson.webp) center / 100% 100% no-repeat;
+  mask: url(assets/brush-crimson.webp) center / 100% 100% no-repeat;
+}
+.cb-ban-hero {
+  position: absolute;
+  right: -3%;
+  top: -14%;
+  height: 165%;
+  width: auto;
+  max-width: none;
+  -webkit-mask: linear-gradient(90deg, transparent 0, #000 16%);
+  mask: linear-gradient(90deg, transparent 0, #000 16%);
+  transform-origin: 75% 60%;
+  transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.25, 1.1);
+}
+.cb-ban-tint { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(40, 4, 16, 0.7) 0, rgba(60, 6, 22, 0.35) 34%, transparent 55%); }
+.cb-ban-flash { position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 40%, rgba(255, 236, 214, 0.55), transparent 60%); opacity: 0; }
+
+.cb-ban-logo { position: absolute; z-index: 3; left: 3%; top: 50%; height: 168px; transform: translateY(-50%) rotate(-3deg); transform-origin: 30% 50%; transition: transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.cb-ban-logo img { display: block; height: 100%; width: auto; filter: drop-shadow(4px 5px 0 rgba(11, 7, 16, 0.55)); }
+.cb-ban-logo .cb-title-txt { display: block; padding-top: 50px; font-size: 40px; white-space: nowrap; }
+
+/* цепь от логотипа к венку: звено на условие, выполненные раскалены */
+.cb-ban-chain {
+  --lk: clamp(10px, calc(100cqw / var(--n) * 0.56), 26px);
+  --step: calc(100cqw / max(var(--n) - 1, 1));
+  position: absolute;
+  z-index: 2;
+  left: calc(3% + var(--lw) - 34px);
+  width: min(24%, 300px);
+  top: 50%;
+  height: 0;
+  container-type: inline-size;
+}
+.cb-link {
+  position: absolute;
+  top: 0;
+  width: var(--lk);
+  height: calc(var(--lk) * 0.66);
+  border: 3.5px solid #e9e1cc;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.8px var(--cb-ink), inset 0 0 0 1.8px var(--cb-ink), 2px 3px 0 1px rgba(11, 7, 16, 0.45);
+  transform: translate(-50%, calc(-50% + var(--y0) * var(--sk, 1))) rotate(calc(var(--a0) * var(--ska, 1)));
+  transition: transform 0.5s cubic-bezier(0.3, 1.7, 0.45, 1) var(--d);
+}
+/* перемычка к следующему звену */
+.cb-link::after { content: ""; position: absolute; left: calc(100% + 1px); top: 50%; width: calc(var(--step) - var(--lk) - 1px); height: 4px; margin-top: -2px; border-radius: 2px; background: #e9e1cc; box-shadow: 0 0 0 1.5px var(--cb-ink); }
+.cb-link:last-child::after { display: none; }
+.cb-link.on { border-color: #ffc94a; box-shadow: 0 0 0 1.8px var(--cb-ink), inset 0 0 0 1.8px var(--cb-ink), 0 0 10px 3px rgba(255, 170, 60, 0.9); }
+.cb-link.on::after { background: #ffc94a; }
+
+.cb-ban-score { position: absolute; z-index: 3; left: calc(3% + var(--lw) - 34px + min(24%, 300px) + 6px); top: 50%; width: 118px; aspect-ratio: 520 / 481; transform: translateY(-48%); transition: transform 0.45s cubic-bezier(0.3, 1.7, 0.5, 1); }
+.cb-ban-score img { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(3px 4px 0 rgba(11, 7, 16, 0.5)); }
+.cb-ban-score b,
+.cb-ban-score i { position: absolute; left: 0; right: 0; text-align: center; color: var(--cb-paint); font-style: normal; font-family: var(--t-display, sans-serif); -webkit-text-stroke: 1.5px var(--cb-ink); paint-order: stroke fill; text-shadow: 2px 2px 0 var(--cb-ink); }
+.cb-ban-score b { top: 22%; font-size: 40px; line-height: 1; }
+.cb-ban-score i { top: 60%; font-size: 17px; line-height: 1; opacity: 0.9; }
+
+.cb-ban-roses { position: absolute; z-index: 4; inset: 0; pointer-events: none; }
+.cb-ban-rose { position: absolute; left: var(--x); bottom: -10px; width: 50px; height: auto; opacity: 0; filter: drop-shadow(1.5px 0 0 #f4ecd8) drop-shadow(-1.5px 0 0 #f4ecd8) drop-shadow(0 1.5px 0 #f4ecd8) drop-shadow(0 -1.5px 0 #f4ecd8) drop-shadow(2px 3px 0 rgba(11, 7, 16, 0.5)); }
+
+/* выделение: толпа вскакивает, цепь рывком натягивается, гладиаторы подаются вперёд, летят розы */
+.gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) .cb-ban-crowd { transform: translateY(0); animation: cb-cheer 0.5s ease-in-out 0.45s infinite alternate; }
+.gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) .cb-link { transform: translate(-50%, calc(-50% + var(--y1) * var(--sk, 1))) rotate(calc(var(--a1) * var(--ska, 1))); }
+.gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) .cb-ban-hero { transform: scale(1.06) translateX(-1.5%); }
+.gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) .cb-ban-flash { animation: cb-flash 0.6s ease-out 1; }
+.gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) .cb-ban-logo { transform: translateY(-50%) rotate(-5deg) scale(1.05); }
+.gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) .cb-ban-score { transform: translateY(-48%) scale(1.1) rotate(4deg); }
+.gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) .cb-ban-rose { animation: cb-rose 1.15s cubic-bezier(0.2, 0.7, 0.4, 1) var(--d) 1 both; }
+.gbanner[data-game="chained-beasts"]:focus-visible .cb-ban-stroke { background: var(--cb-paint); }
+.gbanner[data-game="chained-beasts"]:focus-visible .cb-ban::after { content: ""; position: absolute; z-index: 0; inset: -14px -1.6%; background: var(--cb-paint); -webkit-mask: url(assets/brush-ink.webp) center / 100% 100% no-repeat; mask: url(assets/brush-ink.webp) center / 100% 100% no-repeat; }
+
+@keyframes cb-cheer { to { transform: translateY(-5px); } }
+@keyframes cb-flash { 30% { opacity: 1; } }
+@keyframes cb-rose {
+  0% { opacity: 0; transform: translate(0, 30px) rotate(0); }
+  12% { opacity: 1; }
+  70% { opacity: 1; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); }
+  100% { opacity: 0; transform: translate(calc(var(--dx) * 1.1), calc(var(--dy) + 40px)) rotate(var(--rot)); }
+}
+
+@media (max-width: 600px) {
+  .cb-ban { --lw: 196px; height: 178px; }
+  .cb-ban-logo { top: 8px; height: 100px; transform: rotate(-3deg); }
+  .gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) .cb-ban-logo { transform: rotate(-5deg) scale(1.05); }
+  .cb-ban-hero { right: -30%; top: -6%; height: 140%; }
+  .cb-ban-score { left: 4%; top: 104px; width: 70px; transform: none; }
+  .gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) .cb-ban-score { transform: scale(1.08) rotate(4deg); }
+  .cb-ban-chain { --lk: clamp(13px, calc(100cqw / var(--n) * 0.6), 20px); left: calc(4% + 78px); width: 44%; top: 136px; }
+  .cb-ban-chain .cb-link { border-width: 2.5px; }
+  .cb-ban-chain { --sk: 0.45; --ska: 1.1; }
+  .cb-ban-score b { font-size: 24px; }
+  .cb-ban-score i { font-size: 11px; }
+  .cb-ban-crowd { top: -40px; height: 70px; transform: translateY(46px); }
+}
+
+/* ====================================================================================
+   Главная: при наведении — арена, трибуны и броски толпы
+   ==================================================================================== */
+
+.stage-layer[data-game="chained-beasts"] { background: #10040a; }
+.cb-st { position: absolute; inset: 0; overflow: hidden; }
+.cb-st > * { position: absolute; pointer-events: none; }
+.cb-st-red { inset: 0; background: radial-gradient(ellipse 70% 60% at var(--bcx, 50%) var(--bcy, 40%), #b50e40 0, #6e0a2b 45%, #22040f 100%); opacity: 0; transition: opacity 0.7s ease; }
+.stage-layer[data-game="chained-beasts"].on .cb-st-red { opacity: 1; }
+/* свет с неба над ареной падает на баннер */
+.cb-st-beam {
+  left: calc(var(--bcx, 50%) - 55vw);
+  top: -10vh;
+  width: 110vw;
+  height: calc(var(--bcy, 40%) + 20vh);
+  background: radial-gradient(ellipse 34% 100% at 50% 0, rgba(255, 228, 200, 0.24), rgba(255, 210, 180, 0.08) 60%, transparent 100%);
+  opacity: 0;
+  transition: opacity 1s ease 0.25s;
+}
+.stage-layer[data-game="chained-beasts"].on .cb-st-beam { opacity: 1; }
+.cb-st-tier { left: -2vw; right: -2vw; -webkit-mask: url(assets/crowd.webp) 0 100% / auto 100% repeat-x; mask: url(assets/crowd.webp) 0 100% / auto 100% repeat-x; transition: transform 1s cubic-bezier(0.2, 0.8, 0.25, 1); }
+.cb-st-tier.far { top: 0; height: 19vh; background: linear-gradient(180deg, #3a0714, #7a0f30); -webkit-mask-position: 37% 100%; mask-position: 37% 100%; transform: translateY(-100%); }
+.cb-st-tier.near { bottom: 0; height: 30vh; background: #090206; transform: translateY(100%); }
+.stage-layer[data-game="chained-beasts"].on .cb-st-tier.far { transform: translateY(0); }
+.stage-layer[data-game="chained-beasts"].on .cb-st-tier.near { transform: translateY(0); animation: cb-roar 0.7s ease-in-out 1s infinite alternate; }
+@keyframes cb-roar { to { transform: translateY(-1.2vh); } }
+/* броски из толпы: по дуге над ареной */
+.cb-st-throw { left: var(--x0); bottom: 16vh; opacity: 0; animation: cb-tx var(--t) linear var(--d) infinite paused; }
+.cb-st-throw > span { display: block; animation: cb-ty var(--t) var(--d) infinite paused; }
+.cb-st-throw img { display: block; width: clamp(34px, 3vw, 54px); height: auto; filter: drop-shadow(1.5px 0 0 #f4ecd8) drop-shadow(-1.5px 0 0 #f4ecd8) drop-shadow(0 1.5px 0 #f4ecd8) drop-shadow(0 -1.5px 0 #f4ecd8); animation: cb-spin var(--t) linear var(--d) infinite paused; }
+.stage-layer[data-game="chained-beasts"].on .cb-st-throw { opacity: 1; transition: opacity 0.6s ease 0.9s; }
+.stage-layer[data-game="chained-beasts"].on :is(.cb-st-throw, .cb-st-throw > span, .cb-st-throw img) { animation-play-state: running; }
+@keyframes cb-tx { to { transform: translateX(var(--tx)); } }
+@keyframes cb-ty {
+  0% { transform: translateY(0); opacity: 0; animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1); }
+  8% { opacity: 1; }
+  50% { transform: translateY(var(--peak)); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  92% { opacity: 1; }
+  100% { transform: translateY(14vh); opacity: 0; }
+}
+@keyframes cb-spin { to { transform: rotate(var(--rot)); } }
+.cb-st-vig { inset: 0; background: radial-gradient(ellipse 85% 75% at var(--bcx, 50%) var(--bcy, 40%), transparent 40%, rgba(8, 2, 6, 0.65) 100%); }
+
+/* ====================================================================================
+   Заставка: мазки кистью закрашивают экран, логотип падает с ударом
+   ==================================================================================== */
+
+.cb-wipe { position: fixed; inset: 0; z-index: 75; overflow: hidden; pointer-events: none; }
+.cb-wipe-base { position: absolute; inset: 0; background: #2a0612; opacity: 0; transition: opacity 0.25s ease; }
+.cb-wipe.landed .cb-wipe-base { opacity: 1; }
+.cb-stroke {
+  position: absolute;
+  left: 50%;
+  width: 180vw;
+  height: var(--h);
+  max-width: none;
+  object-fit: fill;
+  transform: translate(calc(-50% + var(--from) * 160vw), -50%) rotate(var(--r));
+  transition: transform 430ms cubic-bezier(0.25, 0.9, 0.3, 1) calc(var(--i) * 75ms);
+  will-change: transform;
+}
+.cb-wipe.in .cb-stroke { transform: translate(-50%, -50%) rotate(var(--r)); }
+.cb-wipe.still .cb-stroke { transition: none; }
+.cb-wipe.out .cb-stroke { transform: translate(calc(-50% - var(--from) * 170vw), -50%) rotate(calc(var(--r) * -1)); transition: transform 520ms cubic-bezier(0.45, 0, 0.7, 0.45) calc(var(--o) * 60ms); }
+.cb-wipe.out .cb-wipe-base { opacity: 0; transition: opacity 0.28s ease 0.04s; }
+.cb-wipe-flash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 160vmax;
+  height: 160vmax;
+  margin: -80vmax 0 0 -80vmax;
+  background: repeating-conic-gradient(from 3deg, rgba(11, 7, 16, 0.7) 0 1.6deg, transparent 1.6deg 7deg);
+  -webkit-mask: radial-gradient(circle, transparent 16%, #000 30%, #000 50%, transparent 64%);
+  mask: radial-gradient(circle, transparent 16%, #000 30%, #000 50%, transparent 64%);
+  opacity: 0;
+}
+.cb-wipe-title { position: fixed; inset: 0; z-index: 76; display: grid; place-items: center; pointer-events: none; transition: opacity 0.32s ease, transform 0.45s ease; }
+.cb-wipe-shake { display: block; }
+.cb-wipe-logo { display: block; width: min(700px, 82vw); height: auto; opacity: 0; transform: scale(1.7) rotate(-6deg); filter: drop-shadow(6px 8px 0 rgba(11, 7, 16, 0.55)); }
+span.cb-wipe-logo { width: auto; }
+.cb-wipe-title.in .cb-wipe-logo { animation: cb-slam 0.4s cubic-bezier(0.25, 0.9, 0.3, 1.15) forwards; }
+.cb-wipe-title.in .cb-wipe-shake { animation: cb-shake 0.32s linear 0.22s 1; }
+.cb-wipe-title.out { opacity: 0; transform: scale(1.12); }
+.cb-wipe.landed:not(.still) .cb-wipe-flash,
+.cb-wipe.still.slam .cb-wipe-flash { animation: cb-burst 0.42s ease-out 0.22s 1 both; }
+@keyframes cb-slam {
+  0% { opacity: 0; transform: scale(1.7) rotate(-6deg); }
+  55% { opacity: 1; transform: scale(0.95) rotate(-2deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-3deg); }
+}
+@keyframes cb-shake {
+  20% { transform: translate(-7px, 4px); }
+  40% { transform: translate(6px, -5px); }
+  60% { transform: translate(-4px, -3px); }
+  80% { transform: translate(3px, 3px); }
+}
+@keyframes cb-burst {
+  0% { opacity: 0; transform: scale(0.55) rotate(0deg); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.25) rotate(6deg); }
+}
+
+/* ====================================================================================
+   Страница: знамёна под балками арены
+   ==================================================================================== */
+
+html[data-game="chained-beasts"] body { background: #14060d; }
+.cb { position: relative; color: var(--cb-paint); font-family: var(--t-body, sans-serif); overflow-x: clip; }
+
+.cb-wall { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: url(assets/arena.webp) center / cover, #5f0b26; }
+.cb-wall-dark { position: absolute; inset: 0; background: radial-gradient(ellipse 90% 70% at 50% 30%, transparent 30%, rgba(14, 4, 12, 0.7) 100%), linear-gradient(180deg, rgba(20, 6, 14, 0.15), rgba(18, 8, 30, 0.6)); }
+.cb-wall-crowd { position: absolute; left: -2%; right: -2%; bottom: -1vh; height: 20vh; background: #0a0308; -webkit-mask: url(assets/crowd.webp) 20% 100% / auto 100% repeat-x; mask: url(assets/crowd.webp) 20% 100% / auto 100% repeat-x; opacity: 0.92; }
+.cb-page { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 78px 26px 22vh; }
+
+/* «назад» — бирка на гвозде */
+.cb-back {
+  position: absolute;
+  z-index: 4;
+  left: 22px;
+  top: 18px;
+  padding: 10px 26px 10px 18px;
+  color: var(--cb-paint);
+  font: 400 15px/1 var(--t-display, sans-serif);
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  background: url(assets/cloth.webp) 0 0 / 260px, var(--cb-navy);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 50%, 100% 100%, 0 100%);
+  transform: rotate(-2deg);
+  transform-origin: 10px 50%;
+  transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1), filter 0.2s ease;
+}
+.cb-back span::before { content: "← "; color: var(--cb-red); }
+.cb-back:is(:hover, :focus-visible) { transform: rotate(-6deg); filter: brightness(1.25); outline: none; }
+.cb-back:focus-visible { box-shadow: inset 0 0 0 2px var(--cb-gold); }
+
+.cb-row { position: relative; margin-bottom: 64px; padding-top: 22px; }
+.cb-beam { position: absolute; z-index: 2; left: -30px; right: -30px; top: 0; height: 42px; background: url(assets/beam.webp) 0 50% / auto 100% repeat-x; filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.55)); }
+.cb-beam::before,
+.cb-beam::after { content: ""; position: absolute; top: 50%; width: 22px; height: 22px; margin-top: -11px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #8a8494, #3a3442 60%, #15101c); box-shadow: 0 0 0 2px var(--cb-ink); }
+.cb-beam::before { left: 6px; }
+.cb-beam::after { right: 6px; }
+.cb-hang { display: grid; grid-template-columns: repeat(var(--slots), minmax(0, 1fr)); gap: 44px; align-items: start; padding: 0 8px; }
+
+.cb-flag { position: relative; z-index: 1; grid-column: span var(--span, 1); padding-top: var(--len); }
+.cb-swing { position: relative; transform-origin: 50% calc(-1 * var(--len) - 2px); }
+.cb-chain { position: absolute; top: calc(-1 * var(--len) - 4px); height: calc(var(--len) + 10px); width: 14px; background: var(--cb-chain) 0 0 / 14px 28px repeat-y; filter: drop-shadow(2px 3px 2px rgba(0, 0, 0, 0.5)); }
+.cb-chain.l { left: 16%; }
+.cb-chain.r { right: 16%; }
+.cb-rod { position: absolute; z-index: 2; top: -6px; left: -9px; right: -9px; height: 14px; border-radius: 7px; background: linear-gradient(180deg, #a1693c, #5a3418 70%, #3a200e); box-shadow: 0 0 0 2px var(--cb-ink), 0 4px 6px rgba(0, 0, 0, 0.45); }
+.cb-rod::before,
+.cb-rod::after { content: ""; position: absolute; top: 50%; width: 18px; height: 18px; margin-top: -9px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff1c2, #d9a542 55%, #7a4c0c); box-shadow: 0 0 0 2px var(--cb-ink); }
+.cb-rod::before { left: -6px; }
+.cb-rod::after { right: -6px; }
+
+/* полотнище: рваный низ, золотые ленты по краям у выполненных */
+.cb-cloth {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 18px 114px;
+  background: url(assets/cloth.webp) 0 0 / 340px, var(--cb-navy);
+  box-shadow: inset 0 0 0 2px rgba(11, 7, 16, 0.8), inset 0 18px 22px -14px rgba(0, 0, 0, 0.7);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), 94% calc(100% - 6px), 87% calc(100% - 26px), 79% 100%, 70% calc(100% - 18px), 61% calc(100% - 4px), 52% calc(100% - 28px), 44% calc(100% - 8px), 35% calc(100% - 24px), 27% 100%, 18% calc(100% - 20px), 9% calc(100% - 3px), 0 calc(100% - 24px));
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.5));
+}
+.cb-flag:nth-child(even) .cb-cloth { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), 92% calc(100% - 28px), 84% calc(100% - 4px), 75% calc(100% - 22px), 66% 100%, 57% calc(100% - 20px), 48% calc(100% - 6px), 39% calc(100% - 26px), 30% calc(100% - 2px), 21% calc(100% - 18px), 12% calc(100% - 30px), 5% calc(100% - 8px), 0 calc(100% - 16px)); }
+.cb-flag.done .cb-cloth::before,
+.cb-flag.done .cb-cloth::after,
+.cb-flag.title .cb-cloth::before,
+.cb-flag.title .cb-cloth::after { content: ""; position: absolute; top: 0; bottom: 0; width: 7px; background: linear-gradient(90deg, #7a4c0c, #ffe39a 45%, #d9a542 70%, #7a4c0c); box-shadow: 0 0 10px rgba(255, 190, 80, 0.55); }
+.cb-flag.done .cb-cloth::before,
+.cb-flag.title .cb-cloth::before { left: 6px; }
+.cb-flag.done .cb-cloth::after,
+.cb-flag.title .cb-cloth::after { right: 6px; }
+.cb-flag.done .cb-cloth { background: linear-gradient(180deg, rgba(197, 13, 68, 0.45), rgba(197, 13, 68, 0) 42%), url(assets/cloth.webp) 0 0 / 340px, var(--cb-navy-2); }
+
+/* номер — шестигранник, как уровень у Trainer */
+.cb-hex { position: absolute; top: -13px; left: 50%; z-index: 3; display: grid; place-items: center; width: 46px; height: 40px; translate: -50% 0; color: #fff; font: 400 21px/1 var(--t-display, sans-serif); background: #5d6bd8; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); text-shadow: 2px 2px 0 var(--cb-ink); }
+.cb-hex::before { content: ""; position: absolute; inset: 3px; z-index: -1; background: linear-gradient(180deg, #8e9bff, #4351b8); clip-path: inherit; }
+.cb-flag.done .cb-hex { background: #fff1c2; }
+.cb-flag.done .cb-hex::before { background: linear-gradient(180deg, #ffe39a, #c98a1c); }
+.cb-flag.todo .cb-hex { background: #6d6680; }
+.cb-flag.todo .cb-hex::before { background: linear-gradient(180deg, #4b4560, #2e2a3d); }
+
+.cb-pic { position: relative; width: 100%; margin: 6px 0 0; aspect-ratio: 1; overflow: hidden; background: var(--cb-ink); box-shadow: 0 0 0 3px var(--cb-ink), 0 0 0 5px rgba(244, 236, 216, 0.16); }
+.cb-pic.wide { aspect-ratio: 16 / 10; }
+.cb-pic img { display: block; width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.5s ease; }
+.cb-flag.done .cb-pic:hover img { transform: scale(1.05); }
+.cb-flag.todo .cb-pic img { filter: saturate(0.4) brightness(0.6) contrast(1.05); }
+.cb-flag.todo .cb-pic::after { content: ""; position: absolute; inset: 0; background: rgba(35, 26, 61, 0.42); mix-blend-mode: multiply; pointer-events: none; transition: opacity 0.5s ease; }
+.cb-flag.todo:is(:hover, :focus-within) .cb-pic img { filter: saturate(0.85) brightness(0.9); }
+.cb-flag.todo:is(:hover, :focus-within) .cb-pic::after { opacity: 0; }
+
+.cb-title { margin: 2px 0 0; color: var(--cb-paint); font: 400 clamp(20px, 1.7vw, 24px)/1.3 var(--t-body, sans-serif); text-align: center; overflow-wrap: anywhere; text-shadow: 2px 2px 0 rgba(11, 7, 16, 0.7); }
+.cb-flag.todo .cb-title { color: rgba(244, 236, 216, 0.82); }
+.cb-note { margin: 0; padding: 8px 12px; border-left: 3px solid var(--cb-red); background: rgba(11, 7, 16, 0.4); font-style: italic; line-height: 1.45; }
+.cb-details { margin: 0; color: rgba(244, 236, 216, 0.85); line-height: 1.5; text-align: center; }
+.cb-list { width: 100%; }
+.cb-list-label { margin: 0 0 6px; color: rgba(244, 236, 216, 0.7); font: 400 13px/1 var(--t-display, sans-serif); letter-spacing: 0.08em; text-align: center; }
+.cb-list-label b { color: var(--cb-gold); font-weight: 400; }
+.cb-list ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.cb-list li { padding: 4px 9px; color: rgba(244, 236, 216, 0.7); font-size: 14px; background: rgba(11, 7, 16, 0.55); box-shadow: inset 0 0 0 1px rgba(244, 236, 216, 0.2); }
+.cb-list li.on { color: var(--cb-ink); background: var(--cb-gold); box-shadow: none; }
+.cb-gal { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.cb-gal img { width: 64px; height: 64px; object-fit: cover; box-shadow: 0 0 0 2px var(--cb-ink), 0 0 0 3px rgba(244, 236, 216, 0.25); cursor: zoom-in; transition: transform 0.25s ease; }
+.cb-gal img:hover { transform: translateY(-2px) rotate(-3deg) scale(1.06); }
+.cb-flag.todo .cb-gal img { filter: grayscale(0.7) brightness(0.75); }
+.cb-link-out { padding: 6px 14px 5px; color: var(--cb-paint); font: 400 14px/1 var(--t-display, sans-serif); letter-spacing: 0.04em; text-decoration: none; background: var(--cb-red); clip-path: polygon(4% 0, 100% 6%, 96% 100%, 0 92%); transition: transform 0.2s ease, filter 0.2s ease; }
+.cb-flag.todo .cb-link-out { background: #4b4560; }
+.cb-link-out:is(:hover, :focus-visible) { transform: rotate(-2deg) scale(1.06); filter: brightness(1.15); outline: none; }
+.cb-link-out:focus-visible { box-shadow: inset 0 0 0 2px var(--cb-gold); }
+
+/* венок толпы внизу полотнища: выполненным — золотой, с большим пальцем вверх */
+.cb-verdict { position: absolute; left: 50%; bottom: 26px; width: 78px; aspect-ratio: 520 / 481; translate: -50% 0; }
+.cb-verdict img { display: block; width: 100%; height: 100%; filter: drop-shadow(2px 3px 0 rgba(11, 7, 16, 0.6)); }
+.cb-verdict i { position: absolute; left: 50%; top: 40%; width: 30px; height: 30px; translate: -50% -50%; background: var(--cb-paint); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 21h3.5V9.5H2zM7.5 21h9.2a2.2 2.2 0 0 0 2.1-1.6l1.7-6.6A2 2 0 0 0 18.6 10h-5l.9-4.3A2.2 2.2 0 0 0 12.4 3L7.5 9.5z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 21h3.5V9.5H2zM7.5 21h9.2a2.2 2.2 0 0 0 2.1-1.6l1.7-6.6A2 2 0 0 0 18.6 10h-5l.9-4.3A2.2 2.2 0 0 0 12.4 3L7.5 9.5z'/%3E%3C/svg%3E") center / contain no-repeat; filter: drop-shadow(1px 1px 0 var(--cb-ink)); }
+.cb-flag.todo .cb-verdict { opacity: 0.32; filter: grayscale(1); }
+.cb-flag.todo .cb-verdict i { display: none; }
+
+/* знамя игры: малиновое, логотип и лавровый венок прогресса */
+.cb-flag.title .cb-cloth { padding: 40px 30px 70px; background: linear-gradient(180deg, rgba(197, 13, 68, 0.88), rgba(120, 10, 42, 0.92)), url(assets/cloth.webp) 0 0 / 340px, var(--cb-red-deep); }
+.cb-logo { margin: 0; line-height: 0; }
+.cb-logo-img { display: block; width: min(460px, 100%); height: auto; filter: drop-shadow(5px 6px 0 rgba(11, 7, 16, 0.55)); }
+.cb-score { position: relative; width: 230px; aspect-ratio: 1; display: grid; place-items: center; }
+.cb-laurel { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(3px 4px 0 rgba(11, 7, 16, 0.55)); }
+.cb-laurel .stem { fill: none; stroke: var(--cb-ink); stroke-width: 5; stroke-linecap: round; }
+.cb-laurel path:not(.stem) { fill: #b9b3c8; stroke: var(--cb-ink); stroke-width: 2.2; }
+.cb-laurel path.tip { fill: #8f88a3; }
+.cb-laurel path.on { fill: var(--cb-gold); }
+.cb-score-num { position: relative; color: var(--cb-paint); font-family: var(--t-display, sans-serif); line-height: 1; text-align: center; -webkit-text-stroke: 2px var(--cb-ink); paint-order: stroke fill; text-shadow: 3px 3px 0 var(--cb-ink); }
+.cb-score-num b { display: block; font-size: 72px; font-weight: 400; }
+.cb-score-num i { display: block; margin-top: 2px; font-size: 26px; font-style: normal; opacity: 0.9; }
+.cb-score-cap { margin: -6px 0 0; color: rgba(244, 236, 216, 0.82); font: 400 15px/1 var(--t-display, sans-serif); letter-spacing: 0.16em; text-transform: uppercase; }
+
+.cb-empty { margin: 20px 0 0; font-size: 19px; line-height: 1.45; text-align: center; }
+
+/* розы от толпы */
+.cb-throws { position: fixed; inset: 0; z-index: 60; overflow: hidden; pointer-events: none; }
+.cb-throw { position: absolute; left: -22px; top: -22px; width: 44px; height: auto; }
+
+/* соседние игры — вымпелы под последней балкой */
+.cb-nav { position: relative; padding-top: 22px; }
+.cb-nav-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px 26px; padding-top: 6px; }
+.cb-pennant { position: relative; display: block; max-width: 300px; padding: 16px 26px 32px; color: var(--cb-paint); font: 400 16px/1.25 var(--t-display, sans-serif); text-align: center; text-decoration: none; background: url(assets/cloth.webp) 0 0 / 260px, var(--cb-navy); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 16px), 0 100%); filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.5)); transform-origin: 50% -34px; transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.cb-pennant::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 8px; background: linear-gradient(180deg, #a1693c, #5a3418); }
+.cb-nav-wrap { position: relative; display: block; padding-top: 30px; }
+.cb-nav-wrap::before,
+.cb-nav-wrap::after { content: ""; position: absolute; z-index: 1; top: -4px; width: 14px; height: 40px; background: var(--cb-chain) 0 0 / 14px 28px repeat-y; }
+.cb-nav-wrap::before { left: 18%; }
+.cb-nav-wrap::after { right: 18%; }
+.cb-pennant.home { background: linear-gradient(180deg, rgba(197, 13, 68, 0.85), rgba(120, 10, 42, 0.9)), url(assets/cloth.webp) 0 0 / 260px; }
+.cb-pennant:is(:hover, :focus-visible) { transform: rotate(-4deg); outline: none; }
+.cb-pennant:focus-visible span { text-decoration: underline 2px; text-underline-offset: 4px; }
+.cb-pennant.prev span::before { content: "← "; }
+.cb-pennant.next span::after { content: " →"; }
+
+@media (max-width: 719px) {
+  .cb-page { padding: 74px 16px 18vh; }
+  .cb-hang { gap: 40px; padding: 0; }
+  .cb-beam { left: -16px; right: -16px; height: 34px; }
+  .cb-row { margin-bottom: 46px; }
+  .cb-flag.title .cb-cloth { padding: 36px 20px 66px; }
+  .cb-score { width: 200px; }
+  .cb-score-num b { font-size: 60px; }
+}
+@media (max-width: 539px) {
+  .cb-hang { max-width: 420px; margin: 0 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cb-ban-crowd,
+  .cb-link,
+  .cb-ban-hero,
+  .cb-ban-logo,
+  .cb-ban-score { transition: none; }
+  .gbanner[data-game="chained-beasts"]:is(:hover, :focus-visible, .picked) :is(.cb-ban-crowd, .cb-ban-flash, .cb-ban-rose) { animation: none; }
+  .stage-layer[data-game="chained-beasts"].on :is(.cb-st-tier.near, .cb-st-throw, .cb-st-throw > span, .cb-st-throw img) { animation: none; }
+  .cb-st-tier,
+  .cb-st-red,
+  .cb-st-beam { transition: none; }
+  .cb-st-throw { display: none; }
+}
