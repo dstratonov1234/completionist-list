@@ -51,8 +51,8 @@
 .cb-ban-crowd {
   position: absolute;
   z-index: 0;
-  left: 5%;
-  right: 5%;
+  left: 1%;
+  right: 1%;
   top: -66px;
   height: 116px;
   filter: drop-shadow(0 -2px 0 #ff8aa6) drop-shadow(0 -1px 6px rgba(255, 150, 170, 0.6));
@@ -63,8 +63,11 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, #2a0510, #12020a 70%);
-  -webkit-mask: url(assets/crowd.webp) 0 100% / auto 100% repeat-x;
-  mask: url(assets/crowd.webp) 0 100% / auto 100% repeat-x;
+  /* силуэты толпы, к краям растворяются — без жёсткого обреза */
+  -webkit-mask: url(assets/crowd-mask.webp) 0 100% / auto 100% repeat-x, linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask: url(assets/crowd-mask.webp) 0 100% / auto 100% repeat-x, linear-gradient(90deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+  mask-composite: intersect;
 }
 
 /* сам мазок: края — край мазка кистью, внутри — арена и гладиаторы */
@@ -190,7 +193,7 @@
   transition: opacity 1s ease 0.25s;
 }
 .stage-layer[data-game="chained-beasts"].on .cb-st-beam { opacity: 1; }
-.cb-st-tier { left: -2vw; right: -2vw; -webkit-mask: url(assets/crowd.webp) 0 100% / auto 100% repeat-x; mask: url(assets/crowd.webp) 0 100% / auto 100% repeat-x; transition: transform 1s cubic-bezier(0.2, 0.8, 0.25, 1); }
+.cb-st-tier { left: -2vw; right: -2vw; -webkit-mask: url(assets/crowd-mask.webp) 0 100% / auto 100% repeat-x; mask: url(assets/crowd-mask.webp) 0 100% / auto 100% repeat-x; transition: transform 1s cubic-bezier(0.2, 0.8, 0.25, 1); }
 .cb-st-tier.far { top: 0; height: 19vh; background: linear-gradient(180deg, #3a0714, #7a0f30); -webkit-mask-position: 37% 100%; mask-position: 37% 100%; transform: translateY(-100%); }
 .cb-st-tier.near { bottom: 0; height: 30vh; background: #090206; transform: translateY(100%); }
 .stage-layer[data-game="chained-beasts"].on .cb-st-tier.far { transform: translateY(0); }
@@ -282,7 +285,7 @@ html[data-game="chained-beasts"] body { background: #14060d; }
 
 .cb-wall { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; background: url(assets/arena.webp) center / cover, #5f0b26; }
 .cb-wall-dark { position: absolute; inset: 0; background: radial-gradient(ellipse 90% 70% at 50% 30%, transparent 30%, rgba(14, 4, 12, 0.7) 100%), linear-gradient(180deg, rgba(20, 6, 14, 0.15), rgba(18, 8, 30, 0.6)); }
-.cb-wall-crowd { position: absolute; left: -2%; right: -2%; bottom: -1vh; height: 20vh; background: #0a0308; -webkit-mask: url(assets/crowd.webp) 20% 100% / auto 100% repeat-x; mask: url(assets/crowd.webp) 20% 100% / auto 100% repeat-x; opacity: 0.92; }
+.cb-wall-crowd { position: absolute; left: -2%; right: -2%; bottom: -1vh; height: 20vh; background: #0a0308; -webkit-mask: url(assets/crowd-mask.webp) 20% 100% / auto 100% repeat-x; mask: url(assets/crowd-mask.webp) 20% 100% / auto 100% repeat-x; opacity: 0.92; }
 .cb-page { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 78px 26px 22vh; }
 
 /* «назад» — бирка на гвозде */

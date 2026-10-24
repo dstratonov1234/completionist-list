@@ -105,7 +105,7 @@
     // ---------- главная: мазок краски с ареной, цепью и венком ----------
     banner(b) {
       const A = b.assets;
-      warm(["brush-crimson.webp", "brush-ink.webp", "crowd.webp", "laurel.webp", "rose.webp"].map((n) => A + n));
+      warm(["brush-crimson.webp", "brush-ink.webp", "crowd-mask.webp", "laurel.webp", "rose.webp"].map((n) => A + n));
       warm([b.game.hero, b.game.logo]);
       // шрифты темы — заранее: без заставки (reduced motion) их подмена была бы видна
       for (const f of ['16px "Rubik Dirt"', '16px "Pangolin"']) document.fonts?.load(f).catch(() => {});
