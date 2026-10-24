@@ -38,6 +38,8 @@
 
 .gbanner[data-game="chained-beasts"] {
   overflow: visible;
+  /* запас сверху: список на главной обрезает всё выше 10px над баннером, а толпа вскакивает над мазком */
+  margin-top: 60px;
   border: 0;
   border-radius: 0;
   box-shadow: none;
@@ -53,10 +55,10 @@
   z-index: 0;
   left: 1%;
   right: 1%;
-  top: -66px;
-  height: 116px;
+  top: -54px;
+  height: 104px;
   filter: drop-shadow(0 -2px 0 #ff8aa6) drop-shadow(0 -1px 6px rgba(255, 150, 170, 0.6));
-  transform: translateY(74px);
+  transform: translateY(62px);
   transition: transform 0.45s cubic-bezier(0.3, 1.5, 0.5, 1);
 }
 .cb-ban-crowd i {
@@ -170,6 +172,7 @@
   .cb-ban-chain { --sk: 0.45; --ska: 1.1; }
   .cb-ban-score b { font-size: 24px; }
   .cb-ban-score i { font-size: 11px; }
+  .gbanner[data-game="chained-beasts"] { margin-top: 46px; }
   .cb-ban-crowd { top: -40px; height: 70px; transform: translateY(46px); }
 }
 
